@@ -580,6 +580,18 @@ fun IslandVisualsSettingsUI(
             )
 
             IconToggleItem(
+                iconRes = R.drawable.rounded_blur_on_24,
+                title = stringResource(R.string.island_progressive_blur_title),
+                isChecked = viewModel.isIslandProgressiveBlur.value,
+                enabled = viewModel.isIslandTransparency.value,
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    viewModel.setIslandProgressiveBlur(checked)
+                },
+                modifier = Modifier.highlight(highlightSetting == "island_progressive_blur"),
+            )
+
+            IconToggleItem(
                 iconRes = R.drawable.rounded_grain_24,
                 title = stringResource(R.string.island_neural_expressive_title),
                 isChecked = viewModel.isIslandNeuralExpressive.value,

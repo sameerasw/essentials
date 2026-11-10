@@ -248,7 +248,10 @@ class IslandCoordinator(
     }
 
     private val powerSaveReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) = pokeStillness()
+        override fun onReceive(context: Context?, intent: Intent?) {
+            pokeStillness()
+            applyConfig()
+        }
     }
 
     private val screenReceiver = object : BroadcastReceiver() {
@@ -765,6 +768,8 @@ class IslandCoordinator(
     }
 
     private fun applyConfig() {
+        val powerSaving = service.getSystemService(PowerManager::class.java)?.isPowerSaveMode == true
+        val transparent = !powerSaving && settings.isIslandTransparencyEnabled()
         val geo = CameraGeometryResolver.resolve(service, wm, settings)
         geometry = geo
         val density = service.resources.displayMetrics.density
@@ -803,10 +808,11 @@ class IslandCoordinator(
             bondEdge = !geo.hasCamera && settings.isIslandBondEdgeEnabled(),
             balanceCompact = settings.isIslandBalanceCompactEnabled(),
             dismissDown = settings.getIslandDismissDirection() == SettingsRepository.ISLAND_DISMISS_DOWN,
-            neuralExpressive = settings.isIslandTransparencyEnabled() && settings.isIslandNeuralExpressiveEnabled(),
+            neuralExpressive = transparent && settings.isIslandNeuralExpressiveEnabled(),
             neuralExpressiveAlways = settings.isIslandNeuralExpressiveAlwaysEnabled(),
             glowIntensity = if (settings.isIslandShowGlowEnabled()) settings.getIslandGlowIntensity().coerceIn(0f, 2f) else 0f,
-            transparency = settings.isIslandTransparencyEnabled(),
+            transparency = transparent,
+            progressiveBlur = transparent && !powerSaving && settings.isIslandProgressiveBlurEnabled(),
             maxExpandedHeight = if (isLandscape) ((geo.screenHeight - geo.surfaceTop) / density - 12f).dp else Dp.Unspecified,
             outlineColor = if (settings.isIslandBorderOutlineEnabled()) {
                 runCatching { Color(AndroidColor.parseColor(settings.getIslandBorderOutlineColor())) }
@@ -1109,6 +1115,7 @@ class IslandCoordinator(
             SettingsRepository.KEY_ISLAND_NEURAL_EXPRESSIVE,
             SettingsRepository.KEY_ISLAND_NEURAL_EXPRESSIVE_ALWAYS,
             SettingsRepository.KEY_ISLAND_TRANSPARENCY,
+            SettingsRepository.KEY_ISLAND_PROGRESSIVE_BLUR,
             SettingsRepository.KEY_ISLAND_SHOW_GLOW,
             SettingsRepository.KEY_ISLAND_GLOW_INTENSITY,
             SettingsRepository.KEY_ISLAND_SECONDARY_BUBBLE,

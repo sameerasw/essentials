@@ -674,6 +674,7 @@ class SettingsRepository(
         const val KEY_ISLAND_NEURAL_EXPRESSIVE = "island_neural_expressive"
         const val KEY_ISLAND_NEURAL_EXPRESSIVE_ALWAYS = "island_neural_expressive_always"
         const val KEY_ISLAND_TRANSPARENCY = "island_transparency"
+        const val KEY_ISLAND_PROGRESSIVE_BLUR = "island_progressive_blur"
         const val KEY_ISLAND_STATUSBAR_AWARE_WIDTH = "island_statusbar_aware_width"
         const val KEY_ISLAND_STATUSBAR_AWARE_WIDTH_RESET_V1 = "island_statusbar_aware_width_reset_v1"
         const val KEY_DEBUG_UI_MARGIN_OVERLAY = "debug_ui_margin_overlay"
@@ -4484,7 +4485,11 @@ class SettingsRepository(
 
     fun setIslandNeuralExpressiveAlwaysEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_NEURAL_EXPRESSIVE_ALWAYS, enabled)
 
-    fun isIslandTransparencyEnabled(): Boolean = getBoolean(KEY_ISLAND_TRANSPARENCY, !com.sameerasw.essentials.utils.DeviceUtils.isLowEndDevice(context))
+    fun isIslandTransparencyEnabled(): Boolean = getBoolean(KEY_ISLAND_TRANSPARENCY, true)
+
+    fun isIslandProgressiveBlurEnabled(): Boolean = getBoolean(KEY_ISLAND_PROGRESSIVE_BLUR, !com.sameerasw.essentials.utils.DeviceUtils.isLowEndDevice(context))
+
+    fun setIslandProgressiveBlurEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_PROGRESSIVE_BLUR, enabled)
 
     fun setIslandTransparencyEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_TRANSPARENCY, enabled)
 
