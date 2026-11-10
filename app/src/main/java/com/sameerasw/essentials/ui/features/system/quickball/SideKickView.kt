@@ -19,7 +19,10 @@ import android.os.Build
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewConfiguration
 import com.sameerasw.essentials.data.repository.SettingsRepository
+import kotlin.math.abs
+import kotlin.math.hypot
 import kotlin.math.roundToInt
 
 class SideKickView @JvmOverloads constructor(
@@ -30,6 +33,7 @@ class SideKickView @JvmOverloads constructor(
 
     private val settings = SettingsRepository(context)
     private val density = context.resources.displayMetrics.density
+    private val touchSlop = ViewConfiguration.get(context).scaledTouchSlop.toFloat()
 
     private val visiblePillWidthPx = 10f * density
     private val arcIndentAngle = 36f
@@ -43,6 +47,10 @@ class SideKickView @JvmOverloads constructor(
 
     private val rectF = RectF()
     private var startAngle = 0f
+
+    private var startX = 0f
+    private var startY = 0f
+    private var isFlicking = false
 
     var onRight: Boolean = true
         set(value) {
@@ -121,6 +129,53 @@ class SideKickView @JvmOverloads constructor(
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
+        when (event.action) {
+            MotionEvent.ACTION_DOWN -> {
+                startX = event.rawX
+                startY = event.rawY
+                isFlicking = false
+            }
+
+            MotionEvent.ACTION_MOVE -> {
+                val dx = event.rawX - startX
+                val dy = event.rawY - startY
+                val dist = hypot(dx, dy)
+
+                if (dist > touchSlop) {
+                    val isInward = if (onRight) {
+                        dx < -touchSlop && abs(dx) > abs(dy) * 0.45f
+                    } else {
+                        dx > touchSlop && abs(dx) > abs(dy) * 0.45f
+                    }
+
+                    if (settings.isQuickBallFlickToSelect() && (isFlicking || isInward)) {
+                        if (!isFlicking) {
+                            isFlicking = true
+                            listener?.onFlickStart()
+                        }
+                        listener?.onFlickMove(event.rawX, event.rawY)
+                        return true
+                    }
+                }
+            }
+
+            MotionEvent.ACTION_UP -> {
+                if (isFlicking) {
+                    isFlicking = false
+                    listener?.onFlickEnd()
+                    return true
+                }
+            }
+
+            MotionEvent.ACTION_CANCEL -> {
+                if (isFlicking) {
+                    isFlicking = false
+                    listener?.onFlickEnd()
+                    return true
+                }
+            }
+        }
+
         return gestureDetector.onTouchEvent(event) || super.onTouchEvent(event)
     }
 

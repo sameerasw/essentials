@@ -237,6 +237,10 @@ class SettingsRepository(
         const val KEY_QUICK_BALL_PILL_THICKNESS = "quick_ball_pill_thickness"
         const val KEY_QUICK_BALL_PILL_TOUCH_WIDTH = "quick_ball_pill_touch_width"
         const val KEY_QUICK_BALL_GESTURES_ENABLED = "quick_ball_gestures_enabled"
+        const val KEY_QUICK_BALL_FLICK_TO_SELECT = "quick_ball_flick_to_select"
+        const val KEY_QUICK_BALL_ACTION_HUD_ENABLED = "quick_ball_action_hud_enabled"
+        const val KEY_QUICK_BALL_LANDSCAPE_POSITION_Y = "quick_ball_landscape_position_y"
+        const val KEY_QUICK_BALL_LANDSCAPE_POSITION_SIDE = "quick_ball_landscape_position_side"
         const val KEY_STATUS_BAR_ICON_CONTROL_ENABLED = "status_bar_icon_control_enabled"
         const val KEY_MAPS_POWER_SAVING_ENABLED = "maps_power_saving_enabled"
         const val KEY_MAPS_DISCOVERED_CHANNELS = "maps_discovered_channels"
@@ -4980,4 +4984,20 @@ class SettingsRepository(
     fun getQuickBallHapticIntensity(): String = prefs.getString(KEY_QUICK_BALL_HAPTIC_INTENSITY, "MEDIUM") ?: "MEDIUM"
 
     fun setQuickBallHapticIntensity(intensity: String) = putString(KEY_QUICK_BALL_HAPTIC_INTENSITY, intensity)
+
+    fun isQuickBallFlickToSelect(): Boolean = getBoolean(KEY_QUICK_BALL_FLICK_TO_SELECT, true)
+
+    fun setQuickBallFlickToSelect(enabled: Boolean) = putBoolean(KEY_QUICK_BALL_FLICK_TO_SELECT, enabled)
+
+    fun isQuickBallActionHudEnabled(): Boolean = getBoolean(KEY_QUICK_BALL_ACTION_HUD_ENABLED, true)
+
+    fun setQuickBallActionHudEnabled(enabled: Boolean) = putBoolean(KEY_QUICK_BALL_ACTION_HUD_ENABLED, enabled)
+
+    fun getQuickBallLandscapePositionY(): Float = getFloat(KEY_QUICK_BALL_LANDSCAPE_POSITION_Y, 0.5f)
+
+    fun setQuickBallLandscapePositionY(yRatio: Float) = putFloat(KEY_QUICK_BALL_LANDSCAPE_POSITION_Y, yRatio)
+
+    fun getQuickBallLandscapePositionSide(): Int = getInt(KEY_QUICK_BALL_LANDSCAPE_POSITION_SIDE, 0)
+
+    fun setQuickBallLandscapePositionSide(side: Int) = putInt(KEY_QUICK_BALL_LANDSCAPE_POSITION_SIDE, side)
 }

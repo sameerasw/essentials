@@ -28,6 +28,9 @@ interface GestureListener {
     fun onSwipeDown() {}
     fun onDragMove(dx: Float, dy: Float) {}
     fun onDragEnd() {}
+    fun onFlickStart() {}
+    fun onFlickMove(rawX: Float, rawY: Float) {}
+    fun onFlickEnd() {}
 }
 
 class QuickBallGestureDetector(

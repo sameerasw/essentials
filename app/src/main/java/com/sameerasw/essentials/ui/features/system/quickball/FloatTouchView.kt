@@ -17,6 +17,8 @@ import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.RippleDrawable
 import android.os.Build
+import android.os.Handler
+import android.os.Looper
 import android.util.AttributeSet
 import android.view.Gravity
 import android.view.MotionEvent
@@ -27,6 +29,7 @@ import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.island.ui.IslandHaptics
 import com.sameerasw.essentials.utils.HapticUtil
+import kotlin.math.abs
 import kotlin.math.hypot
 import kotlin.math.roundToInt
 
@@ -38,6 +41,7 @@ class FloatTouchView @JvmOverloads constructor(
 
     private val settings = SettingsRepository(context)
     private val density = context.resources.displayMetrics.density
+    private val handler = Handler(Looper.getMainLooper())
 
     private val imageView =
         ImageView(context).apply {
@@ -47,23 +51,43 @@ class FloatTouchView @JvmOverloads constructor(
     var isExpanded: Boolean = false
         private set
 
-    var listener: GestureListener?
-        get() = gestureDetector.listener
-        set(value) {
-            gestureDetector.listener = value
-        }
+    var onRight: Boolean = true
+
+    var listener: GestureListener? = null
 
     private val touchSlop = ViewConfiguration.get(context).scaledTouchSlop.toFloat()
+    private val tapTimeoutMs = 220L
+    private val longPressTimeoutMs = ViewConfiguration.getLongPressTimeout().toLong()
+
     private var startX = 0f
     private var startY = 0f
     private var isDragging = false
+    private var isFlicking = false
+    private var isLongPressTriggered = false
+    private var tapCount = 0
 
-    private val gestureDetector by lazy {
-        QuickBallGestureDetector(
-            context = context,
-            isGestureEnabled = { settings.isQuickBallGesturesEnabled() && settings.isQuickBallLockPosition() },
-        )
-    }
+    private val tapRunnable =
+        Runnable {
+            when (tapCount) {
+                1 -> listener?.onSingleTap()
+                2 -> listener?.onDoubleTap()
+                else -> if (tapCount >= 3) listener?.onTripleTap()
+            }
+            tapCount = 0
+        }
+
+    private val longPressRunnable =
+        Runnable {
+            if (!isDragging && !isFlicking) {
+                isLongPressTriggered = true
+                handler.removeCallbacks(tapRunnable)
+                tapCount = 0
+                if (settings.isQuickBallHaptic()) {
+                    IslandHaptics.commit(context)
+                }
+                listener?.onLongPress()
+            }
+        }
 
     init {
         addView(imageView)
@@ -175,14 +199,10 @@ class FloatTouchView @JvmOverloads constructor(
             return true
         }
 
-        return if (settings.isQuickBallLockPosition()) {
-            gestureDetector.onTouchEvent(event) || super.onTouchEvent(event)
-        } else {
-            handleDragTouchEvent(event)
-        }
+        return handleTouchGesture(event)
     }
 
-    private fun handleDragTouchEvent(event: MotionEvent): Boolean {
+    private fun handleTouchGesture(event: MotionEvent): Boolean {
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
                 if (settings.isQuickBallHaptic()) {
@@ -192,42 +212,121 @@ class FloatTouchView @JvmOverloads constructor(
                 startX = event.rawX
                 startY = event.rawY
                 isDragging = false
+                isFlicking = false
+                isLongPressTriggered = false
+
+                handler.removeCallbacks(longPressRunnable)
+                if (settings.isQuickBallGesturesEnabled()) {
+                    handler.postDelayed(longPressRunnable, longPressTimeoutMs)
+                }
                 return true
             }
 
             MotionEvent.ACTION_MOVE -> {
+                if (isLongPressTriggered) return true
+
                 val dx = event.rawX - startX
                 val dy = event.rawY - startY
+                val dist = hypot(dx, dy)
 
-                if (!isDragging && hypot(dx, dy) > touchSlop) {
-                    isDragging = true
-                    if (settings.isQuickBallHaptic()) {
-                        IslandHaptics.thresholdReached(context)
+                if (dist > touchSlop) {
+                    handler.removeCallbacks(longPressRunnable)
+
+                    // Check if inward swipe towards radial arc (Flick-to-Select)
+                    val isInward = if (onRight) {
+                        dx < -touchSlop && abs(dx) > abs(dy) * 0.45f
+                    } else {
+                        dx > touchSlop && abs(dx) > abs(dy) * 0.45f
                     }
-                }
 
-                if (isDragging) {
-                    listener?.onDragMove(dx, dy)
+                    if (settings.isQuickBallFlickToSelect() && (isFlicking || isInward)) {
+                        if (!isFlicking) {
+                            isFlicking = true
+                            handler.removeCallbacks(tapRunnable)
+                            tapCount = 0
+                            listener?.onFlickStart()
+                        }
+                        listener?.onFlickMove(event.rawX, event.rawY)
+                        return true
+                    }
+
+                    // Otherwise regular dragging or locked position gestures
+                    if (!settings.isQuickBallLockPosition()) {
+                        if (!isDragging) {
+                            isDragging = true
+                            handler.removeCallbacks(tapRunnable)
+                            tapCount = 0
+                            if (settings.isQuickBallHaptic()) {
+                                IslandHaptics.thresholdReached(context)
+                            }
+                        }
+                        listener?.onDragMove(dx, dy)
+                    } else if (settings.isQuickBallGesturesEnabled()) {
+                        val swipeThreshold = 24f * density
+                        if (abs(dy) > swipeThreshold && abs(dy) > abs(dx) * 1.8f) {
+                            handler.removeCallbacks(tapRunnable)
+                            tapCount = 0
+                            if (dy < 0) {
+                                listener?.onSwipeUp()
+                            } else {
+                                listener?.onSwipeDown()
+                            }
+                        }
+                    }
                 }
                 return true
             }
 
             MotionEvent.ACTION_UP -> {
+                handler.removeCallbacks(longPressRunnable)
+
+                if (isFlicking) {
+                    isFlicking = false
+                    listener?.onFlickEnd()
+                    return true
+                }
+
                 if (isDragging) {
+                    isDragging = false
                     listener?.onDragEnd()
+                    return true
+                }
+
+                if (isLongPressTriggered) {
+                    isLongPressTriggered = false
+                    return true
+                }
+
+                // Tap handling (Single / Double tap)
+                if (settings.isQuickBallGesturesEnabled()) {
+                    tapCount++
+                    handler.removeCallbacks(tapRunnable)
+                    if (tapCount >= 2) {
+                        tapCount = 0
+                        listener?.onDoubleTap()
+                    } else {
+                        handler.postDelayed(tapRunnable, tapTimeoutMs)
+                    }
                 } else {
                     listener?.onSingleTap()
                 }
-                isDragging = false
                 return true
             }
 
             MotionEvent.ACTION_CANCEL -> {
+                handler.removeCallbacks(longPressRunnable)
+                handler.removeCallbacks(tapRunnable)
+                if (isFlicking) {
+                    isFlicking = false
+                    listener?.onFlickEnd()
+                }
                 if (isDragging) {
+                    isDragging = false
                     listener?.onDragEnd()
                 }
                 listener?.onTouchCancel()
-                isDragging = false
+                tapCount = 0
+                isLongPressTriggered = false
                 return true
             }
 
@@ -237,6 +336,6 @@ class FloatTouchView @JvmOverloads constructor(
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
-        gestureDetector.cleanup()
+        handler.removeCallbacksAndMessages(null)
     }
 }

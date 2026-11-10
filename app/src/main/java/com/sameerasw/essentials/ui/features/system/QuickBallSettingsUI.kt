@@ -599,6 +599,14 @@ fun QuickBallSettingsUI(
                             iconRes = R.drawable.rounded_touch_app_24,
                         )
 
+                        IconToggleItem(
+                            title = stringResource(R.string.quick_ball_flick_to_select_title),
+                            description = stringResource(R.string.quick_ball_flick_to_select_desc),
+                            isChecked = viewModel.isQuickBallFlickToSelect.value,
+                            onCheckedChange = { viewModel.setQuickBallFlickToSelect(it) },
+                            iconRes = R.drawable.rounded_touch_app_24,
+                        )
+
                         AnimatedVisibility(
                             visible = viewModel.isQuickBallGesturesEnabled.value,
                             enter = expandVertically(),
@@ -1098,6 +1106,14 @@ fun QuickBallSettingsUI(
                             isChecked = viewModel.isQuickBallShowLockscreen.value,
                             onCheckedChange = { viewModel.setQuickBallShowLockscreen(it) },
                             iconRes = R.drawable.rounded_lock_clock_24,
+                        )
+
+                        IconToggleItem(
+                            title = stringResource(R.string.quick_ball_action_hud_title),
+                            description = stringResource(R.string.quick_ball_action_hud_desc),
+                            isChecked = viewModel.isQuickBallActionHudEnabled.value,
+                            onCheckedChange = { viewModel.setQuickBallActionHudEnabled(it) },
+                            iconRes = R.drawable.rounded_notifications_24,
                         )
 
                         val autoHideCount = viewModel.quickBallAutoHideApps.value.size

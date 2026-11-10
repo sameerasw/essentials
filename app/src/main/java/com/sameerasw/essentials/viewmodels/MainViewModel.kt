@@ -189,6 +189,8 @@ class MainViewModel : ViewModel() {
     val isQuickBallBorderEnabled = mutableStateOf(false)
     val quickBallBorderWidth = mutableFloatStateOf(1.5f)
     val quickBallHapticIntensity = mutableStateOf("MEDIUM")
+    val isQuickBallFlickToSelect = mutableStateOf(true)
+    val isQuickBallActionHudEnabled = mutableStateOf(true)
     val isQuickBallStickToEdge = mutableStateOf(true)
     val isQuickBallLockPosition = mutableStateOf(false)
     val isQuickBallHideLandscape = mutableStateOf(false)
@@ -857,6 +859,12 @@ class MainViewModel : ViewModel() {
                         isQuickBallAutoHide.value = settingsRepository.isQuickBallStickToEdge()
                         isQuickBallStickToEdge.value = settingsRepository.isQuickBallStickToEdge()
                     }
+
+                    SettingsRepository.KEY_QUICK_BALL_FLICK_TO_SELECT ->
+                        isQuickBallFlickToSelect.value = settingsRepository.isQuickBallFlickToSelect()
+
+                    SettingsRepository.KEY_QUICK_BALL_ACTION_HUD_ENABLED ->
+                        isQuickBallActionHudEnabled.value = settingsRepository.isQuickBallActionHudEnabled()
 
                     SettingsRepository.KEY_QUICK_BALL_LOCK_POSITION ->
                         isQuickBallLockPosition.value = settingsRepository.isQuickBallLockPosition()
@@ -2629,6 +2637,8 @@ class MainViewModel : ViewModel() {
         isQuickBallAutoHide.value = settingsRepository.isQuickBallStickToEdge()
         isQuickBallStickToEdge.value = settingsRepository.isQuickBallStickToEdge()
         isQuickBallLockPosition.value = settingsRepository.isQuickBallLockPosition()
+        isQuickBallFlickToSelect.value = settingsRepository.isQuickBallFlickToSelect()
+        isQuickBallActionHudEnabled.value = settingsRepository.isQuickBallActionHudEnabled()
         isQuickBallHideLandscape.value = settingsRepository.isQuickBallHideLandscape()
         isQuickBallShowLockscreen.value = settingsRepository.isQuickBallShowLockscreen()
         quickBallAutoHideApps.value = settingsRepository.getQuickBallAutoHideApps()
@@ -5881,6 +5891,18 @@ class MainViewModel : ViewModel() {
     fun setQuickBallHapticIntensity(intensity: String) {
         quickBallHapticIntensity.value = intensity
         settingsRepository.setQuickBallHapticIntensity(intensity)
+        com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService.updateQuickBallState()
+    }
+
+    fun setQuickBallFlickToSelect(enabled: Boolean) {
+        isQuickBallFlickToSelect.value = enabled
+        settingsRepository.setQuickBallFlickToSelect(enabled)
+        com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService.updateQuickBallState()
+    }
+
+    fun setQuickBallActionHudEnabled(enabled: Boolean) {
+        isQuickBallActionHudEnabled.value = enabled
+        settingsRepository.setQuickBallActionHudEnabled(enabled)
         com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService.updateQuickBallState()
     }
 

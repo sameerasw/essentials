@@ -38,6 +38,7 @@ import com.sameerasw.essentials.ui.activities.LockscreenActionActivity
 import com.sameerasw.essentials.ui.features.system.quickball.FloatPanelView
 import com.sameerasw.essentials.ui.features.system.quickball.FloatTouchView
 import com.sameerasw.essentials.ui.features.system.quickball.GestureListener
+import com.sameerasw.essentials.ui.features.system.quickball.QuickBallHud
 import com.sameerasw.essentials.ui.features.system.quickball.SideKickView
 import com.sameerasw.essentials.utils.HapticUtil
 import kotlinx.coroutines.CoroutineScope
@@ -109,7 +110,12 @@ class QuickBallHandler(
             return
         }
 
-        isOnRight = settings.getQuickBallPositionSide() == 0
+        val isLandscape = service.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+        isOnRight = if (isLandscape) {
+            settings.getQuickBallLandscapePositionSide() == 0
+        } else {
+            settings.getQuickBallPositionSide() == 0
+        }
 
         refreshBallVisibility()
         updateFabAppearance()
@@ -139,6 +145,7 @@ class QuickBallHandler(
 
     fun destroy() {
         scope.cancel()
+        QuickBallHud.dismiss()
         stopInactivityTimer()
         removeMenuWindow()
         removePillWindow()
@@ -216,7 +223,17 @@ class QuickBallHandler(
         if (fabView != null) return
 
         val (screenWidth, screenHeight) = getScreenDimensions()
-        val savedYRatio = settings.getQuickBallPositionY()
+        val isLandscape = service.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+        isOnRight = if (isLandscape) {
+            settings.getQuickBallLandscapePositionSide() == 0
+        } else {
+            settings.getQuickBallPositionSide() == 0
+        }
+        val savedYRatio = if (isLandscape) {
+            settings.getQuickBallLandscapePositionY()
+        } else {
+            settings.getQuickBallPositionY()
+        }
         fabY = (screenHeight * savedYRatio).roundToInt().coerceIn(topBoundary, screenHeight - fabSizePx - bottomBoundary)
         fabX = getEdgeX(screenWidth)
 
@@ -231,6 +248,7 @@ class QuickBallHandler(
         var screenH = 0
 
         fabView = FloatTouchView(service).apply {
+            onRight = this@QuickBallHandler.isOnRight
             setExpanded(isExpanded, animate = false)
 
             listener = object : GestureListener {
@@ -270,6 +288,27 @@ class QuickBallHandler(
                     isDragging = false
                     if (!isStashing) {
                         snapToEdge()
+                    }
+                }
+
+                override fun onFlickStart() {
+                    if (isExpanded) return
+                    if (isStashed || isStashing) {
+                        unstashFab(animated = false)
+                    }
+                    expandMenu()
+                }
+
+                override fun onFlickMove(rawX: Float, rawY: Float) {
+                    val localX = rawX - (menuParams?.x ?: 0)
+                    val localY = rawY - (menuParams?.y ?: 0)
+                    menuView?.updateHover(localX, localY)
+                }
+
+                override fun onFlickEnd() {
+                    val handled = menuView?.handleRelease() == true
+                    if (!handled) {
+                        collapseMenu()
                     }
                 }
 
@@ -324,11 +363,18 @@ class QuickBallHandler(
 
     private fun snapToEdge() {
         val (screenWidth, screenHeight) = getScreenDimensions()
+        val isLandscape = service.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
         isOnRight = (fabX + fabSizePx / 2) > screenWidth / 2
-        settings.setQuickBallPositionSide(if (isOnRight) 0 else 1)
-
         val targetYRatio = if (screenHeight > 0) fabY.toFloat() / screenHeight else 0.5f
-        settings.setQuickBallPositionY(targetYRatio)
+
+        if (isLandscape) {
+            settings.setQuickBallLandscapePositionSide(if (isOnRight) 0 else 1)
+            settings.setQuickBallLandscapePositionY(targetYRatio)
+        } else {
+            settings.setQuickBallPositionSide(if (isOnRight) 0 else 1)
+            settings.setQuickBallPositionY(targetYRatio)
+        }
+        fabView?.onRight = isOnRight
 
         val targetX = getEdgeX(screenWidth)
         val distance = abs(targetX - fabX)
@@ -490,7 +536,7 @@ class QuickBallHandler(
         val targetY = fabY + (fabSizePx - pillHeight) / 2
 
         pillView = SideKickView(service).apply {
-            onRight = isOnRight
+            onRight = this@QuickBallHandler.isOnRight
             listener = object : GestureListener {
                 override fun onSingleTap() {
                     if (settings.isQuickBallHaptic()) {
@@ -500,6 +546,27 @@ class QuickBallHandler(
                     unstashFab(animated = false)
                     expandMenu()
                 }
+
+                override fun onFlickStart() {
+                    if (isExpanded) return
+                    removePillWindow()
+                    unstashFab(animated = false)
+                    expandMenu()
+                }
+
+                override fun onFlickMove(rawX: Float, rawY: Float) {
+                    val localX = rawX - (menuParams?.x ?: 0)
+                    val localY = rawY - (menuParams?.y ?: 0)
+                    menuView?.updateHover(localX, localY)
+                }
+
+                override fun onFlickEnd() {
+                    val handled = menuView?.handleRelease() == true
+                    if (!handled) {
+                        collapseMenu()
+                    }
+                }
+
                 override fun onDoubleTap() = executeGestureAction("DOUBLE_TAP")
                 override fun onTripleTap() = executeGestureAction("TRIPLE_TAP")
                 override fun onLongPress() = executeGestureAction("LONG_PRESS")
@@ -556,6 +623,7 @@ class QuickBallHandler(
     /* -------------------- Expanded Radial Menu Window -------------------- */
 
     private fun expandMenu() {
+        Log.d(TAG, "expandMenu() called, isExpanded=$isExpanded, isStashed=$isStashed")
         if (isExpanded) return
         isExpanded = true
         fabView?.setExpanded(true)
@@ -626,6 +694,7 @@ class QuickBallHandler(
     }
 
     private fun collapseMenu() {
+        Log.d(TAG, "collapseMenu() called, isExpanded=$isExpanded")
         if (!isExpanded) return
         isExpanded = false
         fabView?.setExpanded(false)
@@ -651,11 +720,16 @@ class QuickBallHandler(
         when (action) {
             is Action.ToggleFlashlight -> {
                 val fh = (service as? ScreenOffAccessibilityService)?.flashlightHandler
-                if (fh != null) {
+                val nextState = if (fh != null) {
+                    val willBeOn = !fh.isTorchOn
                     fh.toggleFlashlight()
+                    willBeOn
                 } else {
                     scope.launch { CombinedActionExecutor.execute(service, action) }
+                    null
                 }
+                val msg = if (nextState == true) "Torch: ON" else if (nextState == false) "Torch: OFF" else "Torch Toggled"
+                QuickBallHud.show(service, action, customMessage = msg)
             }
             is Action.TurnOnFlashlight -> {
                 val fh = (service as? ScreenOffAccessibilityService)?.flashlightHandler
@@ -664,6 +738,7 @@ class QuickBallHandler(
                 } else {
                     scope.launch { CombinedActionExecutor.execute(service, action) }
                 }
+                QuickBallHud.show(service, action, customMessage = "Torch: ON")
             }
             is Action.TurnOffFlashlight -> {
                 val fh = (service as? ScreenOffAccessibilityService)?.flashlightHandler
@@ -672,34 +747,44 @@ class QuickBallHandler(
                 } else {
                     scope.launch { CombinedActionExecutor.execute(service, action) }
                 }
+                QuickBallHud.show(service, action, customMessage = "Torch: OFF")
             }
             is Action.Back -> {
+                QuickBallHud.show(service, action)
                 service.performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK)
             }
             is Action.Home -> {
+                QuickBallHud.show(service, action)
                 service.performGlobalAction(AccessibilityService.GLOBAL_ACTION_HOME)
             }
             is Action.RecentApps -> {
+                QuickBallHud.show(service, action)
                 service.performGlobalAction(AccessibilityService.GLOBAL_ACTION_RECENTS)
             }
             is Action.OpenNotifications -> {
+                QuickBallHud.show(service, action)
                 service.performGlobalAction(AccessibilityService.GLOBAL_ACTION_NOTIFICATIONS)
             }
             is Action.OpenQuickSettings -> {
+                QuickBallHud.show(service, action)
                 service.performGlobalAction(AccessibilityService.GLOBAL_ACTION_QUICK_SETTINGS)
             }
             is Action.PowerDialog -> {
+                QuickBallHud.show(service, action)
                 service.performGlobalAction(AccessibilityService.GLOBAL_ACTION_POWER_DIALOG)
             }
             is Action.LockScreen -> {
+                QuickBallHud.show(service, action)
                 service.performGlobalAction(AccessibilityService.GLOBAL_ACTION_LOCK_SCREEN)
             }
             is Action.TakeScreenshot -> {
+                QuickBallHud.show(service, action)
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                     service.performGlobalAction(AccessibilityService.GLOBAL_ACTION_TAKE_SCREENSHOT)
                 }
             }
             else -> {
+                QuickBallHud.show(service, action)
                 scope.launch {
                     CombinedActionExecutor.execute(service, action)
                 }
@@ -742,8 +827,19 @@ class QuickBallHandler(
 
     private fun recalculatePosition() {
         val (screenWidth, screenHeight) = getScreenDimensions()
-        val savedYRatio = settings.getQuickBallPositionY()
+        val isLandscape = service.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+        isOnRight = if (isLandscape) {
+            settings.getQuickBallLandscapePositionSide() == 0
+        } else {
+            settings.getQuickBallPositionSide() == 0
+        }
+        val savedYRatio = if (isLandscape) {
+            settings.getQuickBallLandscapePositionY()
+        } else {
+            settings.getQuickBallPositionY()
+        }
         fabY = (screenHeight * savedYRatio).roundToInt().coerceIn(topBoundary, screenHeight - fabSizePx - bottomBoundary)
+        fabView?.onRight = isOnRight
 
         if (isStashed || isStashing) {
             updatePillAppearance()

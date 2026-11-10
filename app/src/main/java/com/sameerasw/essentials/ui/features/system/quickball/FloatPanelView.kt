@@ -88,6 +88,7 @@ class FloatPanelView(
     private val itemOffsets: List<Pair<Float, Float>>
     private var isCollapsing = false
     private var hasDismissed = false
+    private var currentHoveredIndex: Int = -1
 
     init {
         clipChildren = false
@@ -104,21 +105,93 @@ class FloatPanelView(
         createChildViews()
     }
 
+    fun findHoveredItemIndex(touchX: Float, touchY: Float): Int {
+        var closestIndex = -1
+        var closestDist = Float.MAX_VALUE
+        val hitRadius = buttonSize * 0.95f
+
+        for (i in itemOffsets.indices) {
+            val (offsetX, offsetY) = itemOffsets[i]
+            val cx = fabCenterX + offsetX
+            val cy = fabCenterY + offsetY
+            val dist = hypot(touchX - cx, touchY - cy)
+            if (dist <= hitRadius && dist < closestDist) {
+                closestDist = dist
+                closestIndex = i
+            }
+        }
+        return closestIndex
+    }
+
+    fun updateHover(touchX: Float, touchY: Float): Int {
+        val newHovered = findHoveredItemIndex(touchX, touchY)
+        if (newHovered != currentHoveredIndex) {
+            if (currentHoveredIndex in itemViews.indices) {
+                itemViews[currentHoveredIndex].animate()
+                    .scaleX(1.0f)
+                    .scaleY(1.0f)
+                    .setDuration(120L)
+                    .start()
+            }
+            if (newHovered in itemViews.indices) {
+                itemViews[newHovered].animate()
+                    .scaleX(1.22f)
+                    .scaleY(1.22f)
+                    .setDuration(140L)
+                    .start()
+                if (settings.isQuickBallHaptic()) {
+                    IslandHaptics.dragStep(context)
+                }
+            }
+            currentHoveredIndex = newHovered
+        }
+        return currentHoveredIndex
+    }
+
+    fun clearHover() {
+        if (currentHoveredIndex in itemViews.indices) {
+            itemViews[currentHoveredIndex].animate()
+                .scaleX(1.0f)
+                .scaleY(1.0f)
+                .setDuration(120L)
+                .start()
+        }
+        currentHoveredIndex = -1
+    }
+
+    fun handleRelease(): Boolean {
+        val selectedIndex = currentHoveredIndex
+        clearHover()
+        if (selectedIndex in actions.indices) {
+            if (settings.isQuickBallHaptic()) {
+                IslandHaptics.commit(context)
+            }
+            onActionClicked(actions[selectedIndex])
+            return true
+        }
+        return false
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     private fun setupTouchHandling() {
         setOnTouchListener { view, event ->
+            android.util.Log.d("FloatPanelView", "Touch event action=${event.action}, x=${event.x}, y=${event.y}")
             when (event.action) {
-                MotionEvent.ACTION_OUTSIDE,
-                MotionEvent.ACTION_DOWN -> {
-                    onDismiss()
+                MotionEvent.ACTION_DOWN,
+                MotionEvent.ACTION_MOVE -> {
+                    updateHover(event.x, event.y)
                     true
                 }
                 MotionEvent.ACTION_UP -> {
                     view.performClick()
-                    onDismiss()
+                    if (!handleRelease()) {
+                        onDismiss()
+                    }
                     true
                 }
+                MotionEvent.ACTION_OUTSIDE,
                 MotionEvent.ACTION_CANCEL -> {
+                    clearHover()
                     onDismiss()
                     true
                 }
@@ -208,6 +281,7 @@ class FloatPanelView(
 
                     setOnClickListener {
                         if (!isCollapsing) {
+                            clearHover()
                             if (settings.isQuickBallHaptic()) {
                                 IslandHaptics.commit(context)
                             }

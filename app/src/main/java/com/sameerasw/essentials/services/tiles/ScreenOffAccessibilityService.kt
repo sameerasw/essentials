@@ -451,6 +451,7 @@ class ScreenOffAccessibilityService :
         smartPixelsHandler.init()
         duoOverlayHandler.init()
         statusGlanceHandler.init()
+        quickBallHandler.init()
         AppVolumeController.updateState(this)
         setupReceivers()
     }
