@@ -355,13 +355,14 @@ class SideKickView @JvmOverloads constructor(
                 val dist = hypot(dx, dy)
 
                 if (dist > touchSlop) {
+                    val isVerticalEdge = abs(dy) > abs(dx) * 1.25f
                     val isInward = if (onRight) {
-                        dx < -touchSlop && abs(dx) > abs(dy) * 0.45f
+                        dx < -touchSlop * 0.45f
                     } else {
-                        dx > touchSlop && abs(dx) > abs(dy) * 0.45f
+                        dx > touchSlop * 0.45f
                     }
 
-                    if (settings.isQuickBallFlickToSelect() && (isFlicking || isInward)) {
+                    if (settings.isQuickBallFlickToSelect() && (isFlicking || (isInward && !isVerticalEdge))) {
                         if (!isFlicking) {
                             isFlicking = true
                             listener?.onFlickStart()

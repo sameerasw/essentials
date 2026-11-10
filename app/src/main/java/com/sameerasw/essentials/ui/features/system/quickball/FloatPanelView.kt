@@ -33,6 +33,7 @@ import android.widget.ImageView
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.domain.diy.Action
 import com.sameerasw.essentials.island.ui.IslandHaptics
+import kotlin.math.abs
 import com.sameerasw.essentials.utils.AppIconUtil
 import com.sameerasw.essentials.utils.HapticUtil
 import kotlin.math.hypot
@@ -105,14 +106,49 @@ class FloatPanelView(
         }
         curveBends = FanLayout.curveBends(itemOffsets)
 
-        setupTouchHandling()
         createChildViews()
     }
 
+    override fun onInterceptTouchEvent(ev: MotionEvent): Boolean = true
+
+    @SuppressLint("ClickableViewAccessibility")
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        when (event.actionMasked) {
+            MotionEvent.ACTION_DOWN,
+            MotionEvent.ACTION_MOVE -> {
+                updateHover(event.x, event.y)
+                return true
+            }
+            MotionEvent.ACTION_UP -> {
+                if (!handleRelease()) {
+                    onDismiss()
+                }
+                return true
+            }
+            MotionEvent.ACTION_OUTSIDE,
+            MotionEvent.ACTION_CANCEL -> {
+                clearHover()
+                onDismiss()
+                return true
+            }
+            else -> return super.onTouchEvent(event)
+        }
+    }
+
     fun findHoveredItemIndex(touchX: Float, touchY: Float): Int {
+        val dx = touchX - fabCenterX
+        val dy = touchY - fabCenterY
+        val distFromCenter = hypot(dx, dy)
+
+        // Center deadzone: floating ball area
+        if (distFromCenter < halfFab * 0.95f) {
+            return -1
+        }
+
+        // 1. Direct proximity to any button
         var closestIndex = -1
         var closestDist = Float.MAX_VALUE
-        val hitRadius = buttonSize * 0.95f
+        val hitRadius = buttonSize * 1.25f
 
         for (i in itemOffsets.indices) {
             val (offsetX, offsetY) = itemOffsets[i]
@@ -124,7 +160,37 @@ class FloatPanelView(
                 closestIndex = i
             }
         }
-        return closestIndex
+
+        if (closestIndex != -1) {
+            return closestIndex
+        }
+
+        // 2. Sector / Angular matching for outward flick gestures
+        if (distFromCenter >= radius * 0.45f && itemOffsets.isNotEmpty()) {
+            val touchAngle = Math.toDegrees(kotlin.math.atan2(dy.toDouble(), dx.toDouble())).toFloat()
+            var bestSectorIndex = -1
+            var minAngleDiff = Float.MAX_VALUE
+
+            for (i in itemOffsets.indices) {
+                val (offsetX, offsetY) = itemOffsets[i]
+                val itemAngle = Math.toDegrees(kotlin.math.atan2(offsetY.toDouble(), offsetX.toDouble())).toFloat()
+                var angleDiff = abs(touchAngle - itemAngle)
+                if (angleDiff > 180f) {
+                    angleDiff = 360f - angleDiff
+                }
+
+                if (angleDiff < minAngleDiff) {
+                    minAngleDiff = angleDiff
+                    bestSectorIndex = i
+                }
+            }
+
+            if (minAngleDiff <= 35f) {
+                return bestSectorIndex
+            }
+        }
+
+        return -1
     }
 
     fun updateHover(touchX: Float, touchY: Float): Int {
@@ -174,34 +240,6 @@ class FloatPanelView(
             return true
         }
         return false
-    }
-
-    @SuppressLint("ClickableViewAccessibility")
-    private fun setupTouchHandling() {
-        setOnTouchListener { view, event ->
-            android.util.Log.d("FloatPanelView", "Touch event action=${event.action}, x=${event.x}, y=${event.y}")
-            when (event.action) {
-                MotionEvent.ACTION_DOWN,
-                MotionEvent.ACTION_MOVE -> {
-                    updateHover(event.x, event.y)
-                    true
-                }
-                MotionEvent.ACTION_UP -> {
-                    view.performClick()
-                    if (!handleRelease()) {
-                        onDismiss()
-                    }
-                    true
-                }
-                MotionEvent.ACTION_OUTSIDE,
-                MotionEvent.ACTION_CANCEL -> {
-                    clearHover()
-                    onDismiss()
-                    true
-                }
-                else -> false
-            }
-        }
     }
 
     private fun createChildViews() {
@@ -457,9 +495,13 @@ class FloatPanelView(
         return (if (isCollapsing) minAlpha * 2f - 1f else minAlpha).coerceIn(0f, 1f)
     }
 
-    fun animateExpand() {
+    fun animateExpand(isFast: Boolean = false) {
         isCollapsing = false
         hasDismissed = false
+
+        val duration = if (isFast) 140L else ANIMATION_DURATION
+        val stagger = if (isFast) 0L else STAGGER_DELAY
+        val interpolator = if (isFast) DECELERATE else OVERSHOOT
 
         val lastIndex = itemViews.size - 1
         itemViews.forEachIndexed { index, itemView ->
@@ -469,9 +511,9 @@ class FloatPanelView(
                 .scaleX(1f)
                 .scaleY(1f)
                 .alpha(1f)
-                .setDuration(ANIMATION_DURATION)
-                .setStartDelay((lastIndex - index) * STAGGER_DELAY)
-                .setInterpolator(OVERSHOOT)
+                .setDuration(duration)
+                .setStartDelay((lastIndex - index) * stagger)
+                .setInterpolator(interpolator)
                 .setUpdateListener { invalidate() }
                 .start()
         }

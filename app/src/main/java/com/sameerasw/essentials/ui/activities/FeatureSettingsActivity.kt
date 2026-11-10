@@ -85,6 +85,7 @@ import com.sameerasw.essentials.ui.features.system.BACK_GESTURE_FEATURE_ID
 import com.sameerasw.essentials.ui.features.system.BackGestureSettingsUI
 import com.sameerasw.essentials.ui.features.system.QUICK_BALL_FEATURE_ID
 import com.sameerasw.essentials.ui.features.system.QuickBallSettingsUI
+import com.sameerasw.essentials.ui.features.system.QuickBallSubMenu
 import com.sameerasw.essentials.ui.features.system.ActivityLauncherSearchBar
 import com.sameerasw.essentials.ui.features.system.ActivityLauncherSettingsUI
 import com.sameerasw.essentials.ui.features.system.ButtonRemapSettingsUI
@@ -267,6 +268,17 @@ fun FeatureSettingsScreen(
             var showPermissionSheet by remember { mutableStateOf(false) }
             var childFeatureForPermissions by remember { mutableStateOf<String?>(null) }
             var standbyAppsSelectedPackages by remember { mutableStateOf(setOf<String>()) }
+            var quickBallActiveSubMenu by remember(highlightSetting) {
+                mutableStateOf(
+                    when (highlightSetting) {
+                        "quick_ball_gestures" -> QuickBallSubMenu.GESTURES
+                        "quick_ball_styling" -> QuickBallSubMenu.STYLING
+                        "quick_ball_dimensions" -> QuickBallSubMenu.DIMENSIONS
+                        "quick_ball_behavior" -> QuickBallSubMenu.BEHAVIOR
+                        else -> null
+                    }
+                )
+            }
             var activityLauncherQuery by remember { mutableStateOf("") }
             var isStandbyMoveSheetVisible by remember { mutableStateOf(false) }
 
@@ -1443,6 +1455,8 @@ fun FeatureSettingsScreen(
                                     viewModel = viewModel,
                                     modifier = Modifier.padding(top = 16.dp),
                                     highlightSetting = highlightSetting,
+                                    activeSubMenu = quickBallActiveSubMenu,
+                                    onSubMenuChange = { quickBallActiveSubMenu = it },
                                 )
                             }
 
@@ -1510,23 +1524,36 @@ fun FeatureSettingsScreen(
                 }
 
                 val isStandbyMultiSelecting = featureId == "Standby apps" && standbyAppsSelectedPackages.isNotEmpty()
+                val isQuickBallSubMenu = featureId == QUICK_BALL_FEATURE_ID && quickBallActiveSubMenu != null
 
                 ProvideBottomBar(
                     route = route,
                     spec =
                         BottomBarSpec(
                             title =
-                                if (isStandbyMultiSelecting) {
-                                    stringResource(R.string.standby_apps_selected_count, standbyAppsSelectedPackages.size)
-                                } else {
-                                    pageTitle
+                                when {
+                                    isStandbyMultiSelecting -> {
+                                        stringResource(R.string.standby_apps_selected_count, standbyAppsSelectedPackages.size)
+                                    }
+                                    isQuickBallSubMenu -> {
+                                        stringResource(quickBallActiveSubMenu!!.titleRes)
+                                    }
+                                    else -> {
+                                        pageTitle
+                                    }
                                 },
                             isBeta = if (isStandbyMultiSelecting) false else (featureObj?.isBeta ?: false),
                             onBack = {
-                                if (isStandbyMultiSelecting) {
-                                    standbyAppsSelectedPackages = emptySet()
-                                } else {
-                                    onBack()
+                                when {
+                                    isStandbyMultiSelecting -> {
+                                        standbyAppsSelectedPackages = emptySet()
+                                    }
+                                    isQuickBallSubMenu -> {
+                                        quickBallActiveSubMenu = null
+                                    }
+                                    else -> {
+                                        onBack()
+                                    }
                                 }
                             },
                             fabIconRes =

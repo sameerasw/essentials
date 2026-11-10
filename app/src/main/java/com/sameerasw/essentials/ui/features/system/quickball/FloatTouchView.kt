@@ -174,7 +174,7 @@ class FloatTouchView @JvmOverloads constructor(
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        if (isExpanded) {
+        if (isExpanded && !isFlicking) {
             if (event.action == MotionEvent.ACTION_UP) {
                 if (settings.isQuickBallHaptic()) {
                     IslandHaptics.openClick(context)
@@ -215,7 +215,7 @@ class FloatTouchView @JvmOverloads constructor(
 
                 if (dist > touchSlop) {
                     if (isMoveMode) {
-                        // User held for 3s to enter move mode: Flick-to-Select is disabled, freely drag across screen
+                        // User held for configured duration to enter move mode: Flick-to-Select is bypassed, freely drag across screen
                         if (!isDragging) {
                             isDragging = true
                         }
@@ -223,17 +223,16 @@ class FloatTouchView @JvmOverloads constructor(
                         return true
                     }
 
-                    // Moved before 3s hold threshold: cancel hold runnable
-                    handler.removeCallbacks(holdToMoveRunnable)
-
-                    // Check if inward swipe towards radial arc (Flick-to-Select)
+                    val isVerticalEdge = abs(dy) > abs(dx) * 1.25f
                     val isInward = if (onRight) {
-                        dx < -touchSlop && abs(dx) > abs(dy) * 0.45f
+                        dx < -touchSlop * 0.45f
                     } else {
-                        dx > touchSlop && abs(dx) > abs(dy) * 0.45f
+                        dx > touchSlop * 0.45f
                     }
 
-                    if (settings.isQuickBallFlickToSelect() && (isFlicking || isInward)) {
+                    // Check if inward swipe towards radial arc (Flick-to-Select)
+                    if (settings.isQuickBallFlickToSelect() && (isFlicking || (isInward && !isVerticalEdge))) {
+                        handler.removeCallbacks(holdToMoveRunnable)
                         if (!isFlicking) {
                             isFlicking = true
                             listener?.onFlickStart()
@@ -242,8 +241,9 @@ class FloatTouchView @JvmOverloads constructor(
                         return true
                     }
 
-                    // If Flick-to-Select is disabled, normal immediate drag repositioning
-                    if (!settings.isQuickBallFlickToSelect() && !settings.isQuickBallLockPosition()) {
+                    // Vertical edge drag (or any drag if flick-to-select disabled) without position lock
+                    if (!settings.isQuickBallLockPosition() && !isFlicking && (isVerticalEdge || !settings.isQuickBallFlickToSelect())) {
+                        handler.removeCallbacks(holdToMoveRunnable)
                         if (!isDragging) {
                             isDragging = true
                             if (settings.isQuickBallHaptic()) {
@@ -251,6 +251,7 @@ class FloatTouchView @JvmOverloads constructor(
                             }
                         }
                         listener?.onDragMove(dx, dy)
+                        return true
                     }
                 }
                 return true

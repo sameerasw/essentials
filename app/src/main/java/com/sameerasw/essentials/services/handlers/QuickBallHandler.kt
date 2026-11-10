@@ -296,13 +296,11 @@ class QuickBallHandler(
                     if (isStashed || isStashing) {
                         unstashFab(animated = false)
                     }
-                    expandMenu()
+                    expandMenu(isFlick = true)
                 }
 
                 override fun onFlickMove(rawX: Float, rawY: Float) {
-                    val localX = rawX - (menuParams?.x ?: 0)
-                    val localY = rawY - (menuParams?.y ?: 0)
-                    menuView?.updateHover(localX, localY)
+                    menuView?.updateHover(rawX, rawY)
                 }
 
                 override fun onFlickEnd() {
@@ -545,13 +543,11 @@ class QuickBallHandler(
                     if (isExpanded) return
                     removePillWindow()
                     unstashFab(animated = false)
-                    expandMenu()
+                    expandMenu(isFlick = true)
                 }
 
                 override fun onFlickMove(rawX: Float, rawY: Float) {
-                    val localX = rawX - (menuParams?.x ?: 0)
-                    val localY = rawY - (menuParams?.y ?: 0)
-                    menuView?.updateHover(localX, localY)
+                    menuView?.updateHover(rawX, rawY)
                 }
 
                 override fun onFlickEnd() {
@@ -616,8 +612,8 @@ class QuickBallHandler(
 
     /* -------------------- Expanded Radial Menu Window -------------------- */
 
-    private fun expandMenu() {
-        Log.d(TAG, "expandMenu() called, isExpanded=$isExpanded, isStashed=$isStashed")
+    private fun expandMenu(isFlick: Boolean = false) {
+        Log.d(TAG, "expandMenu() called, isExpanded=$isExpanded, isStashed=$isStashed, isFlick=$isFlick")
         if (isExpanded) return
         isExpanded = true
         fabView?.setExpanded(true)
@@ -628,33 +624,18 @@ class QuickBallHandler(
 
         val (screenWidth, screenHeight) = getScreenDimensions()
         val actualFabX = getEdgeX(screenWidth)
-        val density = service.resources.displayMetrics.density
-
-        val radiusPx = (settings.getQuickBallMenuRadius() * density).toInt()
-        val buttonSizePx = (settings.getQuickBallMenuSize() * density).toInt()
-        val maxReach = radiusPx + buttonSizePx + (24 * density).toInt()
-
-        val isOnRight = actualFabX + fabSizePx / 2 > screenWidth / 2
-        val menuWidth = (maxReach + fabSizePx).coerceAtMost(screenWidth)
-        val menuHeight = (2 * maxReach + fabSizePx).coerceAtMost(screenHeight)
-
-        val windowX = if (isOnRight) screenWidth - menuWidth else 0
-        val windowY = (fabY + fabSizePx / 2 - menuHeight / 2).coerceIn(0, (screenHeight - menuHeight).coerceAtLeast(0))
-
-        val localFabX = if (isOnRight) menuWidth - fabSizePx - edgePaddingPx else edgePaddingPx
-        val localFabY = fabY - windowY
 
         val slotCount = settings.getQuickBallSlotCount()
         val actionList = (1..slotCount).map { settings.getQuickBallSlotAction(it) }
 
         menuView = FloatPanelView(
             context = service,
-            fabX = localFabX,
-            fabY = localFabY,
+            fabX = actualFabX,
+            fabY = fabY,
             fabSize = fabSizePx,
             actions = actionList,
             isOnRight = isOnRight,
-            panelHeight = menuHeight,
+            panelHeight = screenHeight,
             onDismiss = {
                 collapseMenu()
             },
@@ -673,18 +654,15 @@ class QuickBallHandler(
         )
 
         menuParams = createOverlayParams(
-            menuWidth,
-            menuHeight,
+            WindowManager.LayoutParams.MATCH_PARENT,
+            WindowManager.LayoutParams.MATCH_PARENT,
         ).apply {
-            this.x = windowX
-            this.y = windowY
-            flags = flags or
-                WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or
-                WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH
+            this.x = 0
+            this.y = 0
         }
 
         addViewSafe(menuView ?: return, menuParams ?: return)
-        menuView?.animateExpand()
+        menuView?.animateExpand(isFast = isFlick)
     }
 
     private fun collapseMenu() {

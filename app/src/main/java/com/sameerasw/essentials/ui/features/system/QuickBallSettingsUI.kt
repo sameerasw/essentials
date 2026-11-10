@@ -161,28 +161,17 @@ fun QuickBallSettingsUI(
     viewModel: MainViewModel,
     modifier: Modifier = Modifier,
     highlightSetting: String? = null,
+    activeSubMenu: QuickBallSubMenu? = null,
+    onSubMenuChange: (QuickBallSubMenu?) -> Unit = {},
 ) {
     val context = LocalContext.current
     val view = LocalView.current
     val isAccessibilityEnabled = viewModel.isAccessibilityEnabled.value
     var showPermissionSheet by remember { mutableStateOf(false) }
 
-    // Active sub-menu folder state
-    var activeSubMenu by remember {
-        mutableStateOf(
-            when (highlightSetting) {
-                "quick_ball_gestures" -> QuickBallSubMenu.GESTURES
-                "quick_ball_styling" -> QuickBallSubMenu.STYLING
-                "quick_ball_dimensions" -> QuickBallSubMenu.DIMENSIONS
-                "quick_ball_behavior" -> QuickBallSubMenu.BEHAVIOR
-                else -> null
-            }
-        )
-    }
-
     // Intercept hardware/gesture back press when in a sub-menu to return to category hub
     BackHandler(enabled = activeSubMenu != null) {
-        activeSubMenu = null
+        onSubMenuChange(null)
     }
 
     // Dialog & Picker States
@@ -726,7 +715,7 @@ fun QuickBallSettingsUI(
                                             .clip(MaterialTheme.shapes.small)
                                             .clickable {
                                                 HapticUtil.performUIHaptic(view)
-                                                activeSubMenu = menu
+                                                onSubMenuChange(menu)
                                             },
                                         leadingContent = {
                                             Box(
@@ -823,7 +812,7 @@ fun QuickBallSettingsUI(
                     IconButton(
                         onClick = {
                             HapticUtil.performUIHaptic(view)
-                            activeSubMenu = null
+                            onSubMenuChange(null)
                         },
                     ) {
                         Icon(
