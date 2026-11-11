@@ -24,6 +24,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -47,6 +48,11 @@ fun ShakeForHelp(
     val view = LocalView.current
     val enabled by viewModel.isShakeForHelpEnabled
     var showHelp by remember { mutableStateOf(false) }
+    val token = remember { Any() }
+    DisposableEffect(token) {
+        ShakeHostStack.hosts += token
+        onDispose { ShakeHostStack.hosts -= token }
+    }
 
     val currentView by rememberUpdatedState(view)
     val detector =
@@ -54,12 +60,12 @@ fun ShakeForHelp(
             ShakeDetector(
                 context = context,
                 onJerk = { count ->
-                    if (count == 2 && !HelpSheetTracker.isAnyOpen) {
+                    if (count == 2 && !HelpSheetTracker.isAnyOpen && ShakeHostStack.isTop(token)) {
                         HapticUtil.performMicroHaptic(currentView)
                     }
                 },
             ) {
-                if (!HelpSheetTracker.isAnyOpen) {
+                if (!HelpSheetTracker.isAnyOpen && ShakeHostStack.isTop(token)) {
                     HapticUtil.performStrongDoubleHaptic(context)
                     showHelp = true
                 }
@@ -74,6 +80,11 @@ fun ShakeForHelp(
     if (showHelp) {
         FeatureHelpSheet(feature, viewModel) { showHelp = false }
     }
+}
+
+private object ShakeHostStack {
+    val hosts = mutableListOf<Any>()
+    fun isTop(token: Any) = hosts.lastOrNull() === token
 }
 
 @Composable
