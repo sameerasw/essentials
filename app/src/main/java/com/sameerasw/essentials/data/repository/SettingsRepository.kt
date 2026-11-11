@@ -36,6 +36,7 @@ import com.sameerasw.essentials.domain.model.NotificationLightingSweepPosition
 import com.sameerasw.essentials.domain.model.PowerChoice
 import com.sameerasw.essentials.domain.model.RemapSlot
 import com.sameerasw.essentials.domain.model.ScaleAnimationsProfile
+import com.sameerasw.essentials.domain.model.Snippet
 import com.sameerasw.essentials.domain.model.SystemShortcutsState
 import com.sameerasw.essentials.domain.model.TrackedRepo
 import com.sameerasw.essentials.domain.model.github.GitHubUser
@@ -403,6 +404,9 @@ class SettingsRepository(
         const val KEY_KEYBOARD_CLIPBOARD_ENABLED = "keyboard_clipboard_enabled"
         const val KEY_KEYBOARD_LONG_PRESS_SYMBOLS = "keyboard_long_press_symbols"
         const val KEY_KEYBOARD_ACCENTED_CHARACTERS = "keyboard_accented_characters"
+        const val KEY_KEYBOARD_TEXT_SNIPPETS_ENABLED = "keyboard_text_snippets_enabled"
+        const val KEY_KEYBOARD_SNIPPET_PREFIX = "keyboard_snippet_prefix"
+        const val KEY_KEYBOARD_SNIPPETS_DATA = "keyboard_snippets_data"
 
         // Essentials-AirSync Bridge
         const val KEY_AIRSYNC_CONNECTION_ENABLED = "airsync_connection_enabled"
@@ -4890,4 +4894,31 @@ class SettingsRepository(
         } ?: emptyMap()
 
     fun setAppVolumeLevels(levels: Map<String, Float>) = putString(KEY_APP_VOLUME_LEVELS, gson.toJson(levels))
+
+    fun isTextSnippetsEnabled(): Boolean = getBoolean(KEY_KEYBOARD_TEXT_SNIPPETS_ENABLED, false)
+    fun setTextSnippetsEnabled(enabled: Boolean) = putBoolean(KEY_KEYBOARD_TEXT_SNIPPETS_ENABLED, enabled)
+
+    fun getSnippetPrefix(): String = getString(KEY_KEYBOARD_SNIPPET_PREFIX, ";") ?: ";"
+    fun setSnippetPrefix(prefix: String) = putString(KEY_KEYBOARD_SNIPPET_PREFIX, prefix)
+
+    fun getTextSnippets(): List<Snippet> {
+        val json = getString(KEY_KEYBOARD_SNIPPETS_DATA, null) ?: return defaultSnippets()
+        return try {
+            val type = object : TypeToken<List<Snippet>>() {}.type
+            gson.fromJson<List<Snippet>>(json, type) ?: defaultSnippets()
+        } catch (_: Exception) {
+            defaultSnippets()
+        }
+    }
+
+    fun saveTextSnippets(snippets: List<Snippet>) {
+        putString(KEY_KEYBOARD_SNIPPETS_DATA, gson.toJson(snippets))
+    }
+
+    fun defaultSnippets(): List<Snippet> =
+        listOf(
+            Snippet(id = 1L, keyword = "addr", title = "Home Address", content = "123 Main Street, Springfield"),
+            Snippet(id = 2L, keyword = "brb", title = "Be Right Back", content = "Be right back!"),
+            Snippet(id = 3L, keyword = "email", title = "Personal Email", content = "hello@example.com"),
+        )
 }
