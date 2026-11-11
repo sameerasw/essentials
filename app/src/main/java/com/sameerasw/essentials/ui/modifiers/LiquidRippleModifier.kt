@@ -9,6 +9,10 @@
 
 package com.sameerasw.essentials.ui.modifiers
 
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import android.graphics.RenderEffect
 import android.graphics.RuntimeShader
 import android.os.Build
@@ -142,5 +146,17 @@ private object Api33LiquidRipple {
                 renderEffect = null
             }
         }
+    }
+}
+
+object AppRipple {
+    var trigger by mutableIntStateOf(0)
+        private set
+    var origin by mutableStateOf(Offset.Zero)
+        private set
+
+    fun fire(at: Offset) {
+        origin = at
+        trigger++
     }
 }

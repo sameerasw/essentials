@@ -9,6 +9,8 @@
 
 package com.sameerasw.essentials.ui.core.sheets
 
+import androidx.compose.ui.geometry.Offset
+import com.sameerasw.essentials.ui.modifiers.AppRipple
 import com.sameerasw.essentials.R
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.res.stringResource
@@ -67,6 +69,11 @@ fun ShakeForHelp(
             ) {
                 if (!HelpSheetTracker.isAnyOpen && ShakeHostStack.isTop(token)) {
                     HapticUtil.performStrongDoubleHaptic(context)
+                    val root = currentView.rootView
+                    val navBottom = androidx.core.view.ViewCompat.getRootWindowInsets(root)
+                        ?.getInsets(androidx.core.view.WindowInsetsCompat.Type.navigationBars())?.bottom ?: 0
+                    val toolbarCenter = 44f * root.resources.displayMetrics.density
+                    AppRipple.fire(Offset(root.width / 2f, root.height - navBottom - toolbarCenter))
                     showHelp = true
                 }
             }
