@@ -195,6 +195,15 @@ sealed interface Trigger {
     }
 
     @Keep
+    data class SoundModeChanged(
+        @SerializedName("mode") val mode: Action.SoundModeType = Action.SoundModeType.SILENT,
+    ) : Trigger {
+        override val title: Int get() = R.string.diy_trigger_sound_mode
+        override val icon: Int get() = mode.icon
+        override val isConfigurable: Boolean get() = true
+    }
+
+    @Keep
     data object AndroidAutoConnected : Trigger {
         override val title: Int = R.string.diy_trigger_android_auto_connected
         override val icon: Int = R.drawable.rounded_directions_car_24
