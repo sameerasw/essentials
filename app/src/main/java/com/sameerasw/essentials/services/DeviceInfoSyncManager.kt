@@ -327,6 +327,7 @@ object DeviceInfoSyncManager {
         dataMap.putString("watchface_clock_font", prefs.getString("watchface_clock_font", "FLEX") ?: "FLEX")
         dataMap.putInt("watchface_clock_font_size", prefs.getInt("watchface_clock_font_size", 100))
         dataMap.putBoolean("watchface_clock_dual_tone", prefs.getBoolean("watchface_clock_dual_tone", false))
+        dataMap.putBoolean("watchface_clock_24h", prefs.getBoolean("watchface_clock_24h", false))
         dataMap.putBoolean("watchface_clock_outline", prefs.getBoolean("watchface_clock_outline", false))
         dataMap.putInt("watchface_clock_outline_thickness", prefs.getInt("watchface_clock_outline_thickness", 2))
 

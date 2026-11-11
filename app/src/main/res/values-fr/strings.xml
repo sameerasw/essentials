@@ -1547,6 +1547,7 @@ Réinitialiser permet d\'effacer les valeurs personnalisées et le système gér
     <string name="watch_watchface_desc">Customiser le cadran</string>
     <string name="watchface_clock_font_size">Taille de la police</string>
     <string name="watchface_clock_dual_tone_desc">Heures en blanc, minutes colorées</string>
+    <string name="watchface_clock_24h_title">24-hour clock</string>
     <string name="watchface_clock_dual_tone_title">Bicolore</string>
     <string name="watchface_hide_battery_title">Cacher la batterie </string>
     <string name="watchface_hide_battery_desc">Cacher l\'arc de la batterie et son indicateur </string>

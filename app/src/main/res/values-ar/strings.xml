@@ -2137,6 +2137,7 @@
     <string name="qs_secure_sensitive_tiles_desc">طلب فتح القفل قبل تفعيل بلاطات QS الحساسة أثناء القفل</string>
     <string name="watch_watchface_title">واجهة الساعة</string>
     <string name="watch_watchface_desc">تخصيص واجهة الساعة</string>
+    <string name="watchface_clock_24h_title">24-hour clock</string>
     <string name="watchface_clock_dual_tone_title">النغمة المزدوجة</string>
     <string name="watchface_clock_dual_tone_desc">ساعات في اللون الأبيض، دقائق بالألوان المميزة</string>
     <string name="watchface_clock_outline_title">المخطط فقط</string>

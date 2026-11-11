@@ -10,7 +10,6 @@
 package com.sameerasw.essentials.ui.features.watch
 
 import android.content.Context
-import android.text.format.DateFormat
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -82,6 +81,9 @@ fun WatchfaceSettingsUI(
     var clockDualTone by remember {
         mutableStateOf(prefs.getBoolean("watchface_clock_dual_tone", false))
     }
+    var clock24h by remember {
+        mutableStateOf(prefs.getBoolean("watchface_clock_24h", false))
+    }
     var clockOutline by remember {
         mutableStateOf(prefs.getBoolean("watchface_clock_outline", false))
     }
@@ -91,7 +93,7 @@ fun WatchfaceSettingsUI(
 
     val clockFontOptions = listOf("FLEX", "GROWTH", "INFLATE", "ROTATION")
     val calendar = remember { Calendar.getInstance() }
-    val is24Hour = DateFormat.is24HourFormat(context)
+    val is24Hour = clock24h
     val rawHour = calendar.get(Calendar.HOUR)
     val hour = if (is24Hour) calendar.get(Calendar.HOUR_OF_DAY) else if (rawHour == 0) 12 else rawHour
     val minute = calendar.get(Calendar.MINUTE)
@@ -184,6 +186,17 @@ fun WatchfaceSettingsUI(
                 valueRange = 70f..130f,
                 increment = 5f,
                 iconRes = R.drawable.rounded_draw_24,
+            )
+
+            IconToggleItem(
+                iconRes = R.drawable.rounded_av_timer_24,
+                title = stringResource(R.string.watchface_clock_24h_title),
+                isChecked = clock24h,
+                onCheckedChange = {
+                    clock24h = it
+                    prefs.edit().putBoolean("watchface_clock_24h", it).apply()
+                    DeviceInfoSyncManager.forceSync(context)
+                },
             )
 
             IconToggleItem(

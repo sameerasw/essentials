@@ -1656,6 +1656,7 @@ Zudem muss die Einstellung unter Umständen mehrfach angewendet werden, damit si
     <string name="watch_watchface_title">Zifferblatt</string>
     <string name="watch_watchface_desc">Das Zifferblatt anpassen</string>
     <string name="watchface_clock_font_size">Schriftgröße</string>
+    <string name="watchface_clock_24h_title">24-hour clock</string>
     <string name="watchface_clock_dual_tone_title">Zweifarbig</string>
     <string name="watchface_clock_dual_tone_desc">Stunden in Weiß, Minuten in Akzentfarbe</string>
     <string name="watchface_clock_outline_title">Nur Gliederung</string>

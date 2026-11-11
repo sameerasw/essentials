@@ -2916,6 +2916,7 @@
     <string name="watchface_show_glow_desc">Dynamic top accent gradient approaching events and travel</string>
     <string name="watchface_category_clock">Clock</string>
     <string name="watchface_clock_font_size">Font size</string>
+    <string name="watchface_clock_24h_title">24-hour clock</string>
     <string name="watchface_clock_dual_tone_title">Dual tone</string>
     <string name="watchface_clock_dual_tone_desc">Hours in white, minutes in accent color</string>
     <string name="watchface_clock_outline_title">Outline only</string>

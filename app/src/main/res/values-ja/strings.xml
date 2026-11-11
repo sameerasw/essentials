@@ -1630,6 +1630,7 @@
     <string name="watch_watchface_title">時計盤</string>
     <string name="watch_watchface_desc">時計盤をカスタマイズ</string>
     <string name="watchface_clock_font_size">フォントサイズ</string>
+    <string name="watchface_clock_24h_title">24-hour clock</string>
     <string name="watchface_clock_dual_tone_title">デュアルトーン</string>
     <string name="watchface_clock_dual_tone_desc">時間を白、分をアクセントカラーにする</string>
     <string name="watchface_clock_outline_title">アウトラインのみ</string>

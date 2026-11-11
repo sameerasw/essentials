@@ -1731,6 +1731,7 @@
     <string name="watch_complications_title">compilações </string>
     <string name="watch_esim_install_title">Instalar eSIM</string>
     <string name="watch_esim_install_desc">Mesmo em regiões sem suporte</string>
+    <string name="watchface_clock_24h_title">24-hour clock</string>
     <string name="watchface_clock_dual_tone_title">bicolor</string>
     <string name="watchface_clock_dual_tone_desc">Horas em branco, minutos em cor de destaque</string>
     <string name="watchface_clock_outline_title">Apenas o esboço</string>

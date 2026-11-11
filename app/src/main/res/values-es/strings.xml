@@ -1544,6 +1544,7 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla s
     <string name="watch_watchface_title">Esfera de reloj </string>
     <string name="watch_watchface_desc">Personaliza la esfera</string>
     <string name="watchface_clock_font_size">Tamaño de fuente</string>
+    <string name="watchface_clock_24h_title">24-hour clock</string>
     <string name="watchface_clock_dual_tone_title">Doble tono</string>
     <string name="watchface_clock_dual_tone_desc">Horas en blanco, minutos en color acentuado</string>
     <string name="watchface_clock_outline_title">Solo bordes</string>
