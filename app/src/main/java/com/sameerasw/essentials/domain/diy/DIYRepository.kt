@@ -17,16 +17,22 @@ import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
 import com.google.gson.JsonSerializationContext
 import com.google.gson.JsonSerializer
+import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlin.reflect.KClass
 
 object DIYRepository {
     private const val PREFS_NAME = "diy_automations_prefs"
     private const val KEY_AUTOMATIONS = "saved_automations"
+    private const val KEY_MACROS = "saved_macros"
 
     private val _automations = MutableStateFlow<List<Automation>>(emptyList())
     val automations = _automations.asStateFlow()
+
+    private val _macros = MutableStateFlow<List<Macro>>(emptyList())
+    val macros = _macros.asStateFlow()
 
     private var prefs: SharedPreferences? = null
     private val gson =
@@ -81,6 +87,7 @@ object DIYRepository {
         if (prefs != null) return
         prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         reloadAutomations()
+        reloadMacros()
     }
 
     fun reloadAutomations() {
@@ -133,6 +140,52 @@ object DIYRepository {
     }
 
     fun getAutomation(id: String): Automation? = _automations.value.find { it.id == id }
+
+    fun reloadMacros() {
+        val json = prefs?.getString(KEY_MACROS, null)
+        _macros.value = if (json != null) macrosFromJson(json) else emptyList()
+    }
+
+    private fun saveMacrosToPrefs() {
+        val json = macrosToJson(_macros.value)
+        prefs?.edit()?.putString(KEY_MACROS, json)?.apply()
+    }
+
+    fun addMacro(macro: Macro) {
+        _macros.update { it + macro }
+        saveMacrosToPrefs()
+    }
+
+    fun updateMacro(macro: Macro) {
+        if (_macros.value.none { it.id == macro.id }) return
+        _macros.update { current ->
+            current.map { if (it.id == macro.id) macro else it }
+        }
+        saveMacrosToPrefs()
+    }
+
+    fun removeMacro(id: String) {
+        _macros.update { current ->
+            current.filter { it.id != id }
+        }
+        saveMacrosToPrefs()
+    }
+
+    fun getMacro(id: String): Macro? = _macros.value.find { it.id == id }
+
+    internal fun macrosToJson(macros: List<Macro>): String = gson.toJson(macros)
+
+    internal fun macrosFromJson(json: String): List<Macro> =
+        try {
+            val type = object : TypeToken<List<Macro>>() {}.type
+            val list: List<Macro> = gson.fromJson(json, type) ?: emptyList()
+            // Gson puts nulls in the list for unknown types despite the non-null type
+            list.filterNotNull().map { macro ->
+                macro.copy(actions = macro.actionList.filterNotNull())
+            }
+        } catch (_: Exception) {
+            emptyList()
+        }
 
     private fun updateActionShortcutLauncherState() {
         val context = appContext ?: return

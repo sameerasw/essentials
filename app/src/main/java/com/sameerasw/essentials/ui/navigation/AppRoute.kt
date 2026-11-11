@@ -15,6 +15,7 @@ import com.sameerasw.essentials.SettingsActivity
 import com.sameerasw.essentials.domain.DIYTabs
 import com.sameerasw.essentials.domain.registry.FeatureRegistry
 import com.sameerasw.essentials.ui.activities.AutomationEditorActivity
+import com.sameerasw.essentials.ui.activities.MacroEditorActivity
 import com.sameerasw.essentials.ui.activities.PixelSearchbarSettingsActivity
 import com.sameerasw.essentials.ui.activities.WallpaperActivity
 import com.sameerasw.essentials.ui.activities.YourAndroidActivity
@@ -41,6 +42,10 @@ sealed interface AppRoute {
     data class AutomationEditor(
         val automationId: String? = null,
         val automationType: String? = null,
+    ) : AppRoute
+
+    data class MacroEditor(
+        val macroId: String? = null,
     ) : AppRoute
 }
 
@@ -108,6 +113,8 @@ object AppRoutes {
                     intent.getStringExtra(AutomationEditorActivity.EXTRA_AUTOMATION_ID),
                     intent.getStringExtra(AutomationEditorActivity.EXTRA_AUTOMATION_TYPE),
                 )
+            MacroEditorActivity::class.java.name ->
+                AppRoute.MacroEditor(intent.getStringExtra(MacroEditorActivity.EXTRA_MACRO_ID))
             YourAndroidActivity::class.java.name -> AppRoute.HomeTab(DIYTabs.YOUR_ANDROID)
             SettingsActivity::class.java.name ->
                 AppRoute.HomeTab(DIYTabs.SETTINGS, intent.getBooleanExtra("expand_permissions", false))
@@ -151,3 +158,4 @@ fun List<AppRoute>.openFeatureIds(): Set<String> =
     }
 
 val LocalOpenAutomationId = androidx.compose.runtime.compositionLocalOf<String?> { null }
+val LocalOpenMacroId = androidx.compose.runtime.compositionLocalOf<String?> { null }

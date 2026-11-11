@@ -142,4 +142,36 @@ object ActionRegistry {
                 ),
             ),
         ) + getCategories(sdkInt, screenOnOnly = true)
+
+    // Saved macros as RunMacro actions, filtered for screen-off if needed, or null when there are none
+    fun getMacroCategory(
+        macros: List<Macro> = DIYRepository.macros.value,
+        screenOnOnly: Boolean? = null,
+    ): ActionCategory? {
+        val filteredMacros =
+            if (screenOnOnly == false) {
+                val screenOffClasses =
+                    getCategories(screenOnOnly = false)
+                        .flatMap { it.actions }
+                        .map { it::class }
+                        .toSet()
+                val allActionClasses =
+                    getCategories(screenOnOnly = null)
+                        .flatMap { it.actions }
+                        .map { it::class }
+                        .toSet()
+                val disallowedClasses = allActionClasses - screenOffClasses
+                macros.filter { macro ->
+                    macro.actionList.none { it::class in disallowedClasses }
+                }
+            } else {
+                macros
+            }
+
+        return filteredMacros
+            .takeIf { it.isNotEmpty() }
+            ?.let { validMacros ->
+                ActionCategory(R.string.diy_category_macros, validMacros.map { Action.RunMacro(it.id) })
+            }
+    }
 }
