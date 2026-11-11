@@ -116,6 +116,7 @@ import com.sameerasw.essentials.ui.features.system.HilightProgressSettingsUI
 import com.sameerasw.essentials.ui.features.system.HilightSettingsUI
 import com.sameerasw.essentials.ui.features.system.HilightStatus
 import com.sameerasw.essentials.ui.features.system.KeyboardSettingsUI
+import com.sameerasw.essentials.ui.features.system.SnippetsSettingsUI
 import com.sameerasw.essentials.ui.features.system.LiveWallpaperSettingsUI
 import com.sameerasw.essentials.ui.features.system.LocationReachedSettingsUI
 import com.sameerasw.essentials.ui.features.system.LockScreenClockSettingsUI
@@ -428,6 +429,7 @@ fun FeatureSettingsScreen(
 
                         "Shut-Up!" -> !isWriteSecureSettingsEnabled || !viewModel.isUsageStatsPermissionGranted.value
                         "Power and Battery" -> !isWriteSecureSettingsEnabled
+                        "Text Snippets" -> !isAccessibilityEnabled
                         "Networks" ->
                             !isWriteSecureSettingsEnabled &&
                                 !com.sameerasw.essentials.utils.ShellUtils.hasPermission(
@@ -1236,6 +1238,13 @@ fun FeatureSettingsScreen(
                                 )
                             }
 
+                            "Text Snippets" -> {
+                                SnippetsSettingsUI(
+                                    viewModel = viewModel,
+                                    modifier = Modifier.padding(top = 16.dp),
+                                )
+                            }
+
                             "Batteries" -> {
                                 BatteriesSettingsUI(
                                     viewModel = viewModel,
@@ -1535,6 +1544,7 @@ fun FeatureSettingsScreen(
                                 when {
                                     isStandbyMultiSelecting -> R.drawable.rounded_mobiledata_arrows_24
                                     (featureId == "Island" || featureId in ISLAND_SUB_PAGE_IDS) -> R.drawable.rounded_play_arrow_24
+                                    featureId == "Text Snippets" -> R.drawable.rounded_add_24
                                     else -> null
                                 },
                             fabAction =
@@ -1545,12 +1555,19 @@ fun FeatureSettingsScreen(
                                             viewModel.triggerIslandPreview(context)
                                         }
                                     }
+                                    featureId == "Text Snippets" -> {
+                                        {
+                                            viewModel.editingSnippet.value = null
+                                            viewModel.isAddSnippetSheetVisible.value = true
+                                        }
+                                    }
                                     else -> null
                                 },
                             fabContentDescription =
                                 when {
                                     isStandbyMultiSelecting -> stringResource(R.string.action_move_bucket)
                                     (featureId == "Island" || featureId in ISLAND_SUB_PAGE_IDS) -> stringResource(R.string.action_preview)
+                                    featureId == "Text Snippets" -> stringResource(R.string.snippets_dialog_new_title)
                                     else -> null
                                 },
                             onHelpClick =
