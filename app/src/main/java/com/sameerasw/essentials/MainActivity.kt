@@ -9,6 +9,8 @@
 
 package com.sameerasw.essentials
 
+import androidx.compose.ui.layout.boundsInRoot
+import androidx.compose.ui.layout.onGloballyPositioned
 import com.sameerasw.essentials.ui.modifiers.AppRipple
 import com.sameerasw.essentials.ui.modifiers.liquidRipple
 import com.sameerasw.essentials.ui.navigation.LocalOpenAutomationId
@@ -807,7 +809,10 @@ class MainActivity : AppCompatActivity() {
                                                             )
                                                         },
                                                     floatingActionButton = {
-                                                        Box {
+                                                        var fabCenter by remember { mutableStateOf(androidx.compose.ui.geometry.Offset.Zero) }
+                                                        Box(
+                                                            Modifier.onGloballyPositioned { fabCenter = it.boundsInRoot().center },
+                                                        ) {
                                                             // Menu anchor
                                                             FloatingActionButton(
                                                                 onClick = {
@@ -816,6 +821,7 @@ class MainActivity : AppCompatActivity() {
                                                                         (detailSpec?.fabAction ?: detailSpec?.onHelpClick)?.invoke()
                                                                     } else when (currentTab) {
                                                                         DIYTabs.ESSENTIALS -> {
+                                                                            AppRipple.fire(fabCenter)
                                                                             isSearchActive = true
                                                                         }
 
@@ -832,6 +838,7 @@ class MainActivity : AppCompatActivity() {
                                                                         }
 
                                                                         DIYTabs.FREEZE -> {
+                                                                            AppRipple.fire(fabCenter)
                                                                             isSearchActive = true
                                                                         }
 
