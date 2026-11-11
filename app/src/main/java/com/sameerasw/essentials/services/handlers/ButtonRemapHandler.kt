@@ -114,7 +114,7 @@ class ButtonRemapHandler(
 
         if (shizukuOwnsKeys) {
             val isTorchControl =
-                flashlightHandler.isTorchOn && (isAdjustEnabled || isGlobalEnabled) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+                flashlightHandler.isTorchOn && (isAdjustEnabled || isGlobalEnabled) && flashlightHandler.canAdjustIntensity()
 
             val slot = RemapSlot.forKeyCode(keyCode, isScreenOn = false)
             val isMapped = slot != null && settingsRepository.getRemapActions(slot.prefKey).isNotEmpty()
@@ -125,7 +125,7 @@ class ButtonRemapHandler(
         }
 
         // Flashlight Brightness Control (Volume Keys + Torch On)
-        if (flashlightHandler.isTorchOn && (isAdjustEnabled || isGlobalEnabled) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        if (flashlightHandler.isTorchOn && (isAdjustEnabled || isGlobalEnabled) && flashlightHandler.canAdjustIntensity()) {
             val isAlwaysTurnOffEnabled =
                 prefs.getBoolean("flashlight_always_turn_off_enabled", false)
             val isFlashlightCapableButton = isFlashlightMapped(keyCode)
