@@ -9,6 +9,9 @@
 
 package com.sameerasw.essentials
 
+import com.sameerasw.essentials.ui.modifiers.liquidRipple
+import androidx.compose.ui.layout.positionInRoot
+import androidx.compose.ui.layout.onGloballyPositioned
 import com.sameerasw.essentials.ui.navigation.LocalOpenAutomationId
 import androidx.compose.runtime.CompositionLocalProvider
 import com.sameerasw.essentials.ui.navigation.openFeatureIds
@@ -1122,12 +1125,39 @@ class MainActivity : AppCompatActivity() {
                                                                     }
 
                                                                     DIYTabs.SETTINGS -> {
-                                                                        SettingsContent(
-                                                                            viewModel = viewModel,
-                                                                            contentPadding = contentPadding,
-                                                                            expandPermissionsInitial = navViewModel.expandSettingsPermissions,
-                                                                            modifier = Modifier.fillMaxSize(),
-                                                                        )
+                                                                        val isRippleEnabled by viewModel.isRippleEnabled
+                                                                        var rippleTrigger by remember { mutableStateOf(0) }
+                                                                        var rippleOrigin by remember { mutableStateOf(androidx.compose.ui.geometry.Offset.Zero) }
+                                                                        var rippleBoxOffset by remember { mutableStateOf(androidx.compose.ui.geometry.Offset.Zero) }
+                                                                        val fireRipple: (androidx.compose.ui.geometry.Offset) -> Unit = { pos ->
+                                                                            rippleOrigin = pos - rippleBoxOffset
+                                                                            rippleTrigger++
+                                                                        }
+                                                                        Box(
+                                                                            modifier = Modifier
+                                                                                .fillMaxSize()
+                                                                                .onGloballyPositioned { rippleBoxOffset = it.positionInRoot() }
+                                                                                .liquidRipple(
+                                                                                    trigger = rippleTrigger,
+                                                                                    origin = rippleOrigin,
+                                                                                    enabled = isRippleEnabled,
+                                                                                    durationMillis = 2800,
+                                                                                    amplitudeDp = 34f,
+                                                                                    frequency = 12f,
+                                                                                    decay = 4.5f,
+                                                                                    speedDp = 1400f,
+                                                                                ),
+                                                                        ) {
+                                                                            SettingsContent(
+                                                                                viewModel = viewModel,
+                                                                                contentPadding = contentPadding,
+                                                                                expandPermissionsInitial = navViewModel.expandSettingsPermissions,
+                                                                                onAppIconSelectedWithPosition = { _, pos -> fireRipple(pos) },
+                                                                                onAvatarLongClickWithPosition = fireRipple,
+                                                                                onRippleToggleEnabledWithPosition = fireRipple,
+                                                                                modifier = Modifier.fillMaxSize(),
+                                                                            )
+                                                                        }
                                                                     }
                                                                 }
                                                             }
