@@ -499,7 +499,7 @@ fun PixelSearchResultsScreen(
             }
 
             if (isSettingsEnabled) {
-                val systemSettings = loadSystemSettings(trimmed)
+                val systemSettings = loadSystemSettings(context, trimmed)
                 val results =
                     SearchRegistry.search(
                         context,
@@ -1607,60 +1607,60 @@ private fun loadContacts(context: Context, query: String): List<PixelSearchResul
     return results
 }
 
-private fun loadSystemSettings(query: String): List<PixelSearchResultItem.SystemSettingItem> {
+private fun loadSystemSettings(context: Context, query: String): List<PixelSearchResultItem.SystemSettingItem> {
     val q = query.lowercase()
     val all = listOf(
         PixelSearchResultItem.SystemSettingItem(
-            title = "Wi-Fi",
-            subtitle = "Network & internet",
+            title = context.getString(R.string.island_network_wifi),
+            subtitle = context.getString(R.string.pixel_search_setting_network),
             iconRes = R.drawable.rounded_android_wifi_3_bar_24,
             intent = Intent(Settings.ACTION_WIFI_SETTINGS).apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) },
         ),
         PixelSearchResultItem.SystemSettingItem(
-            title = "Bluetooth",
-            subtitle = "Connected devices",
+            title = context.getString(R.string.icon_bluetooth),
+            subtitle = context.getString(R.string.pixel_search_setting_bluetooth),
             iconRes = R.drawable.rounded_bluetooth_24,
             intent = Intent(Settings.ACTION_BLUETOOTH_SETTINGS).apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) },
         ),
         PixelSearchResultItem.SystemSettingItem(
-            title = "Display",
-            subtitle = "Brightness, theme, screen timeout",
+            title = context.getString(R.string.cat_display),
+            subtitle = context.getString(R.string.pixel_search_setting_display),
             iconRes = R.drawable.rounded_mobile_text_2_24,
             intent = Intent(Settings.ACTION_DISPLAY_SETTINGS).apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) },
         ),
         PixelSearchResultItem.SystemSettingItem(
-            title = "Sound & vibration",
-            subtitle = "Volume, haptics, Do Not Disturb",
+            title = context.getString(R.string.pixel_search_setting_sound_title),
+            subtitle = context.getString(R.string.pixel_search_setting_sound),
             iconRes = R.drawable.rounded_volume_up_24,
             intent = Intent(Settings.ACTION_SOUND_SETTINGS).apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) },
         ),
         PixelSearchResultItem.SystemSettingItem(
-            title = "Battery",
-            subtitle = "Battery usage and saver",
+            title = context.getString(R.string.icon_battery),
+            subtitle = context.getString(R.string.pixel_search_setting_battery),
             iconRes = R.drawable.rounded_battery_charging_60_24,
             intent = Intent(Intent.ACTION_POWER_USAGE_SUMMARY).apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) },
         ),
         PixelSearchResultItem.SystemSettingItem(
-            title = "Apps",
-            subtitle = "Installed apps and permissions",
+            title = context.getString(R.string.tab_apps),
+            subtitle = context.getString(R.string.pixel_search_setting_apps),
             iconRes = R.drawable.rounded_apps_24,
             intent = Intent(Settings.ACTION_APPLICATION_SETTINGS).apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) },
         ),
         PixelSearchResultItem.SystemSettingItem(
-            title = "Notifications",
-            subtitle = "Notification history and alerts",
+            title = context.getString(R.string.option_notifications),
+            subtitle = context.getString(R.string.pixel_search_setting_notifications),
             iconRes = R.drawable.rounded_notifications_unread_24,
             intent = Intent(Settings.ACTION_ALL_APPS_NOTIFICATION_SETTINGS).apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) },
         ),
         PixelSearchResultItem.SystemSettingItem(
-            title = "Storage",
-            subtitle = "Internal storage, cleanup",
+            title = context.getString(R.string.label_device_storage),
+            subtitle = context.getString(R.string.pixel_search_setting_storage),
             iconRes = R.drawable.rounded_save_24,
             intent = Intent(Settings.ACTION_INTERNAL_STORAGE_SETTINGS).apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) },
         ),
         PixelSearchResultItem.SystemSettingItem(
-            title = "Security & privacy",
-            subtitle = "Screen lock, app permissions",
+            title = context.getString(R.string.pixel_search_setting_security_title),
+            subtitle = context.getString(R.string.pixel_search_setting_security),
             iconRes = R.drawable.rounded_security_24,
             intent = Intent(Settings.ACTION_SECURITY_SETTINGS).apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) },
         ),
@@ -1680,7 +1680,7 @@ private fun loadShortcuts(context: Context, query: String): List<PixelSearchResu
             PixelSearchResultItem.ShortcutItem(
                 id = "shortcut_wallpaper",
                 label = context.getString(R.string.feat_daily_wallpaper_title),
-                subtitle = "Essentials wallpaper changer",
+                subtitle = context.getString(R.string.pixel_search_shortcut_wallpaper),
                 iconRes = R.drawable.rounded_wallpaper_24,
                 intent = Intent(context, WallpaperActivity::class.java).apply {
                     action = Intent.ACTION_VIEW
@@ -1694,8 +1694,8 @@ private fun loadShortcuts(context: Context, query: String): List<PixelSearchResu
         items.add(
             PixelSearchResultItem.ShortcutItem(
                 id = "shortcut_freeze",
-                label = "App Freezing",
-                subtitle = "Freeze unused apps",
+                label = context.getString(R.string.freeze_activity_title),
+                subtitle = context.getString(R.string.pixel_search_shortcut_freeze),
                 iconRes = R.drawable.rounded_mode_cool_24,
                 intent = Intent(context, AppFreezingActivity::class.java).apply {
                     addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)

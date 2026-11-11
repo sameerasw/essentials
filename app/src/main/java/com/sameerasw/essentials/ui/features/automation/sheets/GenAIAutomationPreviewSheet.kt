@@ -209,7 +209,7 @@ fun GenAIAutomationPreviewSheet(
                                 modifier = Modifier.fillMaxWidth(),
                             ) {
                                 Text(
-                                    text = "No actions defined",
+                                    text = stringResource(R.string.diy_no_actions_defined),
                                     style = MaterialTheme.typography.bodyMedium,
                                     color = MaterialTheme.colorScheme.onPrimaryContainer,
                                     modifier = Modifier.padding(14.dp),

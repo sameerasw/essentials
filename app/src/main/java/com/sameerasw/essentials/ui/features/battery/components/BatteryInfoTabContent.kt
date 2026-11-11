@@ -119,7 +119,7 @@ fun BatteryInfoTabContent(
     RoundedCardContainer(modifier = Modifier.fillMaxWidth()) {
         InfoDetailRow(
             title = R.string.label_battery_health,
-            value = BatteryInfoUtil.formatHealth(batteryDetails.health),
+            value = BatteryInfoUtil.formatHealth(LocalContext.current, batteryDetails.health),
             iconRes = R.drawable.rounded_ecg_heart_24,
         )
         InfoDetailRow(
@@ -191,7 +191,7 @@ fun BatteryInfoTabContent(
         // Plug type renamed to "Mode"
         InfoDetailRow(
             title = R.string.label_battery_mode,
-            value = BatteryInfoUtil.formatPlugged(batteryDetails.plugged),
+            value = BatteryInfoUtil.formatPlugged(LocalContext.current, batteryDetails.plugged),
             iconRes = R.drawable.rounded_cable_24,
         )
 
@@ -212,7 +212,7 @@ fun BatteryInfoTabContent(
                     batteryDetails.chargingPolicy?.let { policy ->
                         InfoDetailRow(
                             title = R.string.label_battery_charging_policy,
-                            value = BatteryInfoUtil.formatChargingPolicy(policy),
+                            value = BatteryInfoUtil.formatChargingPolicy(LocalContext.current, policy),
                             iconRes = R.drawable.rounded_info_24,
                         )
                     }
@@ -243,7 +243,7 @@ fun BatteryInfoTabContent(
                     batteryDetails.chargingStatusNew?.let { statusNew ->
                         InfoDetailRow(
                             title = R.string.label_battery_charging_status,
-                            value = BatteryInfoUtil.formatChargingStatusNew(statusNew),
+                            value = BatteryInfoUtil.formatChargingStatusNew(LocalContext.current, statusNew),
                             iconRes = R.drawable.rounded_charger_24
                         )
                     }
@@ -252,7 +252,7 @@ fun BatteryInfoTabContent(
                     batteryDetails.chargeTimeRemainingMs?.let { timeMs ->
                         InfoDetailRow(
                             title = R.string.label_battery_charge_time_remaining,
-                            value = BatteryInfoUtil.formatChargeTimeRemaining(timeMs),
+                            value = BatteryInfoUtil.formatChargeTimeRemaining(LocalContext.current, timeMs),
                             iconRes = R.drawable.battery_android_frame_bolt_24px,
                         )
                     }
@@ -366,7 +366,7 @@ fun BatteryInfoTabContent(
             batteryDetails.partStatus?.let { part ->
                 InfoDetailRow(
                     title = R.string.label_battery_part_status,
-                    value = BatteryInfoUtil.formatPartStatus(part),
+                    value = BatteryInfoUtil.formatPartStatus(LocalContext.current, part),
                     iconRes = R.drawable.battery_android_frame_shield_24px,
                 )
             }

@@ -69,7 +69,7 @@ fun WatermarkPreview(
                     if (targetModel != visibleModel) {
                         AsyncImage(
                             model = targetModel,
-                            contentDescription = "Preview",
+                            contentDescription = stringResource(R.string.action_preview),
                             modifier = Modifier.fillMaxSize(),
                             contentScale = ContentScale.Fit,
                             onSuccess = {

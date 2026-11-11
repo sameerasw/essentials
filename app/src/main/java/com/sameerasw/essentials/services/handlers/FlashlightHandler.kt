@@ -233,10 +233,10 @@ class FlashlightHandler(
             val channel =
                 NotificationChannel(
                     CHANNEL_ID_FLASHLIGHT,
-                    "Flashlight Controls",
+                    service.getString(R.string.flashlight_channel_name),
                     NotificationManager.IMPORTANCE_HIGH,
                 ).apply {
-                    description = "Controls for active flashlight"
+                    description = service.getString(R.string.flashlight_channel_desc)
                     setShowBadge(false)
                     setSound(null, null)
                     enableVibration(false)
@@ -284,8 +284,8 @@ class FlashlightHandler(
                     Notification
                         .Builder(service, CHANNEL_ID_FLASHLIGHT)
                         .setSmallIcon(R.drawable.rounded_flashlight_on_24)
-                        .setContentTitle("Flashlight active")
-                        .setContentText("Brightness: $percentage%")
+                        .setContentTitle(service.getString(R.string.flashlight_active_title))
+                        .setContentText(service.getString(R.string.flashlight_brightness, percentage))
                         .setOngoing(true)
                         .setOnlyAlertOnce(true)
                         .setCategory(Notification.CATEGORY_SERVICE)
@@ -376,14 +376,14 @@ class FlashlightHandler(
             NotificationCompat
                 .Builder(service, CHANNEL_ID_FLASHLIGHT)
                 .setSmallIcon(R.drawable.rounded_flashlight_on_24)
-                .setContentTitle("Flashlight active")
-                .setContentText("Brightness: $percentage%")
+                .setContentTitle(service.getString(R.string.flashlight_active_title))
+                .setContentText(service.getString(R.string.flashlight_brightness, percentage))
                 .setOngoing(true)
                 .setOnlyAlertOnce(true)
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setCategory(NotificationCompat.CATEGORY_SERVICE)
                 .addAction(R.drawable.rounded_keyboard_arrow_down_24, "-", decreaseIntent)
-                .addAction(R.drawable.rounded_power_settings_new_24, "Off", offIntent)
+                .addAction(R.drawable.rounded_power_settings_new_24, service.getString(R.string.off), offIntent)
                 .addAction(R.drawable.rounded_keyboard_arrow_up_24, "+", increaseIntent)
                 .addExtras(
                     android.os.Bundle().apply {

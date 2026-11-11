@@ -325,7 +325,7 @@ fun KeyboardSettingsUI(
 
             IconToggleItem(
                 iconRes = R.drawable.rounded_book_2_24,
-                title = "User Dictionary (Learn words)",
+                title = stringResource(R.string.keyboard_user_dictionary_title),
                 isChecked = viewModel.isUserDictionaryEnabled.value,
                 onCheckedChange = { viewModel.setUserDictionaryEnabled(it, context) },
                 modifier = Modifier.highlight(highlightSetting == "user_dictionary_enabled"),
@@ -334,7 +334,7 @@ fun KeyboardSettingsUI(
             if (viewModel.isUserDictionaryEnabled.value) {
                 IconToggleItem(
                     iconRes = R.drawable.rounded_settings_24,
-                    title = "Manage Learned Words",
+                    title = stringResource(R.string.keyboard_manage_learned_words),
                     isChecked = false,
                     showToggle = false,
                     onCheckedChange = { viewModel.isUserDictionarySheetVisible.value = true },

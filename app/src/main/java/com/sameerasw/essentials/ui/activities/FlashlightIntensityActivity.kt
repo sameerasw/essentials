@@ -390,7 +390,7 @@ fun FlashlightIntensityOverlay(onDismiss: () -> Unit) {
                     ) {
                         Icon(
                             painter = painterResource(id = R.drawable.rounded_award_star_24),
-                            contentDescription = "Toggle special modes",
+                            contentDescription = stringResource(R.string.flashlight_toggle_special_modes),
                             modifier = Modifier.size(24.dp),
                         )
                     }

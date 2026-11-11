@@ -172,7 +172,7 @@ fun PocketModeSettingsUI(
                     painter =
                         androidx.compose.ui.res
                             .painterResource(id = R.drawable.rounded_info_24),
-                    contentDescription = "Warning",
+                    contentDescription = stringResource(R.string.content_desc_warning),
                     tint = MaterialTheme.colorScheme.onErrorContainer,
                     modifier = Modifier.size(24.dp),
                 )

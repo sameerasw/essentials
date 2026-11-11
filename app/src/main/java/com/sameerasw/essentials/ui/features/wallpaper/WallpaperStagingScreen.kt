@@ -292,7 +292,7 @@ fun WallpaperStagingScreen(
                     }
 
                     Text(
-                        text = "Photo by ${currentPhoto.authorName}",
+                        text = stringResource(R.string.wallpaper_photo_by, currentPhoto.authorName),
                         style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Medium),
                         color = MaterialTheme.colorScheme.onSurface,
                         maxLines = 1,
@@ -416,7 +416,7 @@ fun WallpaperStagingScreen(
                             } else {
                                 Toast.makeText(
                                     context,
-                                    "Failed to commit. Ensure GitHub token is connected in Settings.",
+                                    context.getString(R.string.wallpaper_commit_failed),
                                     Toast.LENGTH_LONG,
                                 ).show()
                             }
@@ -549,12 +549,12 @@ fun WallpaperStagingScreen(
                             loadData()
                         },
                     ) {
-                        Text("Save")
+                        Text(stringResource(R.string.action_save))
                     }
                 },
                 dismissButton = {
                     TextButton(onClick = { showApiKeyDialog = false }) {
-                        Text("Cancel")
+                        Text(stringResource(R.string.action_cancel))
                     }
                 },
             )

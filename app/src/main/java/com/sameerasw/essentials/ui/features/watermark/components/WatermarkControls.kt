@@ -290,7 +290,7 @@ fun WatermarkControls(
 
         // Border Section
         Text(
-            text = "Border",
+            text = stringResource(R.string.watermark_border),
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 8.dp),
             color = MaterialTheme.colorScheme.onSurfaceVariant,

@@ -149,7 +149,7 @@ fun ShutUpPerAppSettingsSheet(
                                 android.widget.Toast
                                     .makeText(
                                         context,
-                                        "Please enter the Shizuku auth token in Essentials settings",
+                                        context.getString(R.string.shut_up_auth_token_missing),
                                         android.widget.Toast.LENGTH_LONG,
                                     ).show()
                             }

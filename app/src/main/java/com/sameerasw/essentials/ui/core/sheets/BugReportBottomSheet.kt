@@ -873,7 +873,7 @@ fun BugReportBottomSheet(
                                 Toast
                                     .makeText(
                                         context,
-                                        e.localizedMessage ?: "Failed to share report",
+                                        e.localizedMessage ?: context.getString(R.string.bug_report_share_failed),
                                         Toast.LENGTH_SHORT,
                                     ).show()
                             }

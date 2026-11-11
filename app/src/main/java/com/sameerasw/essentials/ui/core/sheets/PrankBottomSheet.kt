@@ -138,7 +138,7 @@ fun PrankBottomSheet(
                                         android.widget.Toast
                                             .makeText(
                                                 view.context,
-                                                "Prank reset for testing",
+                                                view.context.getString(R.string.prank_reset_toast),
                                                 android.widget.Toast.LENGTH_SHORT,
                                             ).show()
                                     },

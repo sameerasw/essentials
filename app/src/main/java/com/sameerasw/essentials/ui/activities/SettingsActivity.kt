@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials
 
+import com.sameerasw.essentials.R
 import com.sameerasw.essentials.ui.navigation.AppRoutes
 import com.sameerasw.essentials.BuildConfig
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -269,16 +270,16 @@ fun SettingsContent(
                 context.contentResolver.openInputStream(uri)?.use { inputStream ->
                     if (viewModel.importConfigs(context, inputStream, keepPrefs)) {
                         Toast
-                            .makeText(context, "Config imported successfully", Toast.LENGTH_SHORT)
+                            .makeText(context, context.getString(R.string.settings_config_imported), Toast.LENGTH_SHORT)
                             .show()
                     } else {
                         Toast
-                            .makeText(context, "Failed to import config", Toast.LENGTH_SHORT)
+                            .makeText(context, context.getString(R.string.settings_config_import_failed), Toast.LENGTH_SHORT)
                             .show()
                     }
                 }
             } catch (e: Exception) {
-                Toast.makeText(context, "Failed to import config", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, context.getString(R.string.settings_config_import_failed), Toast.LENGTH_SHORT).show()
                 e.printStackTrace()
             } finally {
                 selectedImportUri = null
@@ -296,11 +297,11 @@ fun SettingsContent(
                     context.contentResolver.openOutputStream(it)?.use { outputStream ->
                         viewModel.exportConfigs(context, outputStream)
                         Toast
-                            .makeText(context, "Config exported successfully", Toast.LENGTH_SHORT)
+                            .makeText(context, context.getString(R.string.settings_config_exported), Toast.LENGTH_SHORT)
                             .show()
                     }
                 } catch (e: Exception) {
-                    Toast.makeText(context, "Failed to export config", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, context.getString(R.string.settings_config_export_failed), Toast.LENGTH_SHORT).show()
                     e.printStackTrace()
                 }
             }
@@ -433,12 +434,12 @@ fun SettingsContent(
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(
-                    text = "Shizuku Auth Token",
+                    text = stringResource(R.string.shizuku_auth_token_title),
                     style = MaterialTheme.typography.headlineSmall,
                     color = MaterialTheme.colorScheme.onSurface,
                 )
                 Text(
-                    text = "In shizuku, in the 'Control Shizuku with automation apps' section, Open 'View intents' and copy and paste the auth token from 'Extras' section.\n\nThis allows Essentials to automate and re-start Shizuku on demand in features such as Shut-Up",
+                    text = stringResource(R.string.shizuku_auth_token_help),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -446,7 +447,7 @@ fun SettingsContent(
                     onClick = { showShizukuHelpBottomSheet = false },
                     modifier = Modifier.fillMaxWidth(),
                 ) {
-                    Text("Got it")
+                    Text(stringResource(R.string.action_got_it))
                 }
             }
         }
@@ -498,7 +499,7 @@ fun SettingsContent(
 
         // Updates 
         Text(
-            text = "Updates",
+            text = stringResource(R.string.label_updates),
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -507,8 +508,8 @@ fun SettingsContent(
         RoundedCardContainer {
             IconToggleItem(
                 iconRes = R.drawable.rounded_mobile_check_24,
-                title = "Auto check for updates",
-                description = "Check for updates at app launch",
+                title = stringResource(R.string.label_auto_check_updates),
+                description = stringResource(R.string.desc_auto_check_updates),
                 isChecked = isAutoUpdateEnabled,
                 onCheckedChange = { viewModel.setAutoUpdateEnabled(it, context) },
             )
@@ -524,7 +525,7 @@ fun SettingsContent(
             )
             IconToggleItem(
                 iconRes = R.drawable.rounded_notifications_unread_24,
-                title = "Notify for new updates",
+                title = stringResource(R.string.label_notify_new_updates),
                 isChecked = isUpdateNotificationEnabled,
                 onCheckedChange = { viewModel.setUpdateNotificationEnabled(it, context) },
             )
@@ -763,7 +764,7 @@ fun SettingsContent(
                         painterResource(
                             id = if (isPermissionsExpanded) R.drawable.rounded_keyboard_arrow_up_24 else R.drawable.rounded_keyboard_arrow_down_24,
                         ),
-                    contentDescription = if (isPermissionsExpanded) "Collapse" else "Expand",
+                    contentDescription = stringResource(if (isPermissionsExpanded) R.string.action_collapse else R.string.action_expand),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
@@ -845,7 +846,7 @@ fun SettingsContent(
                 OutlinedTextField(
                     value = tokenText,
                     onValueChange = { tokenText = it },
-                    label = { Text("Shizuku auth token") },
+                    label = { Text(stringResource(R.string.shizuku_auth_token_label)) },
                     modifier = Modifier.weight(1f),
                     shape = MaterialTheme.shapes.large,
                     singleLine = true,
@@ -858,7 +859,7 @@ fun SettingsContent(
                                     painterResource(
                                         id = if (isTokenVisible) R.drawable.rounded_visibility_24 else R.drawable.rounded_visibility_off_24,
                                     ),
-                                contentDescription = if (isTokenVisible) "Hide token" else "Show token",
+                                contentDescription = stringResource(if (isTokenVisible) R.string.content_desc_hide_token else R.string.content_desc_show_token),
                                 modifier = Modifier.size(24.dp),
                             )
                         }
@@ -869,7 +870,7 @@ fun SettingsContent(
                     onClick = {
                         viewModel.setShizukuAuthToken(tokenText)
                         HapticUtil.performUIHaptic(view)
-                        Toast.makeText(context, "Saved", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, context.getString(R.string.toast_saved), Toast.LENGTH_SHORT).show()
                     },
                 ) {
                     Icon(
@@ -1136,9 +1137,9 @@ fun SettingsContent(
                     if (currentUser !=
                         null
                     ) {
-                        "Logged in as ${currentUser?.name ?: currentUser?.login}"
+                        stringResource(R.string.translation_logged_in_as, currentUser?.name ?: currentUser?.login.orEmpty())
                     } else {
-                        "Sign in required to translate"
+                        stringResource(R.string.translation_sign_in_required)
                     },
                 isEnabled = true,
                 onToggle = {},
@@ -1154,7 +1155,7 @@ fun SettingsContent(
                     if (currentUser != null) {
                         @Composable { onDismiss ->
                             SegmentedDropdownMenuItem(
-                                text = { Text("Sign Out") },
+                                text = { Text(stringResource(R.string.action_sign_out)) },
                                 onClick = {
                                     onDismiss()
                                     HapticUtil.performUIHaptic(view)
@@ -1182,7 +1183,7 @@ fun SettingsContent(
                 title = stringResource(R.string.settings_translate_mode),
                 description =
                     if (isEnglishApp) {
-                        "App language is English. Change app language to translate strings"
+                        stringResource(R.string.translation_english_app_desc)
                     } else {
                         stringResource(
                             R.string.settings_translate_mode_desc,
@@ -1235,10 +1236,10 @@ fun SettingsContent(
                             ""
                         }
                     val subtitleText =
-                        if (dateFormatted.isNotBlank()) "PR #${pr.number} • Updated $dateFormatted" else "PR #${pr.number}"
+                        if (dateFormatted.isNotBlank()) stringResource(R.string.bug_report_pr_number_updated, pr.number.toString(), dateFormatted) else stringResource(R.string.bug_report_pr_number, pr.number.toString())
 
                     FeatureCard(
-                        title = "View existing PR",
+                        title = stringResource(R.string.bug_report_view_existing_pr),
                         description = subtitleText,
                         isEnabled = true,
                         onToggle = {},
@@ -1287,7 +1288,7 @@ fun SettingsContent(
                     Toast
                         .makeText(
                             context,
-                            if (newState) "Developer options enabled" else "Developer options disabled",
+                            context.getString(if (newState) R.string.developer_options_enabled_toast else R.string.developer_options_disabled_toast),
                             Toast.LENGTH_SHORT,
                         ).show()
                 },
@@ -1300,7 +1301,7 @@ fun SettingsContent(
 
             // Updates Section
             Text(
-                text = "Developer Options",
+                text = stringResource(R.string.label_developer_options),
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -1483,7 +1484,7 @@ fun SettingsContent(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Text(
-                    text = "Wallpaper Update",
+                    text = stringResource(R.string.label_wallpaper_update),
                     style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -1503,7 +1504,7 @@ fun SettingsContent(
                             verticalArrangement = Arrangement.spacedBy(8.dp),
                         ) {
                             Text(
-                                text = "Workflow authorization is required to trigger wallpaper updates remotely.",
+                                text = stringResource(R.string.wallpaper_workflow_auth_required),
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
@@ -1518,7 +1519,7 @@ fun SettingsContent(
                                         },
                                         modifier = Modifier.fillMaxWidth(),
                                     ) {
-                                        Text("Grant Workflow Access")
+                                        Text(stringResource(R.string.wallpaper_grant_workflow_access))
                                     }
                                 }
 
@@ -1540,7 +1541,7 @@ fun SettingsContent(
                                         verticalArrangement = Arrangement.spacedBy(8.dp),
                                     ) {
                                         Text(
-                                            text = "Verification Code:",
+                                            text = stringResource(R.string.github_verification_code),
                                             style = MaterialTheme.typography.titleSmall,
                                         )
                                         Text(
@@ -1552,7 +1553,7 @@ fun SettingsContent(
                                             color = MaterialTheme.colorScheme.primary,
                                         )
                                         Text(
-                                            text = "Go to: ${codeData.verificationUri}",
+                                            text = stringResource(R.string.github_go_to, codeData.verificationUri),
                                             style = MaterialTheme.typography.bodySmall,
                                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                                         )
@@ -1570,14 +1571,14 @@ fun SettingsContent(
                                                     context.startActivity(intent)
                                                 },
                                             ) {
-                                                Text("Open Page")
+                                                Text(stringResource(R.string.action_open_page))
                                             }
                                             TextButton(
                                                 onClick = {
                                                     viewModel.cancelWorkflowAuthFlow()
                                                 },
                                             ) {
-                                                Text("Cancel")
+                                                Text(stringResource(R.string.action_cancel))
                                             }
                                         }
                                     }
@@ -1592,7 +1593,7 @@ fun SettingsContent(
                                         verticalArrangement = Arrangement.spacedBy(8.dp),
                                     ) {
                                         Text(
-                                            text = err.message,
+                                            text = stringResource(err.messageRes, err.formatArg.orEmpty()),
                                             color = MaterialTheme.colorScheme.error,
                                             style = MaterialTheme.typography.bodyMedium,
                                         )
@@ -1601,7 +1602,7 @@ fun SettingsContent(
                                                 viewModel.startWorkflowAuthFlow(context)
                                             },
                                         ) {
-                                            Text("Retry")
+                                            Text(stringResource(R.string.action_retry))
                                         }
                                     }
                                 }
@@ -1621,7 +1622,7 @@ fun SettingsContent(
                             verticalArrangement = Arrangement.spacedBy(12.dp),
                         ) {
                             Text(
-                                text = "Trigger unsplash wallpaper update on your website directly:",
+                                text = stringResource(R.string.wallpaper_trigger_update_desc),
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
@@ -1701,9 +1702,9 @@ fun SettingsContent(
                                 Text(
                                     text =
                                         when (triggerState) {
-                                            "loading" -> "Sending trigger request..."
-                                            "success" -> "Trigger sent successfully!"
-                                            "error" -> "Failed to send trigger."
+                                            "loading" -> stringResource(R.string.wallpaper_trigger_sending)
+                                            "success" -> stringResource(R.string.wallpaper_trigger_success)
+                                            "error" -> stringResource(R.string.wallpaper_trigger_failed)
                                             else -> ""
                                         },
                                     style = MaterialTheme.typography.bodySmall,

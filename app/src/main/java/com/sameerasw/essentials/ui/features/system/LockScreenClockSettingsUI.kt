@@ -313,7 +313,7 @@ fun LockScreenClockSettingsUI(
                     items = listOf("DEFAULT", "DIGITAL_CLOCK_FLEX"),
                     selectedItem = currentClockId ?: "DEFAULT",
                     onItemSelected = { viewModel.setLockScreenClockId(it, context) },
-                    labelProvider = { if (it == "DEFAULT") "Default" else "Flex" },
+                    labelProvider = { context.getString(if (it == "DEFAULT") R.string.lock_screen_clock_default else R.string.lock_screen_clock_flex) },
                 )
 
                 ConfigSliderItem(

@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials.services
 
+import com.sameerasw.essentials.R
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -320,7 +321,7 @@ class NotificationLightingService : Service() {
                     val chan =
                         NotificationChannel(
                             CHANNEL_ID,
-                            "Notification Lighting",
+                            getString(R.string.tile_notification_lighting),
                             NotificationManager.IMPORTANCE_LOW,
                         )
                     chan.setSound(null, null)

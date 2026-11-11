@@ -109,7 +109,7 @@ fun LocationAlarmCard(
                     ) {
                         Icon(
                             painter = painterResource(if (alarm.isPaused) R.drawable.round_play_arrow_24 else R.drawable.rounded_pause_24),
-                            contentDescription = if (alarm.isPaused) "Resume" else "Pause",
+                            contentDescription = stringResource(if (alarm.isPaused) R.string.location_reached_resume else R.string.location_reached_pause),
                         )
                     }
 
@@ -127,7 +127,7 @@ fun LocationAlarmCard(
                     ) {
                         Icon(
                             painter = painterResource(R.drawable.rounded_close_24),
-                            contentDescription = "Stop",
+                            contentDescription = stringResource(R.string.action_stop),
                         )
                     }
                 }
@@ -147,7 +147,7 @@ fun LocationAlarmCard(
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.rounded_play_arrow_24),
-                        contentDescription = "Start",
+                        contentDescription = stringResource(R.string.action_start),
                     )
                 }
             }

@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials.ui.features.system
 
+import androidx.compose.ui.res.stringResource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -44,7 +45,7 @@ fun MapsPowerSavingSettingsUI(
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         Text(
-            text = "Detection Channels",
+            text = stringResource(R.string.maps_power_saving_detection_channels),
             style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(start = 16.dp),
@@ -70,7 +71,7 @@ fun MapsPowerSavingSettingsUI(
 
             if (viewModel.mapsChannels.value.isEmpty()) {
                 Text(
-                    text = "No Maps channels discovered yet. They will appear here once detected while navigating.",
+                    text = stringResource(R.string.maps_power_saving_no_channels),
                     modifier = Modifier.padding(16.dp),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,

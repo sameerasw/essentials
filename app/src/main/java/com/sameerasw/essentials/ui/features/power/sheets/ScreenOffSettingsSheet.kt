@@ -93,7 +93,7 @@ fun ScreenOffSettingsSheet(
                             android.widget.Toast
                                 .makeText(
                                     context,
-                                    "Shizuku/Root permission required for Input method",
+                                    context.getString(R.string.screen_off_input_permission_required),
                                     android.widget.Toast.LENGTH_SHORT,
                                 ).show()
                         } else {

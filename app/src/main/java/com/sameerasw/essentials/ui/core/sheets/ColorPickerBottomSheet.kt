@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials.ui.core.sheets
 
+import androidx.compose.ui.res.stringResource
 import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -177,7 +178,7 @@ fun ColorPickerBottomSheet(
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.rounded_share_24),
-                        contentDescription = "Share",
+                        contentDescription = stringResource(R.string.action_share),
                         modifier = Modifier.size(24.dp),
                     )
                 }
@@ -190,7 +191,7 @@ fun ColorPickerBottomSheet(
                         android.widget.Toast
                             .makeText(
                                 context,
-                                "Copied to clipboard",
+                                context.getString(R.string.pixel_search_copied_to_clipboard),
                                 android.widget.Toast.LENGTH_SHORT,
                             ).show()
                         onDismissRequest()

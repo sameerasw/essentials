@@ -123,7 +123,7 @@ fun DIYScreen(
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
                         Text(
-                            text = "No automations yet",
+                            text = stringResource(R.string.diy_no_automations),
                         )
                         if (onNewAutomationClick != null) {
                             Spacer(modifier = Modifier.height(16.dp))

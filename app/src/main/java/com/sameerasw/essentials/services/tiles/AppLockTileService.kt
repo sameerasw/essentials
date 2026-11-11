@@ -27,10 +27,10 @@ class AppLockTileService : BaseTileService() {
             Intent(this, TileAuthActivity::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 putExtra("feature_pref_key", "app_lock_enabled")
-                putExtra("auth_title", "App Lock Security")
+                putExtra("auth_title", getString(R.string.app_lock_auth_title))
                 putExtra(
                     "auth_subtitle",
-                    if (isEnabled) "Authenticate to disable app lock" else "Authenticate to enable app lock",
+                    getString(if (isEnabled) R.string.app_lock_disable_auth_subtitle else R.string.app_lock_enable_auth_subtitle),
                 )
             }
 
@@ -48,9 +48,9 @@ class AppLockTileService : BaseTileService() {
         }
     }
 
-    override fun getTileLabel(): String = "App Lock"
+    override fun getTileLabel(): String = getString(R.string.tile_app_lock)
 
-    override fun getTileSubtitle(): String = if (getTileState() == Tile.STATE_ACTIVE) "Enabled" else "Disabled"
+    override fun getTileSubtitle(): String = getString(if (getTileState() == Tile.STATE_ACTIVE) R.string.label_enabled else R.string.label_disabled)
 
     override fun hasFeaturePermission(): Boolean {
         // Accessibility is required for monitoring app usage

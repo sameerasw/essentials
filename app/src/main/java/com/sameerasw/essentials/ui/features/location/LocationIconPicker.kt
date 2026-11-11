@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials.ui.components
 
+import androidx.compose.ui.res.stringResource
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -68,7 +69,7 @@ fun LocationIconPicker(
 
     Column(modifier = modifier.fillMaxWidth()) {
         Text(
-            text = "Pick an icon",
+            text = stringResource(R.string.freeze_tag_icon_picker_label),
             style = MaterialTheme.typography.labelMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(bottom = 8.dp),

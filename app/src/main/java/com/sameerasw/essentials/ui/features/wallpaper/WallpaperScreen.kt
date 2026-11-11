@@ -672,7 +672,7 @@ fun WallpaperScreen(
                                         shapes = ButtonGroupDefaults.connectedLeadingButtonShapes(),
                                         modifier = Modifier.weight(1f),
                                     ) {
-                                        Text("Home Screen")
+                                        Text(stringResource(R.string.wallpaper_home_screen))
                                     }
                                     ToggleButton(
                                         checked = applyLock,
@@ -686,7 +686,7 @@ fun WallpaperScreen(
                                         shapes = ButtonGroupDefaults.connectedTrailingButtonShapes(),
                                         modifier = Modifier.weight(1f),
                                     ) {
-                                        Text("Lock Screen")
+                                        Text(stringResource(R.string.wallpaper_lock_screen))
                                     }
                                 }
 
@@ -817,7 +817,7 @@ fun WallpaperScreen(
                                     painterResource(
                                         id = if (showSettingsCard) R.drawable.rounded_keyboard_arrow_down_24 else R.drawable.rounded_keyboard_arrow_up_24,
                                     ),
-                                contentDescription = "Options",
+                                contentDescription = stringResource(R.string.label_options),
                                 modifier = Modifier.size(24.dp),
                             )
                         }
@@ -928,7 +928,7 @@ fun WallpaperHelpBottomSheet(
                             verticalArrangement = Arrangement.spacedBy(12.dp),
                         ) {
                             Text(
-                                text = "Current Photo Credits",
+                                text = stringResource(R.string.wallpaper_current_photo_credits),
                                 style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                             )
 
@@ -945,7 +945,7 @@ fun WallpaperHelpBottomSheet(
                                             contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                                         ),
                                 ) {
-                                    Text(text = "View Photo")
+                                    Text(text = stringResource(R.string.wallpaper_view_photo))
                                 }
 
                                 Button(
@@ -987,7 +987,7 @@ fun WallpaperHelpBottomSheet(
                                     contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                                 ),
                         ) {
-                            Text(text = "View Sameera's Collection")
+                            Text(text = stringResource(R.string.wallpaper_view_collection))
                         }
 
                         Button(
@@ -1036,7 +1036,7 @@ fun WallpaperHelpBottomSheet(
                         verticalArrangement = Arrangement.spacedBy(12.dp),
                     ) {
                         Text(
-                            text = "How to use",
+                            text = stringResource(R.string.label_how_to_use),
                             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                         )
                         Text(

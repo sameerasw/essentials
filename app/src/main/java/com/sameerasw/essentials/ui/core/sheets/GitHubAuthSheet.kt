@@ -169,7 +169,7 @@ fun GitHubAuthSheet(
 
                 is AuthState.Error -> {
                     Text(
-                        text = state.message,
+                        text = stringResource(state.messageRes, state.formatArg.orEmpty()),
                         color = MaterialTheme.colorScheme.error,
                         textAlign = TextAlign.Center,
                     )

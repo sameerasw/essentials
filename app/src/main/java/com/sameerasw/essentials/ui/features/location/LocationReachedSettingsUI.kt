@@ -340,7 +340,7 @@ fun TopStatusCard(
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = displayAlarm?.name?.ifEmpty { "Destination" } ?: "Destination",
+                    text = displayAlarm?.name?.ifEmpty { stringResource(R.string.location_reached_destination) } ?: stringResource(R.string.location_reached_destination),
                     style = MaterialTheme.typography.headlineSmall,
                     color = MaterialTheme.colorScheme.onSurface,
                     fontWeight = FontWeight.Bold,

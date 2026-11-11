@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials.ui.activities
 
+import com.sameerasw.essentials.R
 import android.os.Bundle
 import androidx.core.content.edit
 import androidx.fragment.app.FragmentActivity
@@ -25,8 +26,8 @@ class TileAuthActivity : FragmentActivity() {
         val targetFeature = intent.getStringExtra("target_feature")
 
         if (feature != null || targetFeature != null) {
-            val title = intent.getStringExtra("auth_title") ?: "Authentication Required"
-            val subtitle = intent.getStringExtra("auth_subtitle") ?: "Confirm your identity"
+            val title = intent.getStringExtra("auth_title") ?: getString(R.string.auth_required_title)
+            val subtitle = intent.getStringExtra("auth_subtitle") ?: getString(R.string.auth_confirm_identity)
 
             BiometricHelper.showBiometricPrompt(
                 activity = this,

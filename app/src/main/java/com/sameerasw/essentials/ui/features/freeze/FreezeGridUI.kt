@@ -643,7 +643,7 @@ fun AppGridItem(
                         ) {
                             Icon(
                                 painter = painterResource(id = R.drawable.rounded_lock_clock_24),
-                                contentDescription = "Auto-freeze excluded",
+                                contentDescription = stringResource(R.string.freeze_auto_freeze_excluded),
                                 modifier = Modifier.fillMaxSize(),
                                 tint = MaterialTheme.colorScheme.onError,
                             )

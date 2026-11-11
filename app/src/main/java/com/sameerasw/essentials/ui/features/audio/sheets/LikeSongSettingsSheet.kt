@@ -138,7 +138,7 @@ fun LikeSongSettingsSheet(
                         )
                         Spacer(modifier = Modifier.width(16.dp))
                         Text(
-                            text = "Notification access granted",
+                            text = stringResource(R.string.like_song_notification_access_granted),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSecondaryContainer,
                         )
@@ -147,7 +147,7 @@ fun LikeSongSettingsSheet(
             }
 
             Text(
-                text = "Options",
+                text = stringResource(R.string.label_options),
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(bottom = 8.dp, top = 8.dp),
             )

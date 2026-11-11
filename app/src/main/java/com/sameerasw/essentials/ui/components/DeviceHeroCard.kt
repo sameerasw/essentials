@@ -224,28 +224,34 @@ fun DeviceHeroCard(
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
-                    text = "Android ${deviceInfo.androidVersion} (${
-                        DeviceUtils.getOSName(
-                            deviceInfo.sdkInt,
-                            deviceInfo.osCodename,
-                        )
-                    })",
+                    text =
+                        stringResource(
+                            R.string.device_android_version,
+                            deviceInfo.androidVersion,
+                            DeviceUtils.getOSName(
+                                deviceInfo.sdkInt,
+                                deviceInfo.osCodename,
+                            ),
+                        ),
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.primary,
                 )
                 Text(
-                    text = "API ${deviceInfo.sdkInt} • Patch: ${
-                        DeviceUtils.formatSecurityPatch(
-                            deviceInfo.securityPatch,
-                        )
-                    }",
+                    text =
+                        stringResource(
+                            R.string.device_api_patch,
+                            deviceInfo.sdkInt.toString(),
+                            DeviceUtils.formatSecurityPatch(
+                                deviceInfo.securityPatch,
+                            ),
+                        ),
                     style = MaterialTheme.typography.labelMedium,
                     fontWeight = FontWeight.Medium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
                 Text(
-                    text = "Build: ${deviceInfo.display}",
+                    text = stringResource(R.string.device_build, deviceInfo.display),
                     style = MaterialTheme.typography.labelSmall,
                     fontWeight = FontWeight.Normal,
                     color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f),

@@ -134,11 +134,11 @@ fun DimWallpaperSettingsSheet(
                         ) {
                             Icon(
                                 painter = painterResource(R.drawable.rounded_adb_24),
-                                contentDescription = "Shizuku",
+                                contentDescription = stringResource(R.string.privileged_mode_shizuku),
                                 tint = MaterialTheme.colorScheme.primary,
                                 modifier = Modifier.size(20.dp),
                             )
-                            Text("Shizuku", style = MaterialTheme.typography.labelMedium)
+                            Text(stringResource(R.string.privileged_mode_shizuku), style = MaterialTheme.typography.labelMedium)
                         }
 
                         // Root Icon
@@ -148,11 +148,11 @@ fun DimWallpaperSettingsSheet(
                         ) {
                             Icon(
                                 painter = painterResource(R.drawable.rounded_numbers_24),
-                                contentDescription = "Root",
+                                contentDescription = stringResource(R.string.privileged_mode_root),
                                 tint = MaterialTheme.colorScheme.primary,
                                 modifier = Modifier.size(20.dp),
                             )
-                            Text("Root", style = MaterialTheme.typography.labelMedium)
+                            Text(stringResource(R.string.privileged_mode_root), style = MaterialTheme.typography.labelMedium)
                         }
                     }
                 }
@@ -173,7 +173,7 @@ fun DimWallpaperSettingsSheet(
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Text(
-                            text = "Dim Amount",
+                            text = stringResource(R.string.dim_wallpaper_amount),
                             style = MaterialTheme.typography.titleMedium,
                             color = MaterialTheme.colorScheme.onSurface,
                         )

@@ -146,7 +146,7 @@ fun NewAutomationSheet(
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.rounded_download_24),
-                        contentDescription = "Import Automation",
+                        contentDescription = stringResource(R.string.diy_import_automation),
                     )
                 }
             }

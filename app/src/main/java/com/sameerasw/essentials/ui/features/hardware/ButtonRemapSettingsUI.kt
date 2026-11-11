@@ -246,11 +246,11 @@ fun ButtonRemapSettingsUI(
                                     )
                                 } else if (isRootEnabled) {
                                     if (shellPermission) {
-                                        "Root Access: Granted"
+                                        stringResource(R.string.button_remap_root_granted)
                                     } else if (shellAvailable) {
-                                        "Root Access: Found"
+                                        stringResource(R.string.button_remap_root_found)
                                     } else {
-                                        "Root Access: Not Found"
+                                        stringResource(R.string.button_remap_root_not_found)
                                     }
                                 } else {
                                     stringResource(

@@ -420,7 +420,7 @@ fun PixelSearchbarSettingsUI(
             IconToggleItem(
                 iconRes = R.drawable.rounded_search_24,
                 title = stringResource(R.string.feat_pixel_searchbar_title),
-                description = "Replace Pixel Launcher default searchbar",
+                description = stringResource(R.string.feat_pixel_searchbar_desc),
                 isChecked = isEnabled,
                 onCheckedChange = { enabled ->
                     if (viewModel.isWriteSecureSettingsEnabled.value ||
@@ -667,7 +667,7 @@ fun PixelSearchbarSettingsUI(
                         Spacer(modifier = Modifier.height(12.dp))
 
                         Text(
-                            text = "Date Format",
+                            text = stringResource(R.string.pixel_searchbar_date_format),
                             style = MaterialTheme.typography.titleMedium,
                             modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 8.dp),
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -729,7 +729,7 @@ fun PixelSearchbarSettingsUI(
                 Spacer(modifier = Modifier.height(12.dp))
 
                 Text(
-                    text = "Tap Action",
+                    text = stringResource(R.string.pixel_searchbar_tap_action),
                     style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.padding(start = 16.dp, top = 8.dp),
                     color = MaterialTheme.colorScheme.onSurfaceVariant,

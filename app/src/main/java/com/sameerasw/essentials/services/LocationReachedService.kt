@@ -477,7 +477,7 @@ class LocationReachedService : Service() {
         val finalIconId = if (iconResId != 0) iconResId else R.drawable.round_navigation_24
 
         if (Build.VERSION.SDK_INT >= 35) {
-            val destinationName = alarm?.name?.ifEmpty { "Destination" } ?: "Destination"
+            val destinationName = alarm?.name?.ifEmpty { getString(R.string.location_reached_destination) } ?: getString(R.string.location_reached_destination)
             val builder =
                 Notification
                     .Builder(this, CHANNEL_ID)
@@ -575,7 +575,7 @@ class LocationReachedService : Service() {
             return builder.build()
         }
 
-        val destinationName = alarm?.name?.ifEmpty { "Destination" } ?: "Destination"
+        val destinationName = alarm?.name?.ifEmpty { getString(R.string.location_reached_destination) } ?: getString(R.string.location_reached_destination)
         val builder =
             NotificationCompat
                 .Builder(this, CHANNEL_ID)

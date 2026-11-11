@@ -110,7 +110,12 @@ fun RestoreModePicker(
                         },
                 ) {
                     Text(
-                        text = mode,
+                        text =
+                            when (mode) {
+                                "Auto" -> stringResource(R.string.app_colors_auto)
+                                "Notify" -> stringResource(R.string.restore_mode_notify)
+                                else -> mode
+                            },
                         style = MaterialTheme.typography.labelLarge,
                         fontWeight = if (isChecked) FontWeight.Bold else FontWeight.Normal,
                         maxLines = 1,

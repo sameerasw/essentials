@@ -78,7 +78,7 @@ fun WatchSettingsUI(
                                 android.widget.Toast
                                     .makeText(
                                         context,
-                                        "Syncing...",
+                                        context.getString(R.string.watch_syncing),
                                         android.widget.Toast.LENGTH_SHORT,
                                     ).show()
                                 com.sameerasw.essentials.services.DeviceInfoSyncManager.forceSync(

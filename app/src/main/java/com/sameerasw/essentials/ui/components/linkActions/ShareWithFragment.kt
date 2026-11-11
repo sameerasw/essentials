@@ -9,6 +9,8 @@
 
 package com.sameerasw.essentials.ui.components.linkActions
 
+import androidx.compose.ui.res.stringResource
+import com.sameerasw.essentials.R
 import android.content.Intent
 import android.net.Uri
 import android.util.Log
@@ -50,7 +52,7 @@ fun ShareWithContent(
             contentAlignment = Alignment.Center,
         ) {
             Text(
-                text = "No apps found to share with",
+                text = stringResource(R.string.link_no_apps_share),
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )

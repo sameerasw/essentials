@@ -173,7 +173,14 @@ fun SometimesEssentialsSettingsSheet(
                         },
                         selectedValue = essentialsOnDisplayMode,
                         options = listOf("Off", "On", "Docked"),
-                        labelProvider = { it },
+                        labelProvider = {
+                            when (it) {
+                                "Off" -> context.getString(R.string.off)
+                                "On" -> context.getString(R.string.on)
+                                "Docked" -> context.getString(R.string.tile_docked)
+                                else -> it
+                            }
+                        },
                         onOptionSelected = {
                             HapticUtil.performVirtualKeyHaptic(view)
                             essentialsOnDisplayMode = it
@@ -190,7 +197,14 @@ fun SometimesEssentialsSettingsSheet(
                         },
                         selectedValue = alwaysOnDisplayMode,
                         options = listOf("Off", "Dynamic", "On"),
-                        labelProvider = { it },
+                        labelProvider = {
+                            when (it) {
+                                "Off" -> context.getString(R.string.off)
+                                "On" -> context.getString(R.string.on)
+                                "Dynamic" -> context.getString(R.string.tile_dynamic)
+                                else -> it
+                            }
+                        },
                         onOptionSelected = {
                             HapticUtil.performVirtualKeyHaptic(view)
                             alwaysOnDisplayMode = it

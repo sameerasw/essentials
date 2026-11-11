@@ -167,7 +167,7 @@ fun PermissionCard(
                                         if (resolvedDescription != null) {
                                             Spacer(modifier = Modifier.height(8.dp))
                                         }
-                                        Text(text = "Required for:", style = MaterialTheme.typography.bodySmall)
+                                        Text(text = stringResource(R.string.permission_required_for), style = MaterialTheme.typography.bodySmall)
                                         Spacer(modifier = Modifier.height(4.dp))
                                         dependentFeatures.forEach { f ->
                                             val resolvedFeature =
@@ -221,7 +221,7 @@ fun PermissionCard(
 
                         if (keyTitle != null) {
                             SegmentedDropdownMenuItem(
-                                text = { Text("Translate Title ($keyTitle)") },
+                                text = { Text(stringResource(R.string.translation_menu_translate_title, keyTitle)) },
                                 onClick = {
                                     showMenu = false
                                     translationSheetKey = keyTitle
@@ -237,7 +237,7 @@ fun PermissionCard(
 
                         if (keyDesc != null) {
                             SegmentedDropdownMenuItem(
-                                text = { Text("Translate Description ($keyDesc)") },
+                                text = { Text(stringResource(R.string.translation_menu_translate_description, keyDesc)) },
                                 onClick = {
                                     showMenu = false
                                     translationSheetKey = keyDesc
@@ -253,7 +253,7 @@ fun PermissionCard(
 
                         if (keyInst != null) {
                             SegmentedDropdownMenuItem(
-                                text = { Text("Translate Instructions ($keyInst)") },
+                                text = { Text(stringResource(R.string.translation_menu_translate_instructions, keyInst)) },
                                 onClick = {
                                     showMenu = false
                                     translationSheetKey = keyInst

@@ -172,7 +172,7 @@ abstract class BaseTileService : TileService() {
                 when {
                     unsupportedDisabled -> getString(R.string.disabled_on_this_device)
                     !hasPerm -> getString(R.string.permission_missing)
-                    isProcessing -> "Working..."
+                    isProcessing -> getString(R.string.tile_working)
                     else -> getTileSubtitle()
                 }
         }

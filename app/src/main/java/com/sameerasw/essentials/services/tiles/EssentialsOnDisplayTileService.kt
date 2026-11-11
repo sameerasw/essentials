@@ -25,7 +25,7 @@ class EssentialsOnDisplayTileService : BaseTileService() {
         val enabled = isGlanceEnabled()
         val docked = isDockedModeEnabled()
         return when {
-            enabled && docked -> "Docked"
+            enabled && docked -> getString(R.string.tile_docked)
             enabled -> getString(R.string.tile_active)
             else -> getString(R.string.tile_inactive)
         }

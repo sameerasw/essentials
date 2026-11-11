@@ -131,7 +131,7 @@ fun LocationReachedBottomSheet(
                         // Coordinates Display
                         Column {
                             Text(
-                                text = "Coordinates",
+                                text = stringResource(R.string.location_reached_coordinates),
                                 style = MaterialTheme.typography.labelMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )

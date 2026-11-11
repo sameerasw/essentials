@@ -71,7 +71,21 @@ class UrlShortenerTileService : BaseTileService() {
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
                     HapticUtil.performHapticForService(this@UrlShortenerTileService, HapticFeedbackType.TICK)
-                    Toast.makeText(this@UrlShortenerTileService, e.message ?: getString(R.string.shorten_error_generic), Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        this@UrlShortenerTileService,
+                        getString(
+                            when (e) {
+                                is UrlShortener.ShortenException.LockdownException -> R.string.shorten_error_lockdown
+                                is UrlShortener.ShortenException.ReservedAliasException -> R.string.shorten_error_reserved_alias
+                                is UrlShortener.ShortenException.SlugConflictException -> R.string.shorten_error_slug_conflict
+                                is UrlShortener.ShortenException.InvalidUrlException -> R.string.shorten_error_invalid_url
+                                is UrlShortener.ShortenException.InvalidAliasException -> R.string.shorten_error_invalid_alias
+                                is UrlShortener.ShortenException.NetworkException -> R.string.shorten_error_network
+                                else -> R.string.shorten_error_generic
+                            },
+                        ),
+                        Toast.LENGTH_LONG,
+                    ).show()
                 }
             }
         }

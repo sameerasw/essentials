@@ -2106,7 +2106,7 @@ class MainViewModel : ViewModel() {
                     Toast
                         .makeText(
                             context,
-                            "Accessibility auto-granted",
+                            context.getString(R.string.accessibility_auto_granted),
                             Toast.LENGTH_SHORT,
                         ).show()
                 }
@@ -3335,7 +3335,7 @@ class MainViewModel : ViewModel() {
             } else {
                 workflowAuthState.value =
                     com.sameerasw.essentials.viewmodels.AuthState
-                        .Error("Failed to request device code")
+                        .Error(R.string.github_auth_device_code_failed)
             }
         }
     }
@@ -3379,7 +3379,7 @@ class MainViewModel : ViewModel() {
                             tokenResponse.error == "expired_token" -> {
                                 workflowAuthState.value =
                                     com.sameerasw.essentials.viewmodels.AuthState
-                                        .Error("Code expired. Please try again.")
+                                        .Error(R.string.github_auth_code_expired)
                                 workflowPollingJob?.cancel()
                                 return@launch
                             }
@@ -3387,7 +3387,7 @@ class MainViewModel : ViewModel() {
                             else -> {
                                 workflowAuthState.value =
                                     com.sameerasw.essentials.viewmodels.AuthState
-                                        .Error("Authentication failed: ${tokenResponse.error}")
+                                        .Error(R.string.github_auth_failed, tokenResponse.error)
                                 workflowPollingJob?.cancel()
                                 return@launch
                             }
@@ -6716,8 +6716,8 @@ class MainViewModel : ViewModel() {
 
                     while (cursor.moveToNext()) {
                         val id = cursor.getLong(idColumn)
-                        val name = cursor.getString(nameColumn) ?: "Unnamed Calendar"
-                        val account = cursor.getString(accountColumn) ?: "Local"
+                        val name = cursor.getString(nameColumn) ?: context.getString(R.string.calendar_unnamed)
+                        val account = cursor.getString(accountColumn) ?: context.getString(R.string.calendar_local)
 
                         calendars.add(
                             CalendarAccount(
@@ -7629,8 +7629,8 @@ class MainViewModel : ViewModel() {
 
                     while (cursor.moveToNext()) {
                         val id = cursor.getLong(idColumn)
-                        val name = cursor.getString(nameColumn) ?: "Unnamed Calendar"
-                        val account = cursor.getString(accountColumn) ?: "Local"
+                        val name = cursor.getString(nameColumn) ?: context.getString(R.string.calendar_unnamed)
+                        val account = cursor.getString(accountColumn) ?: context.getString(R.string.calendar_local)
 
                         calendars.add(
                             CalendarAccount(

@@ -159,7 +159,7 @@ fun AboutSection(
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.avatar),
-                    contentDescription = "Developer Avatar",
+                    contentDescription = stringResource(R.string.content_desc_developer_avatar),
                     contentScale = ContentScale.Crop,
                     modifier =
                         Modifier

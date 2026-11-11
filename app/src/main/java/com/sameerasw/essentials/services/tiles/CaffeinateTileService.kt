@@ -53,7 +53,7 @@ class CaffeinateTileService : BaseTileService() {
         handler.post(refreshRunnable)
     }
 
-    override fun getTileLabel(): String = "Caffeinate"
+    override fun getTileLabel(): String = getString(R.string.tile_caffeinate)
 
     override fun getTileSubtitle(): String =
         if (CaffeinateController.isStarting.value) {
@@ -75,7 +75,7 @@ class CaffeinateTileService : BaseTileService() {
             getString(R.string.caffeinate_active)
         } else {
             val timeout = getScreenOffTimeout()
-            if (timeout == -1L) "Never" else "${timeout / 1000}s"
+            if (timeout == -1L) getString(R.string.tile_never) else getString(R.string.tile_seconds, (timeout / 1000).toInt())
         }
 
     override fun hasFeaturePermission(): Boolean = true

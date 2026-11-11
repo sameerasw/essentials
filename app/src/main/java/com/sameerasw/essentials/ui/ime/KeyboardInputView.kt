@@ -847,7 +847,7 @@ fun KeyboardInputView(
                             ) {
                                 Icon(
                                     painter = painterResource(id = R.drawable.rounded_add_24),
-                                    contentDescription = "Collapse Suggestions",
+                                    contentDescription = stringResource(R.string.keyboard_collapse_suggestions),
                                     modifier =
                                         Modifier
                                             .size(18.dp)
@@ -973,7 +973,15 @@ fun KeyboardInputView(
                                             ) {
                                                 Icon(
                                                     painter = painterResource(id = iconRes),
-                                                    contentDescription = desc,
+                                                    contentDescription =
+                                                        when (desc) {
+                                                            "Emoji" -> stringResource(R.string.keyboard_key_emoji)
+                                                            "Backspace" -> stringResource(R.string.keyboard_key_backspace)
+                                                            "Undo" -> stringResource(R.string.screenshot_action_undo)
+                                                            "Clipboard" -> stringResource(R.string.keyboard_key_clipboard)
+                                                            "Expand" -> stringResource(R.string.action_expand)
+                                                            else -> desc
+                                                        },
                                                     modifier =
                                                         Modifier
                                                             .size(if (desc == "Expand") 18.dp else 20.dp)
@@ -1040,7 +1048,7 @@ fun KeyboardInputView(
                         ) {
                             if (clipboardHistory.isEmpty()) {
                                 Text(
-                                    text = "Clipboard is empty",
+                                    text = stringResource(R.string.keyboard_clipboard_empty),
                                     modifier = Modifier.align(Alignment.Center),
                                     style = MaterialTheme.typography.bodyMedium,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -1093,7 +1101,7 @@ fun KeyboardInputView(
                                                 ) {
                                                     Icon(
                                                         painter = painterResource(R.drawable.rounded_delete_24),
-                                                        contentDescription = "Delete",
+                                                        contentDescription = stringResource(R.string.action_delete),
                                                         tint = MaterialTheme.colorScheme.onErrorContainer,
                                                     )
                                                 }
@@ -1669,7 +1677,7 @@ fun KeyboardInputView(
                                             ) {
                                                 Icon(
                                                     painter = painterResource(id = R.drawable.key_shift),
-                                                    contentDescription = "Shift",
+                                                    contentDescription = stringResource(R.string.keyboard_key_shift),
                                                     modifier = Modifier.size(24.dp),
                                                     tint =
                                                         if (isSymbols) {
@@ -1928,7 +1936,7 @@ fun KeyboardInputView(
                                             ) {
                                                 Icon(
                                                     painter = painterResource(id = R.drawable.rounded_backspace_24),
-                                                    contentDescription = "Backspace",
+                                                    contentDescription = stringResource(R.string.keyboard_key_backspace),
                                                     modifier = Modifier.size(24.dp),
                                                     tint = animatedContentColorDel,
                                                 )
@@ -2276,7 +2284,7 @@ fun KeyboardInputView(
                                             ) {
                                                 Icon(
                                                     painter = painterResource(id = R.drawable.rounded_keyboard_return_24),
-                                                    contentDescription = "Return",
+                                                    contentDescription = stringResource(R.string.keyboard_key_return),
                                                     modifier = Modifier.size(24.dp),
                                                 )
                                             }

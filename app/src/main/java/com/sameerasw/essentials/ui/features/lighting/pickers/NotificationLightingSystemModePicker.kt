@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials.ui.core.pickers
 
+import androidx.compose.ui.res.stringResource
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -46,7 +47,7 @@ fun NotificationLightingSystemModePicker(
             R.drawable.rounded_center_focus_strong_24,
             R.drawable.rounded_my_location_24,
         )
-    val labels = listOf("Charging", "Auth", "Custom") // For semantics/descriptions
+    val labels = listOf(stringResource(R.string.diy_state_charging), stringResource(R.string.lighting_system_mode_auth), stringResource(R.string.app_colors_custom))
 
     val view = LocalView.current
 

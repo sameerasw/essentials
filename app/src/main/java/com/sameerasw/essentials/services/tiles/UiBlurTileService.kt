@@ -18,9 +18,9 @@ import com.sameerasw.essentials.R
 import com.sameerasw.essentials.utils.DeviceUtils
 
 class UiBlurTileService : BaseTileService() {
-    override fun getTileLabel(): String = "UI Blur"
+    override fun getTileLabel(): String = getString(R.string.tile_ui_blur)
 
-    override fun getTileSubtitle(): String = if (isBlurEnabled()) "On" else "Off"
+    override fun getTileSubtitle(): String = getString(if (isBlurEnabled()) R.string.on else R.string.off)
 
     override fun hasFeaturePermission(): Boolean {
         if (DeviceUtils.isBlurProblematicDevice()) return false

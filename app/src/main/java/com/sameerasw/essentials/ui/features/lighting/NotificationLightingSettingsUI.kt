@@ -208,7 +208,7 @@ fun NotificationLightingSettingsUI(
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.rounded_apps_24),
-                    contentDescription = "Apps",
+                    contentDescription = stringResource(R.string.tab_apps),
                 )
                 Text(stringResource(R.string.action_select_apps))
             }

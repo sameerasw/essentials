@@ -20,9 +20,9 @@ import com.sameerasw.essentials.R
 
 @RequiresApi(Build.VERSION_CODES.N)
 class BubblesTileService : BaseTileService() {
-    override fun getTileLabel(): String = "Bubbles"
+    override fun getTileLabel(): String = getString(R.string.tile_bubbles)
 
-    override fun getTileSubtitle(): String = if (areBubblesEnabled()) "On" else "Off"
+    override fun getTileSubtitle(): String = getString(if (areBubblesEnabled()) R.string.on else R.string.off)
 
     override fun hasFeaturePermission(): Boolean =
         checkCallingOrSelfPermission(Manifest.permission.WRITE_SECURE_SETTINGS) == PackageManager.PERMISSION_GRANTED

@@ -216,7 +216,7 @@ fun ConfigSliderItem(
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.rounded_remove_24),
-                    contentDescription = "Decrease",
+                    contentDescription = stringResource(R.string.content_desc_decrease),
                     tint = MaterialTheme.colorScheme.primary,
                 )
             }
@@ -254,7 +254,7 @@ fun ConfigSliderItem(
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.rounded_add_24),
-                    contentDescription = "Increase",
+                    contentDescription = stringResource(R.string.content_desc_increase),
                     tint = MaterialTheme.colorScheme.primary,
                 )
             }

@@ -360,7 +360,7 @@ fun ShortenUrlSheet(
                                             HapticUtil.performVirtualKeyHaptic(view)
                                             selectedExpiration = exp
                                         },
-                                        label = { Text(exp.label) },
+                                        label = { Text(if (exp == UrlShortener.Expiration.NEVER) stringResource(R.string.shorten_never_expire) else exp.label) },
                                         shape = RoundedCornerShape(12.dp),
                                         colors = FilterChipDefaults.filterChipColors(
                                             selectedContainerColor = MaterialTheme.colorScheme.primary,
@@ -810,7 +810,7 @@ fun ShortenUrlSheet(
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
                             Text(
-                                text = "${historyList.size} Saved Links",
+                                text = stringResource(R.string.shorten_saved_links_count, historyList.size),
                                 style = MaterialTheme.typography.labelMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
@@ -855,7 +855,7 @@ fun ShortenUrlSheet(
                                             horizontalArrangement = Arrangement.spacedBy(6.dp),
                                         ) {
                                             val isExpired = item.isExpired(currentTimeMs)
-                                            val remainingLabel = item.getRemainingTimeLabel(currentTimeMs)
+                                            val remainingLabel = item.getRemainingTimeLabel(context, currentTimeMs)
 
                                             Surface(
                                                 shape = MaterialTheme.shapes.extraSmall,
@@ -875,7 +875,7 @@ fun ShortenUrlSheet(
                                                     color = MaterialTheme.colorScheme.secondaryContainer,
                                                 ) {
                                                     Text(
-                                                        text = "PIN",
+                                                        text = stringResource(R.string.shorten_pin_badge),
                                                         style = MaterialTheme.typography.labelSmall,
                                                         color = MaterialTheme.colorScheme.onSecondaryContainer,
                                                         modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
@@ -898,7 +898,7 @@ fun ShortenUrlSheet(
                                         ) {
                                             Icon(
                                                 painter = painterResource(id = R.drawable.rounded_delete_24),
-                                                contentDescription = "Delete",
+                                                contentDescription = stringResource(R.string.shorten_delete_link),
                                                 modifier = Modifier.size(14.dp),
                                             )
                                         }

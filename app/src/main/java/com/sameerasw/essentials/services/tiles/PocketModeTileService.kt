@@ -21,7 +21,7 @@ class PocketModeTileService : BaseTileService() {
 
     override fun getTileLabel(): String = getString(R.string.feat_pocket_mode_title)
 
-    override fun getTileSubtitle(): String = if (getTileState() == Tile.STATE_ACTIVE) "Enabled" else "Disabled"
+    override fun getTileSubtitle(): String = getString(if (getTileState() == Tile.STATE_ACTIVE) R.string.label_enabled else R.string.label_disabled)
 
     override fun hasFeaturePermission(): Boolean = PermissionUtils.isAccessibilityServiceEnabled(this)
 

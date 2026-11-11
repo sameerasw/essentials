@@ -154,7 +154,7 @@ fun WatchInstallHelpBottomSheet(
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = "Watch ADB Permissions",
+                text = stringResource(R.string.watch_adb_permissions_title),
                 style = MaterialTheme.typography.titleMedium,
                 modifier =
                     Modifier
@@ -166,8 +166,8 @@ fun WatchInstallHelpBottomSheet(
 
             // Secure Settings Command Card
             AdbCommandCard(
-                title = "Write Secure Settings",
-                description = "Required on the watch to toggle Wireless Debugging remotely.",
+                title = stringResource(R.string.perm_write_secure_title),
+                description = stringResource(R.string.watch_adb_write_secure_desc),
                 command = "adb shell pm grant com.sameerasw.essentials android.permission.WRITE_SECURE_SETTINGS",
                 context = context,
                 view = view,
@@ -175,8 +175,8 @@ fun WatchInstallHelpBottomSheet(
 
             // DND Access Command Card
             AdbCommandCard(
-                title = "Do Not Disturb (DND) Access",
-                description = "Required on the watch for DND / Silent sync modes.",
+                title = stringResource(R.string.watch_adb_dnd_title),
+                description = stringResource(R.string.watch_adb_dnd_desc),
                 command = "adb shell cmd notification allow_dnd com.sameerasw.essentials",
                 context = context,
                 view = view,
@@ -247,14 +247,14 @@ private fun AdbCommandCard(
                         android.widget.Toast
                             .makeText(
                                 context,
-                                "Command copied",
+                                context.getString(R.string.toast_command_copied),
                                 android.widget.Toast.LENGTH_SHORT,
                             ).show()
                     },
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.rounded_content_copy_24),
-                        contentDescription = "Copy command",
+                        contentDescription = stringResource(R.string.content_desc_copy_command),
                         modifier = Modifier.size(20.dp),
                         tint = MaterialTheme.colorScheme.onSurfaceVariant,
                     )

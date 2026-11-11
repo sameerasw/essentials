@@ -311,7 +311,7 @@
         <activity
             android:name=".FeatureSettingsActivity"
             android:exported="false"
-            android:label="Feature Settings"
+            android:label="@string/label_feature_settings"
             android:noHistory="true"
             android:excludeFromRecents="true"
             android:theme="@android:style/Theme.NoDisplay"></activity>
@@ -327,7 +327,7 @@
         <activity
             android:name=".SettingsActivity"
             android:exported="false"
-            android:label="Settings"
+            android:label="@string/label_settings"
             android:theme="@android:style/Theme.NoDisplay"
             android:excludeFromRecents="true"
             ></activity>
@@ -461,7 +461,7 @@
             android:name=".LinkPickerActivity"
             android:excludeFromRecents="true"
             android:exported="true"
-            android:label="Open Link"
+            android:label="@string/label_open_link"
             android:launchMode="singleInstance"
             android:noHistory="true"
             android:taskAffinity=""
@@ -960,7 +960,7 @@
             android:name=".services.tiles.CaffeinateTileService"
             android:exported="true"
             android:icon="@drawable/rounded_coffee_24"
-            android:label="Caffeinate"
+            android:label="@string/tile_caffeinate"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE" />
@@ -990,7 +990,7 @@
             android:name=".services.tiles.SoundModeTileService"
             android:exported="true"
             android:icon="@drawable/rounded_volume_up_24"
-            android:label="Sound Mode"
+            android:label="@string/tile_sound_mode"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE" />
@@ -1004,7 +1004,7 @@
             android:name=".services.tiles.UiBlurTileService"
             android:exported="true"
             android:icon="@drawable/rounded_blur_on_24"
-            android:label="UI Blur"
+            android:label="@string/tile_ui_blur"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE" />
@@ -1018,7 +1018,7 @@
             android:name=".services.tiles.BubblesTileService"
             android:exported="true"
             android:icon="@drawable/rounded_bubble_24"
-            android:label="Bubbles"
+            android:label="@string/tile_bubbles"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE" />
@@ -1032,7 +1032,7 @@
             android:name=".services.tiles.MonoAudioTileService"
             android:exported="true"
             android:icon="@drawable/rounded_headphones_24"
-            android:label="Mono Audio"
+            android:label="@string/tile_mono_audio"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE" />
@@ -1046,7 +1046,7 @@
             android:name=".services.tiles.PrivateNotificationsTileService"
             android:exported="true"
             android:icon="@drawable/rounded_notifications_off_24"
-            android:label="Sensitive Content"
+            android:label="@string/tile_sensitive_content"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE" />
@@ -1074,7 +1074,7 @@
             android:name=".services.tiles.TapToWakeTileService"
             android:exported="true"
             android:icon="@drawable/rounded_touch_app_24"
-            android:label="Tap to Wake"
+            android:label="@string/tile_tap_to_wake"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE" />
@@ -1088,7 +1088,7 @@
             android:name=".services.tiles.NotificationLightingTileService"
             android:exported="true"
             android:icon="@drawable/rounded_blur_linear_24"
-            android:label="Notification Lighting"
+            android:label="@string/tile_notification_lighting"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE" />
@@ -1102,7 +1102,7 @@
             android:name=".services.tiles.DynamicNightLightTileService"
             android:exported="true"
             android:icon="@drawable/rounded_nightlight_24"
-            android:label="Dynamic Night Light"
+            android:label="@string/tile_dynamic_night_light"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE" />
@@ -1167,7 +1167,7 @@
             android:name=".services.tiles.ScreenLockedSecurityTileService"
             android:exported="true"
             android:icon="@drawable/rounded_security_24"
-            android:label="Locked Security"
+            android:label="@string/tile_locked_security"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE" />
@@ -1180,7 +1180,7 @@
             android:name=".services.tiles.AppLockTileService"
             android:exported="true"
             android:icon="@drawable/rounded_shield_lock_24"
-            android:label="App Lock"
+            android:label="@string/tile_app_lock"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE" />
@@ -1270,7 +1270,7 @@
             android:name=".services.tiles.FlashlightTileService"
             android:exported="true"
             android:icon="@drawable/rounded_flashlight_on_24"
-            android:label="Flashlight"
+            android:label="@string/tile_flashlight"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE" />
@@ -1598,7 +1598,7 @@
             android:name=".services.dreams.AmbientDreamService"
             android:exported="true"
             android:icon="@mipmap/ic_launcher"
-            android:label="Ambience"
+            android:label="@string/dream_ambience_label"
             android:permission="android.permission.BIND_DREAM_SERVICE">
             <intent-filter>
                 <action android:name="android.service.dreams.DreamService" />

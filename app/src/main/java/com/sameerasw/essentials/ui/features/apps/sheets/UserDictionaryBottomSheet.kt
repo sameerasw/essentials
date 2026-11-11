@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials.ui.features.apps.sheets
 
+import androidx.compose.ui.res.stringResource
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -68,8 +69,8 @@ fun UserDictionaryBottomSheet(
     if (showDeleteConfirmation) {
         androidx.compose.material3.AlertDialog(
             onDismissRequest = { showDeleteConfirmation = false },
-            title = { Text("Reset learned words") },
-            text = { Text("Are you sure you want to delete all learned words? This cannot be undone.") },
+            title = { Text(stringResource(R.string.user_dictionary_reset_title)) },
+            text = { Text(stringResource(R.string.user_dictionary_reset_confirm)) },
             confirmButton = {
                 androidx.compose.material3.TextButton(
                     onClick = {
@@ -77,14 +78,14 @@ fun UserDictionaryBottomSheet(
                         showDeleteConfirmation = false
                     },
                 ) {
-                    Text("Delete", color = MaterialTheme.colorScheme.error)
+                    Text(stringResource(R.string.action_delete), color = MaterialTheme.colorScheme.error)
                 }
             },
             dismissButton = {
                 androidx.compose.material3.TextButton(
                     onClick = { showDeleteConfirmation = false },
                 ) {
-                    Text("Cancel")
+                    Text(stringResource(R.string.action_cancel))
                 }
             },
         )
@@ -104,14 +105,14 @@ fun UserDictionaryBottomSheet(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
-                text = "Learned Words",
+                text = stringResource(R.string.user_dictionary_title),
                 style = MaterialTheme.typography.headlineSmall,
                 modifier = Modifier.padding(bottom = 16.dp),
             )
 
             if (words.isEmpty()) {
                 Text(
-                    text = "No words learned yet.",
+                    text = stringResource(R.string.user_dictionary_empty),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(vertical = 32.dp),
@@ -142,12 +143,12 @@ fun UserDictionaryBottomSheet(
                                 Spacer(Modifier.width(16.dp))
                                 Column {
                                     Text(
-                                        text = "Reset learned words",
+                                        text = stringResource(R.string.user_dictionary_reset_title),
                                         style = MaterialTheme.typography.titleMedium,
                                         color = MaterialTheme.colorScheme.onSurface,
                                     )
                                     Text(
-                                        text = "Delete all learned words from dictionary",
+                                        text = stringResource(R.string.user_dictionary_reset_desc),
                                         style = MaterialTheme.typography.bodySmall,
                                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                                     )
@@ -191,7 +192,7 @@ fun UserDictionaryBottomSheet(
                                         ) {
                                             Icon(
                                                 painter = painterResource(R.drawable.rounded_delete_24),
-                                                contentDescription = "Delete",
+                                                contentDescription = stringResource(R.string.action_delete),
                                                 tint = MaterialTheme.colorScheme.error,
                                             )
                                         }

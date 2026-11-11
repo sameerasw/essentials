@@ -383,7 +383,7 @@ fun QuickSettingsTilesSettingsUI(
         }
 
         Text(
-            text = "Long press a tile to see what it does",
+            text = stringResource(R.string.qs_tiles_long_press_info),
             style = MaterialTheme.typography.labelMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(top = 8.dp),
@@ -424,7 +424,7 @@ fun QuickSettingsTilesSettingsUI(
             }
 
             Text(
-                text = "Long press tiles to add",
+                text = stringResource(R.string.qs_tiles_long_press_add),
                 style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(start = 12.dp),
@@ -603,7 +603,7 @@ fun QSTileCard(
                 Text(
                     text =
                         if (isMissingPermissions) {
-                            "Grant permission"
+                            stringResource(R.string.qs_tiles_grant_permission)
                         } else if (isAdded) {
                             stringResource(R.string.action_added)
                         } else {
