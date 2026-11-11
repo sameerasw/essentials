@@ -4917,8 +4917,8 @@ class SettingsRepository(
 
     fun defaultSnippets(): List<Snippet> =
         listOf(
-            Snippet(id = 1L, keyword = "addr", title = "Home Address", content = "123 Main Street, Springfield"),
-            Snippet(id = 2L, keyword = "brb", title = "Be Right Back", content = "Be right back!"),
+            Snippet(id = 1L, keyword = "shrug", title = "Shrug", content = "¯\\_(ツ)_/¯"),
+            Snippet(id = 2L, keyword = "app", title = "Essentials", content = "https://github.com/sameerasw/essentials"),
             Snippet(id = 3L, keyword = "email", title = "Personal Email", content = "hello@example.com"),
         )
 }
