@@ -1942,6 +1942,7 @@ class NotificationListener : NotificationListenerService() {
             title = extras.getCharSequence(Notification.EXTRA_TITLE)?.toString(),
             text = extras.getCharSequence(Notification.EXTRA_TEXT)?.toString(),
             iconIsGlyph = iconIsGlyph,
+            isSilent = !LiveUpdateSnoozer.isLiveUpdate(sbn) && !isFakeLiveUpdate(sbn) && isSilentNotification(sbn),
             shortText = extras.getCharSequence("android.shortCriticalText")?.toString()?.trim()?.takeIf { it.isNotEmpty() },
             appName = try {
                 packageManager.getApplicationLabel(packageManager.getApplicationInfo(sbn.packageName, 0)).toString()
@@ -2147,10 +2148,11 @@ class NotificationListener : NotificationListenerService() {
         if (sbn.packageName == packageName || !hasReadableExtras(sbn) || isMediaNotification(sbn)) return null
         if (isHandledAsProgress(sbn) || isShownByDedicatedFeature(sbn)) return null
         if ((sbn.notification.flags and Notification.FLAG_GROUP_SUMMARY) != 0 && !isStandaloneSummary(sbn)) return null
+        val silent = isSilentNotification(sbn, rankingMap)
         return extractNotificationAlert(sbn)?.copy(
-            isSilent = isSilentNotification(sbn, rankingMap),
+            isSilent = silent,
             blockedByDnd = isBlockedByDnd(sbn, rankingMap),
-            ongoing = sbn.isOngoing,
+            ongoing = sbn.isOngoing && (!silent || LiveUpdateSnoozer.isLiveUpdate(sbn)),
             isConversation = isConversationNotification(sbn, rankingMap),
             hubOnly = true,
             timestamp = if (sbn.postTime > 0) sbn.postTime else System.currentTimeMillis(),

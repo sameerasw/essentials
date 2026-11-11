@@ -137,6 +137,11 @@ class FlashlightHandler(
             }
         }
 
+    fun canAdjustIntensity(): Boolean =
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+            !com.sameerasw.essentials.utils.DeviceUtils.isMediatekDevice() &&
+            !com.sameerasw.essentials.utils.DeviceUtils.isTorchAccessRestricted()
+
     fun register() {
         if (com.sameerasw.essentials.utils.DeviceUtils
                 .isTorchAccessRestricted()
@@ -545,8 +550,8 @@ class FlashlightHandler(
     }
 
     fun adjustFlashlightIntensity(increase: Boolean) {
+        if (!canAdjustIntensity()) return
         val cameraId = getCameraId() ?: return
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) return
 
         try {
             val maxLevel = FlashlightUtil.getMaxLevel(service, cameraId)
@@ -633,7 +638,7 @@ class FlashlightHandler(
                 FlashlightUtil.getMaxLevel(service, finalCameraId)
                 val defaultLevel = FlashlightUtil.getDefaultLevel(service, finalCameraId)
 
-                if (isFadeEnabled && FlashlightUtil.isIntensitySupported(service, finalCameraId)) {
+                if (isFadeEnabled && canAdjustIntensity() && FlashlightUtil.isIntensitySupported(service, finalCameraId)) {
                     val targetState = !isTorchOn
                     if (targetState) {
                         currentIntensityLevel = overrideIntensity ?: if (prefs.getBoolean(
@@ -693,6 +698,10 @@ class FlashlightHandler(
                             updateFlashlightNotification(currentIntensityLevel)
                         } else {
                             cancelFlashlightNotification()
+                        }
+                        if (com.sameerasw.essentials.utils.DeviceUtils.isTorchAccessRestricted()) {
+                            isTorchOn = !isTorchOn
+                            isInternalToggle = false
                         }
                     } else {
                         isInternalToggle = false

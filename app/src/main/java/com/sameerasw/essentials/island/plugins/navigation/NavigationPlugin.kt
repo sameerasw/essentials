@@ -43,6 +43,11 @@ class NavigationPlugin : BaseIslandPlugin() {
 
     private val endRoute = Runnable { trigger.reset() }
 
+    private val clearData = Runnable {
+        data = null
+        render()
+    }
+
     private val endExpand = Runnable {
         val c = ctx ?: return@Runnable
         if (c.focusedKey() != ITEM_KEY || c.currentStage() != IslandStage.Expanded) return@Runnable
@@ -71,6 +76,7 @@ class NavigationPlugin : BaseIslandPlugin() {
         ctx?.mainHandler?.removeCallbacks(endExpand)
         ctx?.mainHandler?.removeCallbacks(peekAfterCollapse)
         ctx?.mainHandler?.removeCallbacks(endRoute)
+        ctx?.mainHandler?.removeCallbacks(clearData)
         data = null
         endRoute.run()
     }
@@ -85,15 +91,20 @@ class NavigationPlugin : BaseIslandPlugin() {
         val c = ctx ?: return
         val stable = stabilized(next)
         val turned = stable?.instruction != null && stable.instruction != data?.instruction
-        data = stable
-        render()
         if (stable == null) {
+            if (data != null) {
+                c.mainHandler.removeCallbacks(clearData)
+                c.mainHandler.postDelayed(clearData, CLEAR_GRACE_MS)
+            }
             c.mainHandler.removeCallbacks(endExpand)
             c.mainHandler.removeCallbacks(peekAfterCollapse)
             c.mainHandler.removeCallbacks(endRoute)
             c.mainHandler.postDelayed(endRoute, ROUTE_GRACE_MS)
             return
         }
+        c.mainHandler.removeCallbacks(clearData)
+        data = stable
+        render()
         c.mainHandler.removeCallbacks(endRoute)
         if (!enabled()) return
         val focused = c.focusedKey()
@@ -157,10 +168,10 @@ class NavigationPlugin : BaseIslandPlugin() {
                         onOpen = { open(d) },
                         onExit = d.exitIntent?.let { intent ->
                             {
-                                sendPendingIntent(
-                                    context,
-                                    intent
-                                )
+                                if (sendPendingIntent(context, intent)) {
+                                    ctx?.mainHandler?.removeCallbacks(clearData)
+                                    clearData.run()
+                                }
                             }
                         },
                         scope = scope,
@@ -182,6 +193,7 @@ class NavigationPlugin : BaseIslandPlugin() {
         private const val EXPANDED_MS = 6_000L
         private const val COLLAPSE_ANIM_MS = 600L
         private const val ROUTE_GRACE_MS = 60_000L
+        private const val CLEAR_GRACE_MS = 2_500L
     }
 }
 

@@ -571,7 +571,7 @@ private fun IslandRootContent(
     var bubbleAbsorbing by remember { mutableStateOf(false) }
     val bubbleAnchorWidth = remember { IntArray(1) }
     if (stage == IslandStage.Line || stage == IslandStage.Expanded) bubbleTucking = true
-    LaunchedEffect(catchUpShown) {
+    LaunchedEffect(catchUpShown, stage) {
         if (inspection) {
             catchUpAnim.snapTo(if (catchUpShown) 1f else 0f)
             return@LaunchedEffect
@@ -919,7 +919,10 @@ private fun IslandRootContent(
                     compositingStrategy = CompositingStrategy.ModulateAlpha
                 },
             ) {
-                MediaSurface(glow, spec.expandedCorner, { visualFrame().pulse }, geometry, camera, Modifier.matchParentSize(), transparent = spec.transparency, progressiveBlur = spec.progressiveBlur, glowIntensity = spec.glowIntensity)
+                if (spec.backdropBlur) {
+                    IslandBackdropBlur({ visualFrame() }, with(density) { spec.backdropBlurRadius.toPx() }, Modifier.matchParentSize())
+                }
+                MediaSurface(glow, spec.expandedCorner, { visualFrame().pulse }, geometry, camera, Modifier.matchParentSize(), transparent = spec.transparency, transparencyIntensity = spec.transparencyIntensity, progressiveBlur = spec.progressiveBlur, glowIntensity = spec.glowIntensity)
                 if (spec.neuralExpressive && (spec.neuralExpressiveAlways || ownerItem?.expandedParticles == true)) {
                     GeminiParticlePill(
                         modifier = Modifier.matchParentSize(),
@@ -1058,6 +1061,8 @@ private fun IslandRootContent(
         val bubbleData = lastCatchUp
         if (bubbleData != null && catchUpAnim.value > 0.001f) {
             val dragX = remember { Animatable(0f) }
+            val liveBubble by rememberUpdatedState(bubbleData)
+            LaunchedEffect(bubbleData) { if (dragX.value != 0f) dragX.snapTo(0f) }
             val bubbleBond = remember(bubbleOnlyLayout) {
                 LiquidBond("sideBubble", presence = {
                     if (bubbleOnlyLayout || bubbleTucking || currentState.stage == IslandStage.Hidden) catchUpAnim.value.coerceIn(0f, 1f) else 1f
@@ -1138,7 +1143,7 @@ private fun IslandRootContent(
                             detectTapGestures {
                                 IslandHaptics.tap(context)
                                 bubbleAbsorbing = true
-                                bubbleData.onOpen()
+                                liveBubble.onOpen()
                                 scope.launch {
                                     delay(IslandMotion.COLLAPSE_MS.toLong())
                                     if (!bubbleTucking) bubbleAbsorbing = false
@@ -1148,7 +1153,7 @@ private fun IslandRootContent(
                         .pointerInput(Unit) {
                             detectHorizontalDragGestures(
                                 onHorizontalDrag = { change, amount ->
-                                    if (bubbleData.onDismiss == null) return@detectHorizontalDragGestures
+                                    if (liveBubble.onDismiss == null) return@detectHorizontalDragGestures
                                     change.consume()
                                     val next = dragX.value + amount
                                     val lo = if (towardCamera > 0f) -with(density) { 8.dp.toPx() } else -maxDrag
@@ -1160,7 +1165,7 @@ private fun IslandRootContent(
                                         if (dragX.value * towardCamera > threshold) {
                                             IslandHaptics.tap(context)
                                             dragX.animateTo(towardCamera * maxDrag, motionTween(100))
-                                            bubbleData.onDismiss?.invoke()
+                                            liveBubble.onDismiss?.invoke()
                                         } else {
                                             dragX.animateTo(0f, IslandMotion.float())
                                         }

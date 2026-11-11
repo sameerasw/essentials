@@ -75,6 +75,7 @@ class ProgressPlugin : BaseIslandPlugin() {
 
     override val settingKeys = setOf(
         SettingsRepository.KEY_ISLAND_NOTIF_KEEP_PROGRESS,
+        SettingsRepository.KEY_ISLAND_NOTIF_SKIP_SILENT,
         SettingsRepository.KEY_ISLAND_NOTIF_QUEUE_STYLE,
         SettingsRepository.KEY_ISLAND_SECONDARY_BUBBLE,
         SettingsRepository.KEY_ISLAND_LIVE_UPDATES_COUNT,
@@ -117,8 +118,10 @@ class ProgressPlugin : BaseIslandPlugin() {
         update(NotificationListener.getProgressNotifications())
     }
 
-    private fun update(next: List<ProgressNotificationData>) {
+    private fun update(incoming: List<ProgressNotificationData>) {
         if (ctx == null) return
+        val skipSilent = settings.isIslandNotifSkipSilentEnabled()
+        val next = if (skipSilent) incoming.filterNot { it.isSilent && it.isIndeterminate } else incoming
         val keys = next.mapTo(HashSet()) { it.key }
         order.retainAll(keys)
         next.asReversed().forEach { if (it.key !in order) order.add(it.key) }

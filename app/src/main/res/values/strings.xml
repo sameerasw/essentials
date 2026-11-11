@@ -2777,14 +2777,14 @@
     <string name="label_wallpaper_next_check">Next check in %1$s</string>
     <string name="label_wallpaper_hours">%1$d hours</string>
     <string name="label_wallpaper_a_few_minutes">a few minutes</string>
-    <string name="feat_wallpaper_staging_title">Tomorrow\'s Wallpaper</string>
-    <string name="feat_wallpaper_staging_desc">Review and queue tomorrow\'s mobile wallpaper</string>
+    <string name="feat_wallpaper_staging_title">Next Wallpaper</string>
+    <string name="feat_wallpaper_staging_desc">Review and queue the next mobile wallpaper</string>
     <string name="wallpaper_staging_next">Next</string>
     <string name="wallpaper_staging_stage">Pick</string>
     <string name="wallpaper_staging_picked">Picked</string>
-    <string name="wallpaper_staging_staged_badge">Queued for Tomorrow</string>
+    <string name="wallpaper_staging_staged_badge">Queued as Next</string>
     <string name="wallpaper_staging_clear">Clear Pick</string>
-    <string name="wallpaper_staging_staged_success">Picked as tomorrow\'s wallpaper!</string>
+    <string name="wallpaper_staging_staged_success">Picked as the next wallpaper!</string>
     <string name="wallpaper_staging_cleared_success">Cleared picked wallpaper</string>
     <string name="wallpaper_staging_error">Could not load photos. Check Unsplash connection or token.</string>
     <string name="wallpaper_staging_set_api_key">Set Unsplash Access Key</string>
@@ -3690,7 +3690,7 @@
     <string name="widget_stack_done">Done</string>
     <string name="widget_stack_unknown_widget">Widget</string>
     <string name="about_desc_link_actions">Choose how links open instead of being stuck with one app.\n\nWhen you open a link, Essentials lets you pick between multiple apps to handle it, with the option to open it in a bubble, copy it, share it or shorten it and create a QR code.</string>
-    <string name="about_desc_daily_wallpaper">Keep your wallpaper fresh with a daily curated wallpaper, or set a live wallpaper.\n\nPick your wallpaper, review and queue tomorrow\'s wallpaper before it is applied, and manage your live wallpaper from one place.</string>
+    <string name="about_desc_daily_wallpaper">Keep your wallpaper fresh with a daily curated wallpaper, or set a live wallpaper.\n\nPick your wallpaper, review and queue the next wallpaper before it is applied, and manage your live wallpaper from one place.</string>
     <string name="about_desc_watch">Integrations between your phone and your Wear OS watch.\n\nInstall the Essentials companion on your watch to sync notifications and calls, lock your phone from the watch, customize the watchface and complications, sync sound mode and location status, install an eSIM and turn on wireless debugging remotely.</string>
     <string name="about_desc_network_download_rate_limit">Limit the system-wide download speed.\n\nUseful to stop large downloads and updates from using all of your bandwidth. Requires advanced permissions such as Shizuku or root.</string>
     <string name="about_desc_mobile_data_always_on">Keeps mobile data active even while connected to Wi-Fi.\n\nThis lets your phone switch to mobile data instantly when the Wi-Fi connection gets weak or drops, at the cost of some extra battery use.</string>
@@ -3752,6 +3752,9 @@
     <string name="island_media_bubble_wide_title">Wider pill</string>
     <string name="island_media_bubble_fill_art_title">Fill album art</string>
     <string name="island_transparency_title">Island transparency</string>
+    <string name="island_transparency_intensity_title">Transparency intensity</string>
+    <string name="island_backdrop_blur_title">Backdrop blur</string>
+    <string name="island_backdrop_blur_radius_title">Blur amount</string>
     <string name="island_progressive_blur_title">Progressive blur animation</string>
     <string name="what_is_this">What is this?</string>
     <string name="label_feature_designed_by">Designed by</string>

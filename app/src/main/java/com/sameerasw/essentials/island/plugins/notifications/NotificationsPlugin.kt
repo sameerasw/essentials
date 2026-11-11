@@ -328,7 +328,7 @@ class NotificationsPlugin : BaseIslandPlugin() {
     }
 
     private fun passesFilters(alert: ActiveNotificationAlert, forHub: Boolean = false): Boolean {
-        if (!forHub && alert.isSilent && settings.isIslandNotifSkipSilentEnabled()) return false
+        if (alert.isSilent && settings.isIslandNotifSkipSilentEnabled() && (!forHub || (!alert.ongoing && !settings.isIslandNotifHubIncludeSilent()))) return false
         if (alert.blockedByDnd && settings.isIslandNotifFollowDndEnabled()) return false
         if (isOtp(alert) && settings.isIslandOtpBypassFilterEnabled()) return true
         if (!settings.isIslandNotifFilterAppsEnabled()) return true

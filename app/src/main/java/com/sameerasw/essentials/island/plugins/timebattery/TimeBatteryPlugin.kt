@@ -94,11 +94,11 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
     }
 
     private enum class PeekReason { Charging, Saver, Low, Critical }
-    private val secondsTick = object : Runnable {
+    private val clockTick = object : Runnable {
         override fun run() {
             readTime()
             render()
-            scheduleSecondsTick()
+            scheduleClockTick()
         }
     }
 
@@ -132,12 +132,12 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
                     }
                 }
                 Intent.ACTION_SCREEN_OFF -> {
-                    ctx?.mainHandler?.removeCallbacks(secondsTick)
+                    ctx?.mainHandler?.removeCallbacks(clockTick)
                     return
                 }
                 Intent.ACTION_SCREEN_ON -> {
                     readTime()
-                    scheduleSecondsTick()
+                    scheduleClockTick()
                 }
                 else -> readTime()
             }
@@ -160,12 +160,12 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
             },
         )
         registered = true
-        scheduleSecondsTick()
+        scheduleClockTick()
     }
 
     override fun onStop() {
         ctx?.mainHandler?.removeCallbacks(endPeek)
-        ctx?.mainHandler?.removeCallbacks(secondsTick)
+        ctx?.mainHandler?.removeCallbacks(clockTick)
         if (registered) {
             try {
                 context.unregisterReceiver(receiver)
@@ -180,14 +180,15 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
         readTime()
         readBattery(null)
         render()
-        scheduleSecondsTick()
+        scheduleClockTick()
     }
 
-    private fun scheduleSecondsTick() {
+    private fun scheduleClockTick() {
         val handler = ctx?.mainHandler ?: return
-        handler.removeCallbacks(secondsTick)
-        if (!registered || !settings.isIslandShowTimeBatteryEnabled() || !showSeconds()) return
-        handler.postDelayed(secondsTick, 1000L - System.currentTimeMillis() % 1000L)
+        handler.removeCallbacks(clockTick)
+        if (!registered || !settings.isIslandShowTimeBatteryEnabled()) return
+        val now = System.currentTimeMillis()
+        handler.postDelayed(clockTick, if (showSeconds()) 1000L - now % 1000L else IslandStillness.msToNextMinute(now))
     }
 
     private fun showSeconds() = settings.getBoolean(SettingsRepository.KEY_ISLAND_TIME_SHOW_SECONDS, false) && !IslandStillness.isStill

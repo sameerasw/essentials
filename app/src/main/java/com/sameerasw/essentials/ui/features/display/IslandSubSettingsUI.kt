@@ -41,6 +41,8 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import kotlin.math.roundToInt
+import com.sameerasw.essentials.island.ui.IslandBackdropBlurSupport
 import com.sameerasw.essentials.FeatureSettingsActivity
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.translation.TranslatableText
@@ -580,6 +582,52 @@ fun IslandVisualsSettingsUI(
                 },
                 modifier = Modifier.highlight(highlightSetting == "island_transparency"),
             )
+
+            if (viewModel.isIslandTransparency.value) {
+                ConfigSliderItem(
+                    title = stringResource(R.string.island_transparency_intensity_title),
+                    value = viewModel.islandTransparencyIntensity.floatValue,
+                    onValueChange = {
+                        HapticUtil.performUIHaptic(view)
+                        viewModel.setIslandTransparencyIntensity(it)
+                    },
+                    valueRange = 0.25f..5f,
+                    increment = 0.05f,
+                    iconRes = R.drawable.rounded_blur_on_24,
+                    valueFormatter = { "%d%%".format((it * 100).roundToInt()) },
+                    allowDecimals = true,
+                    modifier = Modifier.highlight(highlightSetting == "island_transparency_intensity"),
+                )
+
+                if (IslandBackdropBlurSupport.available) {
+                    IconToggleItem(
+                        iconRes = R.drawable.rounded_blur_on_24,
+                        title = stringResource(R.string.island_backdrop_blur_title),
+                        isChecked = viewModel.isIslandBackdropBlur.value,
+                        onCheckedChange = { checked ->
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            viewModel.setIslandBackdropBlur(checked)
+                        },
+                        modifier = Modifier.highlight(highlightSetting == "island_backdrop_blur"),
+                    )
+
+                    if (viewModel.isIslandBackdropBlur.value) {
+                        ConfigSliderItem(
+                            title = stringResource(R.string.island_backdrop_blur_radius_title),
+                            value = viewModel.islandBackdropBlurRadius.floatValue,
+                            onValueChange = {
+                                HapticUtil.performUIHaptic(view)
+                                viewModel.setIslandBackdropBlurRadius(it)
+                            },
+                            valueRange = 5f..120f,
+                            increment = 5f,
+                            iconRes = R.drawable.rounded_blur_on_24,
+                            valueFormatter = { "%d dp".format(it.roundToInt()) },
+                            modifier = Modifier.highlight(highlightSetting == "island_backdrop_blur_radius"),
+                        )
+                    }
+                }
+            }
 
             IconToggleItem(
                 iconRes = R.drawable.rounded_blur_on_24,

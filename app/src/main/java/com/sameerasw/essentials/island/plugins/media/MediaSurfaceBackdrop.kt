@@ -88,6 +88,7 @@ fun MediaSurface(
     camera: () -> MediaCameraGeometry?,
     modifier: Modifier = Modifier,
     transparent: Boolean = true,
+    transparencyIntensity: Float = 1f,
     progressiveBlur: Boolean = true,
     glowIntensity: Float = 1f,
 ) {
@@ -124,7 +125,10 @@ fun MediaSurface(
                     shader = RadialGradient(
                         0f, 0f, 1f,
                         if (transparent) {
-                            intArrayOf(0xFF000000.toInt(), 0xF2000000.toInt(), 0xE6000000.toInt(), 0xCC000000.toInt(), 0x8C000000.toInt(), 0x80000000.toInt())
+                            intArrayOf(0xFF, 0xF2, 0xE6, 0xCC, 0x8C, 0x80).mapIndexed { index, base ->
+                                val alpha = if (index == 0) base else (255 - (255 - base) * transparencyIntensity).toInt().coerceIn(0, 255)
+                                alpha shl 24
+                            }.toIntArray()
                         } else {
                             IntArray(6) { 0xFF000000.toInt() }
                         },
