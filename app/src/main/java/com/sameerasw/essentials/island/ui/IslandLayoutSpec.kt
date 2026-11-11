@@ -48,6 +48,7 @@ data class IslandLayoutSpec(
     val pulseDurationMs: Int = 1450,
     val queueStyle: QueueStyle = QueueStyle.Stack,
     val queueInline: Boolean = false,
+    val bubbleOnRight: Boolean = false,
     val iconColorCustom: Color? = null,
     val iconDynamic: Boolean = true,
     val themedText: Boolean = false,

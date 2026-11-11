@@ -3451,6 +3451,7 @@
     <string name="island_live_updates_count_title">Live updates count</string>
     <string name="island_live_updates_expanded_title">Expanded live update</string>
     <string name="island_secondary_bubbles_count_title">Secondary bubbles count</string>
+    <string name="island_secondary_bubble_side_title">Secondary bubble placement</string>
     <string name="island_progress_open">Open</string>
     <string name="island_travel_pause">Pause</string>
     <string name="island_travel_resume">Resume</string>

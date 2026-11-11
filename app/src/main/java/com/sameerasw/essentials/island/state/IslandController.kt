@@ -50,6 +50,7 @@ class IslandController(
     var secondaryBubbleEnabled: Boolean = true
     var secondaryBubbleOverlap: Boolean = false
     var secondaryBubbleMax: Int = 0
+    var bubbleOnRight: Boolean = false
     private var feedbackActive = false
 
     fun setFeedbackActive(active: Boolean) {
@@ -375,6 +376,9 @@ class IslandController(
             }
         val merged = if (secondaryBubbleOverlap) mergedBubble(items, bubbleOwner, mediaBubble) else null
         val usesBubbleOnly = merged == null && bubbleOwner?.sideBubble?.whenOccupiedOnly == true
+        val anchor = anchorProvider()
+        val mirrored = bubbleOnRight && anchor == CameraAnchor.Center
+        fun CompactArrangement.flipped() = if (mirrored) CompactArrangement(after, before, visibleItems) else this
         val arrangement = CompactLayoutEngine.arrange(
             items.values.filter {
                 it.compactVisible && !(usesBubbleOnly && it.key == bubbleOwner?.key) && !(mediaBubble != null && it.key == mediaItem?.key)
@@ -390,22 +394,23 @@ class IslandController(
                     chipsEnabled && item.chip,
                 )
             },
-            anchorProvider(),
+            anchor,
             maxCells = maxCells,
             leftExtra = (merged ?: bubbleOwner?.sideBubble)?.cells?.coerceAtLeast(1) ?: 0,
             balance = balanceCompact,
             cellWidth = compactCellWidth,
             leftExtraWidth = (merged ?: bubbleOwner?.sideBubble)?.cells?.coerceAtLeast(1)?.let(compactBubbleWidth) ?: 0f,
-            previous = _state.value.arrangement,
+            previous = _state.value.arrangement.flipped(),
             fits = compactFits?.let { fits ->
                 val extra = (merged ?: bubbleOwner?.sideBubble)?.cells?.coerceAtLeast(1) ?: 0
                 val shown = (_state.value.arrangement.before + _state.value.arrangement.after).toSet()
                 val wrapped: (List<String>, List<String>) -> Int? = { before, after ->
-                    fits(before, after, extra, (before + after).any { it !in shown })
+                    val growing = (before + after).any { it !in shown }
+                    if (mirrored) fits(after, before, extra, growing) else fits(before, after, extra, growing)
                 }
                 wrapped
             },
-        )
+        ).flipped()
         val focusedKey = expandedKey ?: peekKey
         val stage = when {
             feedbackActive && !suppressed && expandedKey == null && peekKey == null -> IslandStage.Compact

@@ -1866,6 +1866,7 @@
     <string name="island_live_updates_count_title">Live updates count</string>
     <string name="island_live_updates_expanded_title">Expanded live update</string>
     <string name="island_secondary_bubbles_count_title">Secondary bubbles count</string>
+    <string name="island_secondary_bubble_side_title">Secondary bubble placement</string>
     <string name="island_notif_queue_title">通知キュー</string>
     <string name="island_catch_up_timeout_title">取得遅延</string>
     <string name="island_battery_only_low_title">残量が低下しているときのみ表示</string>

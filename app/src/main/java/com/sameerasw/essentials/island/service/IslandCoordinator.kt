@@ -834,6 +834,7 @@ class IslandCoordinator(
                 else -> QueueStyle.Stack
             },
             queueInline = settings.isIslandNotifQueueInlineEnabled(),
+            bubbleOnRight = settings.getIslandSecondaryBubbleSide() == SettingsRepository.ISLAND_CAMERA_POSITION_RIGHT,
             iconColorCustom = if (iconCustomMode && !iconMaterialYou) {
                 runCatching {
                     Color(AndroidColor.parseColor(settings.getString(SettingsRepository.KEY_ISLAND_ICON_COLOR_CUSTOM, null) ?: "#FFFFFF"))
@@ -857,6 +858,7 @@ class IslandCoordinator(
         controller.secondaryBubbleEnabled = settings.isIslandSecondaryBubbleEnabled()
         controller.secondaryBubbleMax = settings.getIslandNotifHubIcons()
         controller.secondaryBubbleOverlap = settings.getIslandNotifQueueStyle() == SettingsRepository.ISLAND_NOTIF_QUEUE_STYLE_OVERLAP
+        controller.bubbleOnRight = settings.getIslandSecondaryBubbleSide() == SettingsRepository.ISLAND_CAMERA_POSITION_RIGHT
         controller.relayout()
         controller.expandedTimeoutMs = settings.getIslandExpandedTimeoutMs()
         applyPreviewRing()
@@ -966,8 +968,9 @@ class IslandCoordinator(
         val (leftRoom, rightRoom) = sideRooms()
         val left = if (leftRoom == Int.MAX_VALUE) leftRoom else leftRoom - slack
         val right = if (rightRoom == Int.MAX_VALUE) rightRoom else rightRoom - slack
-        val needLeft = need(before, leftExtra)
-        val needRight = need(after, 0)
+        val extraRight = geo.anchor == CameraAnchor.Center && controller.bubbleOnRight
+        val needLeft = need(before, if (extraRight) 0 else leftExtra)
+        val needRight = need(after, if (extraRight) leftExtra else 0)
         if (needLeft > left || needRight > right) return null
         val mirrored = geo.anchor == CameraAnchor.Center && leftExtra == 0
         if (mirrored && maxOf(needLeft, needRight) > minOf(left, right)) return null
@@ -1070,6 +1073,7 @@ class IslandCoordinator(
         val CONFIG_KEYS = setOf(
             SettingsRepository.KEY_ISLAND_NOTIF_THEMED_BUBBLE,
             SettingsRepository.KEY_ISLAND_NOTIF_QUEUE_STYLE,
+            SettingsRepository.KEY_ISLAND_SECONDARY_BUBBLE_SIDE,
             SettingsRepository.KEY_ISLAND_NOTIF_QUEUE_INLINE,
             SettingsRepository.KEY_ISLAND_USE_AUTO_DETECT,
             SettingsRepository.KEY_ISLAND_CAMERA_OFFSET_X,
@@ -1121,6 +1125,7 @@ class IslandCoordinator(
             SettingsRepository.KEY_ISLAND_SECONDARY_BUBBLE,
             SettingsRepository.KEY_ISLAND_NOTIF_HUB_ICONS,
             SettingsRepository.KEY_ISLAND_NOTIF_QUEUE_STYLE,
+            SettingsRepository.KEY_ISLAND_SECONDARY_BUBBLE_SIDE,
             SettingsRepository.KEY_ISLAND_MAX_ITEMS,
             SettingsRepository.KEY_ISLAND_STATUSBAR_AWARE_WIDTH,
             SettingsRepository.KEY_ISLAND_STATUSBAR_IGNORE_NOTIFICATIONS,
