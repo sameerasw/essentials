@@ -62,6 +62,7 @@ fun initPermissionRegistry() {
     PermissionRegistry.register("ACCESSIBILITY", R.string.feat_status_glance_title)
     PermissionRegistry.register("READ_CALENDAR", R.string.feat_status_glance_title)
     PermissionRegistry.register("ACCESSIBILITY", R.string.feat_conscious_gate_title)
+    PermissionRegistry.register("ACCESSIBILITY", R.string.feat_text_snippets_title)
 
     // Write secure settings permission
     PermissionRegistry.register("WRITE_SECURE_SETTINGS", R.string.feat_statusbar_icons_title)
