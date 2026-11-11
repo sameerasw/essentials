@@ -41,19 +41,60 @@ body:
     attributes:
       label: Screenshots
       description: If applicable, add screenshots to help explain your problem.
-  - type: input
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severity
+      description: How badly does this affect you?
+      options:
+        - Crash
+        - Broken
+        - Rare
+        - Minor
+        - Cosmetic
+    validations:
+      required: true
+  - type: dropdown
     id: android-version
     attributes:
       label: Android Version
       description: What version of Android are you running?
-      placeholder: e.g., Android 14
+      options:
+        - Android 17 (SDK37)
+        - Android 16 (SDK36)
+        - Android 15 (SDK35)
+        - Android 14 (SDK34)
+        - Android 13 (SDK33)
+        - Android 12 (SDK31/32)
+        - Android 11 (SDK30)
+        - Android 10 (SDK29)
+        - Android 9 (SDK28)
+        - Android 8 (SDK26/27)
+        - Android Canary
+    validations:
+      required: true
+  - type: dropdown
+    id: oem
+    attributes:
+      label: Device (OEM)
+      description: Who makes your device?
+      options:
+        - Pixel
+        - Samsung
+        - Motorola
+        - OnePlus
+        - Xiaomi
+        - Oppo
+        - Vivo
+        - Nothing
+        - Other
     validations:
       required: true
   - type: input
     id: device
     attributes:
       label: Device
-      description: What device are you using?
+      description: What device model are you using?
       placeholder: e.g., Google Pixel 8
     validations:
       required: true
