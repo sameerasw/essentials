@@ -613,7 +613,6 @@ Sin embargo, sí te permite reanudarla desde la lista de aplicaciones del lanzad
     <string name="perm_battery_optimization_title">Optimización de la batería</string>
     <string name="perm_battery_optimization_desc">Asegúrate de que el sistema no finalice el servicio para ahorrar energía.</string>
     <!-- Tabs -->
-    <string name="tab_essentials">Essentials</string>
     <string name="tab_freeze">Congelar</string>
     <string name="tab_freeze_title">Congelado</string>
     <string name="tab_diy">DIY (Hazlo tú mismo)</string>

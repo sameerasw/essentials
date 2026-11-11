@@ -51,6 +51,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.core.sheets.CameraFlipInfoBottomSheet
 import com.sameerasw.essentials.domain.HapticFeedbackType
 import com.sameerasw.essentials.domain.diy.Action
@@ -292,8 +293,8 @@ fun ButtonRemapSettingsUI(
                                             vertical = 0.dp,
                                         ),
                                 ) {
-                                    Text(
-                                        stringResource(R.string.shizuku_open_button),
+                                    TranslatableText(
+                                        R.string.shizuku_open_button,
                                         style = MaterialTheme.typography.labelSmall,
                                     )
                                 }
@@ -311,8 +312,8 @@ fun ButtonRemapSettingsUI(
         ) {
             Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
                 // Haptic Feedback (Common)
-                Text(
-                    text = stringResource(R.string.settings_section_haptic),
+                TranslatableText(
+                    stringResId = R.string.settings_section_haptic,
                     style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.padding(start = 16.dp),
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -331,8 +332,8 @@ fun ButtonRemapSettingsUI(
                     )
                 }
 
-                Text(
-                    text = stringResource(R.string.button_remap_section_button),
+                TranslatableText(
+                    stringResId = R.string.button_remap_section_button,
                     style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.padding(start = 16.dp),
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -372,8 +373,8 @@ fun ButtonRemapSettingsUI(
                 }
 
                 if (selectedButtonTab != 2) {
-                    Text(
-                        text = stringResource(R.string.button_remap_section_long_press),
+                    TranslatableText(
+                        stringResId = R.string.button_remap_section_long_press,
                         style = MaterialTheme.typography.titleMedium,
                         modifier = Modifier.padding(start = 16.dp),
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -390,8 +391,8 @@ fun ButtonRemapSettingsUI(
                 } else {
                     val screenState =
                         if (selectedScreenTab == 0) RemapScreenState.OFF else RemapScreenState.ON
-                    Text(
-                        text = stringResource(R.string.button_remap_double_press),
+                    TranslatableText(
+                        stringResId = R.string.button_remap_double_press,
                         style = MaterialTheme.typography.titleMedium,
                         modifier = Modifier.padding(start = 16.dp),
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -536,8 +537,8 @@ private fun PowerGestureSection(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        Text(
-            text = stringResource(titleRes),
+        TranslatableText(
+            stringResId = titleRes,
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(start = 16.dp),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -596,12 +597,9 @@ private fun PowerGestureSection(
 
         if (PowerButtonGestures.isHandledByEssentials(offChoice, onChoice)) {
             RoundedCardContainer {
-                Text(
-                    text =
-                        stringResource(
-                            R.string.button_remap_power_hold_handled_hint,
-                            stringResource(R.string.button_remap_use_shizuku_title),
-                        ),
+                TranslatableText(
+                    stringResId = R.string.button_remap_power_hold_handled_hint,
+                    formatArgs = listOf(stringResource(R.string.button_remap_use_shizuku_title)),
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.padding(16.dp),
                     color = MaterialTheme.colorScheme.onSurfaceVariant,

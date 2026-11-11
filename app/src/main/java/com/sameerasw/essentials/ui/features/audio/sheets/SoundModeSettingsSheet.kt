@@ -46,6 +46,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.diy.Action
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.utils.ColorUtil
 import com.sameerasw.essentials.utils.HapticUtil
@@ -71,8 +72,8 @@ fun SoundModeSettingsSheet(
                     .fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            Text(
-                text = stringResource(R.string.diy_action_sound_mode),
+            TranslatableText(
+                stringResId = R.string.diy_action_sound_mode,
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSurface,
@@ -109,8 +110,8 @@ fun SoundModeSettingsSheet(
                             modifier = Modifier.size(24.dp),
                         )
                     }
-                    Text(
-                        text = stringResource(R.string.diy_sound_mode_desc),
+                    TranslatableText(
+                        stringResId = R.string.diy_sound_mode_desc,
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
@@ -193,7 +194,7 @@ fun SoundModeSettingsSheet(
                         modifier = Modifier.size(20.dp),
                     )
                     Spacer(modifier = Modifier.size(8.dp))
-                    Text(stringResource(R.string.action_cancel))
+                    TranslatableText(R.string.action_cancel)
                 }
 
                 Button(
@@ -209,7 +210,7 @@ fun SoundModeSettingsSheet(
                         modifier = Modifier.size(20.dp),
                     )
                     Spacer(modifier = Modifier.size(8.dp))
-                    Text(stringResource(R.string.action_save))
+                    TranslatableText(R.string.action_save)
                 }
             }
         }

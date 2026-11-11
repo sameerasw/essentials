@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.model.AppSelection
 import com.sameerasw.essentials.domain.model.ShutUpAppConfig
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenu
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
@@ -103,7 +104,7 @@ fun ShutUpSettingsUI(
                     onDismissRequest = { keyboardMenuOpen = false },
                 ) {
                     SegmentedDropdownMenuItem(
-                        text = { Text(stringResource(R.string.shut_up_keyboard_skip)) },
+                        text = { TranslatableText(R.string.shut_up_keyboard_skip) },
                         onClick = {
                             keyboardMenuOpen = false
                             viewModel.setShutUpKeyboard("")
@@ -186,7 +187,7 @@ fun ShutUpSettingsUI(
                     },
                     additionalMenuItems = { onDismiss ->
                         SegmentedDropdownMenuItem(
-                            text = { Text(stringResource(R.string.action_remove)) },
+                            text = { TranslatableText(R.string.action_remove) },
                             onClick = {
                                 onDismiss()
                                 viewModel.removeShutUpConfig(config.packageName)
@@ -203,8 +204,8 @@ fun ShutUpSettingsUI(
             }
         }
 
-        Text(
-            text = stringResource(R.string.shut_up_description),
+        TranslatableText(
+            stringResId = R.string.shut_up_description,
             style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier.padding(16.dp),
             color = MaterialTheme.colorScheme.onSurfaceVariant,

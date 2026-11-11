@@ -22,7 +22,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -31,7 +30,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.Layout
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -43,6 +41,7 @@ import com.sameerasw.essentials.island.gestures.SlideFeedback
 import com.sameerasw.essentials.island.ui.IslandLayoutSpec
 import com.sameerasw.essentials.island.ui.IslandMotion
 import com.sameerasw.essentials.island.ui.IslandTextStyles
+import com.sameerasw.essentials.translation.TranslatableText
 
 // Volume / brightness / sound mode take over the whole pill: label on the far side, icon on the other.
 @Composable
@@ -61,7 +60,7 @@ fun SlideFeedbackCompact(feedback: SlideFeedback, spec: IslandLayoutSpec) {
                         },
                         label = "soundMode",
                     ) { mode ->
-                        Text(stringResource(mode.labelRes), style = IslandTextStyles.compact)
+                        TranslatableText(mode.labelRes, style = IslandTextStyles.compact)
                     }
                     is SlideFeedback.Track -> Unit
                 }

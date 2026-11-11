@@ -612,7 +612,6 @@
     <string name="perm_battery_optimization_title">Оптимізація батареї</string>
     <string name="perm_battery_optimization_desc">Переконайтеся, що служба не припиняється системою, щоб заощадити енергію.</string>
     <!-- Tabs -->
-    <string name="tab_essentials">Основи</string>
     <string name="tab_freeze">Заморозити</string>
     <string name="tab_freeze_title">Заморожені</string>
     <string name="tab_diy">DIY</string>

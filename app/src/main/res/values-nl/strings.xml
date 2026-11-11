@@ -612,7 +612,6 @@
     <string name="perm_battery_optimization_title">Batterijoptimalisatie</string>
     <string name="perm_battery_optimization_desc">Zorgt ervoor dat de service niet gestopt wordt door het systeem om stroom te besparen.</string>
     <!-- Tabs -->
-    <string name="tab_essentials">Essentials</string>
     <string name="tab_freeze">Bevriezen</string>
     <string name="tab_freeze_title">Bevroren</string>
     <string name="tab_diy">DIY</string>

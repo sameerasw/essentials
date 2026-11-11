@@ -9,7 +9,6 @@
 
 package com.sameerasw.essentials.ui.components.linkActions
 
-import androidx.compose.ui.res.stringResource
 import com.sameerasw.essentials.R
 import android.content.Intent
 import android.net.Uri
@@ -21,12 +20,12 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 
 @Composable
@@ -51,8 +50,8 @@ fun ShareWithContent(
                     .padding(24.dp),
             contentAlignment = Alignment.Center,
         ) {
-            Text(
-                text = stringResource(R.string.link_no_apps_share),
+            TranslatableText(
+                stringResId = R.string.link_no_apps_share,
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )

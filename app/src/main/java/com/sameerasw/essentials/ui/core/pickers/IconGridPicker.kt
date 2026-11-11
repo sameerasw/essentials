@@ -17,7 +17,6 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -26,8 +25,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.utils.HapticUtil
 
 data class IconCategory(@StringRes val label: Int, val icons: List<String>)
@@ -61,8 +60,8 @@ fun IconGridPicker(
     ) {
         resolved.forEachIndexed { index, (label, icons) ->
             item(key = "header_$label", span = { GridItemSpan(maxLineSpan) }) {
-                Text(
-                    text = stringResource(label),
+                TranslatableText(
+                    stringResId = label,
                     style = MaterialTheme.typography.titleSmall,
                     color = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.padding(start = 8.dp, top = if (index == 0) 0.dp else 12.dp, bottom = 2.dp),

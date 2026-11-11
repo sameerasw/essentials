@@ -11,6 +11,7 @@ package com.sameerasw.essentials
 
 import androidx.compose.ui.layout.boundsInRoot
 import androidx.compose.ui.layout.onGloballyPositioned
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.modifiers.AppRipple
 import com.sameerasw.essentials.ui.modifiers.liquidRipple
 import com.sameerasw.essentials.ui.navigation.LocalOpenAutomationId
@@ -943,7 +944,7 @@ class MainActivity : AppCompatActivity() {
                                                                         },
                                                                     )
                                                                     SegmentedDropdownMenuItem(
-                                                                        text = { Text(stringResource(R.string.action_sign_out)) },
+                                                                        text = { TranslatableText(R.string.action_sign_out) },
                                                                         onClick = {
                                                                             gitHubAuthViewModel.signOut(context)
                                                                             showFabProfileMenu = false

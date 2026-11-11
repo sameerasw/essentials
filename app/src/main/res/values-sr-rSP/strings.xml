@@ -668,7 +668,6 @@
     <string name="perm_battery_optimization_title">Оптимизација батерије</string>
     <string name="perm_battery_optimization_desc">Уверите се да систем не уништи услугу да бисте уштедели енергију.</string>
     <!-- Tabs -->
-    <string name="tab_essentials">Ессентиалс</string>
     <string name="tab_freeze">Фреезе</string>
     <string name="tab_freeze_title">Фрозен</string>
     <string name="tab_diy">ДИИ</string>

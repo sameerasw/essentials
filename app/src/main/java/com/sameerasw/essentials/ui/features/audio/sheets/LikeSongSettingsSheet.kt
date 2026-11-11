@@ -28,7 +28,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -38,6 +37,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.viewmodels.MainViewModel
@@ -62,14 +62,14 @@ fun LikeSongSettingsSheet(
                     .padding(horizontal = 24.dp)
                     .padding(bottom = 24.dp),
         ) {
-            Text(
-                text = stringResource(R.string.like_song_settings_title),
+            TranslatableText(
+                stringResId = R.string.like_song_settings_title,
                 style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
                 modifier = Modifier.padding(bottom = 16.dp),
             )
 
-            Text(
-                text = stringResource(R.string.like_song_settings_desc),
+            TranslatableText(
+                stringResId = R.string.like_song_settings_desc,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(bottom = 24.dp),
@@ -109,7 +109,7 @@ fun LikeSongSettingsSheet(
                                 .padding(end = 8.dp)
                                 .size(20.dp),
                     )
-                    Text(text = stringResource(R.string.grant_notification_access))
+                    TranslatableText(stringResId = R.string.grant_notification_access)
                 }
             } else {
                 Card(
@@ -137,8 +137,8 @@ fun LikeSongSettingsSheet(
                             tint = MaterialTheme.colorScheme.primary,
                         )
                         Spacer(modifier = Modifier.width(16.dp))
-                        Text(
-                            text = stringResource(R.string.like_song_notification_access_granted),
+                        TranslatableText(
+                            stringResId = R.string.like_song_notification_access_granted,
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSecondaryContainer,
                         )
@@ -146,8 +146,8 @@ fun LikeSongSettingsSheet(
                 }
             }
 
-            Text(
-                text = stringResource(R.string.label_options),
+            TranslatableText(
+                stringResId = R.string.label_options,
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(bottom = 8.dp, top = 8.dp),
             )

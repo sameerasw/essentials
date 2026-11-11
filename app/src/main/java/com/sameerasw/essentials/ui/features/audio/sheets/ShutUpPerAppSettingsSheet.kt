@@ -24,7 +24,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -38,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.model.ShutUpAppConfig
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.viewmodels.MainViewModel
@@ -63,8 +63,8 @@ fun ShutUpPerAppSettingsSheet(
     if (showShizukuRestartWarning) {
         AlertDialog(
             onDismissRequest = { showShizukuRestartWarning = false },
-            title = { Text(stringResource(R.string.shut_up_shizuku_restart_warning_title)) },
-            text = { Text(stringResource(R.string.shut_up_shizuku_restart_warning_message)) },
+            title = { TranslatableText(R.string.shut_up_shizuku_restart_warning_title) },
+            text = { TranslatableText(R.string.shut_up_shizuku_restart_warning_message) },
             confirmButton = {
                 TextButton(onClick = {
                     showShizukuRestartWarning = false
@@ -72,12 +72,12 @@ fun ShutUpPerAppSettingsSheet(
                     currentConfig = newConfig
                     onConfigChanged(newConfig)
                 }) {
-                    Text(stringResource(R.string.action_enable))
+                    TranslatableText(R.string.action_enable)
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showShizukuRestartWarning = false }) {
-                    Text(stringResource(R.string.action_cancel))
+                    TranslatableText(R.string.action_cancel)
                 }
             },
         )
@@ -95,8 +95,8 @@ fun ShutUpPerAppSettingsSheet(
                     .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            Text(
-                text = stringResource(R.string.shut_up_per_app_settings),
+            TranslatableText(
+                stringResId = R.string.shut_up_per_app_settings,
                 style = MaterialTheme.typography.headlineSmall,
                 modifier = Modifier.padding(horizontal = 16.dp),
             )
@@ -218,7 +218,7 @@ fun ShutUpPerAppSettingsSheet(
                     modifier = Modifier.size(20.dp),
                 )
                 Spacer(modifier = Modifier.width(8.dp))
-                Text(text = stringResource(R.string.action_create_shortcut))
+                TranslatableText(stringResId = R.string.action_create_shortcut)
             }
 
             Spacer(modifier = Modifier.height(32.dp))

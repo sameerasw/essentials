@@ -37,6 +37,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.utils.HapticUtil
@@ -86,13 +87,13 @@ fun CalendarStateSheet(
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            Text(
-                text = stringResource(R.string.diy_calendar_state_title),
+            TranslatableText(
+                stringResId = R.string.diy_calendar_state_title,
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(start = 8.dp),
             )
-            Text(
-                text = stringResource(R.string.diy_calendar_state_desc),
+            TranslatableText(
+                stringResId = R.string.diy_calendar_state_desc,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(start = 8.dp),
@@ -128,15 +129,15 @@ fun CalendarStateSheet(
 
             SectionLabel(stringResource(R.string.diy_calendar_calendars))
             if (!hasPermission) {
-                Text(
-                    text = stringResource(R.string.diy_calendar_permission),
+                TranslatableText(
+                    stringResId = R.string.diy_calendar_permission,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(start = 8.dp),
                 )
             } else if (calendars.isEmpty()) {
-                Text(
-                    text = stringResource(R.string.status_glance_calendar_no_calendars),
+                TranslatableText(
+                    stringResId = R.string.status_glance_calendar_no_calendars,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(start = 8.dp),

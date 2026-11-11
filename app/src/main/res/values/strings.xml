@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Essentials</string>
+    <string name="app_name" translatable="false">Essentials</string>
     <string name="diy_genai_lazy_title">I’m lazy, Do it for me</string>
     <string name="settings_genai_automation_title">Enable GenAI use</string>
 
@@ -1160,7 +1160,6 @@
     <string name="perm_battery_optimization_desc">Ensure the service is not killed by the system to save power.</string>
 
     <!-- Tabs -->
-    <string name="tab_essentials">Essentials</string>
     <string name="tab_freeze">Freeze</string>
     <string name="tab_freeze_title">Frozen</string>
     <string name="tab_diy">DIY</string>
@@ -3004,7 +3003,6 @@
     <string name="pixel_search_section_apps">Apps</string>
     <string name="pixel_search_section_contacts">Contacts</string>
     <string name="pixel_search_section_system_settings">System Settings</string>
-    <string name="pixel_search_section_essentials">Essentials</string>
     <string name="pixel_search_section_shortcuts">Shortcuts</string>
     <string name="pixel_search_section_web">Web</string>
     <string name="pixel_search_section_media">Photos &amp; Videos</string>

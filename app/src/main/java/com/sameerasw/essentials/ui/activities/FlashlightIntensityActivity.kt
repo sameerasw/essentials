@@ -66,6 +66,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.services.receivers.FlashlightActionReceiver
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
 import com.sameerasw.essentials.utils.FlashlightUtil
 import com.sameerasw.essentials.utils.HapticUtil
@@ -313,7 +314,7 @@ fun FlashlightIntensityOverlay(onDismiss: () -> Unit) {
                                         .semantics { role = Role.RadioButton },
                                 shapes = ButtonGroupDefaults.connectedLeadingButtonShapes(),
                             ) {
-                                Text(stringResource(R.string.flashlight_mode_sos))
+                                TranslatableText(R.string.flashlight_mode_sos)
                             }
 
                             // Strobe
@@ -338,7 +339,7 @@ fun FlashlightIntensityOverlay(onDismiss: () -> Unit) {
                                         .semantics { role = Role.RadioButton },
                                 shapes = ButtonGroupDefaults.connectedMiddleButtonShapes(),
                             ) {
-                                Text(stringResource(R.string.flashlight_mode_strobe))
+                                TranslatableText(R.string.flashlight_mode_strobe)
                             }
 
                             // Fade
@@ -363,7 +364,7 @@ fun FlashlightIntensityOverlay(onDismiss: () -> Unit) {
                                         .semantics { role = Role.RadioButton },
                                 shapes = ButtonGroupDefaults.connectedTrailingButtonShapes(),
                             ) {
-                                Text(stringResource(R.string.flashlight_fade_label))
+                                TranslatableText(R.string.flashlight_fade_label)
                             }
                         }
                     }
@@ -403,7 +404,7 @@ fun FlashlightIntensityOverlay(onDismiss: () -> Unit) {
                                 .height(48.dp),
                         shape = RoundedCornerShape(16.dp),
                     ) {
-                        Text(stringResource(R.string.action_done))
+                        TranslatableText(R.string.action_done)
                     }
 
                     Button(
@@ -421,7 +422,7 @@ fun FlashlightIntensityOverlay(onDismiss: () -> Unit) {
                                 .height(48.dp),
                         shape = RoundedCornerShape(16.dp),
                     ) {
-                        Text(stringResource(R.string.action_turn_off))
+                        TranslatableText(R.string.action_turn_off)
                     }
                 }
             }

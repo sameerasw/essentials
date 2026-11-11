@@ -21,7 +21,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SheetState
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -31,13 +30,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalView
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.SettingsRepository
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.viewmodels.MainViewModel
 
@@ -76,15 +75,15 @@ fun PrankBottomSheet(
 
             if (!isRevealed) {
                 // Prank Phase
-                Text(
-                    text = stringResource(R.string.prank_trial_expired_title),
+                TranslatableText(
+                    stringResId = R.string.prank_trial_expired_title,
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center,
                 )
 
-                Text(
-                    text = stringResource(R.string.prank_trial_expired_desc),
+                TranslatableText(
+                    stringResId = R.string.prank_trial_expired_desc,
                     style = MaterialTheme.typography.bodyMedium,
                     textAlign = TextAlign.Center,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -99,20 +98,20 @@ fun PrankBottomSheet(
                     },
                     modifier = Modifier.fillMaxWidth(),
                 ) {
-                    Text(text = stringResource(R.string.prank_button_premium))
+                    TranslatableText(stringResId = R.string.prank_button_premium)
                 }
             } else {
                 // Reveal Phase
-                Text(
-                    text = stringResource(R.string.prank_reveal_title),
+                TranslatableText(
+                    stringResId = R.string.prank_reveal_title,
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center,
                     color = MaterialTheme.colorScheme.primary,
                 )
 
-                Text(
-                    text = stringResource(R.string.prank_reveal_desc),
+                TranslatableText(
+                    stringResId = R.string.prank_reveal_desc,
                     style = MaterialTheme.typography.bodyLarge,
                     textAlign = TextAlign.Center,
                 )
@@ -149,7 +148,7 @@ fun PrankBottomSheet(
                                 )
                             },
                 ) {
-                    Text(text = stringResource(R.string.action_continue))
+                    TranslatableText(stringResId = R.string.action_continue)
                 }
             }
 

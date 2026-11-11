@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
@@ -38,6 +37,7 @@ import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.utils.HapticUtil
 
 @Stable
@@ -148,7 +148,7 @@ fun PullTitleHeader(
                 expandableContent()
             }
         }
-        Text(
+        TranslatableText(
             text = title,
             style =
                 baseStyle.copy(
@@ -161,7 +161,7 @@ fun PullTitleHeader(
             modifier = Modifier.basicMarquee(),
         )
         if (caption != null) {
-            Text(
+            TranslatableText(
                 text = caption,
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,

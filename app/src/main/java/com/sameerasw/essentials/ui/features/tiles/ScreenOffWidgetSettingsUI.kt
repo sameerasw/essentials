@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -24,12 +23,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.edit
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.HapticFeedbackType
 import com.sameerasw.essentials.domain.ScreenOffMethod
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.pickers.HapticFeedbackPicker
 import com.sameerasw.essentials.ui.core.pickers.ScreenOffMethodPicker
@@ -74,8 +73,8 @@ fun ScreenOffWidgetSettingsUI(
         verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
         // Screen Off Method Category
-        Text(
-            text = stringResource(R.string.screen_off_method_title),
+        TranslatableText(
+            stringResId = R.string.screen_off_method_title,
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -104,8 +103,8 @@ fun ScreenOffWidgetSettingsUI(
         }
 
         // Haptic Feedback Category
-        Text(
-            text = stringResource(R.string.settings_section_haptic),
+        TranslatableText(
+            stringResId = R.string.settings_section_haptic,
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
             color = MaterialTheme.colorScheme.onSurfaceVariant,

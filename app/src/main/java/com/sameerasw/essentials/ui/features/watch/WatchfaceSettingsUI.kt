@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.services.DeviceInfoSyncManager
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
 import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
 import com.sameerasw.essentials.ui.core.cards.ConfigPickerItem
@@ -142,8 +143,8 @@ fun WatchfaceSettingsUI(
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         // Section 0: Clock
-        Text(
-            text = stringResource(R.string.watchface_category_clock),
+        TranslatableText(
+            stringResId = R.string.watchface_category_clock,
             style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.primary,
             modifier = Modifier.padding(start = 8.dp),
@@ -242,8 +243,8 @@ fun WatchfaceSettingsUI(
         }
 
         // Section 1: Battery & Icons
-        Text(
-            text = stringResource(R.string.watchface_category_battery),
+        TranslatableText(
+            stringResId = R.string.watchface_category_battery,
             style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.primary,
             modifier = Modifier.padding(start = 8.dp),
@@ -277,8 +278,8 @@ fun WatchfaceSettingsUI(
         }
 
         // Section 2: Complications
-        Text(
-            text = stringResource(R.string.watchface_category_complications),
+        TranslatableText(
+            stringResId = R.string.watchface_category_complications,
             style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.primary,
             modifier = Modifier.padding(start = 8.dp),

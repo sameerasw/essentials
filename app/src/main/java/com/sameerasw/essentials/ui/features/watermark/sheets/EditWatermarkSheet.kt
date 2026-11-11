@@ -48,6 +48,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.watermark.WatermarkOptions
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.utils.HapticUtil.performUIHaptic
@@ -90,8 +91,8 @@ fun EditWatermarkSheet(
                     .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            Text(
-                text = stringResource(R.string.watermark_edit_texts),
+            TranslatableText(
+                stringResId = R.string.watermark_edit_texts,
                 style = MaterialTheme.typography.titleLarge,
                 modifier = Modifier.padding(bottom = 8.dp),
             )
@@ -119,7 +120,7 @@ fun EditWatermarkSheet(
                             OutlinedTextField(
                                 value = draftBrand,
                                 onValueChange = { draftBrand = it },
-                                label = { Text(stringResource(R.string.watermark_device_brand)) },
+                                label = { TranslatableText(R.string.watermark_device_brand) },
                                 modifier =
                                     Modifier
                                         .fillMaxWidth()
@@ -141,8 +142,8 @@ fun EditWatermarkSheet(
                     OutlinedTextField(
                         value = draftCustom,
                         onValueChange = { draftCustom = it },
-                        label = { Text(stringResource(R.string.watermark_custom_text)) },
-                        placeholder = { Text(stringResource(R.string.watermark_custom_text_hint)) },
+                        label = { TranslatableText(R.string.watermark_custom_text) },
+                        placeholder = { TranslatableText(R.string.watermark_custom_text_hint) },
                         modifier =
                             Modifier
                                 .fillMaxWidth()
@@ -174,8 +175,8 @@ fun EditWatermarkSheet(
                     )
                     Spacer(modifier = Modifier.size(2.dp))
                     Column(modifier = Modifier.weight(1f)) {
-                        Text(
-                            text = stringResource(R.string.watermark_date_time),
+                        TranslatableText(
+                            stringResId = R.string.watermark_date_time,
                             style = MaterialTheme.typography.bodyMedium,
                         )
                         Text(
@@ -205,7 +206,7 @@ fun EditWatermarkSheet(
                     },
                     modifier = Modifier.weight(1f),
                 ) {
-                    Text(stringResource(R.string.action_cancel))
+                    TranslatableText(R.string.action_cancel)
                 }
 
                 Button(
@@ -215,7 +216,7 @@ fun EditWatermarkSheet(
                     },
                     modifier = Modifier.weight(1f),
                 ) {
-                    Text(stringResource(R.string.action_save_changes))
+                    TranslatableText(R.string.action_save_changes)
                 }
             }
         }
@@ -245,7 +246,7 @@ fun EditWatermarkSheet(
                     }
                     showDatePicker = false
                     showTimePicker = true
-                }) { Text(stringResource(R.string.action_next)) }
+                }) { TranslatableText(R.string.action_next) }
             },
         ) {
             DatePicker(state = datePickerState)
@@ -274,7 +275,7 @@ fun EditWatermarkSheet(
                     val datePart = draftDate?.split(" ")?.getOrNull(0) ?: "2024:01:01"
                     draftDate = "$datePart $timePart"
                     showTimePicker = false
-                }) { Text(stringResource(R.string.action_ok)) }
+                }) { TranslatableText(R.string.action_ok) }
             },
             text = { TimePicker(state = timePickerState) },
         )

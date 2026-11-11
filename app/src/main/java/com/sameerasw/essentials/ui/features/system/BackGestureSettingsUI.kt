@@ -58,6 +58,7 @@ import androidx.compose.ui.window.PopupProperties
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.model.BackGestureAppConfig
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
 import com.sameerasw.essentials.ui.core.cards.FeatureCard
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
@@ -170,8 +171,8 @@ fun BackGestureSettingsUI(
             BothEdgesOffNotice(modifier = Modifier.padding(top = 8.dp))
         }
 
-        Text(
-            text = stringResource(R.string.back_gesture_apps_section),
+        TranslatableText(
+            stringResId = R.string.back_gesture_apps_section,
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(start = 16.dp, top = 20.dp, bottom = 4.dp),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -238,8 +239,8 @@ fun BackGestureSettingsUI(
             )
         }
 
-        Text(
-            text = stringResource(R.string.back_gesture_automation_note),
+        TranslatableText(
+            stringResId = R.string.back_gesture_automation_note,
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
@@ -340,8 +341,8 @@ private fun BackGestureAppSheet(
             if (current.leftScale == 0f && current.rightScale == 0f) {
                 BothEdgesOffNotice()
             }
-            Text(
-                text = stringResource(R.string.back_gesture_app_sheet_desc),
+            TranslatableText(
+                stringResId = R.string.back_gesture_app_sheet_desc,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(horizontal = 16.dp),
@@ -377,13 +378,13 @@ private fun BothEdgesOffNotice(modifier: Modifier = Modifier) {
             )
             Spacer(modifier = Modifier.width(16.dp))
             Column {
-                Text(
-                    text = stringResource(R.string.back_gesture_both_off_title),
+                TranslatableText(
+                    stringResId = R.string.back_gesture_both_off_title,
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onErrorContainer,
                 )
-                Text(
-                    text = stringResource(R.string.back_gesture_both_off_desc),
+                TranslatableText(
+                    stringResId = R.string.back_gesture_both_off_desc,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onErrorContainer,
                 )

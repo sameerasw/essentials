@@ -29,7 +29,6 @@ import com.sameerasw.essentials.island.ui.components.IslandIcon
 import com.sameerasw.essentials.island.ui.IslandHaptics
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.input.key.type
@@ -40,6 +39,7 @@ import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.FocusRequester
+import com.sameerasw.essentials.translation.TranslatableText
 import kotlinx.coroutines.flow.first
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.platform.LocalWindowInfo
@@ -342,7 +342,7 @@ private fun ReplyInput(
     ) {
         Box(Modifier.weight(1f), contentAlignment = Alignment.CenterStart) {
             if (text.isEmpty()) {
-                Text(stringResource(R.string.island_reply_hint), style = IslandTextStyles.body, maxLines = 1)
+                TranslatableText(R.string.island_reply_hint, style = IslandTextStyles.body, maxLines = 1)
             }
             BasicTextField(
                 value = text,

@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials.ui.composables
 
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.navigation.LocalOpenAutomationId
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.draw.clip
@@ -122,8 +123,8 @@ fun DIYScreen(
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
-                        Text(
-                            text = stringResource(R.string.diy_no_automations),
+                        TranslatableText(
+                            stringResId = R.string.diy_no_automations,
                         )
                         if (onNewAutomationClick != null) {
                             Spacer(modifier = Modifier.height(16.dp))
@@ -133,7 +134,7 @@ fun DIYScreen(
                                     onNewAutomationClick()
                                 },
                             ) {
-                                Text(stringResource(R.string.action_new_automation))
+                                TranslatableText(R.string.action_new_automation)
                             }
                         }
                     }
@@ -219,8 +220,9 @@ fun DIYScreen(
                                     modifier = Modifier.padding(top = 16.dp),
                                     verticalArrangement = Arrangement.spacedBy(8.dp),
                                 ) {
-                                    Text(
-                                        text = stringResource(R.string.diy_selected_count, selected.size),
+                                    TranslatableText(
+                                        stringResId = R.string.diy_selected_count,
+                                        formatArgs = listOf(selected.size),
                                         style = MaterialTheme.typography.titleMedium,
                                         modifier = Modifier.padding(start = 16.dp),
                                         color = MaterialTheme.colorScheme.onSurfaceVariant,

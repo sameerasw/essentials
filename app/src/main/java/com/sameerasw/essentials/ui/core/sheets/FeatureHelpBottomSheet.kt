@@ -116,8 +116,8 @@ fun FeatureHelpBottomSheet(
     if (showResetInfo) {
         AlertDialog(
             onDismissRequest = { showResetInfo = false },
-            title = { Text(stringResource(R.string.feature_reset_info_title)) },
-            text = { Text(stringResource(R.string.feature_reset_info_desc)) },
+            title = { TranslatableText(R.string.feature_reset_info_title) },
+            text = { TranslatableText(R.string.feature_reset_info_desc) },
             confirmButton = {
                 TextButton(onClick = { showResetInfo = false }) { Text(stringResource(android.R.string.ok)) }
             },
@@ -290,8 +290,8 @@ fun FeatureHelpBottomSheet(
             }
 
             feature.howToUse?.let { howRes ->
-                Text(
-                    text = stringResource(R.string.label_how_to_use),
+                TranslatableText(
+                    stringResId = R.string.label_how_to_use,
                     style = MaterialTheme.typography.titleSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(horizontal = 8.dp),
@@ -322,7 +322,7 @@ fun FeatureHelpBottomSheet(
                         modifier = Modifier.size(18.dp),
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text(text = stringResource(customHelp.label))
+                    TranslatableText(stringResId = customHelp.label)
                 }
             }
 

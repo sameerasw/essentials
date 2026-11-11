@@ -45,6 +45,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.SettingsRepository
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.components.buttons.ListExpandToggleButton
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.pickers.MultiSegmentedPicker
@@ -78,8 +79,8 @@ fun BatteryInfoTabContent(
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 Column {
-                    Text(
-                        text = stringResource(R.string.label_battery_state_of_health),
+                    TranslatableText(
+                        stringResId = R.string.label_battery_state_of_health,
                         style = MaterialTheme.typography.titleMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
@@ -472,14 +473,14 @@ fun BatteryInfoTabContent(
                         ).padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
-                Text(
-                    text = stringResource(R.string.charge_opt_long_press_desc),
+                TranslatableText(
+                    stringResId = R.string.charge_opt_long_press_desc,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
 
-                Text(
-                    text = stringResource(R.string.charge_opt_long_press_title),
+                TranslatableText(
+                    stringResId = R.string.charge_opt_long_press_title,
                     style = MaterialTheme.typography.labelLarge,
                     color = MaterialTheme.colorScheme.primary,
                 )
@@ -536,15 +537,15 @@ fun BatteryInfoTabContent(
                             ).padding(16.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp),
                 ) {
-                    Text(
-                        text = stringResource(R.string.label_reset_battery_stats_title),
+                    TranslatableText(
+                        stringResId = R.string.label_reset_battery_stats_title,
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface,
                     )
 
-                    Text(
-                        text = stringResource(R.string.label_reset_battery_stats_desc),
+                    TranslatableText(
+                        stringResId = R.string.label_reset_battery_stats_desc,
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
@@ -561,7 +562,7 @@ fun BatteryInfoTabContent(
                         },
                         modifier = Modifier.fillMaxWidth(),
                     ) {
-                        Text(text = stringResource(R.string.action_reset_battery_stats))
+                        TranslatableText(stringResId = R.string.action_reset_battery_stats)
                     }
                 }
 
@@ -615,16 +616,16 @@ fun BatteryInfoTabContent(
                         modifier = Modifier.size(24.dp),
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = stringResource(R.string.label_battery_grant_stats_title),
+                    TranslatableText(
+                        stringResId = R.string.label_battery_grant_stats_title,
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface,
                     )
                 }
 
-                Text(
-                    text = stringResource(R.string.label_battery_grant_stats_desc),
+                TranslatableText(
+                    stringResId = R.string.label_battery_grant_stats_desc,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -646,7 +647,7 @@ fun BatteryInfoTabContent(
                         },
                         modifier = Modifier.fillMaxWidth(),
                     ) {
-                        Text(text = stringResource(R.string.action_grant_shizuku))
+                        TranslatableText(stringResId = R.string.action_grant_shizuku)
                     }
                 }
             }

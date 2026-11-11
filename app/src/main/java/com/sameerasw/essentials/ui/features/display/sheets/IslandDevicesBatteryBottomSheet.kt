@@ -23,17 +23,16 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.FeatureSettingsActivity
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.core.sheets.EssentialsBottomSheet
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.viewmodels.MainViewModel
@@ -57,8 +56,8 @@ fun IslandDevicesBatteryBottomSheet(
                     .padding(bottom = 32.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            Text(
-                text = stringResource(R.string.island_devices_battery_title),
+            TranslatableText(
+                stringResId = R.string.island_devices_battery_title,
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.padding(start = 8.dp, bottom = 4.dp),
@@ -92,8 +91,8 @@ fun IslandDevicesBatteryBottomSheet(
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.primary,
                 )
-                Text(
-                    text = stringResource(R.string.island_devices_manage_in_batteries),
+                TranslatableText(
+                    stringResId = R.string.island_devices_manage_in_batteries,
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.weight(1f).padding(start = 16.dp),

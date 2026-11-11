@@ -45,6 +45,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.viewmodels.MainViewModel
 
@@ -69,8 +70,8 @@ fun UserDictionaryBottomSheet(
     if (showDeleteConfirmation) {
         androidx.compose.material3.AlertDialog(
             onDismissRequest = { showDeleteConfirmation = false },
-            title = { Text(stringResource(R.string.user_dictionary_reset_title)) },
-            text = { Text(stringResource(R.string.user_dictionary_reset_confirm)) },
+            title = { TranslatableText(R.string.user_dictionary_reset_title) },
+            text = { TranslatableText(R.string.user_dictionary_reset_confirm) },
             confirmButton = {
                 androidx.compose.material3.TextButton(
                     onClick = {
@@ -78,14 +79,14 @@ fun UserDictionaryBottomSheet(
                         showDeleteConfirmation = false
                     },
                 ) {
-                    Text(stringResource(R.string.action_delete), color = MaterialTheme.colorScheme.error)
+                    TranslatableText(R.string.action_delete, color = MaterialTheme.colorScheme.error)
                 }
             },
             dismissButton = {
                 androidx.compose.material3.TextButton(
                     onClick = { showDeleteConfirmation = false },
                 ) {
-                    Text(stringResource(R.string.action_cancel))
+                    TranslatableText(R.string.action_cancel)
                 }
             },
         )
@@ -104,15 +105,15 @@ fun UserDictionaryBottomSheet(
                     .padding(horizontal = 16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Text(
-                text = stringResource(R.string.user_dictionary_title),
+            TranslatableText(
+                stringResId = R.string.user_dictionary_title,
                 style = MaterialTheme.typography.headlineSmall,
                 modifier = Modifier.padding(bottom = 16.dp),
             )
 
             if (words.isEmpty()) {
-                Text(
-                    text = stringResource(R.string.user_dictionary_empty),
+                TranslatableText(
+                    stringResId = R.string.user_dictionary_empty,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(vertical = 32.dp),
@@ -142,13 +143,13 @@ fun UserDictionaryBottomSheet(
                                 )
                                 Spacer(Modifier.width(16.dp))
                                 Column {
-                                    Text(
-                                        text = stringResource(R.string.user_dictionary_reset_title),
+                                    TranslatableText(
+                                        stringResId = R.string.user_dictionary_reset_title,
                                         style = MaterialTheme.typography.titleMedium,
                                         color = MaterialTheme.colorScheme.onSurface,
                                     )
-                                    Text(
-                                        text = stringResource(R.string.user_dictionary_reset_desc),
+                                    TranslatableText(
+                                        stringResId = R.string.user_dictionary_reset_desc,
                                         style = MaterialTheme.typography.bodySmall,
                                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                                     )

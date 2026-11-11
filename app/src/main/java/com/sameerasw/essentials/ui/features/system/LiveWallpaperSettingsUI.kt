@@ -40,7 +40,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -60,6 +59,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.SettingsRepository
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenu
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
@@ -143,14 +143,14 @@ fun LiveWallpaperSettingsUI(
                         .size(24.dp)
                         .padding(end = 8.dp),
             )
-            Text(
-                text = stringResource(R.string.btn_apply),
+            TranslatableText(
+                stringResId = R.string.btn_apply,
                 style = MaterialTheme.typography.titleMedium,
             )
         }
 
-        Text(
-            text = stringResource(R.string.live_wallpaper_playback_trigger_title),
+        TranslatableText(
+            stringResId = R.string.live_wallpaper_playback_trigger_title,
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(start = 16.dp, top = 8.dp),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -175,8 +175,8 @@ fun LiveWallpaperSettingsUI(
             )
         }
 
-        Text(
-            text = stringResource(R.string.live_wallpaper_video_title),
+        TranslatableText(
+            stringResId = R.string.live_wallpaper_video_title,
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(start = 16.dp, top = 8.dp),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -329,7 +329,7 @@ fun ThumbnailItem(
                 onDismissRequest = { showMenu = false },
             ) {
                 SegmentedDropdownMenuItem(
-                    text = { Text(stringResource(R.string.action_remove)) },
+                    text = { TranslatableText(R.string.action_remove) },
                     onClick = {
                         showMenu = false
                         onRemove?.invoke()

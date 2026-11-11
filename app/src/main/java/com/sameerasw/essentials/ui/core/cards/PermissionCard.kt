@@ -44,6 +44,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.translation.TranslationManager
 import com.sameerasw.essentials.translation.ui.TranslationBottomSheet
 import com.sameerasw.essentials.ui.theme.Shapes
@@ -167,7 +168,7 @@ fun PermissionCard(
                                         if (resolvedDescription != null) {
                                             Spacer(modifier = Modifier.height(8.dp))
                                         }
-                                        Text(text = stringResource(R.string.permission_required_for), style = MaterialTheme.typography.bodySmall)
+                                        TranslatableText(stringResId = R.string.permission_required_for, style = MaterialTheme.typography.bodySmall)
                                         Spacer(modifier = Modifier.height(4.dp))
                                         dependentFeatures.forEach { f ->
                                             val resolvedFeature =

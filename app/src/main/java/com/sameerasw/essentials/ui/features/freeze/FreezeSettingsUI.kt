@@ -58,6 +58,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.model.FreezeMode
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenu
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
 import com.sameerasw.essentials.ui.core.cards.AppToggleItem
@@ -149,8 +150,8 @@ fun FreezeSettingsUI(
                 .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
-        Text(
-            text = stringResource(R.string.settings_section_app_control),
+        TranslatableText(
+            stringResId = R.string.settings_section_app_control,
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(start = 16.dp, top = 4.dp, bottom = 8.dp),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -194,8 +195,8 @@ fun FreezeSettingsUI(
                             modifier = Modifier.size(20.dp),
                         )
                         Spacer(Modifier.size(8.dp))
-                        Text(
-                            stringResource(R.string.action_freeze),
+                        TranslatableText(
+                            R.string.action_freeze,
                             fontSize = dimensionResource(R.dimen.font_small).value.sp,
                         )
                     }
@@ -216,8 +217,8 @@ fun FreezeSettingsUI(
                             modifier = Modifier.size(20.dp),
                         )
                         Spacer(Modifier.size(8.dp))
-                        Text(
-                            stringResource(R.string.action_unfreeze),
+                        TranslatableText(
+                            R.string.action_unfreeze,
                             fontSize = dimensionResource(R.dimen.font_small).value.sp,
                         )
                     }
@@ -241,7 +242,7 @@ fun FreezeSettingsUI(
                             onDismissRequest = { isMenuExpanded = false },
                         ) {
                             SegmentedDropdownMenuItem(
-                                text = { Text(stringResource(R.string.action_freeze_all)) },
+                                text = { TranslatableText(R.string.action_freeze_all) },
                                 onClick = {
                                     HapticUtil.performVirtualKeyHaptic(view)
                                     viewModel.freezeAllManual(context)
@@ -256,7 +257,7 @@ fun FreezeSettingsUI(
                                 },
                             )
                             SegmentedDropdownMenuItem(
-                                text = { Text(stringResource(R.string.action_unfreeze_all)) },
+                                text = { TranslatableText(R.string.action_unfreeze_all) },
                                 onClick = {
                                     HapticUtil.performVirtualKeyHaptic(view)
                                     viewModel.unfreezeAllManual(context)
@@ -271,7 +272,7 @@ fun FreezeSettingsUI(
                                 },
                             )
                             SegmentedDropdownMenuItem(
-                                text = { Text(stringResource(R.string.action_export_freeze)) },
+                                text = { TranslatableText(R.string.action_export_freeze) },
                                 onClick = {
                                     HapticUtil.performVirtualKeyHaptic(view)
                                     exportLauncher.launch("freeze_apps_backup.json")
@@ -286,7 +287,7 @@ fun FreezeSettingsUI(
                                 },
                             )
                             SegmentedDropdownMenuItem(
-                                text = { Text(stringResource(R.string.action_import_freeze)) },
+                                text = { TranslatableText(R.string.action_import_freeze) },
                                 onClick = {
                                     HapticUtil.performVirtualKeyHaptic(view)
                                     importLauncher.launch(arrayOf("application/json"))
@@ -329,8 +330,8 @@ fun FreezeSettingsUI(
             )
         }
 
-        Text(
-            text = stringResource(R.string.freeze_mode_title),
+        TranslatableText(
+            stringResId = R.string.freeze_mode_title,
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(start = 16.dp, top = 24.dp, bottom = 8.dp),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -396,35 +397,35 @@ fun FreezeSettingsUI(
                         verticalArrangement = Arrangement.spacedBy(10.dp),
                     ) {
                         if (page == 0) {
-                            Text(
-                                text = stringResource(R.string.freeze_mode_description_freeze_title),
+                            TranslatableText(
+                                stringResId = R.string.freeze_mode_description_freeze_title,
                                 style = MaterialTheme.typography.titleLarge,
                                 color = MaterialTheme.colorScheme.primary,
                             )
-                            Text(
-                                text = stringResource(R.string.freeze_mode_description_freeze_body),
+                            TranslatableText(
+                                stringResId = R.string.freeze_mode_description_freeze_body,
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
-                            Text(
-                                text = stringResource(R.string.freeze_mode_description_freeze_warning),
+                            TranslatableText(
+                                stringResId = R.string.freeze_mode_description_freeze_warning,
                                 style = MaterialTheme.typography.labelLarge,
                                 color = MaterialTheme.colorScheme.error,
                                 fontWeight = FontWeight.Bold,
                             )
                         } else {
-                            Text(
-                                text = stringResource(R.string.freeze_mode_description_suspend_title),
+                            TranslatableText(
+                                stringResId = R.string.freeze_mode_description_suspend_title,
                                 style = MaterialTheme.typography.titleLarge,
                                 color = MaterialTheme.colorScheme.primary,
                             )
-                            Text(
-                                text = stringResource(R.string.freeze_mode_description_suspend_body),
+                            TranslatableText(
+                                stringResId = R.string.freeze_mode_description_suspend_body,
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
-                            Text(
-                                text = stringResource(R.string.freeze_mode_description_suspend_footer),
+                            TranslatableText(
+                                stringResId = R.string.freeze_mode_description_suspend_footer,
                                 style = MaterialTheme.typography.labelSmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 fontWeight = FontWeight.Medium,
@@ -475,8 +476,8 @@ fun FreezeSettingsUI(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Text(
-                text = stringResource(R.string.freeze_tags_section_title),
+            TranslatableText(
+                stringResId = R.string.freeze_tags_section_title,
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -497,8 +498,8 @@ fun FreezeSettingsUI(
         val tags by viewModel.freezeTags
         RoundedCardContainer(spacing = 2.dp) {
             if (tags.isEmpty()) {
-                Text(
-                    text = stringResource(R.string.freeze_tags_empty),
+                TranslatableText(
+                    stringResId = R.string.freeze_tags_empty,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(16.dp),
@@ -606,8 +607,8 @@ fun FreezeSettingsUI(
             )
         }
 
-        Text(
-            text = stringResource(R.string.settings_section_automation),
+        TranslatableText(
+            stringResId = R.string.settings_section_automation,
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(start = 16.dp, top = 24.dp, bottom = 8.dp),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -664,8 +665,8 @@ fun FreezeSettingsUI(
                         ).padding(horizontal = 32.dp, vertical = 18.dp)
                         .highlight(highlightKey == "freeze_lock_delay_index"),
             ) {
-                Text(
-                    text = stringResource(R.string.freeze_delay_title),
+                TranslatableText(
+                    stringResId = R.string.freeze_delay_title,
                     style = MaterialTheme.typography.bodyLarge,
                     color =
                         if (viewModel.isFreezeWhenLockedEnabled.value) {
@@ -739,8 +740,8 @@ fun FreezeSettingsUI(
                     )
                 }
 
-            Text(
-                text = stringResource(R.string.freeze_auto_freeze_section),
+            TranslatableText(
+                stringResId = R.string.freeze_auto_freeze_section,
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(start = 16.dp, top = 24.dp, bottom = 8.dp),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -792,15 +793,15 @@ fun FreezeSettingsUI(
             )
         }
 
-        Text(
-            text = stringResource(R.string.freeze_automation_hint),
+        TranslatableText(
+            stringResId = R.string.freeze_automation_hint,
             style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier.padding(16.dp),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
 
-        Text(
-            text = stringResource(R.string.freeze_warning),
+        TranslatableText(
+            stringResId = R.string.freeze_warning,
             style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -836,8 +837,8 @@ fun FreezeSettingsUI(
                         modifier = Modifier.size(18.dp),
                     )
                     Spacer(Modifier.size(8.dp))
-                    Text(
-                        text = stringResource(R.string.action_export_freeze),
+                    TranslatableText(
+                        stringResId = R.string.action_export_freeze,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                     )
@@ -858,8 +859,8 @@ fun FreezeSettingsUI(
                         modifier = Modifier.size(18.dp),
                     )
                     Spacer(Modifier.size(8.dp))
-                    Text(
-                        text = stringResource(R.string.action_import_freeze),
+                    TranslatableText(
+                        stringResId = R.string.action_import_freeze,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                     )
@@ -924,11 +925,11 @@ fun FreezeSettingsUI(
                     androidx.compose.material3.TextButton(onClick = {
                         showModeWarningResult = false
                     }) {
-                        Text(stringResource(id = R.string.action_ok))
+                        TranslatableText(R.string.action_ok)
                     }
                 },
-                title = { Text(stringResource(id = R.string.warning_title)) },
-                text = { Text(stringResource(id = R.string.freeze_mode_warning_desc)) },
+                title = { TranslatableText(R.string.warning_title) },
+                text = { TranslatableText(R.string.freeze_mode_warning_desc) },
             )
         }
     }

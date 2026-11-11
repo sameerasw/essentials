@@ -42,6 +42,7 @@ import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
@@ -67,15 +68,15 @@ fun StatusGlanceBatteryOptionsBottomSheet(
                 .padding(bottom = 24.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            Text(
-                text = stringResource(R.string.status_glance_battery_options_title),
+            TranslatableText(
+                stringResId = R.string.status_glance_battery_options_title,
                 style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.padding(start = 8.dp, bottom = 4.dp),
             )
 
-            Text(
-                text = stringResource(R.string.status_glance_battery_display_mode_title),
+            TranslatableText(
+                stringResId = R.string.status_glance_battery_display_mode_title,
                 style = MaterialTheme.typography.titleSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(start = 8.dp),
@@ -163,8 +164,8 @@ fun StatusGlanceBatteryOptionsBottomSheet(
                 }
             }
 
-            Text(
-                text = stringResource(R.string.status_glance_section_what_to_show),
+            TranslatableText(
+                stringResId = R.string.status_glance_section_what_to_show,
                 style = MaterialTheme.typography.titleSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(start = 8.dp),

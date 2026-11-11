@@ -35,7 +35,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
@@ -44,6 +43,7 @@ import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.WidgetStackRepository
 import com.sameerasw.essentials.domain.model.WidgetStackConfig
 import com.sameerasw.essentials.services.widgets.StackWidgetProvider
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.activities.WidgetStackConfigureActivity
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.utils.HapticUtil
@@ -85,15 +85,15 @@ fun WidgetStackSettingsUI(modifier: Modifier = Modifier) {
                         tint = MaterialTheme.colorScheme.primary,
                     )
                 },
-                headlineContent = { Text(stringResource(R.string.widget_stack_add_to_home)) },
-                supportingContent = { Text(stringResource(R.string.widget_stack_add_to_home_desc)) },
+                headlineContent = { TranslatableText(R.string.widget_stack_add_to_home) },
+                supportingContent = { TranslatableText(R.string.widget_stack_add_to_home_desc) },
                 colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceBright),
             )
         }
 
         if (stacks.isNotEmpty()) {
-            Text(
-                text = stringResource(R.string.widget_stack_your_stacks),
+            TranslatableText(
+                stringResId = R.string.widget_stack_your_stacks,
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(start = 16.dp),

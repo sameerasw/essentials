@@ -668,7 +668,6 @@
     <string name="perm_battery_optimization_title">배터리 최적화</string>
     <string name="perm_battery_optimization_desc">전원을 절약하려면 시스템이 서비스를 종료하지 않는지 확인하세요.</string>
     <!-- Tabs -->
-    <string name="tab_essentials">골자</string>
     <string name="tab_freeze">꼭 매달리게 하다</string>
     <string name="tab_freeze_title">언</string>
     <string name="tab_diy">DIY</string>

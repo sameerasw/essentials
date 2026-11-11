@@ -668,7 +668,6 @@
     <string name="perm_battery_optimization_title">Βελτιστοποίηση μπαταρίας</string>
     <string name="perm_battery_optimization_desc">Βεβαιωθείτε ότι η υπηρεσία δεν σκοτώνεται από το σύστημα για εξοικονόμηση ενέργειας.</string>
     <!-- Tabs -->
-    <string name="tab_essentials">Βασικά</string>
     <string name="tab_freeze">Πάγωμα</string>
     <string name="tab_freeze_title">Παγωμένος</string>
     <string name="tab_diy">DIY</string>

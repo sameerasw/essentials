@@ -10,6 +10,7 @@
 package com.sameerasw.essentials
 
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.navigation.AppRoutes
 import com.sameerasw.essentials.BuildConfig
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -433,13 +434,13 @@ fun SettingsContent(
                 verticalArrangement = Arrangement.spacedBy(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                Text(
-                    text = stringResource(R.string.shizuku_auth_token_title),
+                TranslatableText(
+                    stringResId = R.string.shizuku_auth_token_title,
                     style = MaterialTheme.typography.headlineSmall,
                     color = MaterialTheme.colorScheme.onSurface,
                 )
-                Text(
-                    text = stringResource(R.string.shizuku_auth_token_help),
+                TranslatableText(
+                    stringResId = R.string.shizuku_auth_token_help,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -447,7 +448,7 @@ fun SettingsContent(
                     onClick = { showShizukuHelpBottomSheet = false },
                     modifier = Modifier.fillMaxWidth(),
                 ) {
-                    Text(stringResource(R.string.action_got_it))
+                    TranslatableText(R.string.action_got_it)
                 }
             }
         }
@@ -498,8 +499,8 @@ fun SettingsContent(
         }
 
         // Updates 
-        Text(
-            text = stringResource(R.string.label_updates),
+        TranslatableText(
+            stringResId = R.string.label_updates,
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -584,8 +585,8 @@ fun SettingsContent(
         Spacer(modifier = Modifier.height(8.dp))
 
         // Customizations 
-        Text(
-            text = stringResource(R.string.settings_section_customizations),
+        TranslatableText(
+            stringResId = R.string.settings_section_customizations,
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -631,8 +632,8 @@ fun SettingsContent(
                     .background(MaterialTheme.colorScheme.surfaceBright, MaterialTheme.shapes.extraSmall)
                     .padding(top = 12.dp),
             ) {
-                Text(
-                    text = stringResource(R.string.label_haptics_title),
+                TranslatableText(
+                    stringResId = R.string.label_haptics_title,
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.padding(horizontal = 16.dp),
@@ -718,8 +719,8 @@ fun SettingsContent(
         Spacer(modifier = Modifier.height(8.dp))
 
         // Permissions 
-        Text(
-            text = stringResource(R.string.settings_section_permissions),
+        TranslatableText(
+            stringResId = R.string.settings_section_permissions,
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -753,8 +754,8 @@ fun SettingsContent(
                         modifier = Modifier.size(24.dp),
                         tint = MaterialTheme.colorScheme.primary,
                     )
-                    Text(
-                        text = stringResource(R.string.settings_permissions_all),
+                    TranslatableText(
+                        stringResId = R.string.settings_permissions_all,
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurface,
                     )
@@ -846,7 +847,7 @@ fun SettingsContent(
                 OutlinedTextField(
                     value = tokenText,
                     onValueChange = { tokenText = it },
-                    label = { Text(stringResource(R.string.shizuku_auth_token_label)) },
+                    label = { TranslatableText(R.string.shizuku_auth_token_label) },
                     modifier = Modifier.weight(1f),
                     shape = MaterialTheme.shapes.large,
                     singleLine = true,
@@ -913,7 +914,7 @@ fun SettingsContent(
                 OutlinedTextField(
                     value = externalToken,
                     onValueChange = { externalToken = it },
-                    label = { Text(stringResource(R.string.external_control_token_title)) },
+                    label = { TranslatableText(R.string.external_control_token_title) },
                     modifier = Modifier.weight(1f),
                     shape = MaterialTheme.shapes.large,
                     singleLine = true,
@@ -1001,8 +1002,8 @@ fun SettingsContent(
         Spacer(modifier = Modifier.height(8.dp))
 
         // More
-        Text(
-            text = stringResource(R.string.settings_section_more),
+        TranslatableText(
+            stringResId = R.string.settings_section_more,
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -1079,7 +1080,7 @@ fun SettingsContent(
                         modifier = Modifier.size(20.dp),
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text(stringResource(R.string.btn_export_config))
+                    TranslatableText(R.string.btn_export_config)
                 }
                 Button(
                     onClick = {
@@ -1102,7 +1103,7 @@ fun SettingsContent(
                         modifier = Modifier.size(20.dp),
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text(stringResource(R.string.btn_import_config))
+                    TranslatableText(R.string.btn_import_config)
                 }
             }
         }
@@ -1117,8 +1118,8 @@ fun SettingsContent(
                     .padding(start = 16.dp, top = 8.dp, bottom = 8.dp, end = 16.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Text(
-                text = stringResource(R.string.settings_translations_section),
+            TranslatableText(
+                stringResId = R.string.settings_translations_section,
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -1155,7 +1156,7 @@ fun SettingsContent(
                     if (currentUser != null) {
                         @Composable { onDismiss ->
                             SegmentedDropdownMenuItem(
-                                text = { Text(stringResource(R.string.action_sign_out)) },
+                                text = { TranslatableText(R.string.action_sign_out) },
                                 onClick = {
                                     onDismiss()
                                     HapticUtil.performUIHaptic(view)
@@ -1300,8 +1301,8 @@ fun SettingsContent(
             Spacer(modifier = Modifier.height(16.dp))
 
             // Updates Section
-            Text(
-                text = stringResource(R.string.label_developer_options),
+            TranslatableText(
+                stringResId = R.string.label_developer_options,
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -1346,7 +1347,7 @@ fun SettingsContent(
                             modifier = Modifier.size(20.dp),
                         )
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text(stringResource(R.string.btn_grant_all_permissions))
+                        TranslatableText(R.string.btn_grant_all_permissions)
                     }
 
                     Button(
@@ -1371,7 +1372,7 @@ fun SettingsContent(
                             modifier = Modifier.size(20.dp),
                         )
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text(stringResource(R.string.btn_reset_onboarding))
+                        TranslatableText(R.string.btn_reset_onboarding)
                     }
 
                     Button(
@@ -1396,7 +1397,7 @@ fun SettingsContent(
                             modifier = Modifier.size(20.dp),
                         )
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text(stringResource(R.string.btn_reset_update_note))
+                        TranslatableText(R.string.btn_reset_update_note)
                     }
 
                     Button(
@@ -1421,7 +1422,7 @@ fun SettingsContent(
                             modifier = Modifier.size(20.dp),
                         )
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text(stringResource(R.string.btn_clear_search_history))
+                        TranslatableText(R.string.btn_clear_search_history)
                     }
                 }
 
@@ -1456,8 +1457,8 @@ fun SettingsContent(
                             modifier = Modifier.size(20.dp),
                         )
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text(
-                            text = stringResource(R.string.simulate_crash),
+                        TranslatableText(
+                            stringResId = R.string.simulate_crash,
                             style = MaterialTheme.typography.labelLarge,
                         )
                     }
@@ -1483,8 +1484,8 @@ fun SettingsContent(
             if (gitHubUser?.login == "sameerasw") {
                 Spacer(modifier = Modifier.height(16.dp))
 
-                Text(
-                    text = stringResource(R.string.label_wallpaper_update),
+                TranslatableText(
+                    stringResId = R.string.label_wallpaper_update,
                     style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -1503,8 +1504,8 @@ fun SettingsContent(
                                     .padding(16.dp),
                             verticalArrangement = Arrangement.spacedBy(8.dp),
                         ) {
-                            Text(
-                                text = stringResource(R.string.wallpaper_workflow_auth_required),
+                            TranslatableText(
+                                stringResId = R.string.wallpaper_workflow_auth_required,
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
@@ -1519,7 +1520,7 @@ fun SettingsContent(
                                         },
                                         modifier = Modifier.fillMaxWidth(),
                                     ) {
-                                        Text(stringResource(R.string.wallpaper_grant_workflow_access))
+                                        TranslatableText(R.string.wallpaper_grant_workflow_access)
                                     }
                                 }
 
@@ -1540,8 +1541,8 @@ fun SettingsContent(
                                         horizontalAlignment = Alignment.CenterHorizontally,
                                         verticalArrangement = Arrangement.spacedBy(8.dp),
                                     ) {
-                                        Text(
-                                            text = stringResource(R.string.github_verification_code),
+                                        TranslatableText(
+                                            stringResId = R.string.github_verification_code,
                                             style = MaterialTheme.typography.titleSmall,
                                         )
                                         Text(
@@ -1552,8 +1553,9 @@ fun SettingsContent(
                                                 ),
                                             color = MaterialTheme.colorScheme.primary,
                                         )
-                                        Text(
-                                            text = stringResource(R.string.github_go_to, codeData.verificationUri),
+                                        TranslatableText(
+                                            stringResId = R.string.github_go_to,
+                                            formatArgs = listOf(codeData.verificationUri),
                                             style = MaterialTheme.typography.bodySmall,
                                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                                         )
@@ -1571,14 +1573,14 @@ fun SettingsContent(
                                                     context.startActivity(intent)
                                                 },
                                             ) {
-                                                Text(stringResource(R.string.action_open_page))
+                                                TranslatableText(R.string.action_open_page)
                                             }
                                             TextButton(
                                                 onClick = {
                                                     viewModel.cancelWorkflowAuthFlow()
                                                 },
                                             ) {
-                                                Text(stringResource(R.string.action_cancel))
+                                                TranslatableText(R.string.action_cancel)
                                             }
                                         }
                                     }
@@ -1592,8 +1594,9 @@ fun SettingsContent(
                                         horizontalAlignment = Alignment.CenterHorizontally,
                                         verticalArrangement = Arrangement.spacedBy(8.dp),
                                     ) {
-                                        Text(
-                                            text = stringResource(err.messageRes, err.formatArg.orEmpty()),
+                                        TranslatableText(
+                                            stringResId = err.messageRes,
+                                            formatArgs = listOf(err.formatArg.orEmpty()),
                                             color = MaterialTheme.colorScheme.error,
                                             style = MaterialTheme.typography.bodyMedium,
                                         )
@@ -1602,7 +1605,7 @@ fun SettingsContent(
                                                 viewModel.startWorkflowAuthFlow(context)
                                             },
                                         ) {
-                                            Text(stringResource(R.string.action_retry))
+                                            TranslatableText(R.string.action_retry)
                                         }
                                     }
                                 }
@@ -1621,8 +1624,8 @@ fun SettingsContent(
                                     .padding(16.dp),
                             verticalArrangement = Arrangement.spacedBy(12.dp),
                         ) {
-                            Text(
-                                text = stringResource(R.string.wallpaper_trigger_update_desc),
+                            TranslatableText(
+                                stringResId = R.string.wallpaper_trigger_update_desc,
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
@@ -1653,7 +1656,7 @@ fun SettingsContent(
                                         modifier = Modifier.size(18.dp),
                                     )
                                     Spacer(modifier = Modifier.width(6.dp))
-                                    Text(stringResource(R.string.btn_wallpaper_desktop))
+                                    TranslatableText(R.string.btn_wallpaper_desktop)
                                 }
                                 Button(
                                     onClick = {
@@ -1673,7 +1676,7 @@ fun SettingsContent(
                                         modifier = Modifier.size(18.dp),
                                     )
                                     Spacer(modifier = Modifier.width(6.dp))
-                                    Text(stringResource(R.string.btn_wallpaper_both))
+                                    TranslatableText(R.string.btn_wallpaper_both)
                                 }
                                 Button(
                                     onClick = {
@@ -1693,7 +1696,7 @@ fun SettingsContent(
                                         modifier = Modifier.size(18.dp),
                                     )
                                     Spacer(modifier = Modifier.width(6.dp))
-                                    Text(stringResource(R.string.btn_wallpaper_mobile))
+                                    TranslatableText(R.string.btn_wallpaper_mobile)
                                 }
                             }
 
@@ -1737,7 +1740,7 @@ fun SettingsContent(
                                     modifier = Modifier.size(18.dp),
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
-                                Text(text = stringResource(R.string.feat_wallpaper_staging_title))
+                                TranslatableText(stringResId = R.string.feat_wallpaper_staging_title)
                             }
                         }
                     }

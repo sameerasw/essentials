@@ -57,6 +57,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.components.ReusableTopAppBar
 import com.sameerasw.essentials.ui.core.cards.TrackedRepoCard
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
@@ -329,16 +330,16 @@ class AppUpdatesActivity : AppCompatActivity() {
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.Center,
                         ) {
-                            Text(
-                                text = stringResource(R.string.msg_no_repos_tracked),
+                            TranslatableText(
+                                stringResId = R.string.msg_no_repos_tracked,
                                 style = MaterialTheme.typography.bodyLarge,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
 
                             Spacer(modifier = Modifier.height(32.dp))
 
-                            Text(
-                                text = stringResource(R.string.label_apps),
+                            TranslatableText(
+                                stringResId = R.string.label_apps,
                                 style = MaterialTheme.typography.titleMedium,
                                 modifier = Modifier.padding(bottom = 12.dp),
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -527,8 +528,8 @@ class AppUpdatesActivity : AppCompatActivity() {
 
                             // Apps Section
                             item {
-                                Text(
-                                    text = stringResource(R.string.label_apps),
+                                TranslatableText(
+                                    stringResId = R.string.label_apps,
                                     style = MaterialTheme.typography.titleMedium,
                                     modifier = Modifier.padding(start = 16.dp, bottom = 8.dp),
                                     color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -584,7 +585,7 @@ private fun ImportExportButtons(
                 modifier = Modifier.size(18.dp),
             )
             Spacer(modifier = Modifier.width(8.dp))
-            Text(stringResource(R.string.action_export))
+            TranslatableText(R.string.action_export)
         }
 
         Button(
@@ -605,7 +606,7 @@ private fun ImportExportButtons(
                 modifier = Modifier.size(18.dp),
             )
             Spacer(modifier = Modifier.width(8.dp))
-            Text(stringResource(R.string.action_import))
+            TranslatableText(R.string.action_import)
         }
     }
 }

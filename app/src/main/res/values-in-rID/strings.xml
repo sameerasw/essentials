@@ -668,7 +668,6 @@
     <string name="perm_battery_optimization_title">Battery Optimization</string>
     <string name="perm_battery_optimization_desc">Ensure the service is not killed by the system to save power.</string>
     <!-- Tabs -->
-    <string name="tab_essentials">Essentials</string>
     <string name="tab_freeze">Freeze</string>
     <string name="tab_freeze_title">Bekukan</string>
     <string name="tab_diy">DIY</string>

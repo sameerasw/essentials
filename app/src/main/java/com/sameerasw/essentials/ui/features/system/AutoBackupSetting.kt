@@ -29,6 +29,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.theme.Shapes
 import com.sameerasw.essentials.utils.AutoBackupManager
 
@@ -73,8 +74,8 @@ fun AutoBackupSetting() {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
-            Text(
-                text = stringResource(R.string.auto_backup_title),
+            TranslatableText(
+                stringResId = R.string.auto_backup_title,
                 style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.weight(1f),
             )
@@ -119,8 +120,8 @@ fun AutoBackupSetting() {
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
-                Text(
-                    text = stringResource(R.string.auto_backup_folder),
+                TranslatableText(
+                    stringResId = R.string.auto_backup_folder,
                     style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier.weight(1f),
                 )

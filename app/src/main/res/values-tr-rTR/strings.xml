@@ -668,7 +668,6 @@
     <string name="perm_battery_optimization_title">Pil Optimizasyonu</string>
     <string name="perm_battery_optimization_desc">Güç tasarrufu sağlamak için hizmetin sistem tarafından sonlandırılmadığından emin olun.</string>
     <!-- Tabs -->
-    <string name="tab_essentials">Temeller</string>
     <string name="tab_freeze">Dondur</string>
     <string name="tab_freeze_title">Dondurulmuş</string>
     <string name="tab_diy">DIY</string>

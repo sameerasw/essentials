@@ -46,6 +46,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.theme.Shapes
 import com.sameerasw.essentials.utils.BatteryUsageApp
@@ -190,7 +191,7 @@ fun BatteryAppsTabContent(
                     ) {
                         if (canOpenAppInfo && app.packageName != null) {
                             com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem(
-                                text = { Text(stringResource(R.string.label_app_info)) },
+                                text = { TranslatableText(R.string.label_app_info) },
                                 onClick = {
                                     showMenu = false
                                     try {

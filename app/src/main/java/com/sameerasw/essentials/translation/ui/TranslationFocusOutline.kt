@@ -49,6 +49,7 @@ fun TranslationFocusOutline(
                         },
                     shape = RoundedCornerShape(8.dp),
                 ).padding(if (visible) 4.dp else 0.dp),
+        propagateMinConstraints = true,
     ) {
         content()
     }

@@ -46,6 +46,7 @@ import com.sameerasw.essentials.domain.diy.Action
 import com.sameerasw.essentials.domain.model.HilightEffect
 import com.sameerasw.essentials.domain.model.HilightFrames
 import com.sameerasw.essentials.domain.model.HilightPattern
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
@@ -80,7 +81,7 @@ fun HilightEffectEditor(
                             HapticUtil.performUIHaptic(view)
                             onEffectChange(effect.copy(pattern = pattern))
                         },
-                        label = { Text(stringResource(pattern.title)) },
+                        label = { TranslatableText(pattern.title) },
                     )
                 }
             }
@@ -163,7 +164,7 @@ fun HilightEffectEditor(
                 modifier = Modifier.size(20.dp),
             )
             Spacer(modifier = Modifier.size(8.dp))
-            Text(stringResource(R.string.hilight_try_it))
+            TranslatableText(R.string.hilight_try_it)
         }
     }
 }
@@ -242,7 +243,7 @@ fun HilightEffectSheet(
                         modifier = Modifier.size(20.dp),
                     )
                     Spacer(modifier = Modifier.size(8.dp))
-                    Text(stringResource(R.string.action_cancel))
+                    TranslatableText(R.string.action_cancel)
                 }
 
                 Button(
@@ -259,7 +260,7 @@ fun HilightEffectSheet(
                         modifier = Modifier.size(20.dp),
                     )
                     Spacer(modifier = Modifier.size(8.dp))
-                    Text(stringResource(R.string.action_save))
+                    TranslatableText(R.string.action_save)
                 }
             }
         }

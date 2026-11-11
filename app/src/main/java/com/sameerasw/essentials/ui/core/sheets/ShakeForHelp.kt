@@ -10,15 +10,14 @@
 package com.sameerasw.essentials.ui.core.sheets
 
 import androidx.compose.ui.geometry.Offset
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.modifiers.AppRipple
 import com.sameerasw.essentials.R
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.Alignment
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.Text
 import androidx.compose.material3.Icon
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.size
@@ -130,7 +129,7 @@ fun WhatIsThisButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
                 modifier = Modifier.size(18.dp),
             )
             Spacer(Modifier.width(8.dp))
-            Text(stringResource(R.string.what_is_this))
+            TranslatableText(R.string.what_is_this)
         }
     }
 }

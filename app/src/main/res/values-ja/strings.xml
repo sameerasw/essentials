@@ -612,7 +612,6 @@
     <string name="perm_battery_optimization_title">バッテリーの最適化を無視</string>
     <string name="perm_battery_optimization_desc">バッテリー節約のためにシステムがアプリを強制終了しないようにしてください。</string>
     <!-- Tabs -->
-    <string name="tab_essentials">Essentials</string>
     <string name="tab_freeze">フリーズ</string>
     <string name="tab_freeze_title">フリーズ</string>
     <string name="tab_diy">DIY</string>

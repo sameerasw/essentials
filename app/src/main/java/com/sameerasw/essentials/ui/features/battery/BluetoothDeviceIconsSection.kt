@@ -15,6 +15,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.runtime.key
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalView
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.utils.BluetoothDeviceOrder
 import com.sameerasw.essentials.utils.HapticUtil
 import sh.calvin.reorderable.ReorderableColumn
@@ -139,8 +140,8 @@ fun BluetoothDeviceIconsSection(
                                 .padding(start = 16.dp, top = 4.dp, bottom = 4.dp, end = 4.dp),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
-                        Text(
-                            text = stringResource(R.string.bt_order_separator),
+                        TranslatableText(
+                            stringResId = R.string.bt_order_separator,
                             style = MaterialTheme.typography.labelLarge,
                             color = MaterialTheme.colorScheme.onSecondaryContainer,
                             modifier = Modifier.weight(1f),

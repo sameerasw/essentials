@@ -44,6 +44,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.edit
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.services.DeviceInfoSyncManager
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.modifiers.scrollMotionBlur
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
@@ -150,8 +151,8 @@ fun WatchControlsSettingsUI(
             hapticFeedback.performHapticFeedback(HapticFeedbackType.SegmentFrequentTick)
         }
 
-    Text(
-        text = stringResource(R.string.watch_controls_reorder_title),
+    TranslatableText(
+        stringResId = R.string.watch_controls_reorder_title,
         style = MaterialTheme.typography.titleMedium,
         modifier = Modifier.padding(start = 24.dp, top = 16.dp, end = 24.dp),
         color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -234,8 +235,8 @@ fun WatchControlsSettingsUI(
         item {
             ReorderableItem(reorderableLazyListState, key = "separator") { _ ->
                 Card(modifier = Modifier.fillMaxWidth()) {
-                    Text(
-                        text = stringResource(R.string.watch_controls_long_press_hint),
+                    TranslatableText(
+                        stringResId = R.string.watch_controls_long_press_hint,
                         textAlign = TextAlign.Center,
                         style = MaterialTheme.typography.bodyMedium,
                         modifier =

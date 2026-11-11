@@ -74,6 +74,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenu
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
 import com.sameerasw.essentials.data.repository.BugReportRepository
@@ -305,14 +306,15 @@ fun BugReportBottomSheet(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterHorizontally),
             ) {
-                Text(
-                    text = stringResource(R.string.bug_report_title),
+                TranslatableText(
+                    stringResId = R.string.bug_report_title,
                     style = MaterialTheme.typography.headlineMedium,
                 )
 
                 if (sourceFeature != null) {
-                    Text(
-                        text = stringResource(R.string.bug_report_source_feature, sourceFeature),
+                    TranslatableText(
+                        stringResId = R.string.bug_report_source_feature,
+                        formatArgs = listOf(sourceFeature),
                         style = MaterialTheme.typography.labelLarge,
                         color = MaterialTheme.colorScheme.primary,
                         maxLines = 1,
@@ -341,7 +343,7 @@ fun BugReportBottomSheet(
                     OutlinedTextField(
                         value = feedbackMessage,
                         onValueChange = { feedbackMessage = it },
-                        label = { Text(stringResource(R.string.bug_report_feedback_placeholder)) },
+                        label = { TranslatableText(R.string.bug_report_feedback_placeholder) },
                         modifier = Modifier.fillMaxWidth(),
                         shape = MaterialTheme.shapes.large,
                         minLines = 3,
@@ -360,7 +362,7 @@ fun BugReportBottomSheet(
                     OutlinedTextField(
                         value = contactEmail,
                         onValueChange = { contactEmail = it },
-                        label = { Text(stringResource(R.string.bug_report_contact_email_label)) },
+                        label = { TranslatableText(R.string.bug_report_contact_email_label) },
                         modifier = Modifier.fillMaxWidth(),
                         shape = MaterialTheme.shapes.large,
                         singleLine = true,
@@ -380,8 +382,8 @@ fun BugReportBottomSheet(
                             ).padding(16.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp),
                 ) {
-                    Text(
-                        text = stringResource(R.string.bug_report_issue_details),
+                    TranslatableText(
+                        stringResId = R.string.bug_report_issue_details,
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.onSurface,
@@ -413,7 +415,7 @@ fun BugReportBottomSheet(
                     OutlinedTextField(
                         value = issueFields.device,
                         onValueChange = { issueFields = issueFields.copy(device = it) },
-                        label = { Text(stringResource(R.string.bug_report_field_device)) },
+                        label = { TranslatableText(R.string.bug_report_field_device) },
                         modifier = Modifier.fillMaxWidth(),
                         shape = MaterialTheme.shapes.large,
                         singleLine = true,
@@ -421,7 +423,7 @@ fun BugReportBottomSheet(
                     OutlinedTextField(
                         value = issueFields.appVersion,
                         onValueChange = { issueFields = issueFields.copy(appVersion = it) },
-                        label = { Text(stringResource(R.string.bug_report_field_app_version)) },
+                        label = { TranslatableText(R.string.bug_report_field_app_version) },
                         modifier = Modifier.fillMaxWidth(),
                         shape = MaterialTheme.shapes.large,
                         singleLine = true,
@@ -459,8 +461,8 @@ fun BugReportBottomSheet(
                             tint = MaterialTheme.colorScheme.primary,
                             modifier = Modifier.size(24.dp),
                         )
-                        Text(
-                            text = stringResource(R.string.bug_report_device_info),
+                        TranslatableText(
+                            stringResId = R.string.bug_report_device_info,
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.SemiBold,
                             color = MaterialTheme.colorScheme.onSurface,
@@ -534,8 +536,8 @@ fun BugReportBottomSheet(
                             tint = MaterialTheme.colorScheme.primary,
                             modifier = Modifier.size(24.dp),
                         )
-                        Text(
-                            text = stringResource(R.string.crash_logs_title),
+                        TranslatableText(
+                            stringResId = R.string.crash_logs_title,
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.SemiBold,
                             color = MaterialTheme.colorScheme.onSurface,
@@ -587,8 +589,8 @@ fun BugReportBottomSheet(
                                         ).padding(16.dp),
                                 contentAlignment = Alignment.Center,
                             ) {
-                                Text(
-                                    text = stringResource(R.string.toast_no_crash_logs),
+                                TranslatableText(
+                                    stringResId = R.string.toast_no_crash_logs,
                                     style = MaterialTheme.typography.bodyMedium,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 )
@@ -680,8 +682,8 @@ fun BugReportBottomSheet(
                                     modifier = Modifier.size(20.dp),
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
-                                Text(
-                                    text = stringResource(R.string.btn_clear_all_crash_logs),
+                                TranslatableText(
+                                    stringResId = R.string.btn_clear_all_crash_logs,
                                     style = MaterialTheme.typography.labelLarge,
                                 )
                             }
@@ -733,11 +735,11 @@ fun BugReportBottomSheet(
                         modifier = Modifier.size(24.dp),
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text(stringResource(R.string.action_send_feedback))
+                    TranslatableText(R.string.action_send_feedback)
                 }
 
-                Text(
-                    text = stringResource(R.string.label_alternatively),
+                TranslatableText(
+                    stringResId = R.string.label_alternatively,
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.outline,
                     modifier = Modifier.padding(top = 4.dp),

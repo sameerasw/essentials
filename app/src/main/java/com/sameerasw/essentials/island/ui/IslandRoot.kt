@@ -16,6 +16,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.EnterTransition
+import com.sameerasw.essentials.translation.TranslatableText
 import kotlinx.coroutines.withTimeoutOrNull
 import kotlinx.coroutines.flow.first
 import androidx.compose.runtime.snapshotFlow
@@ -1913,7 +1914,7 @@ private fun DismissReveal(fromStart: Boolean, progress: () -> Float, corner: Dp,
             },
         ) {
             Icon(painterResource(R.drawable.rounded_close_24), contentDescription = null, tint = Color.White, modifier = Modifier.size(20.dp))
-            Text(stringResource(R.string.action_dismiss), style = IslandTextStyles.title)
+            TranslatableText(R.string.action_dismiss, style = IslandTextStyles.title)
         }
     }
 }

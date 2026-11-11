@@ -16,13 +16,13 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.utils.HapticUtil
 
 @Composable
@@ -44,10 +44,10 @@ fun SelectionCardItem(
                     HapticUtil.performUIHaptic(view)
                     onClick()
                 },
-        headlineContent = { Text(title) },
+        headlineContent = { TranslatableText(text = title) },
         supportingContent =
             if (description != null) {
-                { Text(description) }
+                { TranslatableText(text = description) }
             } else {
                 null
             },

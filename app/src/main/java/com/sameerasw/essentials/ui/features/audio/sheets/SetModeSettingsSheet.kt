@@ -49,6 +49,7 @@ import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.controller.ZenModeController
 import com.sameerasw.essentials.domain.diy.Action
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.pickers.SegmentedPicker
 import com.sameerasw.essentials.ui.core.sheets.EssentialsBottomSheet
@@ -90,15 +91,15 @@ fun SetModeSettingsSheet(
                     .fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            Text(
-                text = stringResource(R.string.diy_action_set_mode),
+            TranslatableText(
+                stringResId = R.string.diy_action_set_mode,
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSurface,
             )
 
-            Text(
-                text = stringResource(R.string.diy_set_mode_desc),
+            TranslatableText(
+                stringResId = R.string.diy_set_mode_desc,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -117,8 +118,8 @@ fun SetModeSettingsSheet(
 
             val loadedModes = modes
             if (loadedModes != null && loadedModes.isEmpty()) {
-                Text(
-                    text = stringResource(R.string.diy_set_mode_empty),
+                TranslatableText(
+                    stringResId = R.string.diy_set_mode_empty,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.error,
                 )
@@ -159,8 +160,8 @@ fun SetModeSettingsSheet(
                                     color = if (isSelected) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant,
                                 )
                                 if (!mode.isEnabled) {
-                                    Text(
-                                        text = stringResource(R.string.diy_set_mode_disabled),
+                                    TranslatableText(
+                                        stringResId = R.string.diy_set_mode_disabled,
                                         style = MaterialTheme.typography.bodySmall,
                                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                                     )
@@ -193,7 +194,7 @@ fun SetModeSettingsSheet(
                         modifier = Modifier.size(20.dp),
                     )
                     Spacer(modifier = Modifier.size(8.dp))
-                    Text(stringResource(R.string.action_cancel))
+                    TranslatableText(R.string.action_cancel)
                 }
 
                 val selectedMode = modes?.firstOrNull { it.id == selectedId }
@@ -213,7 +214,7 @@ fun SetModeSettingsSheet(
                         modifier = Modifier.size(20.dp),
                     )
                     Spacer(modifier = Modifier.size(8.dp))
-                    Text(stringResource(R.string.action_save))
+                    TranslatableText(R.string.action_save)
                 }
             }
         }

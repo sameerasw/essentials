@@ -740,7 +740,6 @@
     <string name="perm_battery_optimization_desc">تأكد من أن النظام لا يوقف الخدمة لتوفير الطاقة.</string>
 
     <!-- Tabs -->
-    <string name="tab_essentials">Essentials</string>
     <string name="tab_freeze">التجميد</string>
     <string name="tab_freeze_title">المجمدة</string>
     <string name="tab_diy">DIY</string>

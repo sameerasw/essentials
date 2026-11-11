@@ -30,6 +30,7 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.pickers.SegmentedPicker
@@ -59,8 +60,8 @@ fun RefreshRateSettingsUI(
                 .padding(horizontal = 16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        Text(
-            text = stringResource(R.string.refresh_rate_section_mode),
+        TranslatableText(
+            stringResId = R.string.refresh_rate_section_mode,
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(start = 16.dp),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -81,8 +82,8 @@ fun RefreshRateSettingsUI(
             )
         }
 
-        Text(
-            text = stringResource(R.string.refresh_rate_section_values),
+        TranslatableText(
+            stringResId = R.string.refresh_rate_section_values,
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(start = 16.dp),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -160,8 +161,8 @@ fun RefreshRateSettingsUI(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 if (isEnabled) {
-                    Text(
-                        text = stringResource(R.string.refresh_rate_reset_desc),
+                    TranslatableText(
+                        stringResId = R.string.refresh_rate_reset_desc,
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier =
@@ -177,8 +178,8 @@ fun RefreshRateSettingsUI(
                         colors = ButtonDefaults.filledTonalButtonColors(),
                         contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp),
                     ) {
-                        Text(
-                            text = stringResource(R.string.label_reset_default),
+                        TranslatableText(
+                            stringResId = R.string.label_reset_default,
                             style = MaterialTheme.typography.labelSmall,
                         )
                     }
@@ -211,8 +212,8 @@ fun RefreshRateSettingsUI(
                         colors = ButtonDefaults.filledTonalButtonColors(),
                         contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp),
                     ) {
-                        Text(
-                            text = stringResource(R.string.label_grant_permission),
+                        TranslatableText(
+                            stringResId = R.string.label_grant_permission,
                             style = MaterialTheme.typography.labelSmall,
                         )
                     }

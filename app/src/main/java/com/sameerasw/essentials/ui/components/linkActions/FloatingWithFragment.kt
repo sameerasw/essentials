@@ -94,6 +94,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.pickers.SegmentedPicker
@@ -342,8 +343,8 @@ fun ShortenUrlSheet(
                                     .padding(14.dp),
                             verticalArrangement = Arrangement.spacedBy(10.dp),
                         ) {
-                            Text(
-                                text = stringResource(R.string.shorten_expiry_label),
+                            TranslatableText(
+                                stringResId = R.string.shorten_expiry_label,
                                 style = MaterialTheme.typography.titleSmall,
                                 color = MaterialTheme.colorScheme.primary,
                             )
@@ -391,8 +392,8 @@ fun ShortenUrlSheet(
                                 horizontalArrangement = Arrangement.SpaceBetween,
                                 verticalAlignment = Alignment.CenterVertically,
                             ) {
-                                Text(
-                                    text = stringResource(R.string.shorten_custom_alias_label),
+                                TranslatableText(
+                                    stringResId = R.string.shorten_custom_alias_label,
                                     style = MaterialTheme.typography.titleSmall,
                                     color = MaterialTheme.colorScheme.onSurface,
                                 )
@@ -421,7 +422,7 @@ fun ShortenUrlSheet(
                                     },
                                     singleLine = true,
                                     modifier = Modifier.fillMaxWidth(),
-                                    placeholder = { Text(stringResource(R.string.shorten_custom_alias_hint)) },
+                                    placeholder = { TranslatableText(R.string.shorten_custom_alias_hint) },
                                     supportingText = {
                                         Row(
                                             modifier = Modifier.fillMaxWidth(),
@@ -460,8 +461,8 @@ fun ShortenUrlSheet(
                                 horizontalArrangement = Arrangement.SpaceBetween,
                                 verticalAlignment = Alignment.CenterVertically,
                             ) {
-                                Text(
-                                    text = stringResource(R.string.shorten_passcode_label),
+                                TranslatableText(
+                                    stringResId = R.string.shorten_passcode_label,
                                     style = MaterialTheme.typography.titleSmall,
                                     color = MaterialTheme.colorScheme.onSurface,
                                 )
@@ -490,7 +491,7 @@ fun ShortenUrlSheet(
                                     },
                                     singleLine = true,
                                     modifier = Modifier.fillMaxWidth(),
-                                    placeholder = { Text(stringResource(R.string.shorten_passcode_hint)) },
+                                    placeholder = { TranslatableText(R.string.shorten_passcode_hint) },
                                     supportingText = {
                                         Row(
                                             modifier = Modifier.fillMaxWidth(),
@@ -607,8 +608,8 @@ fun ShortenUrlSheet(
                                     contentDescription = null,
                                     modifier = Modifier.size(20.dp),
                                 )
-                                Text(
-                                    text = stringResource(R.string.shorten_url_title),
+                                TranslatableText(
+                                    stringResId = R.string.shorten_url_title,
                                     style = MaterialTheme.typography.labelLarge,
                                     fontWeight = FontWeight.SemiBold,
                                 )
@@ -631,8 +632,8 @@ fun ShortenUrlSheet(
                                     modifier = Modifier.fillMaxWidth().padding(16.dp),
                                     verticalArrangement = Arrangement.spacedBy(12.dp),
                                 ) {
-                                    Text(
-                                        text = stringResource(R.string.shorten_success_label),
+                                    TranslatableText(
+                                        stringResId = R.string.shorten_success_label,
                                         style = MaterialTheme.typography.labelMedium,
                                         color = MaterialTheme.colorScheme.primary,
                                     )
@@ -790,13 +791,13 @@ fun ShortenUrlSheet(
                                     modifier = Modifier.size(28.dp),
                                 )
                             }
-                            Text(
-                                text = stringResource(R.string.shorten_history_empty_title),
+                            TranslatableText(
+                                stringResId = R.string.shorten_history_empty_title,
                                 style = MaterialTheme.typography.titleMedium,
                                 color = MaterialTheme.colorScheme.onSurface,
                             )
-                            Text(
-                                text = stringResource(R.string.shorten_history_empty_desc),
+                            TranslatableText(
+                                stringResId = R.string.shorten_history_empty_desc,
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 textAlign = TextAlign.Center,
@@ -809,8 +810,9 @@ fun ShortenUrlSheet(
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
-                            Text(
-                                text = stringResource(R.string.shorten_saved_links_count, historyList.size),
+                            TranslatableText(
+                                stringResId = R.string.shorten_saved_links_count,
+                                formatArgs = listOf(historyList.size),
                                 style = MaterialTheme.typography.labelMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
@@ -828,7 +830,7 @@ fun ShortenUrlSheet(
                                     modifier = Modifier.size(16.dp),
                                 )
                                 Spacer(modifier = Modifier.width(4.dp))
-                                Text(stringResource(R.string.shorten_clear_history), style = MaterialTheme.typography.labelSmall)
+                                TranslatableText(R.string.shorten_clear_history, style = MaterialTheme.typography.labelSmall)
                             }
                         }
 
@@ -874,8 +876,8 @@ fun ShortenUrlSheet(
                                                     shape = MaterialTheme.shapes.extraSmall,
                                                     color = MaterialTheme.colorScheme.secondaryContainer,
                                                 ) {
-                                                    Text(
-                                                        text = stringResource(R.string.shorten_pin_badge),
+                                                    TranslatableText(
+                                                        stringResId = R.string.shorten_pin_badge,
                                                         style = MaterialTheme.typography.labelSmall,
                                                         color = MaterialTheme.colorScheme.onSecondaryContainer,
                                                         modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
@@ -1056,8 +1058,8 @@ fun ShortenUrlSheet(
                         .padding(horizontal = 20.dp, vertical = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
-                Text(
-                    text = stringResource(R.string.shorten_settings_title),
+                TranslatableText(
+                    stringResId = R.string.shorten_settings_title,
                     style = MaterialTheme.typography.titleLarge,
                     color = MaterialTheme.colorScheme.onSurface,
                 )
@@ -1070,13 +1072,13 @@ fun ShortenUrlSheet(
                         modifier = Modifier.fillMaxWidth().padding(16.dp),
                         verticalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
-                        Text(
-                            text = stringResource(R.string.shorten_settings_custom_domain_title),
+                        TranslatableText(
+                            stringResId = R.string.shorten_settings_custom_domain_title,
                             style = MaterialTheme.typography.titleSmall,
                             color = MaterialTheme.colorScheme.primary,
                         )
-                        Text(
-                            text = stringResource(R.string.shorten_settings_custom_domain_desc),
+                        TranslatableText(
+                            stringResId = R.string.shorten_settings_custom_domain_desc,
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )

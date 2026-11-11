@@ -668,7 +668,6 @@
     <string name="perm_battery_optimization_title">Optymalizacja baterii</string>
     <string name="perm_battery_optimization_desc">Aby oszczędzać energię, upewnij się, że usługa nie zostanie zatrzymana przez system.</string>
     <!-- Tabs -->
-    <string name="tab_essentials">Elementy zasadnicze</string>
     <string name="tab_freeze">Zamrażać</string>
     <string name="tab_freeze_title">Mrożony</string>
     <string name="tab_diy">Zrób to sam</string>

@@ -612,7 +612,6 @@
     <string name="perm_battery_optimization_title">Akun optimointi</string>
     <string name="perm_battery_optimization_desc">Varmista, että järjestelmä ei lopeta palvelua virran säästämiseksi.</string>
     <!-- Tabs -->
-    <string name="tab_essentials">Essentials</string>
     <string name="tab_freeze">Jäädyttää</string>
     <string name="tab_freeze_title">Jäädytetyt</string>
     <string name="tab_diy">DIY</string>

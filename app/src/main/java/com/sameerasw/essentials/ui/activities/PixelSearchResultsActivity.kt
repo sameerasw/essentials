@@ -107,6 +107,7 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import com.sameerasw.essentials.translation.TranslatableText
 import kotlin.math.roundToInt
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
@@ -725,8 +726,8 @@ fun PixelSearchResultsScreen(
                                     modifier = Modifier.size(16.dp),
                                 )
                             }
-                            Text(
-                                text = stringResource(tab.labelRes),
+                            TranslatableText(
+                                stringResId = tab.labelRes,
                                 style = MaterialTheme.typography.labelLarge,
                                 fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
                                 color = contentColor,
@@ -803,7 +804,7 @@ fun PixelSearchResultsScreen(
                                     additionalMenuItems = if (app.isFrozen) {
                                         { onDismiss ->
                                             SegmentedDropdownMenuItem(
-                                                text = { Text(stringResource(R.string.action_unfreeze)) },
+                                                text = { TranslatableText(R.string.action_unfreeze) },
                                                 onClick = {
                                                     onDismiss()
                                                     scope.launch(Dispatchers.IO) {
@@ -820,7 +821,7 @@ fun PixelSearchResultsScreen(
                                                 },
                                             )
                                             SegmentedDropdownMenuItem(
-                                                text = { Text(stringResource(R.string.action_app_info)) },
+                                                text = { TranslatableText(R.string.action_app_info) },
                                                 onClick = {
                                                     onDismiss()
                                                     val infoIntent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
@@ -1193,7 +1194,7 @@ fun PixelSearchResultsScreen(
                 if ((isAllTab || selectedTab == PixelSearchTab.SETTINGS) && isSettingsEnabled && (matchingQsTiles.isNotEmpty() || settingResults.isNotEmpty())) {
                     item(key = "essentials_header") {
                         SearchSectionHeader(
-                            stringResource(R.string.pixel_search_section_essentials),
+                            stringResource(R.string.app_name),
                             modifier = Modifier.animateItem(),
                         )
                     }
@@ -1380,8 +1381,8 @@ fun PixelSearchResultsScreen(
                         .fillMaxWidth()
                         .focusRequester(focusRequester),
                     placeholder = {
-                        Text(
-                            text = stringResource(R.string.pixel_search_input_hint),
+                        TranslatableText(
+                            stringResId = R.string.pixel_search_input_hint,
                             style = MaterialTheme.typography.bodyLarge,
                             color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
                             maxLines = 1,

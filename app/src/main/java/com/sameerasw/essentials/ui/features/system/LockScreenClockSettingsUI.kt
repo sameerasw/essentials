@@ -32,7 +32,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.material3.carousel.HorizontalMultiBrowseCarousel
 import androidx.compose.material3.carousel.rememberCarouselState
 import androidx.compose.runtime.Composable
@@ -53,6 +52,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
@@ -186,8 +186,8 @@ fun LockScreenClockSettingsUI(
                 .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        Text(
-            text = stringResource(R.string.lock_screen_clock_select_label),
+        TranslatableText(
+            stringResId = R.string.lock_screen_clock_select_label,
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(horizontal = 16.dp),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -246,8 +246,8 @@ fun LockScreenClockSettingsUI(
         }
 
         // Color & Tone Section
-        Text(
-            text = stringResource(R.string.label_color),
+        TranslatableText(
+            stringResId = R.string.label_color,
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 4.dp),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -301,8 +301,8 @@ fun LockScreenClockSettingsUI(
         }
 
         if (isDefaultStyleSelected) {
-            Text(
-                text = stringResource(R.string.label_style_font),
+            TranslatableText(
+                stringResId = R.string.label_style_font,
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 4.dp),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,

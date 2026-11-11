@@ -25,7 +25,6 @@ import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -40,12 +39,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.MainActivity
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.DIYTabs
 import com.sameerasw.essentials.domain.model.NotificationApp
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.composables.AppGridItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.sheets.AssignTagsSheet
@@ -116,8 +115,8 @@ fun FrozenAppsSearchResultCard(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Text(
-                text = stringResource(R.string.label_frozen_apps),
+            TranslatableText(
+                stringResId = R.string.label_frozen_apps,
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -125,8 +124,8 @@ fun FrozenAppsSearchResultCard(
             AssistChip(
                 onClick = { navigateToFreezeTab() },
                 label = {
-                    Text(
-                        text = stringResource(R.string.action_view_all),
+                    TranslatableText(
+                        stringResId = R.string.action_view_all,
                         style = MaterialTheme.typography.labelMedium,
                     )
                 },

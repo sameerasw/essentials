@@ -68,6 +68,7 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.window.DialogWindowProvider
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.genai.AutomationSuggestion
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.modifiers.BlurDirection
 import com.sameerasw.essentials.ui.modifiers.progressiveBlur
 import com.sameerasw.essentials.utils.HapticUtil
@@ -398,8 +399,8 @@ fun GenAIFloatingPill(
                                     shape = RoundedCornerShape(16.dp),
                                     modifier = Modifier.fillMaxWidth(),
                                 ) {
-                                    Text(
-                                        text = stringResource(R.string.diy_no_actions_defined),
+                                    TranslatableText(
+                                        stringResId = R.string.diy_no_actions_defined,
                                         style = MaterialTheme.typography.bodyMedium,
                                         color = MaterialTheme.colorScheme.onPrimary,
                                         modifier = Modifier.padding(14.dp),
@@ -410,8 +411,8 @@ fun GenAIFloatingPill(
 
                         Spacer(modifier = Modifier.height(10.dp))
 
-                        Text(
-                            text = stringResource(R.string.diy_genai_disclaimer),
+                        TranslatableText(
+                            stringResId = R.string.diy_genai_disclaimer,
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.7f),
                             modifier =
@@ -434,8 +435,8 @@ fun GenAIFloatingPill(
                         value = promptText,
                         onValueChange = { promptText = it },
                         placeholder = {
-                            Text(
-                                text = stringResource(R.string.diy_genai_describe_placeholder),
+                            TranslatableText(
+                                stringResId = R.string.diy_genai_describe_placeholder,
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.6f),
                             )

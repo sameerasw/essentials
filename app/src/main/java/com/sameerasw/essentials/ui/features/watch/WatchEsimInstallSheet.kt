@@ -44,13 +44,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.codescanner.GmsBarcodeScannerOptions
 import com.google.mlkit.vision.codescanner.GmsBarcodeScanning
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.sheets.EssentialsBottomSheet
 import com.sameerasw.essentials.utils.HapticUtil
@@ -118,8 +118,8 @@ fun WatchEsimInstallSheet(onDismissRequest: () -> Unit) {
                     .padding(bottom = 16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            Text(
-                text = stringResource(R.string.watch_esim_sheet_title),
+            TranslatableText(
+                stringResId = R.string.watch_esim_sheet_title,
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(start = 8.dp),
@@ -145,8 +145,8 @@ fun WatchEsimInstallSheet(onDismissRequest: () -> Unit) {
                         modifier = Modifier.size(24.dp),
                     )
                     Spacer(modifier = Modifier.width(12.dp))
-                    Text(
-                        text = stringResource(R.string.watch_esim_scan_qr),
+                    TranslatableText(
+                        stringResId = R.string.watch_esim_scan_qr,
                         style = MaterialTheme.typography.titleMedium,
                     )
                 }
@@ -166,10 +166,10 @@ fun WatchEsimInstallSheet(onDismissRequest: () -> Unit) {
                             errorRes = null
                         },
                         modifier = Modifier.fillMaxWidth(),
-                        label = { Text(stringResource(R.string.watch_esim_enter_code)) },
+                        label = { TranslatableText(R.string.watch_esim_enter_code) },
                         placeholder = { Text("LPA:1\$smdp.example.com\$ABCD-1234") },
                         isError = errorRes != null,
-                        supportingText = errorRes?.let { { Text(stringResource(it)) } },
+                        supportingText = errorRes?.let { { TranslatableText(it) } },
                         singleLine = true,
                     )
                 }
@@ -195,11 +195,11 @@ fun WatchEsimInstallSheet(onDismissRequest: () -> Unit) {
                                 .height(56.dp),
                         shape = MaterialTheme.shapes.extraLarge,
                     ) {
-                        Text(text = stringResource(R.string.watch_esim_continue))
+                        TranslatableText(stringResId = R.string.watch_esim_continue)
                     }
                     if (!companionAvailable) {
-                        Text(
-                            text = stringResource(R.string.watch_esim_error_companion_missing),
+                        TranslatableText(
+                            stringResId = R.string.watch_esim_error_companion_missing,
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.error,
                         )
@@ -207,8 +207,8 @@ fun WatchEsimInstallSheet(onDismissRequest: () -> Unit) {
                 }
             }
 
-            Text(
-                text = stringResource(R.string.watch_esim_instructions_title),
+            TranslatableText(
+                stringResId = R.string.watch_esim_instructions_title,
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(start = 8.dp),
             )
@@ -243,15 +243,15 @@ fun WatchEsimInstallSheet(onDismissRequest: () -> Unit) {
                                 color = MaterialTheme.colorScheme.onPrimaryContainer,
                             )
                         }
-                        Text(
-                            text = stringResource(res),
+                        TranslatableText(
+                            stringResId = res,
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurface,
                         )
                     }
                 }
-                Text(
-                    text = stringResource(R.string.watch_esim_warning),
+                TranslatableText(
+                    stringResId = R.string.watch_esim_warning,
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier =

@@ -56,11 +56,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.viewmodels.MainViewModel
@@ -183,13 +183,13 @@ fun RipplePositionPickerScreen(
                     modifier = Modifier.size(24.dp),
                 )
 
-                Text(
-                    text = stringResource(R.string.notification_lighting_ripple_position_picker_title),
+                TranslatableText(
+                    stringResId = R.string.notification_lighting_ripple_position_picker_title,
                     style = MaterialTheme.typography.titleLarge,
                 )
 
-                Text(
-                    text = stringResource(R.string.notification_lighting_ripple_position_picker_desc),
+                TranslatableText(
+                    stringResId = R.string.notification_lighting_ripple_position_picker_desc,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -215,7 +215,7 @@ fun RipplePositionPickerScreen(
                                 .height(48.dp),
                         shape = RoundedCornerShape(16.dp),
                     ) {
-                        Text(stringResource(R.string.notification_lighting_sweep_pos_center))
+                        TranslatableText(R.string.notification_lighting_sweep_pos_center)
                     }
 
                     Button(
@@ -230,7 +230,7 @@ fun RipplePositionPickerScreen(
                                 .height(48.dp),
                         shape = RoundedCornerShape(16.dp),
                     ) {
-                        Text(stringResource(R.string.action_done))
+                        TranslatableText(R.string.action_done)
                     }
                 }
             }

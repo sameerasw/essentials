@@ -33,7 +33,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -53,6 +52,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.SettingsRepository
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.pickers.SegmentedPicker
@@ -179,8 +179,8 @@ fun DebuggingSettingsOverlay(onDismiss: () -> Unit) {
                     tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.size(28.dp),
                 )
-                Text(
-                    text = stringResource(R.string.tile_usb_debugging),
+                TranslatableText(
+                    stringResId = R.string.tile_usb_debugging,
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.SemiBold,
                 )
@@ -232,8 +232,8 @@ fun DebuggingSettingsOverlay(onDismiss: () -> Unit) {
                     "wireless" to R.string.debugging_tap_action_wireless,
                 )
 
-            Text(
-                text = stringResource(R.string.debugging_default_tap_action_title),
+            TranslatableText(
+                stringResId = R.string.debugging_default_tap_action_title,
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(start = 4.dp),
@@ -280,8 +280,8 @@ fun DebuggingSettingsOverlay(onDismiss: () -> Unit) {
                     contentDescription = null,
                     modifier = Modifier.size(20.dp),
                 )
-                Text(
-                    text = stringResource(R.string.tile_developer_options),
+                TranslatableText(
+                    stringResId = R.string.tile_developer_options,
                     modifier = Modifier.padding(start = 8.dp),
                 )
             }

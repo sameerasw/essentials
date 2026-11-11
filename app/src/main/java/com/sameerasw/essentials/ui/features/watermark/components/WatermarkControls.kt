@@ -26,7 +26,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -43,6 +42,7 @@ import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.watermark.ColorMode
 import com.sameerasw.essentials.domain.watermark.WatermarkOptions
 import com.sameerasw.essentials.domain.watermark.WatermarkStyle
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
@@ -159,8 +159,8 @@ fun WatermarkControls(
                 )
                 Spacer(modifier = Modifier.size(2.dp))
 
-                Text(
-                    text = stringResource(R.string.watermark_show_exif),
+                TranslatableText(
+                    stringResId = R.string.watermark_show_exif,
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.weight(1f),
                 )
@@ -191,8 +191,8 @@ fun WatermarkControls(
 
         // Font Size Section
         if (options.showDeviceBrand || options.showExif || options.showCustomText) {
-            Text(
-                text = stringResource(R.string.watermark_font_options),
+            TranslatableText(
+                stringResId = R.string.watermark_font_options,
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 8.dp),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -250,8 +250,8 @@ fun WatermarkControls(
         }
 
         // Logo Section
-        Text(
-            text = stringResource(R.string.watermark_logo_section),
+        TranslatableText(
+            stringResId = R.string.watermark_logo_section,
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 8.dp),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -289,8 +289,8 @@ fun WatermarkControls(
         }
 
         // Border Section
-        Text(
-            text = stringResource(R.string.watermark_border),
+        TranslatableText(
+            stringResId = R.string.watermark_border,
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 8.dp),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -327,8 +327,8 @@ fun WatermarkControls(
         }
 
         // Color Section
-        Text(
-            text = stringResource(R.string.watermark_color_section),
+        TranslatableText(
+            stringResId = R.string.watermark_color_section,
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 8.dp),
             color = MaterialTheme.colorScheme.onSurfaceVariant,

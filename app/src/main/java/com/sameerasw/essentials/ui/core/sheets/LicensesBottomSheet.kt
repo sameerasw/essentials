@@ -55,6 +55,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import com.mikepenz.aboutlibraries.ui.compose.produceLibraries
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.utils.ColorUtil
 import com.sameerasw.essentials.utils.HapticUtil
@@ -165,15 +166,15 @@ fun LicensesBottomSheet(onDismissRequest: () -> Unit) {
                             .padding(bottom = 8.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
-                    Text(
-                        text = stringResource(R.string.licenses_credits_title),
+                    TranslatableText(
+                        stringResId = R.string.licenses_credits_title,
                         style = MaterialTheme.typography.headlineSmall,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface,
                         modifier = Modifier.padding(bottom = 4.dp, top = 8.dp),
                     )
-                    Text(
-                        text = stringResource(R.string.licenses_credits_subtitle),
+                    TranslatableText(
+                        stringResId = R.string.licenses_credits_subtitle,
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.padding(bottom = 8.dp),

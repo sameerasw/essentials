@@ -44,6 +44,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.components.CategoryExpandableSection
 import com.sameerasw.essentials.ui.components.EssentialsWatchfacePromoContent
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
@@ -103,8 +104,8 @@ fun WatchInstallHelpBottomSheet(
                     )
                 }
 
-                Text(
-                    text = stringResource(R.string.watch_help_title),
+                TranslatableText(
+                    stringResId = R.string.watch_help_title,
                     style = MaterialTheme.typography.titleMedium,
                 )
             }
@@ -114,8 +115,8 @@ fun WatchInstallHelpBottomSheet(
                 containerColor = MaterialTheme.colorScheme.surfaceBright,
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
-                    Text(
-                        text = stringResource(R.string.watch_help_description),
+                    TranslatableText(
+                        stringResId = R.string.watch_help_description,
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.onSurface,
                     )
@@ -145,16 +146,16 @@ fun WatchInstallHelpBottomSheet(
                     modifier = Modifier.size(20.dp),
                 )
                 Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    text = stringResource(R.string.action_download_from_github),
+                TranslatableText(
+                    stringResId = R.string.action_download_from_github,
                     style = MaterialTheme.typography.labelLarge,
                 )
             }
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            Text(
-                text = stringResource(R.string.watch_adb_permissions_title),
+            TranslatableText(
+                stringResId = R.string.watch_adb_permissions_title,
                 style = MaterialTheme.typography.titleMedium,
                 modifier =
                     Modifier

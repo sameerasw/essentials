@@ -50,6 +50,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import coil.compose.AsyncImage
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.model.AppStandbyInfo
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenu
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
@@ -208,8 +209,8 @@ fun StandbyAppsSettingsUI(
                                         .padding(16.dp),
                                 contentAlignment = Alignment.Center,
                             ) {
-                                Text(
-                                    text = stringResource(R.string.standby_apps_empty_bucket),
+                                TranslatableText(
+                                    stringResId = R.string.standby_apps_empty_bucket,
                                     style = MaterialTheme.typography.bodyMedium,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
                                 )
@@ -337,7 +338,7 @@ private fun AppStandbyCardItem(
                             val isCurrent = targetBucket == currentBucket
                             SegmentedDropdownMenuItem(
                                 text = {
-                                    Text(text = stringResource(titleRes))
+                                    TranslatableText(stringResId = titleRes)
                                 },
                                 enabled = !isCurrent,
                                 onClick = {

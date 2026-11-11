@@ -12,7 +12,6 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -26,6 +25,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.diy.Action
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.utils.HapticUtil
@@ -57,8 +57,8 @@ fun WaitSettingsSheet(
                     .fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            Text(
-                text = stringResource(R.string.diy_action_wait),
+            TranslatableText(
+                stringResId = R.string.diy_action_wait,
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSurface,
@@ -102,7 +102,7 @@ fun WaitSettingsSheet(
                         modifier = Modifier.size(20.dp),
                     )
                     Spacer(modifier = Modifier.size(8.dp))
-                    Text(stringResource(R.string.action_cancel))
+                    TranslatableText(R.string.action_cancel)
                 }
 
                 Button(
@@ -118,7 +118,7 @@ fun WaitSettingsSheet(
                         modifier = Modifier.size(20.dp),
                     )
                     Spacer(modifier = Modifier.size(8.dp))
-                    Text(stringResource(R.string.action_save))
+                    TranslatableText(R.string.action_save)
                 }
             }
         }

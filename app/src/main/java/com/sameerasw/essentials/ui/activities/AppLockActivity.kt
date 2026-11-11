@@ -31,7 +31,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -43,6 +42,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import coil.compose.AsyncImage
 import com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
 import java.util.concurrent.Executor
 
@@ -159,16 +159,16 @@ class AppLockActivity : AppCompatActivity() {
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                Text(
-                    text = stringResource(R.string.app_lock_locked_title),
+                TranslatableText(
+                    stringResId = R.string.app_lock_locked_title,
                     style = MaterialTheme.typography.headlineSmall,
                     color = MaterialTheme.colorScheme.onBackground,
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                Text(
-                    text = stringResource(R.string.app_lock_locked_desc),
+                TranslatableText(
+                    stringResId = R.string.app_lock_locked_desc,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onBackground,
                     textAlign = TextAlign.Center,

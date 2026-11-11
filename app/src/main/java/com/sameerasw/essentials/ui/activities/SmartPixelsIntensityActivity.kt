@@ -32,7 +32,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Slider
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -45,10 +44,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.viewmodels.MainViewModel
@@ -132,8 +131,8 @@ fun SmartPixelsIntensityOverlay(
                     modifier = Modifier.size(24.dp),
                 )
 
-                Text(
-                    text = stringResource(R.string.smart_pixels_intensity_title),
+                TranslatableText(
+                    stringResId = R.string.smart_pixels_intensity_title,
                     style = MaterialTheme.typography.titleLarge,
                 )
 
@@ -158,7 +157,7 @@ fun SmartPixelsIntensityOverlay(
                         modifier = Modifier.weight(1f),
                         shape = RoundedCornerShape(16.dp),
                     ) {
-                        Text(stringResource(R.string.action_done))
+                        TranslatableText(R.string.action_done)
                     }
 
                     Button(
@@ -169,7 +168,7 @@ fun SmartPixelsIntensityOverlay(
                         modifier = Modifier.weight(1f),
                         shape = RoundedCornerShape(16.dp),
                     ) {
-                        Text(stringResource(R.string.action_turn_off))
+                        TranslatableText(R.string.action_turn_off)
                     }
                 }
             }

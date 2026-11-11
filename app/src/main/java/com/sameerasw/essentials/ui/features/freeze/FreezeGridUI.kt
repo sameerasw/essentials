@@ -14,6 +14,7 @@ import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.SplitButtonDefaults
 import androidx.compose.material3.SplitButtonLayout
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.components.rememberPullTitleHeaderState
 import com.sameerasw.essentials.ui.components.PullTitleHeader
 import android.content.Intent
@@ -215,8 +216,8 @@ fun FreezeGridUI(
                     tint = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-                Text(
-                    text = stringResource(R.string.msg_no_apps_frozen),
+                TranslatableText(
+                    stringResId = R.string.msg_no_apps_frozen,
                     textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -229,7 +230,7 @@ fun FreezeGridUI(
                             onGetStartedClick()
                         },
                     ) {
-                        Text(stringResource(R.string.action_get_started))
+                        TranslatableText(R.string.action_get_started)
                     }
                 }
             }
@@ -378,8 +379,9 @@ fun FreezeGridUI(
                                 style = MaterialTheme.typography.bodyLarge,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
-                            Text(
-                                text = stringResource(id = R.string.search_no_results, searchQuery),
+                            TranslatableText(
+                                stringResId = R.string.search_no_results,
+                                formatArgs = listOf(searchQuery),
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 modifier = Modifier.padding(top = 8.dp),
@@ -720,7 +722,7 @@ fun AppGridItem(
 
                 SegmentedDropdownMenuItem(
                     text = {
-                        Text(stringResource(R.string.action_assign_tags))
+                        TranslatableText(R.string.action_assign_tags)
                     },
                     onClick = {
                         showMenu = false
@@ -736,7 +738,7 @@ fun AppGridItem(
 
                 SegmentedDropdownMenuItem(
                     text = {
-                        Text(stringResource(R.string.action_remove))
+                        TranslatableText(R.string.action_remove)
                     },
                     onClick = {
                         showMenu = false
@@ -753,7 +755,7 @@ fun AppGridItem(
 
                 SegmentedDropdownMenuItem(
                     text = {
-                        Text(stringResource(R.string.action_create_shortcut))
+                        TranslatableText(R.string.action_create_shortcut)
                     },
                     onClick = {
                         showMenu = false
@@ -769,7 +771,7 @@ fun AppGridItem(
 
                 SegmentedDropdownMenuItem(
                     text = {
-                        Text(stringResource(R.string.action_app_info))
+                        TranslatableText(R.string.action_app_info)
                     },
                     onClick = {
                         showMenu = false

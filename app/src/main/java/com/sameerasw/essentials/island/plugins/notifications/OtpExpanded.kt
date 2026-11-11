@@ -36,6 +36,7 @@ import com.sameerasw.essentials.island.ui.components.ConnectedTextLabel
 import com.sameerasw.essentials.island.ui.components.IslandBitmap
 import com.sameerasw.essentials.island.ui.components.MarqueeText
 import com.sameerasw.essentials.island.ui.components.cameraClearance
+import com.sameerasw.essentials.translation.TranslatableText
 
 fun formatOtp(code: String): String = when {
     code.length <= 5 -> code
@@ -74,7 +75,7 @@ fun OtpExpanded(
                         IslandBitmap(alert.appIcon ?: alert.icon, spec.cellSize, fallbackRes = R.drawable.rounded_notifications_unread_24)
                     },
                     end = {
-                        Text(stringResource(R.string.island_otp_label), style = IslandTextStyles.body, maxLines = 1)
+                        TranslatableText(R.string.island_otp_label, style = IslandTextStyles.body, maxLines = 1)
                     },
                 )
                 Spacer(Modifier.height(10.dp))
@@ -92,8 +93,8 @@ fun OtpExpanded(
                 if (message.isNotBlank()) {
                     Spacer(Modifier.height(6.dp))
                     if (!showMessage) {
-                        Text(
-                            text = stringResource(R.string.island_otp_show_message),
+                        TranslatableText(
+                            stringResId = R.string.island_otp_show_message,
                             style = IslandTextStyles.body,
                             textAlign = TextAlign.Center,
                             modifier = Modifier

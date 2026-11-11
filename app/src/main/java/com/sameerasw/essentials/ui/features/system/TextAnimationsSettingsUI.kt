@@ -32,6 +32,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.pickers.SegmentedPicker
@@ -117,8 +118,8 @@ fun TextAnimationsSettingsUI(
         }
 
         // Text Section
-        Text(
-            text = stringResource(R.string.settings_section_text),
+        TranslatableText(
+            stringResId = R.string.settings_section_text,
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(start = 16.dp),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -172,8 +173,8 @@ fun TextAnimationsSettingsUI(
                     colors = ButtonDefaults.filledTonalButtonColors(),
                     contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp),
                 ) {
-                    Text(
-                        text = stringResource(R.string.label_reset_default),
+                    TranslatableText(
+                        stringResId = R.string.label_reset_default,
                         style = MaterialTheme.typography.labelSmall,
                     )
                 }
@@ -181,8 +182,8 @@ fun TextAnimationsSettingsUI(
         }
 
         // Scale Section
-        Text(
-            text = stringResource(R.string.settings_section_scale),
+        TranslatableText(
+            stringResId = R.string.settings_section_scale,
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(start = 16.dp),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -228,14 +229,14 @@ fun TextAnimationsSettingsUI(
                         colors = ButtonDefaults.filledTonalButtonColors(),
                         contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp),
                     ) {
-                        Text(
-                            text = stringResource(R.string.label_reset_default),
+                        TranslatableText(
+                            stringResId = R.string.label_reset_default,
                             style = MaterialTheme.typography.labelSmall,
                         )
                     }
                 } else {
-                    Text(
-                        text = stringResource(R.string.msg_shizuku_permission_required),
+                    TranslatableText(
+                        stringResId = R.string.msg_shizuku_permission_required,
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.error,
                         modifier =
@@ -251,8 +252,8 @@ fun TextAnimationsSettingsUI(
                         colors = ButtonDefaults.filledTonalButtonColors(),
                         contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp),
                     ) {
-                        Text(
-                            text = stringResource(R.string.label_grant_permission),
+                        TranslatableText(
+                            stringResId = R.string.label_grant_permission,
                             style = MaterialTheme.typography.labelSmall,
                         )
                     }
@@ -261,8 +262,8 @@ fun TextAnimationsSettingsUI(
         }
 
         // Animations Section
-        Text(
-            text = stringResource(R.string.settings_section_animations),
+        TranslatableText(
+            stringResId = R.string.settings_section_animations,
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(start = 16.dp),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -335,8 +336,8 @@ fun TextAnimationsSettingsUI(
                     colors = ButtonDefaults.filledTonalButtonColors(),
                     contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp),
                 ) {
-                    Text(
-                        text = stringResource(R.string.label_reset_default),
+                    TranslatableText(
+                        stringResId = R.string.label_reset_default,
                         style = MaterialTheme.typography.labelSmall,
                     )
                 }

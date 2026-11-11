@@ -49,6 +49,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.translation.TranslationManager
 import com.sameerasw.essentials.translation.ui.TranslationBottomSheet
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenu
@@ -303,7 +304,7 @@ private fun SliderValueEntry(
                     text = input.copy(text = allowed)
                 },
                 singleLine = true,
-                label = { Text(stringResource(R.string.slider_value_label)) },
+                label = { TranslatableText(R.string.slider_value_label) },
                 supportingText = {
                     Text(
                         if (decimals) {

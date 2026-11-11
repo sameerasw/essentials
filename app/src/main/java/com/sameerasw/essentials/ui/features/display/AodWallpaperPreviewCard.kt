@@ -47,7 +47,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
@@ -59,6 +58,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenu
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
 import com.sameerasw.essentials.utils.HapticUtil
@@ -215,7 +215,7 @@ fun AodWallpaperPreviewCard(
             onDismissRequest = { isPreviewMenuExpanded = false },
         ) {
             SegmentedDropdownMenuItem(
-                text = { Text(stringResource(R.string.feat_aod_wallpaper_pick_image)) },
+                text = { TranslatableText(R.string.feat_aod_wallpaper_pick_image) },
                 onClick = {
                     HapticUtil.performVirtualKeyHaptic(view)
                     isPreviewMenuExpanded = false
@@ -231,7 +231,7 @@ fun AodWallpaperPreviewCard(
 
             if (hasCustomImage) {
                 SegmentedDropdownMenuItem(
-                    text = { Text(stringResource(R.string.feat_aod_wallpaper_remove_custom_image)) },
+                    text = { TranslatableText(R.string.feat_aod_wallpaper_remove_custom_image) },
                     onClick = {
                         HapticUtil.performVirtualKeyHaptic(view)
                         isPreviewMenuExpanded = false

@@ -11,7 +11,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -29,6 +28,7 @@ import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.domain.diy.Action
 import com.sameerasw.essentials.domain.diy.ActionRegistry
 import com.sameerasw.essentials.domain.model.AppSelection
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.components.CategoryExpandableSection
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
@@ -133,8 +133,8 @@ fun GestureActionPickerSheet(
                     .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
-                Text(
-                    text = stringResource(R.string.duo_action_pick_title),
+                TranslatableText(
+                    stringResId = R.string.duo_action_pick_title,
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface,
@@ -270,8 +270,8 @@ fun GestureActionPickerSheet(
                     .fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
-                Text(
-                    text = stringResource(R.string.flashlight_options_title),
+                TranslatableText(
+                    stringResId = R.string.flashlight_options_title,
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface,
@@ -306,7 +306,7 @@ fun GestureActionPickerSheet(
                         .fillMaxWidth(),
                     shape = MaterialTheme.shapes.extraLarge,
                 ) {
-                    Text(stringResource(R.string.action_done))
+                    TranslatableText(R.string.action_done)
                 }
             }
         }

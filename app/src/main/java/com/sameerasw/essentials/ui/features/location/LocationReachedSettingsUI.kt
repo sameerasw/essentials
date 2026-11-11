@@ -50,6 +50,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.cards.LocationAlarmCard
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
@@ -130,8 +131,8 @@ fun LocationReachedSettingsUI(
             // List Header
             if (savedAlarms.isNotEmpty()) {
                 item {
-                    Text(
-                        text = stringResource(R.string.location_reached_saved_destinations),
+                    TranslatableText(
+                        stringResId = R.string.location_reached_saved_destinations,
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.padding(start = 8.dp, top = 8.dp),
@@ -187,8 +188,8 @@ fun LocationReachedSettingsUI(
                                 .padding(vertical = 48.dp),
                         contentAlignment = Alignment.Center,
                     ) {
-                        Text(
-                            text = stringResource(R.string.location_reached_no_saved_dest),
+                        TranslatableText(
+                            stringResId = R.string.location_reached_no_saved_dest,
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             textAlign = androidx.compose.ui.text.style.TextAlign.Center,
@@ -199,8 +200,8 @@ fun LocationReachedSettingsUI(
 
             // Instructional Description
             item {
-                Text(
-                    text = stringResource(R.string.location_reached_instructional_desc),
+                TranslatableText(
+                    stringResId = R.string.location_reached_instructional_desc,
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
                     textAlign = androidx.compose.ui.text.style.TextAlign.Start,
@@ -332,8 +333,8 @@ fun TopStatusCard(
                 )
                 Spacer(modifier = Modifier.height(16.dp))
 
-                Text(
-                    text = stringResource(R.string.location_reached_tracking_now),
+                TranslatableText(
+                    stringResId = R.string.location_reached_tracking_now,
                     style = MaterialTheme.typography.labelLarge,
                     color = MaterialTheme.colorScheme.primary,
                     fontWeight = FontWeight.Bold,
@@ -455,7 +456,7 @@ fun TopStatusCard(
                             contentDescription = null,
                         )
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text(stringResource(R.string.action_stop))
+                        TranslatableText(R.string.action_stop)
                     }
                 }
             } else if (lastTrip != null) {
@@ -474,8 +475,8 @@ fun TopStatusCard(
                     tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
                 )
                 Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = stringResource(R.string.location_reached_last_trip),
+                TranslatableText(
+                    stringResId = R.string.location_reached_last_trip,
                     style = MaterialTheme.typography.labelLarge,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -494,7 +495,7 @@ fun TopStatusCard(
                             .height(48.dp),
                     shape = androidx.compose.foundation.shape.CircleShape,
                 ) {
-                    Text(stringResource(R.string.location_reached_restart_btn))
+                    TranslatableText(R.string.location_reached_restart_btn)
                 }
             } else {
                 // Completely empty state for top card
@@ -505,8 +506,8 @@ fun TopStatusCard(
                     tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-                Text(
-                    text = stringResource(R.string.feat_location_reached_title),
+                TranslatableText(
+                    stringResId = R.string.feat_location_reached_title,
                     style = MaterialTheme.typography.titleLarge,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )

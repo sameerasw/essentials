@@ -86,6 +86,7 @@ import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import coil.request.ImageRequest
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.components.ShakeForHelpCard
 import com.sameerasw.essentials.ui.components.WhatsNewCustomContent
 import com.sameerasw.essentials.ui.components.text.SimpleMarkdown
@@ -372,8 +373,8 @@ fun WelcomeStepContent(
                 textAlign = TextAlign.Center,
             )
 
-            Text(
-                text = stringResource(R.string.welcome_subtitle),
+            TranslatableText(
+                stringResId = R.string.welcome_subtitle,
                 textAlign = TextAlign.Center,
             )
 
@@ -405,8 +406,8 @@ fun WelcomeStepContent(
 
                 Spacer(modifier = Modifier.width(8.dp))
 
-                Text(
-                    text = stringResource(R.string.welcome_developer_attribution),
+                TranslatableText(
+                    stringResId = R.string.welcome_developer_attribution,
                     textAlign = TextAlign.Center,
                     color = MaterialTheme.colorScheme.onPrimaryContainer,
                     modifier = Modifier.padding(end = 4.dp),
@@ -475,8 +476,8 @@ fun AcknowledgementStepContent(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Text(
-            text = stringResource(R.string.acknowledgement_title),
+        TranslatableText(
+            stringResId = R.string.acknowledgement_title,
             style =
                 MaterialTheme.typography.headlineLarge.copy(
                     fontFamily = GoogleSansFlexRounded,
@@ -500,15 +501,15 @@ fun AcknowledgementStepContent(
             ) {
                 Spacer(modifier = Modifier.height(16.dp))
 
-                Text(
-                    text = stringResource(R.string.acknowledgement_desc),
+                TranslatableText(
+                    stringResId = R.string.acknowledgement_desc,
                     style = MaterialTheme.typography.bodyLarge,
                 )
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                Text(
-                    text = stringResource(R.string.acknowledgement_warning),
+                TranslatableText(
+                    stringResId = R.string.acknowledgement_warning,
                     color = MaterialTheme.colorScheme.error,
                     fontWeight = FontWeight.Bold,
                     style = MaterialTheme.typography.bodyLarge,
@@ -516,8 +517,8 @@ fun AcknowledgementStepContent(
 
                 Spacer(modifier = Modifier.height(32.dp))
 
-                Text(
-                    text = stringResource(R.string.acknowledgement_footer),
+                TranslatableText(
+                    stringResId = R.string.acknowledgement_footer,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -568,8 +569,8 @@ fun AcknowledgementStepContent(
                         .weight(1f)
                         .height(56.dp),
             ) {
-                Text(
-                    text = stringResource(R.string.action_i_understand),
+                TranslatableText(
+                    stringResId = R.string.action_i_understand,
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                 )
@@ -622,8 +623,8 @@ fun FeatureIntroStepContent(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            Text(
-                text = stringResource(R.string.action_what_is_this),
+            TranslatableText(
+                stringResId = R.string.action_what_is_this,
                 style =
                     MaterialTheme.typography.headlineLarge.copy(
                         fontFamily = GoogleSansFlexRounded,
@@ -642,8 +643,8 @@ fun FeatureIntroStepContent(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            Text(
-                text = stringResource(R.string.feature_intro_desc),
+            TranslatableText(
+                stringResId = R.string.feature_intro_desc,
                 style = MaterialTheme.typography.bodyLarge,
                 textAlign = TextAlign.Start,
             )
@@ -703,8 +704,8 @@ fun FeatureIntroStepContent(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            Text(
-                text = stringResource(R.string.feature_intro_footer),
+            TranslatableText(
+                stringResId = R.string.feature_intro_footer,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Start,
@@ -745,8 +746,8 @@ fun FeatureIntroStepContent(
                         .weight(1f)
                         .height(56.dp),
             ) {
-                Text(
-                    text = stringResource(R.string.action_let_me_in),
+                TranslatableText(
+                    stringResId = R.string.action_let_me_in,
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                 )
@@ -871,8 +872,8 @@ fun WhatsNewStepContent(
                                     .padding(vertical = 24.dp),
                             horizontalAlignment = Alignment.CenterHorizontally,
                         ) {
-                            Text(
-                                text = stringResource(R.string.msg_error_load_release_notes),
+                            TranslatableText(
+                                stringResId = R.string.msg_error_load_release_notes,
                                 style = MaterialTheme.typography.bodyLarge,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 textAlign = TextAlign.Center,
@@ -890,8 +891,8 @@ fun WhatsNewStepContent(
                                     context.startActivity(intent)
                                 },
                             ) {
-                                Text(
-                                    text = stringResource(R.string.action_view_on_web),
+                                TranslatableText(
+                                    stringResId = R.string.action_view_on_web,
                                     fontWeight = FontWeight.Bold,
                                 )
                             }
@@ -940,8 +941,8 @@ fun WhatsNewStepContent(
                         .weight(1f)
                         .height(56.dp),
             ) {
-                Text(
-                    text = stringResource(R.string.action_let_me_in),
+                TranslatableText(
+                    stringResId = R.string.action_let_me_in,
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                 )
@@ -1004,8 +1005,8 @@ fun PreferencesStepContent(
         ) {
             Spacer(modifier = Modifier.height(32.dp))
 
-            Text(
-                text = stringResource(R.string.preferences_title),
+            TranslatableText(
+                stringResId = R.string.preferences_title,
                 style =
                     MaterialTheme.typography.headlineLarge.copy(
                         fontFamily = GoogleSansFlexRounded,
@@ -1018,8 +1019,8 @@ fun PreferencesStepContent(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            Text(
-                text = stringResource(R.string.preferences_desc),
+            TranslatableText(
+                stringResId = R.string.preferences_desc,
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center,
@@ -1028,8 +1029,8 @@ fun PreferencesStepContent(
             Spacer(modifier = Modifier.height(32.dp))
 
             // App Settings Section
-            Text(
-                text = stringResource(R.string.label_app_settings),
+            TranslatableText(
+                stringResId = R.string.label_app_settings,
                 style = MaterialTheme.typography.titleMedium,
                 modifier =
                     Modifier
@@ -1051,8 +1052,8 @@ fun PreferencesStepContent(
                         .background(MaterialTheme.colorScheme.surfaceBright, MaterialTheme.shapes.extraSmall)
                         .padding(top = 12.dp),
                 ) {
-                    Text(
-                        text = stringResource(R.string.label_haptics_title),
+                    TranslatableText(
+                        stringResId = R.string.label_haptics_title,
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.onSurface,
                         modifier = Modifier.padding(horizontal = 16.dp),
@@ -1096,8 +1097,8 @@ fun PreferencesStepContent(
             Spacer(modifier = Modifier.height(24.dp))
 
             // Updates Section
-            Text(
-                text = stringResource(R.string.label_updates),
+            TranslatableText(
+                stringResId = R.string.label_updates,
                 style = MaterialTheme.typography.titleMedium,
                 modifier =
                     Modifier
@@ -1168,8 +1169,8 @@ fun PreferencesStepContent(
                         .weight(1f)
                         .height(56.dp),
             ) {
-                Text(
-                    text = stringResource(R.string.action_all_set),
+                TranslatableText(
+                    stringResId = R.string.action_all_set,
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                 )

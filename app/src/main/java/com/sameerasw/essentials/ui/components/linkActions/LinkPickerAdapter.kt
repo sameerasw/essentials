@@ -119,6 +119,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.SettingsRepository
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.modifiers.BlurDirection
 import com.sameerasw.essentials.ui.modifiers.progressiveBlur
 import com.sameerasw.essentials.ui.modifiers.scrollMotionBlur
@@ -682,8 +683,8 @@ fun LinkPickerScreen(
                                             tint = MaterialTheme.colorScheme.onSurface,
                                         )
                                         Spacer(modifier = Modifier.width(6.dp))
-                                        Text(
-                                            text = stringResource(id = action.titleRes),
+                                        TranslatableText(
+                                            stringResId = action.titleRes,
                                             style = MaterialTheme.typography.labelMedium,
                                             color = MaterialTheme.colorScheme.onSurface,
                                             maxLines = 1,
@@ -697,7 +698,7 @@ fun LinkPickerScreen(
                                         onDismissRequest = { showSettingsMenu = false },
                                     ) {
                                         SegmentedDropdownMenuItem(
-                                            text = { Text(text = stringResource(R.string.link_preview_show_preview)) },
+                                            text = { TranslatableText(stringResId = R.string.link_preview_show_preview) },
                                             onClick = {
                                                 val next = !isLinkPreviewEnabled
                                                 isLinkPreviewEnabled = next
@@ -715,7 +716,7 @@ fun LinkPickerScreen(
                                             },
                                         )
                                         SegmentedDropdownMenuItem(
-                                            text = { Text(text = stringResource(R.string.link_preview_show_images)) },
+                                            text = { TranslatableText(stringResId = R.string.link_preview_show_images) },
                                             onClick = {
                                                 if (isLinkPreviewEnabled) {
                                                     val next = !isLinkPreviewImagesEnabled
@@ -833,8 +834,8 @@ fun LinkPickerScreen(
                                 .padding(top = 0.dp, bottom = 0.dp, start = 16.dp, end = 16.dp),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
-                        Text(
-                            text = stringResource(R.string.label_share_with),
+                        TranslatableText(
+                            stringResId = R.string.label_share_with,
                             style = MaterialTheme.typography.titleMedium,
                             color = MaterialTheme.colorScheme.onSurface,
                         )
@@ -1022,8 +1023,8 @@ fun LinkPickerScreen(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Text(
-                        text = stringResource(R.string.link_edit_title),
+                    TranslatableText(
+                        stringResId = R.string.link_edit_title,
                         style = MaterialTheme.typography.titleLarge,
                         color = MaterialTheme.colorScheme.onSurface,
                     )
@@ -1084,7 +1085,7 @@ fun LinkPickerScreen(
                         Modifier
                             .fillMaxWidth()
                             .focusRequester(focusRequester),
-                    label = { Text(stringResource(R.string.label_url)) },
+                    label = { TranslatableText(R.string.label_url) },
                     maxLines = 5,
                     shape = RoundedCornerShape(12.dp),
                 )
