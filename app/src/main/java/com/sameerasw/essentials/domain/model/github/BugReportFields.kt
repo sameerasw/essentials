@@ -178,11 +178,19 @@ object BugReportIssueFormatter {
     private const val TITLE_PREFIX = "[Bug]: "
     private const val MAX_TITLE_LENGTH = 80
 
-    fun title(description: String): String {
+    fun describe(
+        description: String,
+        sourceFeature: String?,
+    ): String = if (sourceFeature == null) description.trim() else "Feature: $sourceFeature\n\n${description.trim()}"
+
+    fun title(
+        description: String,
+        sourceFeature: String? = null,
+    ): String {
         val firstLine = description.trim().lineSequence().firstOrNull().orEmpty()
         val summary =
             if (firstLine.length > MAX_TITLE_LENGTH) firstLine.take(MAX_TITLE_LENGTH).trimEnd() + "…" else firstLine
-        return TITLE_PREFIX + summary
+        return TITLE_PREFIX + (sourceFeature?.let { "[$it] " } ?: "") + summary
     }
 
     fun additionalContext(

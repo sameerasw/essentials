@@ -2533,6 +2533,7 @@
     <string name="bug_report_issue_details">Issue details</string>
     <string name="bug_report_field_severity">Severity</string>
     <string name="bug_report_field_area">Area (optional)</string>
+    <string name="bug_report_source_feature">Feature: %1$s</string>
     <string name="bug_report_field_android_version">Android version</string>
     <string name="bug_report_field_oem">Device (OEM)</string>
     <string name="bug_report_field_device">Device model</string>

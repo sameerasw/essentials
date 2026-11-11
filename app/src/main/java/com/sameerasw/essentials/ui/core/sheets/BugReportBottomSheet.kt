@@ -70,6 +70,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
 import com.sameerasw.essentials.R
@@ -100,6 +101,7 @@ import java.util.Locale
 fun BugReportBottomSheet(
     viewModel: MainViewModel,
     onDismissRequest: () -> Unit,
+    sourceFeature: String? = null,
 ) {
     val context = LocalContext.current
     val view = LocalView.current
@@ -172,8 +174,8 @@ fun BugReportBottomSheet(
             buildList {
                 add("template" to "bug_report.yml")
                 if (feedbackMessage.isNotBlank()) {
-                    add("title" to BugReportIssueFormatter.title(feedbackMessage))
-                    add(BugReportFormIds.DESCRIPTION to feedbackMessage.trim())
+                    add("title" to BugReportIssueFormatter.title(feedbackMessage, sourceFeature))
+                    add(BugReportFormIds.DESCRIPTION to BugReportIssueFormatter.describe(feedbackMessage, sourceFeature))
                 }
                 issueFields.severity?.let { add(BugReportFormIds.SEVERITY to it) }
                 issueFields.androidVersion?.let { add(BugReportFormIds.ANDROID_VERSION to it) }
@@ -209,10 +211,10 @@ fun BugReportBottomSheet(
             val issueUrl =
                 bugReportRepository.createIssue(
                     token = token,
-                    title = BugReportIssueFormatter.title(feedbackMessage),
+                    title = BugReportIssueFormatter.title(feedbackMessage, sourceFeature),
                     body =
                         BugReportIssueFormatter.body(
-                            description = feedbackMessage,
+                            description = BugReportIssueFormatter.describe(feedbackMessage, sourceFeature),
                             fields = issueFields,
                             additionalContext =
                                 BugReportIssueFormatter.additionalContext(
@@ -240,7 +242,7 @@ fun BugReportBottomSheet(
         buildString {
             if (feedbackMessage.isNotBlank()) {
                 append("User Feedback:\n")
-                append(feedbackMessage.trim())
+                append(BugReportIssueFormatter.describe(feedbackMessage, sourceFeature))
                 append("\n\n")
             }
             if (contactEmail.isNotBlank()) {
@@ -299,10 +301,31 @@ fun BugReportBottomSheet(
             verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Text(
-                text = stringResource(R.string.bug_report_title),
-                style = MaterialTheme.typography.headlineMedium,
-            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterHorizontally),
+            ) {
+                Text(
+                    text = stringResource(R.string.bug_report_title),
+                    style = MaterialTheme.typography.headlineMedium,
+                )
+
+                if (sourceFeature != null) {
+                    Text(
+                        text = stringResource(R.string.bug_report_source_feature, sourceFeature),
+                        style = MaterialTheme.typography.labelLarge,
+                        color = MaterialTheme.colorScheme.primary,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier =
+                            Modifier
+                                .weight(1f, fill = false)
+                                .clip(CircleShape)
+                                .background(MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.4f))
+                                .padding(horizontal = 12.dp, vertical = 6.dp),
+                    )
+                }
+            }
 
             // Segmented Input Fields Container (Describe issue + Contact email)
             RoundedCardContainer(spacing = 2.dp) {
@@ -676,7 +699,7 @@ fun BugReportBottomSheet(
                     onClick = {
                         HapticUtil.performUIHaptic(view)
                         val feedbackText = buildString {
-                            append(feedbackMessage)
+                            append(BugReportIssueFormatter.describe(feedbackMessage, sourceFeature))
                             append("\n\n")
                             issueFields.asIssueFieldValues().forEach { (name, value) ->
                                 append("$name: $value\n")
@@ -765,7 +788,7 @@ fun BugReportBottomSheet(
                                     append(contactLine)
                                 }
                                 if (feedbackMessage.isNotBlank()) {
-                                    append("Feedback:\n$feedbackMessage\n\n")
+                                    append("Feedback:\n${BugReportIssueFormatter.describe(feedbackMessage, sourceFeature)}\n\n")
                                 }
                                 append("Device Info:\n$deviceInfoString\n\n")
                                 if (selectedCrashReport != null) {
