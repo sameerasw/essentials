@@ -15,7 +15,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -29,6 +28,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.diy.Trigger
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.utils.HapticUtil
@@ -59,14 +59,14 @@ fun NotificationTriggerSheet(
                     .fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            Text(
-                text = stringResource(R.string.diy_trigger_notification_received),
+            TranslatableText(
+                stringResId = R.string.diy_trigger_notification_received,
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSurface,
             )
-            Text(
-                text = stringResource(R.string.diy_notification_trigger_hint),
+            TranslatableText(
+                stringResId = R.string.diy_notification_trigger_hint,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -103,7 +103,7 @@ fun NotificationTriggerSheet(
             OutlinedTextField(
                 value = textContains,
                 onValueChange = { textContains = it },
-                label = { Text(stringResource(R.string.diy_notification_trigger_text)) },
+                label = { TranslatableText(R.string.diy_notification_trigger_text) },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
             )
@@ -130,7 +130,7 @@ fun NotificationTriggerSheet(
                         modifier = Modifier.size(20.dp),
                     )
                     Spacer(modifier = Modifier.size(8.dp))
-                    Text(stringResource(R.string.action_cancel))
+                    TranslatableText(R.string.action_cancel)
                 }
 
                 Button(
@@ -147,7 +147,7 @@ fun NotificationTriggerSheet(
                         modifier = Modifier.size(20.dp),
                     )
                     Spacer(modifier = Modifier.size(8.dp))
-                    Text(stringResource(R.string.action_save))
+                    TranslatableText(R.string.action_save)
                 }
             }
         }

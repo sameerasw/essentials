@@ -11,6 +11,7 @@ package com.sameerasw.essentials.ui.features.display
 
 import androidx.compose.runtime.key
 import androidx.compose.material3.IconButton
+import com.sameerasw.essentials.translation.TranslatableText
 import sh.calvin.reorderable.ReorderableColumn
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.island.model.IslandPriorityEntries
@@ -41,7 +42,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -201,8 +201,8 @@ fun IslandSettingsUI(
             }
         }
 
-        Text(
-            text = stringResource(R.string.duo_section_what_to_show),
+        TranslatableText(
+            stringResId = R.string.duo_section_what_to_show,
             style = MaterialTheme.typography.titleSmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(start = 8.dp),
@@ -219,8 +219,8 @@ fun IslandSettingsUI(
                     .padding(top = 12.dp)
                     .highlight(highlightSetting == "island_max_items"),
             ) {
-                Text(
-                    text = stringResource(R.string.island_max_items_title),
+                TranslatableText(
+                    stringResId = R.string.island_max_items_title,
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.padding(horizontal = 16.dp),
@@ -578,8 +578,8 @@ fun IslandSettingsUI(
 
         IslandProvidersSection(onChanged = { providerVersion++ })
 
-        Text(
-            text = stringResource(R.string.duo_section_actions),
+        TranslatableText(
+            stringResId = R.string.duo_section_actions,
             style = MaterialTheme.typography.titleSmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(start = 8.dp),
@@ -711,8 +711,8 @@ fun IslandSettingsUI(
             enter = expandVertically() + fadeIn(),
             exit = shrinkVertically() + fadeOut(),
         ) {
-            Text(
-                text = stringResource(R.string.island_gesture_visuals_hint),
+            TranslatableText(
+                stringResId = R.string.island_gesture_visuals_hint,
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(horizontal = 16.dp),
@@ -781,8 +781,8 @@ fun IslandSettingsUI(
                         modifier = Modifier.highlight(highlightSetting == "island_media_player_style"),
                         verticalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
-                        Text(
-                            text = stringResource(R.string.island_media_player_style_title),
+                        TranslatableText(
+                            stringResId = R.string.island_media_player_style_title,
                             style = MaterialTheme.typography.titleSmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.padding(start = 8.dp),
@@ -886,8 +886,8 @@ fun IslandSettingsUI(
                             }
                         }
                     }
-                    Text(
-                        text = stringResource(R.string.duo_media_skip_apps_title),
+                    TranslatableText(
+                        stringResId = R.string.duo_media_skip_apps_title,
                         style = MaterialTheme.typography.titleSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.padding(start = 8.dp),

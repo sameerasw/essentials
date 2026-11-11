@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials.services
 
+import com.sameerasw.essentials.R
 import com.sameerasw.essentials.utils.AppIconUtil
 import android.graphics.drawable.Icon
 import android.content.pm.LauncherApps
@@ -649,7 +650,7 @@ class NotificationListener : NotificationListenerService() {
                     android.widget.Toast
                         .makeText(
                             applicationContext,
-                            "Already Liked \u2665",
+                            applicationContext.getString(R.string.like_song_already_liked),
                             android.widget.Toast.LENGTH_SHORT,
                         ).show()
                 }
@@ -679,7 +680,7 @@ class NotificationListener : NotificationListenerService() {
                             android.widget.Toast
                                 .makeText(
                                     applicationContext,
-                                    "Liked song \u2665",
+                                    applicationContext.getString(R.string.like_song_liked),
                                     android.widget.Toast.LENGTH_SHORT,
                                 ).show()
                         }
@@ -711,7 +712,7 @@ class NotificationListener : NotificationListenerService() {
                                 android.widget.Toast
                                     .makeText(
                                         applicationContext,
-                                        "Liked song \u2665",
+                                        applicationContext.getString(R.string.like_song_liked),
                                         android.widget.Toast.LENGTH_SHORT,
                                     ).show()
                             }

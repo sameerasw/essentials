@@ -19,9 +19,9 @@ import com.sameerasw.essentials.R
 class PrivateNotificationsTileService : BaseTileService() {
     override val isSensitiveTile: Boolean = true
 
-    override fun getTileLabel(): String = "Sensitive Content"
+    override fun getTileLabel(): String = getString(R.string.tile_sensitive_content)
 
-    override fun getTileSubtitle(): String = if (arePrivateNotificationsAllowed()) "Shown on lock screen" else "Hidden on lock screen"
+    override fun getTileSubtitle(): String = getString(if (arePrivateNotificationsAllowed()) R.string.tile_sensitive_content_shown else R.string.tile_sensitive_content_hidden)
 
     override fun hasFeaturePermission(): Boolean =
         checkCallingOrSelfPermission(Manifest.permission.WRITE_SECURE_SETTINGS) == PackageManager.PERMISSION_GRANTED

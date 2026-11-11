@@ -33,6 +33,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.SettingsRepository
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
@@ -165,8 +166,8 @@ fun PowerAndBatterySettingsUI(
         }
 
         // --- SECTION: DISPLAY & BRIGHTNESS ---
-        Text(
-            text = stringResource(R.string.title_battery_saver_display),
+        TranslatableText(
+            stringResId = R.string.title_battery_saver_display,
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(start = 16.dp),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -256,8 +257,8 @@ fun PowerAndBatterySettingsUI(
         }
 
         // --- SECTION: POWER & PERFORMANCE ---
-        Text(
-            text = stringResource(R.string.title_battery_saver_power),
+        TranslatableText(
+            stringResId = R.string.title_battery_saver_power,
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(start = 16.dp),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -311,8 +312,8 @@ fun PowerAndBatterySettingsUI(
         }
 
         // --- SECTION: NETWORK & SYNC ---
-        Text(
-            text = stringResource(R.string.title_battery_saver_network),
+        TranslatableText(
+            stringResId = R.string.title_battery_saver_network,
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(start = 16.dp),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -362,8 +363,8 @@ fun PowerAndBatterySettingsUI(
         }
 
         // --- SECTION: SOUND & SENSORS ---
-        Text(
-            text = stringResource(R.string.title_battery_saver_sound_sensors),
+        TranslatableText(
+            stringResId = R.string.title_battery_saver_sound_sensors,
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(start = 16.dp),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -422,8 +423,8 @@ fun PowerAndBatterySettingsUI(
         }
 
         // --- SECTION: LOCATION ---
-        Text(
-            text = stringResource(R.string.title_battery_saver_location),
+        TranslatableText(
+            stringResId = R.string.title_battery_saver_location,
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(start = 16.dp),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -512,7 +513,7 @@ fun PowerAndBatterySettingsUI(
                         .fillMaxWidth()
                         .padding(8.dp),
             ) {
-                Text(text = stringResource(R.string.action_reset_battery_saver))
+                TranslatableText(stringResId = R.string.action_reset_battery_saver)
             }
         }
     }

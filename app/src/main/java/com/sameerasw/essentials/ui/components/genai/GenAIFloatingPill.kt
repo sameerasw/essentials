@@ -68,6 +68,7 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.window.DialogWindowProvider
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.genai.AutomationSuggestion
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.modifiers.BlurDirection
 import com.sameerasw.essentials.ui.modifiers.progressiveBlur
 import com.sameerasw.essentials.utils.HapticUtil
@@ -196,23 +197,23 @@ fun GenAIFloatingPill(
                             when {
                                 suggestion.type.equals("APP", ignoreCase = true) -> {
                                     val appsCount = suggestion.selectedApps.size
-                                    if (appsCount > 0) "Apps ($appsCount selected)" else "App Automation"
+                                    if (appsCount > 0) stringResource(R.string.genai_apps_selected, appsCount) else stringResource(R.string.genai_app_automation)
                                 }
 
                                 suggestion.triggerType == "Schedule" && suggestion.hour != null -> {
-                                    String.format(
-                                        "Schedule (%02d:%02d)",
-                                        suggestion.hour,
+                                    stringResource(
+                                        R.string.genai_schedule_time,
+                                        suggestion.hour ?: 0,
                                         suggestion.minute ?: 0,
                                     )
                                 }
 
                                 suggestion.stateType == "TimePeriod" && suggestion.hour != null && suggestion.endHour != null -> {
-                                    String.format(
-                                        "Time Period (%02d:%02d - %02d:%02d)",
-                                        suggestion.hour,
+                                    stringResource(
+                                        R.string.genai_time_period,
+                                        suggestion.hour ?: 0,
                                         suggestion.minute ?: 0,
-                                        suggestion.endHour,
+                                        suggestion.endHour ?: 0,
                                         suggestion.endMinute ?: 0,
                                     )
                                 }
@@ -398,8 +399,8 @@ fun GenAIFloatingPill(
                                     shape = RoundedCornerShape(16.dp),
                                     modifier = Modifier.fillMaxWidth(),
                                 ) {
-                                    Text(
-                                        text = "No actions defined",
+                                    TranslatableText(
+                                        stringResId = R.string.diy_no_actions_defined,
                                         style = MaterialTheme.typography.bodyMedium,
                                         color = MaterialTheme.colorScheme.onPrimary,
                                         modifier = Modifier.padding(14.dp),
@@ -410,8 +411,8 @@ fun GenAIFloatingPill(
 
                         Spacer(modifier = Modifier.height(10.dp))
 
-                        Text(
-                            text = stringResource(R.string.diy_genai_disclaimer),
+                        TranslatableText(
+                            stringResId = R.string.diy_genai_disclaimer,
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.7f),
                             modifier =
@@ -434,8 +435,8 @@ fun GenAIFloatingPill(
                         value = promptText,
                         onValueChange = { promptText = it },
                         placeholder = {
-                            Text(
-                                text = stringResource(R.string.diy_genai_describe_placeholder),
+                            TranslatableText(
+                                stringResId = R.string.diy_genai_describe_placeholder,
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.6f),
                             )

@@ -9,13 +9,12 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalView
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.utils.HapticUtil
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -32,13 +31,13 @@ fun PreferStillIslandInfoBottomSheet(onDismissRequest: () -> Unit) {
                     .padding(bottom = 32.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            Text(
-                text = stringResource(R.string.island_prefer_still_title),
+            TranslatableText(
+                stringResId = R.string.island_prefer_still_title,
                 style = MaterialTheme.typography.headlineSmall,
                 color = MaterialTheme.colorScheme.onSurface,
             )
-            Text(
-                text = stringResource(R.string.island_prefer_still_info),
+            TranslatableText(
+                stringResId = R.string.island_prefer_still_info,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -49,7 +48,7 @@ fun PreferStillIslandInfoBottomSheet(onDismissRequest: () -> Unit) {
                 },
                 modifier = Modifier.fillMaxWidth(),
             ) {
-                Text(stringResource(R.string.action_got_it))
+                TranslatableText(R.string.action_got_it)
             }
         }
     }

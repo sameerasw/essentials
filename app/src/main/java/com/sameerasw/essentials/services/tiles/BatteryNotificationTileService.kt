@@ -38,9 +38,9 @@ class BatteryNotificationTileService : BaseTileService() {
         }
     }
 
-    override fun getTileLabel(): String = "Battery Info"
+    override fun getTileLabel(): String = getString(R.string.tile_battery_info)
 
-    override fun getTileSubtitle(): String = if (settingsRepository.isBatteryNotificationEnabled()) "On" else "Off"
+    override fun getTileSubtitle(): String = getString(if (settingsRepository.isBatteryNotificationEnabled()) R.string.on else R.string.off)
 
     override fun hasFeaturePermission(): Boolean = true
 

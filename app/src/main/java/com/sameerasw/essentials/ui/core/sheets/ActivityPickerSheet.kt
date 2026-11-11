@@ -59,6 +59,7 @@ import androidx.core.graphics.drawable.toBitmap
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.diy.Action
 import com.sameerasw.essentials.domain.model.ActivityIconSource
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.utils.ActivityLauncherUtil
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.utils.ShellUtils
@@ -147,8 +148,8 @@ fun ActivityPickerSheet(
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             Column {
-                Text(
-                    text = stringResource(R.string.activity_picker_title),
+                TranslatableText(
+                    stringResId = R.string.activity_picker_title,
                     style = MaterialTheme.typography.headlineSmall,
                 )
                 Text(
@@ -167,7 +168,7 @@ fun ActivityPickerSheet(
                 value = query,
                 onValueChange = { query = it },
                 modifier = Modifier.fillMaxWidth(),
-                placeholder = { Text(stringResource(R.string.activity_picker_search)) },
+                placeholder = { TranslatableText(R.string.activity_picker_search) },
                 leadingIcon = {
                     Icon(
                         painter = painterResource(id = R.drawable.rounded_search_24),
@@ -191,8 +192,8 @@ fun ActivityPickerSheet(
                     }
 
                 filtered.isEmpty() ->
-                    Text(
-                        text = stringResource(R.string.activity_picker_empty),
+                    TranslatableText(
+                        stringResId = R.string.activity_picker_empty,
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.padding(vertical = 16.dp),
@@ -325,8 +326,8 @@ private fun ActivityRow(
                     overflow = TextOverflow.Ellipsis,
                 )
                 if (activity.requiresRoot) {
-                    Text(
-                        text = stringResource(R.string.activity_picker_root_only),
+                    TranslatableText(
+                        stringResId = R.string.activity_picker_root_only,
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.tertiary,
                     )

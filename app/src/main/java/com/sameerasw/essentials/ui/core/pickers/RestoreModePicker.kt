@@ -36,6 +36,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.translation.TranslatableText
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -74,8 +75,8 @@ fun RestoreModePicker(
                     containerColor = MaterialTheme.colorScheme.surfaceBright,
                 ),
             content = {
-                Text(
-                    text = stringResource(R.string.label_restore_mode),
+                TranslatableText(
+                    stringResId = R.string.label_restore_mode,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurface,
                 )
@@ -110,7 +111,12 @@ fun RestoreModePicker(
                         },
                 ) {
                     Text(
-                        text = mode,
+                        text =
+                            when (mode) {
+                                "Auto" -> stringResource(R.string.app_colors_auto)
+                                "Notify" -> stringResource(R.string.restore_mode_notify)
+                                else -> mode
+                            },
                         style = MaterialTheme.typography.labelLarge,
                         fontWeight = if (isChecked) FontWeight.Bold else FontWeight.Normal,
                         maxLines = 1,

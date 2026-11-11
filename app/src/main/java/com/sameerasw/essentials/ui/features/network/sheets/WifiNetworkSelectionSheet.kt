@@ -32,7 +32,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -44,11 +43,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.core.cards.SelectionCardItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.utils.HapticUtil
@@ -104,8 +103,8 @@ fun WifiNetworkSelectionSheet(
                     .fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            Text(
-                text = stringResource(R.string.diy_select_wifi_network_title),
+            TranslatableText(
+                stringResId = R.string.diy_select_wifi_network_title,
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSurface,
@@ -125,8 +124,8 @@ fun WifiNetworkSelectionSheet(
                 }
 
                 savedNetworks.isNotEmpty() -> {
-                    Text(
-                        text = stringResource(R.string.diy_saved_networks_via_shizuku),
+                    TranslatableText(
+                        stringResId = R.string.diy_saved_networks_via_shizuku,
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
@@ -149,7 +148,7 @@ fun WifiNetworkSelectionSheet(
                     OutlinedTextField(
                         value = ssid,
                         onValueChange = { ssid = it },
-                        label = { Text(stringResource(R.string.diy_wifi_ssid_label)) },
+                        label = { TranslatableText(R.string.diy_wifi_ssid_label) },
                         modifier = Modifier.fillMaxWidth(),
                         singleLine = true,
                     )
@@ -176,7 +175,7 @@ fun WifiNetworkSelectionSheet(
                             modifier = Modifier.size(20.dp),
                         )
                         Spacer(modifier = Modifier.size(8.dp))
-                        Text(stringResource(R.string.diy_use_current_network))
+                        TranslatableText(R.string.diy_use_current_network)
                     }
 
                     Row(
@@ -201,7 +200,7 @@ fun WifiNetworkSelectionSheet(
                                 modifier = Modifier.size(20.dp),
                             )
                             Spacer(modifier = Modifier.size(8.dp))
-                            Text(stringResource(R.string.action_cancel))
+                            TranslatableText(R.string.action_cancel)
                         }
 
                         Button(
@@ -220,7 +219,7 @@ fun WifiNetworkSelectionSheet(
                                 modifier = Modifier.size(20.dp),
                             )
                             Spacer(modifier = Modifier.size(8.dp))
-                            Text(stringResource(R.string.action_save))
+                            TranslatableText(R.string.action_save)
                         }
                     }
                 }

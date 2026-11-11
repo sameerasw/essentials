@@ -612,7 +612,6 @@
     <string name="perm_battery_optimization_title">Optimizarea bateriei</string>
     <string name="perm_battery_optimization_desc">Asigurați-vă că serviciul nu este oprit de sistem pentru a economisi energie.</string>
     <!-- Tabs -->
-    <string name="tab_essentials">Esențiale</string>
     <string name="tab_freeze">Îngheţa</string>
     <string name="tab_freeze_title">Îngheţat</string>
     <string name="tab_diy">DIY</string>

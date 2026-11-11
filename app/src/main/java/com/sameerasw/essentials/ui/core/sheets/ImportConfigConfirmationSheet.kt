@@ -18,17 +18,16 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalView
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.utils.HapticUtil
 
@@ -55,15 +54,15 @@ fun ImportConfigConfirmationSheet(
             verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Text(
-                text = stringResource(R.string.import_config_sheet_title),
+            TranslatableText(
+                stringResId = R.string.import_config_sheet_title,
                 style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold),
                 color = MaterialTheme.colorScheme.onSurface,
                 textAlign = TextAlign.Center,
             )
 
-            Text(
-                text = stringResource(R.string.import_config_sheet_desc),
+            TranslatableText(
+                stringResId = R.string.import_config_sheet_desc,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center,
@@ -77,8 +76,8 @@ fun ImportConfigConfirmationSheet(
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
-                    Text(
-                        text = stringResource(R.string.import_config_merge_warning),
+                    TranslatableText(
+                        stringResId = R.string.import_config_merge_warning,
                         style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Medium),
                         color = MaterialTheme.colorScheme.error,
                         textAlign = TextAlign.Center,
@@ -98,7 +97,7 @@ fun ImportConfigConfirmationSheet(
                     },
                     modifier = Modifier.weight(1f),
                 ) {
-                    Text(stringResource(R.string.action_override))
+                    TranslatableText(R.string.action_override)
                 }
 
                 OutlinedButton(
@@ -108,7 +107,7 @@ fun ImportConfigConfirmationSheet(
                     },
                     modifier = Modifier.weight(1f),
                 ) {
-                    Text(stringResource(R.string.action_merge))
+                    TranslatableText(R.string.action_merge)
                 }
             }
 
@@ -119,7 +118,7 @@ fun ImportConfigConfirmationSheet(
                 },
                 modifier = Modifier.fillMaxWidth(),
             ) {
-                Text(stringResource(R.string.action_abort))
+                TranslatableText(R.string.action_abort)
             }
         }
     }

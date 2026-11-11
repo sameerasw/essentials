@@ -15,9 +15,9 @@ import android.service.quicksettings.Tile
 import com.sameerasw.essentials.R
 
 class MonoAudioTileService : BaseTileService() {
-    override fun getTileLabel(): String = "Mono Audio"
+    override fun getTileLabel(): String = getString(R.string.tile_mono_audio)
 
-    override fun getTileSubtitle(): String = if (isMonoAudioEnabled()) "On" else "Off"
+    override fun getTileSubtitle(): String = getString(if (isMonoAudioEnabled()) R.string.on else R.string.off)
 
     override fun hasFeaturePermission(): Boolean =
         com.sameerasw.essentials.utils.PermissionUtils

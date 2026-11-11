@@ -51,6 +51,7 @@ import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.model.NotificationApp
 import com.sameerasw.essentials.services.automation.executors.CombinedActionExecutor
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.core.sheets.ActivityPickerSheet
 import com.sameerasw.essentials.utils.AppUtil
 import com.sameerasw.essentials.utils.HapticUtil
@@ -66,7 +67,7 @@ fun ActivityLauncherSearchBar(
         value = query,
         onValueChange = onQueryChange,
         modifier = modifier.fillMaxWidth(),
-        placeholder = { Text(stringResource(R.string.label_search)) },
+        placeholder = { TranslatableText(R.string.label_search) },
         leadingIcon = {
             Icon(
                 painter = painterResource(id = R.drawable.rounded_search_24),
@@ -130,8 +131,8 @@ fun ActivityLauncherSettingsUI(
 
             filtered.isEmpty() ->
                 item {
-                    Text(
-                        text = stringResource(R.string.activity_launcher_no_apps),
+                    TranslatableText(
+                        stringResId = R.string.activity_launcher_no_apps,
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.padding(16.dp),

@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -31,6 +30,7 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.sheets.AppSelectionSheet
@@ -101,8 +101,8 @@ fun AlwaysOnDisplaySettingsUI(
             )
         }
 
-        Text(
-            text = stringResource(R.string.feat_notification_glance_title),
+        TranslatableText(
+            stringResId = R.string.feat_notification_glance_title,
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(start = 16.dp, top = 8.dp),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -155,15 +155,15 @@ fun AlwaysOnDisplaySettingsUI(
             )
         }
 
-        Text(
-            text = stringResource(R.string.notification_glance_desc),
+        TranslatableText(
+            stringResId = R.string.notification_glance_desc,
             modifier = Modifier.padding(horizontal = 16.dp),
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
 
-        Text(
-            text = stringResource(R.string.feat_aod_force_turn_off_desc),
+        TranslatableText(
+            stringResId = R.string.feat_aod_force_turn_off_desc,
             modifier = Modifier.padding(16.dp),
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -178,7 +178,7 @@ fun AlwaysOnDisplaySettingsUI(
                 modifier = Modifier.fillMaxWidth(),
                 enabled = viewModel.isNotificationGlanceEnabled.value,
             ) {
-                Text(stringResource(R.string.action_select_apps))
+                TranslatableText(R.string.action_select_apps)
             }
         }
 

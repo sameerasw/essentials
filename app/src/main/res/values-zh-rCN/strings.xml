@@ -745,7 +745,6 @@
     <string name="perm_battery_optimization_desc">确保服务不会被系统为了省电而杀死。</string>
 
     <!-- Tabs -->
-    <string name="tab_essentials">Essentials</string>
     <string name="tab_freeze">冻结</string>
     <string name="tab_freeze_title">已冻结</string>
     <string name="tab_diy">DIY</string>

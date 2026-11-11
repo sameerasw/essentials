@@ -48,6 +48,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.model.AppTag
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.utils.HapticUtil
 
@@ -87,8 +88,8 @@ fun AssignTagsSheet(
             )
 
             if (availableTags.isEmpty()) {
-                Text(
-                    text = stringResource(R.string.freeze_tags_empty),
+                TranslatableText(
+                    stringResId = R.string.freeze_tags_empty,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(vertical = 16.dp),
@@ -188,7 +189,7 @@ fun AssignTagsSheet(
                         onDismissRequest()
                     },
                 ) {
-                    Text(stringResource(R.string.action_cancel))
+                    TranslatableText(R.string.action_cancel)
                 }
                 Spacer(modifier = Modifier.width(8.dp))
                 Button(
@@ -198,7 +199,7 @@ fun AssignTagsSheet(
                         onDismissRequest()
                     },
                 ) {
-                    Text(stringResource(R.string.action_save))
+                    TranslatableText(R.string.action_save)
                 }
             }
         }

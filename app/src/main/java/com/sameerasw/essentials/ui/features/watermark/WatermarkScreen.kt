@@ -28,7 +28,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -44,6 +43,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.components.ReusableTopAppBar
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenu
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
@@ -270,7 +270,7 @@ private fun WatermarkActions(
                     modifier = Modifier.size(18.dp),
                 )
                 Spacer(Modifier.size(8.dp))
-                Text(stringResource(R.string.watermark_pick_image))
+                TranslatableText(R.string.watermark_pick_image)
             }
         } else {
             OutlinedButton(onClick = {
@@ -298,7 +298,7 @@ private fun WatermarkActions(
                         modifier = Modifier.size(18.dp),
                     )
                     Spacer(Modifier.size(8.dp))
-                    Text(stringResource(R.string.action_save))
+                    TranslatableText(R.string.action_save)
                 }
 
                 SegmentedDropdownMenu(
@@ -306,7 +306,7 @@ private fun WatermarkActions(
                     onDismissRequest = { showMenu = false },
                 ) {
                     SegmentedDropdownMenuItem(
-                        text = { Text(stringResource(R.string.action_share)) },
+                        text = { TranslatableText(R.string.action_share) },
                         leadingIcon = {
                             Icon(
                                 painter = painterResource(R.drawable.rounded_share_24),
@@ -322,7 +322,7 @@ private fun WatermarkActions(
                     )
 
                     SegmentedDropdownMenuItem(
-                        text = { Text(stringResource(R.string.action_save)) },
+                        text = { TranslatableText(R.string.action_save) },
                         leadingIcon = {
                             Icon(
                                 painter = painterResource(R.drawable.rounded_save_24),

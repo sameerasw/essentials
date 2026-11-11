@@ -668,7 +668,6 @@
     <string name="perm_battery_optimization_title">Akkumulátor optimalizálás</string>
     <string name="perm_battery_optimization_desc">Győződjön meg arról, hogy a szolgáltatást nem ölte meg a rendszer az energiatakarékosság érdekében.</string>
     <!-- Tabs -->
-    <string name="tab_essentials">Essentials</string>
     <string name="tab_freeze">Fagy</string>
     <string name="tab_freeze_title">Fagyott</string>
     <string name="tab_diy">DIY</string>

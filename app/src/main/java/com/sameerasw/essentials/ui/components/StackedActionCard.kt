@@ -23,13 +23,13 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.utils.HapticUtil
 
 @Composable
@@ -65,12 +65,12 @@ fun StackedActionCard(
                     tint = MaterialTheme.colorScheme.primary,
                 )
                 Column(modifier = Modifier.weight(1f)) {
-                    Text(
+                    TranslatableText(
                         text = title,
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.onSurface,
                     )
-                    Text(
+                    TranslatableText(
                         text = description,
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -106,7 +106,7 @@ fun StackedActionCard(
                     )
                     Spacer(modifier = Modifier.width(6.dp))
                 }
-                Text(
+                TranslatableText(
                     text = actionLabel,
                     style = MaterialTheme.typography.labelLarge,
                 )

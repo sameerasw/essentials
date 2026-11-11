@@ -3,7 +3,6 @@ package com.sameerasw.essentials.ui.features.display
 import android.widget.Toast
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -17,6 +16,7 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LifecycleResumeEffect
+import com.sameerasw.essentials.translation.TranslatableText
 import kotlinx.coroutines.launch
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.SettingsRepository
@@ -46,8 +46,8 @@ fun IslandProvidersSection(onChanged: () -> Unit = {}) {
     var busy by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
 
-    Text(
-        text = stringResource(R.string.island_providers_title),
+    TranslatableText(
+        stringResId = R.string.island_providers_title,
         style = MaterialTheme.typography.titleSmall,
         color = MaterialTheme.colorScheme.onSurfaceVariant,
         modifier = Modifier.padding(start = 8.dp),

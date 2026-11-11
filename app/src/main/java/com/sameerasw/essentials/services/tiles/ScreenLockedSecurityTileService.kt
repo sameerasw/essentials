@@ -26,10 +26,10 @@ class ScreenLockedSecurityTileService : BaseTileService() {
             Intent(this, TileAuthActivity::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 putExtra("feature_pref_key", "screen_locked_security_enabled")
-                putExtra("auth_title", "Screen Locked Security")
+                putExtra("auth_title", getString(R.string.feat_screen_locked_security_title))
                 putExtra(
                     "auth_subtitle",
-                    if (isEnabled) "Authenticate to disable screen locked security" else "Authenticate to enable screen locked security",
+                    getString(if (isEnabled) R.string.screen_locked_security_tile_auth_disable else R.string.screen_locked_security_tile_auth_enable),
                 )
             }
 
@@ -47,9 +47,9 @@ class ScreenLockedSecurityTileService : BaseTileService() {
         }
     }
 
-    override fun getTileLabel(): String = "Locked Security"
+    override fun getTileLabel(): String = getString(R.string.tile_locked_security)
 
-    override fun getTileSubtitle(): String = if (getTileState() == Tile.STATE_ACTIVE) "Enabled" else "Disabled"
+    override fun getTileSubtitle(): String = getString(if (getTileState() == Tile.STATE_ACTIVE) R.string.label_enabled else R.string.label_disabled)
 
     override fun hasFeaturePermission(): Boolean =
         com.sameerasw.essentials.utils.ShellUtils

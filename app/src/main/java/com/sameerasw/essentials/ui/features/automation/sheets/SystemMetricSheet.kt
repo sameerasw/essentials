@@ -40,6 +40,7 @@ import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.diy.Comparison
 import com.sameerasw.essentials.domain.diy.Metric
 import com.sameerasw.essentials.domain.diy.Trigger
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.components.CategoryExpandableSection
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
 import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
@@ -145,8 +146,8 @@ fun SystemMetricSheet(
                     .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            Text(
-                text = stringResource(metric.title),
+            TranslatableText(
+                stringResId = metric.title,
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(start = 8.dp),
             )
@@ -170,12 +171,9 @@ fun SystemMetricSheet(
 
             val batteryLevelValue = currentBatteryPercent
             if (batteryLevelValue != null) {
-                Text(
-                    text =
-                        stringResource(
-                            R.string.diy_metric_now,
-                            stringResource(R.string.diy_metric_percent, batteryLevelValue),
-                        ),
+                TranslatableText(
+                    stringResId = R.string.diy_metric_now,
+                    formatArgs = listOf(stringResource(R.string.diy_metric_percent, batteryLevelValue)),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(start = 8.dp),

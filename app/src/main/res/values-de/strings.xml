@@ -612,7 +612,6 @@
     <string name="perm_battery_optimization_title">Akkuoptimierung</string>
     <string name="perm_battery_optimization_desc">Stelle sicher, dass der Service nicht von dem System gestoppt wird, um Strom zu sparen.</string>
     <!-- Tabs -->
-    <string name="tab_essentials">Essentials</string>
     <string name="tab_freeze">Einfrieren</string>
     <string name="tab_freeze_title">Eingefroren</string>
     <string name="tab_diy">DIY</string>

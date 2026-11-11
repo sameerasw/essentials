@@ -22,9 +22,9 @@ class DynamicNightLightTileService : BaseTileService() {
         prefs.edit { putBoolean("dynamic_night_light_enabled", !isEnabled) }
     }
 
-    override fun getTileLabel(): String = "Dynamic Night Light"
+    override fun getTileLabel(): String = getString(R.string.tile_dynamic_night_light)
 
-    override fun getTileSubtitle(): String = if (getTileState() == Tile.STATE_ACTIVE) "Enabled" else "Disabled"
+    override fun getTileSubtitle(): String = getString(if (getTileState() == Tile.STATE_ACTIVE) R.string.label_enabled else R.string.label_disabled)
 
     override fun hasFeaturePermission(): Boolean {
         // Accessibility is required to monitor apps

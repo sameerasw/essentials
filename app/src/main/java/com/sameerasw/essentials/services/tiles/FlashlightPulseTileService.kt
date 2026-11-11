@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials.services.tiles
 
+import com.sameerasw.essentials.R
 import android.service.quicksettings.Tile
 import androidx.core.content.edit
 
@@ -23,12 +24,12 @@ class FlashlightPulseTileService : BaseTileService() {
         }
     }
 
-    override fun getTileLabel(): String = "Flashlight Pulse"
+    override fun getTileLabel(): String = getString(R.string.tile_flashlight_pulse)
 
     override fun getTileSubtitle(): String {
         val prefs = getSharedPreferences("essentials_prefs", MODE_PRIVATE)
         val enabled = prefs.getBoolean("flashlight_pulse_enabled", false)
-        return if (enabled) "Enabled" else "Disabled"
+        return getString(if (enabled) R.string.label_enabled else R.string.label_disabled)
     }
 
     override fun hasFeaturePermission(): Boolean {

@@ -47,6 +47,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.diy.Action
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.utils.ColorUtil
 import com.sameerasw.essentials.utils.HapticUtil
 
@@ -76,8 +77,8 @@ fun DeviceEffectsSettingsSheet(
                     .fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            Text(
-                text = stringResource(R.string.diy_action_device_effects),
+            TranslatableText(
+                stringResId = R.string.diy_action_device_effects,
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSurface,
@@ -115,15 +116,15 @@ fun DeviceEffectsSettingsSheet(
                         )
                     }
                     Column {
-                        Text(
-                            text = stringResource(R.string.diy_device_effects_desc),
+                        TranslatableText(
+                            stringResId = R.string.diy_device_effects_desc,
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                         if (android.os.Build.VERSION.SDK_INT < 35) {
                             Spacer(modifier = Modifier.size(8.dp))
-                            Text(
-                                text = stringResource(R.string.diy_device_effects_android_15_warning),
+                            TranslatableText(
+                                stringResId = R.string.diy_device_effects_android_15_warning,
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.error,
                                 fontWeight = FontWeight.Bold,
@@ -290,7 +291,7 @@ fun DeviceEffectsSettingsSheet(
                         modifier = Modifier.size(20.dp),
                     )
                     Spacer(modifier = Modifier.size(8.dp))
-                    Text(stringResource(R.string.action_cancel))
+                    TranslatableText(R.string.action_cancel)
                 }
 
                 Button(
@@ -315,7 +316,7 @@ fun DeviceEffectsSettingsSheet(
                         modifier = Modifier.size(20.dp),
                     )
                     Spacer(modifier = Modifier.size(8.dp))
-                    Text(stringResource(R.string.action_save))
+                    TranslatableText(R.string.action_save)
                 }
             }
         }

@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials
 
+import com.sameerasw.essentials.R
 import android.content.ContentResolver
 import android.content.Intent
 import android.os.Bundle
@@ -294,7 +295,7 @@ class ShutUpShortcutActivity : ComponentActivity() {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
         } else {
-            Toast.makeText(this, "Could not launch $packageName", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.shut_up_could_not_launch, packageName), Toast.LENGTH_SHORT).show()
         }
     }
 }

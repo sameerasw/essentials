@@ -51,6 +51,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.components.battery.BatteryAppsTabContent
 import com.sameerasw.essentials.ui.components.battery.BatteryInfoTabContent
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
@@ -262,8 +263,8 @@ fun BatteryDetailsBottomSheet(
                 val currentMode = chargingMode
                 if (currentMode != null) {
                     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                        Text(
-                            text = stringResource(R.string.label_charging_mode_title),
+                        TranslatableText(
+                            stringResId = R.string.label_charging_mode_title,
                             style = MaterialTheme.typography.labelLarge,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.padding(start = 4.dp),

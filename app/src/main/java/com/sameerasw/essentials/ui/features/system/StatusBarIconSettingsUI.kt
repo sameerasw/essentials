@@ -31,7 +31,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -50,6 +49,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.edit
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.StatusBarIconRegistry
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.pickers.NetworkTypePicker
@@ -181,8 +181,8 @@ fun StatusBarIconSettingsUI(
                 val iconsInCat =
                     StatusBarIconRegistry.ALL_ICONS.filter { it.categoryRes == categoryRes }
                 if (iconsInCat.isNotEmpty()) {
-                    Text(
-                        text = stringResource(categoryRes),
+                    TranslatableText(
+                        stringResId = categoryRes,
                         style = MaterialTheme.typography.titleMedium,
                         modifier = Modifier.padding(start = 16.dp, top = 24.dp, bottom = 8.dp),
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -222,8 +222,8 @@ fun StatusBarIconSettingsUI(
             }
 
             // Smart Visibility Category
-            Text(
-                text = stringResource(R.string.settings_section_smart_visibility),
+            TranslatableText(
+                stringResId = R.string.settings_section_smart_visibility,
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(start = 16.dp, top = 24.dp, bottom = 8.dp),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -357,8 +357,8 @@ fun StatusBarIconSettingsUI(
             }
 
             // Advanced Status Bar Settings
-            Text(
-                text = stringResource(R.string.status_bar_section_advanced),
+            TranslatableText(
+                stringResId = R.string.status_bar_section_advanced,
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(start = 16.dp, top = 24.dp, bottom = 8.dp),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -399,8 +399,8 @@ fun StatusBarIconSettingsUI(
                                 .padding(top = 16.dp, start = 20.dp, end = 16.dp, bottom = 2.dp),
                         verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
                     ) {
-                        Text(
-                            text = stringResource(R.string.stb_clock_position),
+                        TranslatableText(
+                            stringResId = R.string.stb_clock_position,
                             style = MaterialTheme.typography.titleSmall,
                             color =
                                 if (isPermissionGranted) {
@@ -479,8 +479,8 @@ fun StatusBarIconSettingsUI(
                                 .padding(top = 16.dp, start = 20.dp, end = 16.dp, bottom = 2.dp),
                         verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
                     ) {
-                        Text(
-                            text = stringResource(R.string.stb_battery_percentage),
+                        TranslatableText(
+                            stringResId = R.string.stb_battery_percentage,
                             style = MaterialTheme.typography.titleSmall,
                             color =
                                 if (batteryPermissionGranted) {
@@ -493,8 +493,8 @@ fun StatusBarIconSettingsUI(
                         )
                         if (!viewModel.isShellPermissionGranted.value) {
                             Spacer(modifier = Modifier.weight(1f))
-                            Text(
-                                text = stringResource(R.string.req_shizuku),
+                            TranslatableText(
+                                stringResId = R.string.req_shizuku,
                                 style = MaterialTheme.typography.labelSmall,
                                 color = MaterialTheme.colorScheme.error,
                             )
@@ -535,13 +535,13 @@ fun StatusBarIconSettingsUI(
                         .highlight(highlightSetting == "reset_icons"),
                 enabled = isPermissionGranted,
             ) {
-                Text(stringResource(R.string.action_reset_all_icons))
+                TranslatableText(R.string.action_reset_all_icons)
             }
         }
 
         // Advanced Status Bar Flags Section
-        Text(
-            text = stringResource(R.string.stb_advanced_flags_title),
+        TranslatableText(
+            stringResId = R.string.stb_advanced_flags_title,
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 8.dp),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -658,8 +658,8 @@ fun StatusBarIconSettingsUI(
             )
         }
 
-        Text(
-            text = stringResource(R.string.stb_hide_entire_status_bar_title),
+        TranslatableText(
+            stringResId = R.string.stb_hide_entire_status_bar_title,
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 8.dp),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -687,8 +687,8 @@ fun StatusBarIconSettingsUI(
             )
         }
 
-        Text(
-            text = stringResource(R.string.status_bar_icons_disclaimer),
+        TranslatableText(
+            stringResId = R.string.status_bar_icons_disclaimer,
             style = MaterialTheme.typography.bodySmall,
             modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 8.dp),
             color = MaterialTheme.colorScheme.onSurfaceVariant,

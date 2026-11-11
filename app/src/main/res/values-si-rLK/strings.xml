@@ -668,7 +668,6 @@
     <string name="perm_battery_optimization_title">බැටරි ප්රශස්තකරණය</string>
     <string name="perm_battery_optimization_desc">බලය ඉතිරි කර ගැනීම සඳහා පද්ධතිය මඟින් සේවාව විනාශ නොවන බවට සහතික වන්න.</string>
     <!-- Tabs -->
-    <string name="tab_essentials">අත්යවශ්ය දේවල්</string>
     <string name="tab_freeze">කැටි කරන්න</string>
     <string name="tab_freeze_title">ශීත කළ</string>
     <string name="tab_diy">DIY</string>

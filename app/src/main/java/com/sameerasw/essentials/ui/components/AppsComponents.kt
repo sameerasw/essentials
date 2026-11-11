@@ -21,13 +21,12 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.CircularWavyProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.utils.HapticUtil
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -59,7 +58,7 @@ fun AppsActionButtons(
                 modifier = Modifier.size(18.dp),
             )
             Spacer(modifier = Modifier.width(8.dp))
-            Text(stringResource(R.string.action_add))
+            TranslatableText(R.string.action_add)
         }
 
         Button(
@@ -81,7 +80,7 @@ fun AppsActionButtons(
                 )
             }
             Spacer(modifier = Modifier.width(8.dp))
-            Text(stringResource(R.string.action_refresh))
+            TranslatableText(R.string.action_refresh)
         }
     }
 }
@@ -125,7 +124,7 @@ fun ImportExportButtons(
                     modifier = Modifier.size(18.dp),
                 )
                 Spacer(modifier = Modifier.width(8.dp))
-                Text(stringResource(R.string.action_export))
+                TranslatableText(R.string.action_export)
             }
         }
 
@@ -147,7 +146,7 @@ fun ImportExportButtons(
                 modifier = Modifier.size(18.dp),
             )
             Spacer(modifier = Modifier.width(8.dp))
-            Text(stringResource(R.string.action_import))
+            TranslatableText(R.string.action_import)
         }
     }
 }

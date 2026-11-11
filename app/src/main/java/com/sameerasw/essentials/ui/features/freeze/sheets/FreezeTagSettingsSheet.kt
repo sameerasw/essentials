@@ -39,12 +39,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.diy.Action
 import com.sameerasw.essentials.domain.model.AppTag
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.pickers.SegmentedPicker
 import com.sameerasw.essentials.utils.ColorUtil
@@ -75,8 +75,8 @@ fun FreezeTagSettingsSheet(
                     .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            Text(
-                text = stringResource(R.string.diy_action_freeze_tag),
+            TranslatableText(
+                stringResId = R.string.diy_action_freeze_tag,
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSurface,
@@ -101,15 +101,15 @@ fun FreezeTagSettingsSheet(
                 )
             }
 
-            Text(
-                text = stringResource(R.string.freeze_tags_section_title),
+            TranslatableText(
+                stringResId = R.string.freeze_tags_section_title,
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
 
             if (availableTags.isEmpty()) {
-                Text(
-                    text = stringResource(R.string.freeze_tags_empty),
+                TranslatableText(
+                    stringResId = R.string.freeze_tags_empty,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(vertical = 8.dp),
@@ -209,7 +209,7 @@ fun FreezeTagSettingsSheet(
                 },
                 modifier = Modifier.fillMaxWidth(),
             ) {
-                Text(text = stringResource(R.string.action_save))
+                TranslatableText(stringResId = R.string.action_save)
             }
         }
     }

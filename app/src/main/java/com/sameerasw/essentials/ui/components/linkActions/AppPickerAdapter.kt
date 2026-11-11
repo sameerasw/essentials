@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials.ui.components.linkActions
 
+import androidx.compose.ui.res.stringResource
 import android.content.pm.ResolveInfo
 import android.graphics.drawable.Drawable
 import android.util.Log
@@ -121,7 +122,7 @@ fun AppPickerItem(
         ) {
             AsyncImage(
                 model = icon,
-                contentDescription = "App icon",
+                contentDescription = stringResource(R.string.content_desc_app_icon),
                 modifier =
                     Modifier
                         .size(42.dp)
@@ -168,7 +169,7 @@ fun AppPickerItem(
         ) {
             AsyncImage(
                 model = icon,
-                contentDescription = "App icon",
+                contentDescription = stringResource(R.string.content_desc_app_icon),
                 modifier =
                     Modifier
                         .size(48.dp)
@@ -191,7 +192,7 @@ fun AppPickerItem(
             if (isPinned) {
                 Icon(
                     painter = painterResource(id = R.drawable.rounded_bookmark_24),
-                    contentDescription = "Pinned",
+                    contentDescription = stringResource(R.string.content_desc_pinned),
                     modifier = Modifier.size(20.dp),
                     tint = MaterialTheme.colorScheme.primary,
                 )

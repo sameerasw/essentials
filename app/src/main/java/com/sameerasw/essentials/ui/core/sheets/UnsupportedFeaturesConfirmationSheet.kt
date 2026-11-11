@@ -20,13 +20,13 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.text.font.FontWeight
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.utils.DeviceUtils
 import com.sameerasw.essentials.ui.features.consciousgate.HoldToContinueButton
 import com.sameerasw.essentials.ui.features.consciousgate.UnscaledMotion
@@ -63,13 +63,13 @@ fun UnsupportedFeaturesConfirmationSheet(
                     .padding(bottom = 32.dp),
             verticalArrangement = Arrangement.spacedBy(18.dp),
         ) {
-            Text(
-                text = stringResource(R.string.unsupported_sheet_title),
+            TranslatableText(
+                stringResId = R.string.unsupported_sheet_title,
                 style = MaterialTheme.typography.headlineSmall,
                 color = MaterialTheme.colorScheme.onSurface,
             )
-            Text(
-                text = stringResource(R.string.unsupported_sheet_body),
+            TranslatableText(
+                stringResId = R.string.unsupported_sheet_body,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -83,22 +83,22 @@ fun UnsupportedFeaturesConfirmationSheet(
                 ) {
                     (capabilities + if (DeviceUtils.isTorchRestrictedDevice()) torchCapabilities else emptyList()).forEach { (titleRes, descriptionRes) ->
                         Column {
-                            Text(
-                                text = stringResource(titleRes),
+                            TranslatableText(
+                                stringResId = titleRes,
                                 style = MaterialTheme.typography.bodyMedium,
                                 fontWeight = FontWeight.Medium,
                                 color = MaterialTheme.colorScheme.onSurface,
                             )
-                            Text(
-                                text = stringResource(descriptionRes),
+                            TranslatableText(
+                                stringResId = descriptionRes,
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
                         }
                     }
                     featureTitleResIds.forEach { titleRes ->
-                        Text(
-                            text = stringResource(titleRes),
+                        TranslatableText(
+                            stringResId = titleRes,
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurface,
                         )
@@ -122,7 +122,7 @@ fun UnsupportedFeaturesConfirmationSheet(
                 onClick = onDismissRequest,
                 modifier = Modifier.fillMaxWidth(),
             ) {
-                Text(stringResource(R.string.action_cancel))
+                TranslatableText(R.string.action_cancel)
             }
         }
     }

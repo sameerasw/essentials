@@ -53,7 +53,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -64,6 +63,7 @@ import coil.compose.AsyncImage
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.ContributorsRepository
 import com.sameerasw.essentials.domain.model.github.GitHubContributor
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.theme.GoogleSansFlexRounded
 import com.sameerasw.essentials.utils.HapticUtil
 
@@ -110,8 +110,8 @@ fun ContributorsCarousel(modifier: Modifier = Modifier) {
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center,
             ) {
-                Text(
-                    text = stringResource(R.string.label_top_contributors),
+                TranslatableText(
+                    stringResId = R.string.label_top_contributors,
                     style = MaterialTheme.typography.titleMedium,
                     textAlign = TextAlign.Center,
                 )

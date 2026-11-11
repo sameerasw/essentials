@@ -27,7 +27,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.LargeFlexibleTopAppBar
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
@@ -47,6 +46,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.model.github.GitHubUser
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.core.cards.FeatureTagIcon
 import com.sameerasw.essentials.utils.HapticUtil
 
@@ -103,8 +103,8 @@ fun ReusableTopAppBar(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
-                    Text(
-                        resolvedTitle,
+                    TranslatableText(
+                        text = resolvedTitle,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                     )
@@ -123,8 +123,8 @@ fun ReusableTopAppBar(
                         is String -> subtitle
                         else -> ""
                     }
-                Text(
-                    resolvedSubtitle,
+                TranslatableText(
+                    text = resolvedSubtitle,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     maxLines = 1,
@@ -137,8 +137,8 @@ fun ReusableTopAppBar(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                Text(
-                    resolvedTitle,
+                TranslatableText(
+                    text = resolvedTitle,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
@@ -297,7 +297,7 @@ fun ReusableTopAppBar(
                         onDismissRequest = { showProfileMenu = false },
                     ) {
                         androidx.compose.material3.DropdownMenuItem(
-                            text = { Text(stringResource(R.string.action_sign_out)) },
+                            text = { TranslatableText(R.string.action_sign_out) },
                             onClick = {
                                 onSignOutClick?.invoke()
                                 showProfileMenu = false

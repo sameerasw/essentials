@@ -30,7 +30,6 @@ import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -51,9 +50,9 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenu
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
 import com.sameerasw.essentials.utils.HapticUtil.performSliderHaptic
@@ -166,8 +165,8 @@ fun WatermarkPreviewArea(
                         tint = MaterialTheme.colorScheme.primary,
                     )
                     Spacer(Modifier.size(8.dp))
-                    Text(
-                        stringResource(R.string.watermark_pick_image),
+                    TranslatableText(
+                        R.string.watermark_pick_image,
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
@@ -221,7 +220,7 @@ fun WatermarkPreviewArea(
                         onDismissRequest = { showRotationMenu = false },
                     ) {
                         SegmentedDropdownMenuItem(
-                            text = { Text(stringResource(R.string.watermark_rotate_left)) },
+                            text = { TranslatableText(R.string.watermark_rotate_left) },
                             leadingIcon = {
                                 Icon(
                                     painter = painterResource(R.drawable.rounded_rotate_left_24),
@@ -235,7 +234,7 @@ fun WatermarkPreviewArea(
                             },
                         )
                         SegmentedDropdownMenuItem(
-                            text = { Text(stringResource(R.string.watermark_rotate_right)) },
+                            text = { TranslatableText(R.string.watermark_rotate_right) },
                             leadingIcon = {
                                 Icon(
                                     painter = painterResource(R.drawable.rounded_rotate_right_24),

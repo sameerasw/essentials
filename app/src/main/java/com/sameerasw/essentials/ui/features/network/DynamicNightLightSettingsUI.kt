@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -28,6 +27,7 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.sheets.AppSelectionSheet
@@ -65,8 +65,8 @@ fun DynamicNightLightSettingsUI(
             )
         }
 
-        Text(
-            text = stringResource(R.string.dynamic_night_light_apps_section),
+        TranslatableText(
+            stringResId = R.string.dynamic_night_light_apps_section,
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(start = 16.dp, top = 24.dp, bottom = 8.dp),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -80,7 +80,7 @@ fun DynamicNightLightSettingsUI(
             },
             modifier = Modifier.fillMaxWidth(),
         ) {
-            Text(stringResource(R.string.action_select_apps))
+            TranslatableText(R.string.action_select_apps)
         }
 
         if (showAppSelectionSheet) {

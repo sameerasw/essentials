@@ -920,7 +920,7 @@ class WatermarkEngine(
                 "${exif.make} ${exif.model}"
             }
         } else {
-            exif.model ?: exif.make ?: "Shot on Device"
+            exif.model ?: exif.make ?: context.getString(R.string.watermark_shot_on_device)
         }
     }
 

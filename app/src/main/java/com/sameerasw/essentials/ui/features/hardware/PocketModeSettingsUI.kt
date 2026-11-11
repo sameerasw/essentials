@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -30,6 +29,7 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
@@ -55,8 +55,8 @@ fun PocketModeSettingsUI(
                 .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
-        Text(
-            text = stringResource(R.string.feat_pocket_mode_title),
+        TranslatableText(
+            stringResId = R.string.feat_pocket_mode_title,
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -115,8 +115,8 @@ fun PocketModeSettingsUI(
 
         Spacer(modifier = Modifier.size(16.dp))
 
-        Text(
-            text = stringResource(R.string.pocket_mode_exclude_apps_title),
+        TranslatableText(
+            stringResId = R.string.pocket_mode_exclude_apps_title,
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 8.dp),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -129,11 +129,11 @@ fun PocketModeSettingsUI(
             },
             modifier = Modifier.fillMaxWidth(),
         ) {
-            Text(stringResource(R.string.action_select_apps))
+            TranslatableText(R.string.action_select_apps)
         }
 
-        Text(
-            text = stringResource(R.string.pocket_mode_exclude_apps_desc),
+        TranslatableText(
+            stringResId = R.string.pocket_mode_exclude_apps_desc,
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -172,14 +172,14 @@ fun PocketModeSettingsUI(
                     painter =
                         androidx.compose.ui.res
                             .painterResource(id = R.drawable.rounded_info_24),
-                    contentDescription = "Warning",
+                    contentDescription = stringResource(R.string.content_desc_warning),
                     tint = MaterialTheme.colorScheme.onErrorContainer,
                     modifier = Modifier.size(24.dp),
                 )
                 androidx.compose.foundation.layout
                     .Spacer(modifier = Modifier.width(16.dp))
-                Text(
-                    text = stringResource(R.string.pocket_mode_warning),
+                TranslatableText(
+                    stringResId = R.string.pocket_mode_warning,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onErrorContainer,
                 )

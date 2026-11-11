@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials.ui.activities
 
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.navigation.AppRoutes
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -339,8 +340,8 @@ fun YourAndroidContent(
         val refreshingRepoIds by updatesViewModel.refreshingRepoIds
         val context = androidx.compose.ui.platform.LocalContext.current
 
-        Text(
-            text = stringResource(R.string.label_apps),
+        TranslatableText(
+            stringResId = R.string.label_apps,
             modifier =
                 Modifier
                     .padding(start = 8.dp, top = 16.dp, bottom = 4.dp)
@@ -388,8 +389,8 @@ fun YourAndroidContent(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center,
                 ) {
-                    Text(
-                        text = stringResource(R.string.msg_no_repos_tracked),
+                    TranslatableText(
+                        stringResId = R.string.msg_no_repos_tracked,
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
@@ -417,7 +418,7 @@ fun YourAndroidContent(
                         showExport = false,
                     )
                     Button(onClick = onAddRepoClick, modifier = Modifier.weight(1f)) {
-                        Text(stringResource(R.string.action_add_repository))
+                        TranslatableText(R.string.action_add_repository)
                     }
                 }
             }
@@ -587,7 +588,7 @@ fun YourAndroidContent(
                         modifier = Modifier.size(18.dp),
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text(stringResource(R.string.action_backup_app_list))
+                    TranslatableText(R.string.action_backup_app_list)
                 }
             }
         }

@@ -612,7 +612,6 @@
     <string name="perm_battery_optimization_title">Yubu batri maber</string>
     <string name="perm_battery_optimization_desc">Nen ni tic ni pe ki neko ki jami ni me gwoko teko.</string>
     <!-- Tabs -->
-    <string name="tab_essentials">Jami ma pirgi tek</string>
     <string name="tab_freeze">Miyu doko ngic</string>
     <string name="tab_freeze_title">Ngic m\'omake</string>
     <string name="tab_diy">DIY</string>

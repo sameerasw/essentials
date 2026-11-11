@@ -74,6 +74,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.compose.material3.toShape
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.core.sheets.LicensesBottomSheet
 import com.sameerasw.essentials.utils.HapticUtil
 
@@ -159,7 +160,7 @@ fun AboutSection(
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.avatar),
-                    contentDescription = "Developer Avatar",
+                    contentDescription = stringResource(R.string.content_desc_developer_avatar),
                     contentScale = ContentScale.Crop,
                     modifier =
                         Modifier
@@ -168,8 +169,9 @@ fun AboutSection(
                 )
             }
 
-            Text(
-                text = stringResource(R.string.developed_by_format, developerName),
+            TranslatableText(
+                stringResId = R.string.developed_by_format,
+                formatArgs = listOf(developerName),
                 style = MaterialTheme.typography.titleMedium,
                 textAlign = TextAlign.Center,
             )
@@ -285,7 +287,7 @@ fun AboutSection(
                         modifier = Modifier.size(18.dp),
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text(stringResource(R.string.action_support))
+                    TranslatableText(R.string.action_support)
                 }
 
                 OutlinedButton(
@@ -301,7 +303,7 @@ fun AboutSection(
                         modifier = Modifier.size(18.dp),
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text(stringResource(R.string.label_other_apps))
+                    TranslatableText(R.string.label_other_apps)
                     Spacer(modifier = Modifier.width(4.dp))
                     Icon(
                         painter =
@@ -346,7 +348,7 @@ fun AboutSection(
                             tint = Color.Unspecified,
                         )
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text(stringResource(R.string.app_overcast))
+                        TranslatableText(R.string.app_overcast)
                     }
 
                     OutlinedButton(
@@ -365,7 +367,7 @@ fun AboutSection(
                             modifier = Modifier.size(18.dp),
                         )
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text(stringResource(R.string.app_airsync))
+                        TranslatableText(R.string.app_airsync)
                     }
 
                     OutlinedButton(
@@ -383,7 +385,7 @@ fun AboutSection(
                             modifier = Modifier.size(18.dp),
                         )
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text(stringResource(R.string.app_zenzero))
+                        TranslatableText(R.string.app_zenzero)
                     }
 
                     OutlinedButton(
@@ -401,7 +403,7 @@ fun AboutSection(
                             modifier = Modifier.size(18.dp),
                         )
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text(stringResource(R.string.app_canvas))
+                        TranslatableText(R.string.app_canvas)
                     }
 
                     OutlinedButton(
@@ -419,7 +421,7 @@ fun AboutSection(
                             modifier = Modifier.size(18.dp),
                         )
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text(stringResource(R.string.app_tasks))
+                        TranslatableText(R.string.app_tasks)
                     }
 
                     OutlinedButton(
@@ -437,7 +439,7 @@ fun AboutSection(
                             modifier = Modifier.size(18.dp),
                         )
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text(stringResource(R.string.app_zero))
+                        TranslatableText(R.string.app_zero)
                     }
                 }
             }
@@ -468,7 +470,7 @@ fun AboutSection(
                     modifier = Modifier.size(18.dp),
                 )
                 Spacer(modifier = Modifier.width(8.dp))
-                Text(stringResource(R.string.action_licenses_and_credits))
+                TranslatableText(R.string.action_licenses_and_credits)
             }
         }
     }

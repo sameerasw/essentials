@@ -612,7 +612,6 @@
     <string name="perm_battery_optimization_title">Battery optimering</string>
     <string name="perm_battery_optimization_desc">Maak seker dat die diens nie deur die stelsel doodgemaak word nie om krag te bespaar.</string>
     <!-- Tabs -->
-    <string name="tab_essentials">Noodsaaklikhede</string>
     <string name="tab_freeze">Vries</string>
     <string name="tab_freeze_title">Gevries</string>
     <string name="tab_diy">DIY</string>

@@ -668,7 +668,6 @@
     <string name="perm_battery_optimization_title">Tối ưu hóa pin</string>
     <string name="perm_battery_optimization_desc">Đảm bảo dịch vụ không bị hệ thống tắt để tiết kiệm điện năng.</string>
     <!-- Tabs -->
-    <string name="tab_essentials">Yếu tố cần thiết</string>
     <string name="tab_freeze">Đông cứng</string>
     <string name="tab_freeze_title">đông lạnh</string>
     <string name="tab_diy">tự làm lấy</string>

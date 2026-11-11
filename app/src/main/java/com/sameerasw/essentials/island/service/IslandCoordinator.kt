@@ -43,6 +43,7 @@ import com.sameerasw.essentials.island.gestures.CompactGestures
 import com.sameerasw.essentials.island.state.IslandUiState
 import com.sameerasw.essentials.island.model.IslandPlugin
 import com.sameerasw.essentials.island.model.IslandPriorityEntries
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.utils.StatusBarManager
 import com.sameerasw.essentials.island.model.IslandPluginContext
 import com.sameerasw.essentials.island.model.IslandStage
@@ -94,9 +95,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.island.model.CompactCell
 import com.sameerasw.essentials.island.model.CompactPlacement
@@ -676,8 +675,8 @@ class IslandCoordinator(
                     .padding(horizontal = 20.dp)
                     .padding(top = scope.spec.expandedTopPadding + scope.spec.compactHeight, bottom = scope.spec.expandedBottomPadding),
             ) {
-                Text(stringResource(R.string.island_preview_sample_title), style = MaterialTheme.typography.titleMedium)
-                Text(stringResource(R.string.island_preview_sample_text), style = MaterialTheme.typography.bodyMedium)
+                TranslatableText(R.string.island_preview_sample_title, style = MaterialTheme.typography.titleMedium)
+                TranslatableText(R.string.island_preview_sample_text, style = MaterialTheme.typography.bodyMedium)
             }
         },
         compactVisible = false,

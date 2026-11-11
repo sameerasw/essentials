@@ -43,6 +43,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.registry.FeatureRegistry
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.utils.ColorUtil
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.viewmodels.MainViewModel
@@ -81,8 +82,8 @@ fun ReorderFavoritesBottomSheet(
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
         ) {
-            Text(
-                text = stringResource(R.string.action_reorder),
+            TranslatableText(
+                stringResId = R.string.action_reorder,
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.padding(start = 8.dp, bottom = 16.dp),

@@ -23,10 +23,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.utils.AutoBackupManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -55,16 +55,16 @@ fun ImportBackupPickerSheet(
             modifier = Modifier.fillMaxWidth().padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(2.dp),
         ) {
-            Text(
-                text = stringResource(R.string.import_backup_picker_title),
+            TranslatableText(
+                stringResId = R.string.import_backup_picker_title,
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.SemiBold,
                 modifier = Modifier.padding(start = 16.dp, bottom = 12.dp),
             )
             val list = backups
             if (list != null && list.isEmpty()) {
-                Text(
-                    text = stringResource(R.string.import_backup_none),
+                TranslatableText(
+                    stringResId = R.string.import_backup_none,
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(16.dp),
@@ -103,7 +103,7 @@ fun ImportBackupPickerSheet(
                 onClick = onPickCustom,
                 modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
             ) {
-                Text(stringResource(R.string.import_backup_pick_custom))
+                TranslatableText(R.string.import_backup_pick_custom)
             }
         }
     }

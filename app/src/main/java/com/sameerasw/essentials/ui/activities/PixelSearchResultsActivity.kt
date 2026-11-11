@@ -107,6 +107,7 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import com.sameerasw.essentials.translation.TranslatableText
 import kotlin.math.roundToInt
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
@@ -499,7 +500,7 @@ fun PixelSearchResultsScreen(
             }
 
             if (isSettingsEnabled) {
-                val systemSettings = loadSystemSettings(trimmed)
+                val systemSettings = loadSystemSettings(context, trimmed)
                 val results =
                     SearchRegistry.search(
                         context,
@@ -725,8 +726,8 @@ fun PixelSearchResultsScreen(
                                     modifier = Modifier.size(16.dp),
                                 )
                             }
-                            Text(
-                                text = stringResource(tab.labelRes),
+                            TranslatableText(
+                                stringResId = tab.labelRes,
                                 style = MaterialTheme.typography.labelLarge,
                                 fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
                                 color = contentColor,
@@ -803,7 +804,7 @@ fun PixelSearchResultsScreen(
                                     additionalMenuItems = if (app.isFrozen) {
                                         { onDismiss ->
                                             SegmentedDropdownMenuItem(
-                                                text = { Text(stringResource(R.string.action_unfreeze)) },
+                                                text = { TranslatableText(R.string.action_unfreeze) },
                                                 onClick = {
                                                     onDismiss()
                                                     scope.launch(Dispatchers.IO) {
@@ -820,7 +821,7 @@ fun PixelSearchResultsScreen(
                                                 },
                                             )
                                             SegmentedDropdownMenuItem(
-                                                text = { Text(stringResource(R.string.action_app_info)) },
+                                                text = { TranslatableText(R.string.action_app_info) },
                                                 onClick = {
                                                     onDismiss()
                                                     val infoIntent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
@@ -1193,7 +1194,7 @@ fun PixelSearchResultsScreen(
                 if ((isAllTab || selectedTab == PixelSearchTab.SETTINGS) && isSettingsEnabled && (matchingQsTiles.isNotEmpty() || settingResults.isNotEmpty())) {
                     item(key = "essentials_header") {
                         SearchSectionHeader(
-                            stringResource(R.string.pixel_search_section_essentials),
+                            stringResource(R.string.app_name),
                             modifier = Modifier.animateItem(),
                         )
                     }
@@ -1380,8 +1381,8 @@ fun PixelSearchResultsScreen(
                         .fillMaxWidth()
                         .focusRequester(focusRequester),
                     placeholder = {
-                        Text(
-                            text = stringResource(R.string.pixel_search_input_hint),
+                        TranslatableText(
+                            stringResId = R.string.pixel_search_input_hint,
                             style = MaterialTheme.typography.bodyLarge,
                             color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
                             maxLines = 1,
@@ -1607,60 +1608,60 @@ private fun loadContacts(context: Context, query: String): List<PixelSearchResul
     return results
 }
 
-private fun loadSystemSettings(query: String): List<PixelSearchResultItem.SystemSettingItem> {
+private fun loadSystemSettings(context: Context, query: String): List<PixelSearchResultItem.SystemSettingItem> {
     val q = query.lowercase()
     val all = listOf(
         PixelSearchResultItem.SystemSettingItem(
-            title = "Wi-Fi",
-            subtitle = "Network & internet",
+            title = context.getString(R.string.island_network_wifi),
+            subtitle = context.getString(R.string.pixel_search_setting_network),
             iconRes = R.drawable.rounded_android_wifi_3_bar_24,
             intent = Intent(Settings.ACTION_WIFI_SETTINGS).apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) },
         ),
         PixelSearchResultItem.SystemSettingItem(
-            title = "Bluetooth",
-            subtitle = "Connected devices",
+            title = context.getString(R.string.icon_bluetooth),
+            subtitle = context.getString(R.string.pixel_search_setting_bluetooth),
             iconRes = R.drawable.rounded_bluetooth_24,
             intent = Intent(Settings.ACTION_BLUETOOTH_SETTINGS).apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) },
         ),
         PixelSearchResultItem.SystemSettingItem(
-            title = "Display",
-            subtitle = "Brightness, theme, screen timeout",
+            title = context.getString(R.string.cat_display),
+            subtitle = context.getString(R.string.pixel_search_setting_display),
             iconRes = R.drawable.rounded_mobile_text_2_24,
             intent = Intent(Settings.ACTION_DISPLAY_SETTINGS).apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) },
         ),
         PixelSearchResultItem.SystemSettingItem(
-            title = "Sound & vibration",
-            subtitle = "Volume, haptics, Do Not Disturb",
+            title = context.getString(R.string.pixel_search_setting_sound_title),
+            subtitle = context.getString(R.string.pixel_search_setting_sound),
             iconRes = R.drawable.rounded_volume_up_24,
             intent = Intent(Settings.ACTION_SOUND_SETTINGS).apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) },
         ),
         PixelSearchResultItem.SystemSettingItem(
-            title = "Battery",
-            subtitle = "Battery usage and saver",
+            title = context.getString(R.string.icon_battery),
+            subtitle = context.getString(R.string.pixel_search_setting_battery),
             iconRes = R.drawable.rounded_battery_charging_60_24,
             intent = Intent(Intent.ACTION_POWER_USAGE_SUMMARY).apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) },
         ),
         PixelSearchResultItem.SystemSettingItem(
-            title = "Apps",
-            subtitle = "Installed apps and permissions",
+            title = context.getString(R.string.tab_apps),
+            subtitle = context.getString(R.string.pixel_search_setting_apps),
             iconRes = R.drawable.rounded_apps_24,
             intent = Intent(Settings.ACTION_APPLICATION_SETTINGS).apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) },
         ),
         PixelSearchResultItem.SystemSettingItem(
-            title = "Notifications",
-            subtitle = "Notification history and alerts",
+            title = context.getString(R.string.option_notifications),
+            subtitle = context.getString(R.string.pixel_search_setting_notifications),
             iconRes = R.drawable.rounded_notifications_unread_24,
             intent = Intent(Settings.ACTION_ALL_APPS_NOTIFICATION_SETTINGS).apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) },
         ),
         PixelSearchResultItem.SystemSettingItem(
-            title = "Storage",
-            subtitle = "Internal storage, cleanup",
+            title = context.getString(R.string.label_device_storage),
+            subtitle = context.getString(R.string.pixel_search_setting_storage),
             iconRes = R.drawable.rounded_save_24,
             intent = Intent(Settings.ACTION_INTERNAL_STORAGE_SETTINGS).apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) },
         ),
         PixelSearchResultItem.SystemSettingItem(
-            title = "Security & privacy",
-            subtitle = "Screen lock, app permissions",
+            title = context.getString(R.string.pixel_search_setting_security_title),
+            subtitle = context.getString(R.string.pixel_search_setting_security),
             iconRes = R.drawable.rounded_security_24,
             intent = Intent(Settings.ACTION_SECURITY_SETTINGS).apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) },
         ),
@@ -1680,7 +1681,7 @@ private fun loadShortcuts(context: Context, query: String): List<PixelSearchResu
             PixelSearchResultItem.ShortcutItem(
                 id = "shortcut_wallpaper",
                 label = context.getString(R.string.feat_daily_wallpaper_title),
-                subtitle = "Essentials wallpaper changer",
+                subtitle = context.getString(R.string.pixel_search_shortcut_wallpaper),
                 iconRes = R.drawable.rounded_wallpaper_24,
                 intent = Intent(context, WallpaperActivity::class.java).apply {
                     action = Intent.ACTION_VIEW
@@ -1694,8 +1695,8 @@ private fun loadShortcuts(context: Context, query: String): List<PixelSearchResu
         items.add(
             PixelSearchResultItem.ShortcutItem(
                 id = "shortcut_freeze",
-                label = "App Freezing",
-                subtitle = "Freeze unused apps",
+                label = context.getString(R.string.freeze_activity_title),
+                subtitle = context.getString(R.string.pixel_search_shortcut_freeze),
                 iconRes = R.drawable.rounded_mode_cool_24,
                 intent = Intent(context, AppFreezingActivity::class.java).apply {
                     addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)

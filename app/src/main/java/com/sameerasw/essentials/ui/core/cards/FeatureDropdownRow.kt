@@ -26,7 +26,6 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -38,6 +37,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenu
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
 import com.sameerasw.essentials.utils.ColorUtil
@@ -110,7 +110,7 @@ fun <T> FeatureDropdownRow(
                             )
                         },
                 ) {
-                    Text(
+                    TranslatableText(
                         text = selectedValue,
                         style = MaterialTheme.typography.labelLarge,
                         modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp),
@@ -124,7 +124,7 @@ fun <T> FeatureDropdownRow(
                     options.forEach { item ->
                         val label = labelProvider(item)
                         SegmentedDropdownMenuItem(
-                            text = { Text(label) },
+                            text = { TranslatableText(text = label) },
                             onClick = {
                                 isMenuExpanded = false
                                 onOptionSelected(item)
@@ -140,7 +140,7 @@ fun <T> FeatureDropdownRow(
             ),
         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
         content = {
-            Text(
+            TranslatableText(
                 text = title,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurface,

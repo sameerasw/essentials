@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials.ui.composables.wallpaper
 
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.navigation.ProvideBottomBar
 import com.sameerasw.essentials.ui.navigation.BottomBarSpec
 import com.sameerasw.essentials.ui.navigation.AppRoute
@@ -592,8 +593,8 @@ fun WallpaperScreen(
                                     Column(
                                         verticalArrangement = Arrangement.spacedBy(2.dp),
                                     ) {
-                                        Text(
-                                            text = stringResource(R.string.label_wallpaper_auto_update),
+                                        TranslatableText(
+                                            stringResId = R.string.label_wallpaper_auto_update,
                                             style =
                                                 MaterialTheme.typography.titleMedium.copy(
                                                     fontWeight = FontWeight.Bold,
@@ -672,7 +673,7 @@ fun WallpaperScreen(
                                         shapes = ButtonGroupDefaults.connectedLeadingButtonShapes(),
                                         modifier = Modifier.weight(1f),
                                     ) {
-                                        Text("Home Screen")
+                                        TranslatableText(R.string.wallpaper_home_screen)
                                     }
                                     ToggleButton(
                                         checked = applyLock,
@@ -686,7 +687,7 @@ fun WallpaperScreen(
                                         shapes = ButtonGroupDefaults.connectedTrailingButtonShapes(),
                                         modifier = Modifier.weight(1f),
                                     ) {
-                                        Text("Lock Screen")
+                                        TranslatableText(R.string.wallpaper_lock_screen)
                                     }
                                 }
 
@@ -699,8 +700,8 @@ fun WallpaperScreen(
                                         .padding(16.dp),
                                 verticalArrangement = Arrangement.spacedBy(12.dp),
                             ) {
-                                Text(
-                                    text = stringResource(R.string.live_wallpaper_playback_trigger_title),
+                                TranslatableText(
+                                    stringResId = R.string.live_wallpaper_playback_trigger_title,
                                     style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                                     color = MaterialTheme.colorScheme.onSurface,
                                 )
@@ -759,7 +760,7 @@ fun WallpaperScreen(
                                             modifier = Modifier.size(18.dp),
                                         )
                                         Spacer(modifier = Modifier.width(8.dp))
-                                        Text(text = stringResource(R.string.label_clear_custom_videos))
+                                        TranslatableText(stringResId = R.string.label_clear_custom_videos)
                                     }
                                 }
                             }
@@ -798,8 +799,8 @@ fun WallpaperScreen(
                                 modifier = Modifier.size(22.dp),
                             )
                             Spacer(modifier = Modifier.width(8.dp))
-                            Text(
-                                text = stringResource(R.string.label_wallpaper_apply),
+                            TranslatableText(
+                                stringResId = R.string.label_wallpaper_apply,
                                 style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                             )
                         }
@@ -817,7 +818,7 @@ fun WallpaperScreen(
                                     painterResource(
                                         id = if (showSettingsCard) R.drawable.rounded_keyboard_arrow_down_24 else R.drawable.rounded_keyboard_arrow_up_24,
                                     ),
-                                contentDescription = "Options",
+                                contentDescription = stringResource(R.string.label_options),
                                 modifier = Modifier.size(24.dp),
                             )
                         }
@@ -905,13 +906,13 @@ fun WallpaperHelpBottomSheet(
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             if (selectedTab == 0) {
-                Text(
-                    text = stringResource(R.string.feat_daily_wallpaper_title),
+                TranslatableText(
+                    stringResId = R.string.feat_daily_wallpaper_title,
                     style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
                 )
 
-                Text(
-                    text = stringResource(R.string.feat_daily_wallpaper_desc),
+                TranslatableText(
+                    stringResId = R.string.feat_daily_wallpaper_desc,
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -927,8 +928,8 @@ fun WallpaperHelpBottomSheet(
                                     ).padding(16.dp),
                             verticalArrangement = Arrangement.spacedBy(12.dp),
                         ) {
-                            Text(
-                                text = "Current Photo Credits",
+                            TranslatableText(
+                                stringResId = R.string.wallpaper_current_photo_credits,
                                 style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                             )
 
@@ -945,7 +946,7 @@ fun WallpaperHelpBottomSheet(
                                             contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                                         ),
                                 ) {
-                                    Text(text = "View Photo")
+                                    TranslatableText(stringResId = R.string.wallpaper_view_photo)
                                 }
 
                                 Button(
@@ -987,7 +988,7 @@ fun WallpaperHelpBottomSheet(
                                     contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                                 ),
                         ) {
-                            Text(text = "View Sameera's Collection")
+                            TranslatableText(stringResId = R.string.wallpaper_view_collection)
                         }
 
                         Button(
@@ -1009,18 +1010,18 @@ fun WallpaperHelpBottomSheet(
                                 modifier = Modifier.size(18.dp),
                             )
                             Spacer(modifier = Modifier.width(8.dp))
-                            Text(text = stringResource(R.string.feat_wallpaper_staging_title))
+                            TranslatableText(stringResId = R.string.feat_wallpaper_staging_title)
                         }
                     }
                 }
             } else {
-                Text(
-                    text = stringResource(R.string.feat_live_wallpaper_title),
+                TranslatableText(
+                    stringResId = R.string.feat_live_wallpaper_title,
                     style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
                 )
 
-                Text(
-                    text = stringResource(R.string.feat_live_wallpaper_desc),
+                TranslatableText(
+                    stringResId = R.string.feat_live_wallpaper_desc,
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -1035,8 +1036,8 @@ fun WallpaperHelpBottomSheet(
                                 ).padding(16.dp),
                         verticalArrangement = Arrangement.spacedBy(12.dp),
                     ) {
-                        Text(
-                            text = "How to use",
+                        TranslatableText(
+                            stringResId = R.string.label_how_to_use,
                             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                         )
                         Text(
@@ -1157,7 +1158,7 @@ fun ThumbnailItem(
                 onDismissRequest = { showMenu = false },
             ) {
                 SegmentedDropdownMenuItem(
-                    text = { Text(stringResource(R.string.action_remove)) },
+                    text = { TranslatableText(R.string.action_remove) },
                     onClick = {
                         showMenu = false
                         onRemove?.invoke()

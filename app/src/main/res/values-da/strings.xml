@@ -612,7 +612,6 @@
     <string name="perm_battery_optimization_title">Batterioptimering</string>
     <string name="perm_battery_optimization_desc">Sørg for, at tjenesten ikke dræbes af systemet for at spare strøm.</string>
     <!-- Tabs -->
-    <string name="tab_essentials">Essentialer</string>
     <string name="tab_freeze">Fryse</string>
     <string name="tab_freeze_title">Frossen</string>
     <string name="tab_diy">DIY</string>

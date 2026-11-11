@@ -668,7 +668,6 @@
     <string name="perm_battery_optimization_title">電池最佳化</string>
     <string name="perm_battery_optimization_desc">確保服務不會被系統為了省電而終止。</string>
     <!-- Tabs -->
-    <string name="tab_essentials">Essentials</string>
     <string name="tab_freeze">凍結</string>
     <string name="tab_freeze_title">已凍結</string>
     <string name="tab_diy">DIY</string>

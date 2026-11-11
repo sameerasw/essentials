@@ -668,7 +668,6 @@
     <string name="perm_battery_optimization_title">Оптимизация батареи</string>
     <string name="perm_battery_optimization_desc">Убедитесь, что служба не отключена системой для экономии энергии.</string>
     <!-- Tabs -->
-    <string name="tab_essentials">Essentials</string>
     <string name="tab_freeze">Заморозка</string>
     <string name="tab_freeze_title">Заморожен</string>
     <string name="tab_diy">DIY</string>

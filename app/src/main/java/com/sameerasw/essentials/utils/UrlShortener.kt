@@ -77,17 +77,20 @@ object UrlShortener {
             return expiresAt > 0 && nowMs > expiresAt
         }
 
-        fun getRemainingTimeLabel(nowMs: Long = System.currentTimeMillis()): String {
-            if (expiresAt == 0L) return "Permanent"
+        fun getRemainingTimeLabel(
+            context: Context,
+            nowMs: Long = System.currentTimeMillis(),
+        ): String {
+            if (expiresAt == 0L) return context.getString(R.string.shorten_permanent)
             val diffMs = expiresAt - nowMs
-            if (diffMs <= 0) return "Expired"
+            if (diffMs <= 0) return context.getString(R.string.shorten_status_expired)
             val hours = diffMs / (1000 * 3600)
             val minutes = (diffMs % (1000 * 3600)) / (1000 * 60)
             val seconds = (diffMs % (1000 * 60)) / 1000
             return when {
-                hours > 0 -> "${hours}h ${minutes}m ${seconds}s left"
-                minutes > 0 -> "${minutes}m ${seconds}s left"
-                else -> "${seconds}s left"
+                hours > 0 -> context.getString(R.string.shorten_time_left_hms, hours, minutes, seconds)
+                minutes > 0 -> context.getString(R.string.shorten_time_left_ms, minutes, seconds)
+                else -> context.getString(R.string.shorten_time_left_s, seconds)
             }
         }
     }

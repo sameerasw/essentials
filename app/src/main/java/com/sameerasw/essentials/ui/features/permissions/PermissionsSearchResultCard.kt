@@ -27,7 +27,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -42,6 +41,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.SettingsActivity
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.components.buttons.ListExpandToggleButton
 import com.sameerasw.essentials.ui.core.cards.FeatureCard
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
@@ -80,8 +80,8 @@ fun PermissionsSearchResultCard(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Text(
-                text = stringResource(R.string.settings_section_permissions),
+            TranslatableText(
+                stringResId = R.string.settings_section_permissions,
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -96,8 +96,8 @@ fun PermissionsSearchResultCard(
                     context.startActivity(intent)
                 },
                 label = {
-                    Text(
-                        text = stringResource(R.string.action_view_all),
+                    TranslatableText(
+                        stringResId = R.string.action_view_all,
                         style = MaterialTheme.typography.labelMedium,
                     )
                 },
@@ -158,8 +158,8 @@ fun PermissionsSearchResultCard(
                                     },
                                     contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
                                 ) {
-                                    Text(
-                                        text = stringResource(R.string.perm_action_granted),
+                                    TranslatableText(
+                                        stringResId = R.string.perm_action_granted,
                                         style = MaterialTheme.typography.labelMedium,
                                     )
                                 }
@@ -171,8 +171,8 @@ fun PermissionsSearchResultCard(
                                     },
                                     contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
                                 ) {
-                                    Text(
-                                        text = stringResource(R.string.perm_action_grant),
+                                    TranslatableText(
+                                        stringResId = R.string.perm_action_grant,
                                         style = MaterialTheme.typography.labelMedium,
                                     )
                                 }

@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
 import com.sameerasw.essentials.ui.core.cards.ConfigPickerItem
 import com.sameerasw.essentials.ui.core.cards.FeatureCard
@@ -80,8 +81,8 @@ fun AppLockSettingsUI(
                 .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
-        Text(
-            text = stringResource(R.string.settings_section_security),
+        TranslatableText(
+            stringResId = R.string.settings_section_security,
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -151,22 +152,22 @@ fun AppLockSettingsUI(
             }
         }
 
-        Text(
-            text = stringResource(R.string.app_lock_description),
+        TranslatableText(
+            stringResId = R.string.app_lock_description,
             style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier.padding(16.dp),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
 
-        Text(
-            text = stringResource(R.string.app_lock_warning),
+        TranslatableText(
+            stringResId = R.string.app_lock_warning,
             style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier.padding(16.dp),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
 
-        Text(
-            text = stringResource(R.string.app_lock_biometric_note),
+        TranslatableText(
+            stringResId = R.string.app_lock_biometric_note,
             style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier.padding(16.dp),
             color = MaterialTheme.colorScheme.onSurfaceVariant,

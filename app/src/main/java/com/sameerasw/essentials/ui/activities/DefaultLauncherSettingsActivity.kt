@@ -29,10 +29,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.utils.LauncherUtils
@@ -71,8 +71,8 @@ fun DefaultLauncherSettingsOverlay(onDismiss: () -> Unit) {
                     .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(2.dp),
         ) {
-            Text(
-                text = stringResource(R.string.tile_default_launcher_cycle_title),
+            TranslatableText(
+                stringResId = R.string.tile_default_launcher_cycle_title,
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.SemiBold,
                 modifier = Modifier.padding(start = 16.dp, bottom = 12.dp),

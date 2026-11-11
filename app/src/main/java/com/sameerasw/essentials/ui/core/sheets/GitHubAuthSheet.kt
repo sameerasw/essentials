@@ -35,13 +35,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.viewmodels.AuthState
 import com.sameerasw.essentials.viewmodels.GitHubAuthViewModel
@@ -74,16 +74,16 @@ fun GitHubAuthSheet(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            Text(
-                text = stringResource(R.string.action_sign_in_github),
+            TranslatableText(
+                stringResId = R.string.action_sign_in_github,
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold,
             )
 
             when (val state = authState) {
                 is AuthState.Idle -> {
-                    Text(
-                        text = stringResource(R.string.auth_sign_in_rationale),
+                    TranslatableText(
+                        stringResId = R.string.auth_sign_in_rationale,
                         textAlign = TextAlign.Center,
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -95,21 +95,21 @@ fun GitHubAuthSheet(
                         },
                         modifier = Modifier.fillMaxWidth(),
                     ) {
-                        Text(stringResource(R.string.action_start_sign_in))
+                        TranslatableText(R.string.action_start_sign_in)
                     }
                 }
 
                 is AuthState.Loading -> {
                     LoadingIndicator()
-                    Text(
-                        text = stringResource(R.string.auth_requesting_code),
+                    TranslatableText(
+                        stringResId = R.string.auth_requesting_code,
                         style = MaterialTheme.typography.bodyMedium,
                     )
                 }
 
                 is AuthState.CodeReceived -> {
-                    Text(
-                        text = stringResource(R.string.auth_copy_code_instruction),
+                    TranslatableText(
+                        stringResId = R.string.auth_copy_code_instruction,
                         style = MaterialTheme.typography.titleMedium,
                     )
 
@@ -134,11 +134,11 @@ fun GitHubAuthSheet(
                             contentDescription = null,
                         )
                         Spacer(modifier = Modifier.padding(4.dp))
-                        Text(stringResource(R.string.auth_copy_code))
+                        TranslatableText(R.string.auth_copy_code)
                     }
 
-                    Text(
-                        text = stringResource(R.string.auth_paste_code_instruction),
+                    TranslatableText(
+                        stringResId = R.string.auth_paste_code_instruction,
                         style = MaterialTheme.typography.titleMedium,
                         modifier = Modifier.padding(top = 8.dp),
                     )
@@ -150,11 +150,11 @@ fun GitHubAuthSheet(
                         },
                         modifier = Modifier.fillMaxWidth(),
                     ) {
-                        Text(stringResource(R.string.auth_open_login_page))
+                        TranslatableText(R.string.auth_open_login_page)
                     }
 
-                    Text(
-                        text = stringResource(R.string.auth_waiting_for_authorization),
+                    TranslatableText(
+                        stringResId = R.string.auth_waiting_for_authorization,
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
@@ -168,8 +168,9 @@ fun GitHubAuthSheet(
                 }
 
                 is AuthState.Error -> {
-                    Text(
-                        text = state.message,
+                    TranslatableText(
+                        stringResId = state.messageRes,
+                        formatArgs = listOf(state.formatArg.orEmpty()),
                         color = MaterialTheme.colorScheme.error,
                         textAlign = TextAlign.Center,
                     )
@@ -179,7 +180,7 @@ fun GitHubAuthSheet(
                             viewModel.startAuthFlow() // Retry
                         },
                     ) {
-                        Text(stringResource(R.string.action_retry))
+                        TranslatableText(R.string.action_retry)
                     }
                 }
             }

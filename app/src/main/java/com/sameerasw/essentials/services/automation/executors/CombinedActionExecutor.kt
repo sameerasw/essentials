@@ -436,7 +436,7 @@ object CombinedActionExecutor {
                             Toast
                                 .makeText(
                                     context,
-                                    "Accessibility service is not running",
+                                    context.getString(R.string.diy_accessibility_not_running),
                                     Toast.LENGTH_SHORT,
                                 ).show()
                         }
@@ -927,7 +927,7 @@ object CombinedActionExecutor {
                             Toast
                                 .makeText(
                                     context,
-                                    "No active foreground task found",
+                                    context.getString(R.string.diy_no_foreground_task),
                                     Toast.LENGTH_SHORT,
                                 ).show()
                         }
@@ -936,7 +936,7 @@ object CombinedActionExecutor {
                         Toast
                             .makeText(
                                 context,
-                                "Failed to pin app: ${e.message}",
+                                context.getString(R.string.diy_pin_app_failed, e.message.orEmpty()),
                                 Toast.LENGTH_SHORT,
                             ).show()
                     }

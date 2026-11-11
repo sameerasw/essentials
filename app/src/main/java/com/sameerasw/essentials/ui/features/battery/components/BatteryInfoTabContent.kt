@@ -45,6 +45,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.SettingsRepository
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.components.buttons.ListExpandToggleButton
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.pickers.MultiSegmentedPicker
@@ -78,8 +79,8 @@ fun BatteryInfoTabContent(
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 Column {
-                    Text(
-                        text = stringResource(R.string.label_battery_state_of_health),
+                    TranslatableText(
+                        stringResId = R.string.label_battery_state_of_health,
                         style = MaterialTheme.typography.titleMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
@@ -119,7 +120,7 @@ fun BatteryInfoTabContent(
     RoundedCardContainer(modifier = Modifier.fillMaxWidth()) {
         InfoDetailRow(
             title = R.string.label_battery_health,
-            value = BatteryInfoUtil.formatHealth(batteryDetails.health),
+            value = BatteryInfoUtil.formatHealth(LocalContext.current, batteryDetails.health),
             iconRes = R.drawable.rounded_ecg_heart_24,
         )
         InfoDetailRow(
@@ -191,7 +192,7 @@ fun BatteryInfoTabContent(
         // Plug type renamed to "Mode"
         InfoDetailRow(
             title = R.string.label_battery_mode,
-            value = BatteryInfoUtil.formatPlugged(batteryDetails.plugged),
+            value = BatteryInfoUtil.formatPlugged(LocalContext.current, batteryDetails.plugged),
             iconRes = R.drawable.rounded_cable_24,
         )
 
@@ -212,7 +213,7 @@ fun BatteryInfoTabContent(
                     batteryDetails.chargingPolicy?.let { policy ->
                         InfoDetailRow(
                             title = R.string.label_battery_charging_policy,
-                            value = BatteryInfoUtil.formatChargingPolicy(policy),
+                            value = BatteryInfoUtil.formatChargingPolicy(LocalContext.current, policy),
                             iconRes = R.drawable.rounded_info_24,
                         )
                     }
@@ -243,7 +244,7 @@ fun BatteryInfoTabContent(
                     batteryDetails.chargingStatusNew?.let { statusNew ->
                         InfoDetailRow(
                             title = R.string.label_battery_charging_status,
-                            value = BatteryInfoUtil.formatChargingStatusNew(statusNew),
+                            value = BatteryInfoUtil.formatChargingStatusNew(LocalContext.current, statusNew),
                             iconRes = R.drawable.rounded_charger_24
                         )
                     }
@@ -252,7 +253,7 @@ fun BatteryInfoTabContent(
                     batteryDetails.chargeTimeRemainingMs?.let { timeMs ->
                         InfoDetailRow(
                             title = R.string.label_battery_charge_time_remaining,
-                            value = BatteryInfoUtil.formatChargeTimeRemaining(timeMs),
+                            value = BatteryInfoUtil.formatChargeTimeRemaining(LocalContext.current, timeMs),
                             iconRes = R.drawable.battery_android_frame_bolt_24px,
                         )
                     }
@@ -366,7 +367,7 @@ fun BatteryInfoTabContent(
             batteryDetails.partStatus?.let { part ->
                 InfoDetailRow(
                     title = R.string.label_battery_part_status,
-                    value = BatteryInfoUtil.formatPartStatus(part),
+                    value = BatteryInfoUtil.formatPartStatus(LocalContext.current, part),
                     iconRes = R.drawable.battery_android_frame_shield_24px,
                 )
             }
@@ -472,14 +473,14 @@ fun BatteryInfoTabContent(
                         ).padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
-                Text(
-                    text = stringResource(R.string.charge_opt_long_press_desc),
+                TranslatableText(
+                    stringResId = R.string.charge_opt_long_press_desc,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
 
-                Text(
-                    text = stringResource(R.string.charge_opt_long_press_title),
+                TranslatableText(
+                    stringResId = R.string.charge_opt_long_press_title,
                     style = MaterialTheme.typography.labelLarge,
                     color = MaterialTheme.colorScheme.primary,
                 )
@@ -536,15 +537,15 @@ fun BatteryInfoTabContent(
                             ).padding(16.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp),
                 ) {
-                    Text(
-                        text = stringResource(R.string.label_reset_battery_stats_title),
+                    TranslatableText(
+                        stringResId = R.string.label_reset_battery_stats_title,
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface,
                     )
 
-                    Text(
-                        text = stringResource(R.string.label_reset_battery_stats_desc),
+                    TranslatableText(
+                        stringResId = R.string.label_reset_battery_stats_desc,
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
@@ -561,7 +562,7 @@ fun BatteryInfoTabContent(
                         },
                         modifier = Modifier.fillMaxWidth(),
                     ) {
-                        Text(text = stringResource(R.string.action_reset_battery_stats))
+                        TranslatableText(stringResId = R.string.action_reset_battery_stats)
                     }
                 }
 
@@ -615,16 +616,16 @@ fun BatteryInfoTabContent(
                         modifier = Modifier.size(24.dp),
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = stringResource(R.string.label_battery_grant_stats_title),
+                    TranslatableText(
+                        stringResId = R.string.label_battery_grant_stats_title,
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface,
                     )
                 }
 
-                Text(
-                    text = stringResource(R.string.label_battery_grant_stats_desc),
+                TranslatableText(
+                    stringResId = R.string.label_battery_grant_stats_desc,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -646,7 +647,7 @@ fun BatteryInfoTabContent(
                         },
                         modifier = Modifier.fillMaxWidth(),
                     ) {
-                        Text(text = stringResource(R.string.action_grant_shizuku))
+                        TranslatableText(stringResId = R.string.action_grant_shizuku)
                     }
                 }
             }

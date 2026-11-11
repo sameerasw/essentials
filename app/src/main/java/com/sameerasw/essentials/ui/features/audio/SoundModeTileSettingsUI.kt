@@ -47,6 +47,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.core.content.edit
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.sheets.PermissionItem
@@ -163,8 +164,8 @@ fun SoundModeTileSettingsUI(
         }
 
     // Notification Category
-    Text(
-        text = stringResource(R.string.sound_mode_reorder_title),
+    TranslatableText(
+        stringResId = R.string.sound_mode_reorder_title,
         style = MaterialTheme.typography.titleMedium,
         modifier = Modifier.padding(start = 24.dp, top = 16.dp, end = 24.dp),
         color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -262,8 +263,8 @@ fun SoundModeTileSettingsUI(
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                 ) {
-                    Text(
-                        text = stringResource(R.string.sound_mode_long_press_hint),
+                    TranslatableText(
+                        stringResId = R.string.sound_mode_long_press_hint,
                         textAlign = TextAlign.Center,
                         style = MaterialTheme.typography.bodyMedium,
                         modifier =
@@ -375,8 +376,8 @@ fun SoundModeTileSettingsUI(
                     },
                 )
             }
-            Text(
-                text = stringResource(R.string.sound_mode_shizuku_info),
+            TranslatableText(
+                stringResId = R.string.sound_mode_shizuku_info,
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(start = 16.dp, top = 8.dp, end = 16.dp, bottom = 24.dp),

@@ -10,6 +10,7 @@
 
 package com.sameerasw.essentials.viewmodels
 
+import com.sameerasw.essentials.R
 import android.app.Application
 import android.content.Context
 import androidx.lifecycle.AndroidViewModel
@@ -132,7 +133,7 @@ class DIYViewModel(
             _genAIState.value =
                 result.fold(
                     onSuccess = { GenAIState.Success(it) },
-                    onFailure = { GenAIState.Error(it.message ?: "Failed to generate suggestion") },
+                    onFailure = { GenAIState.Error(it.message ?: getApplication<Application>().getString(R.string.diy_genai_failed)) },
                 )
         }
     }

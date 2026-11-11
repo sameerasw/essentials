@@ -49,6 +49,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.services.ScreenOffWidgetProvider
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
@@ -169,15 +170,15 @@ fun ScreenOffWidgetConfigureOverlay(
                     tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.size(24.dp),
                 )
-                Text(
-                    text = stringResource(R.string.screen_off_widget_label),
+                TranslatableText(
+                    stringResId = R.string.screen_off_widget_label,
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.SemiBold,
                 )
             }
 
-            Text(
-                text = stringResource(R.string.feat_screen_off_widget_desc),
+            TranslatableText(
+                stringResId = R.string.feat_screen_off_widget_desc,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(horizontal = 16.dp),

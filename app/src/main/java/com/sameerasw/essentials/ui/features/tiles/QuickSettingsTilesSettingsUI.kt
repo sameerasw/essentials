@@ -89,6 +89,7 @@ import com.sameerasw.essentials.services.tiles.UrlShortenerTileService
 import com.sameerasw.essentials.services.tiles.UsbDebuggingTileService
 import com.sameerasw.essentials.domain.registry.QSTileInfo
 import com.sameerasw.essentials.domain.registry.QSTileRegistry
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.sheets.PermissionsBottomSheet
@@ -263,8 +264,8 @@ fun QuickSettingsTilesSettingsUI(
                         modifier = Modifier.size(26.dp),
                     )
                 }
-                Text(
-                    text = stringResource(categoryRes),
+                TranslatableText(
+                    stringResId = categoryRes,
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.primary,
                 )
@@ -382,8 +383,8 @@ fun QuickSettingsTilesSettingsUI(
             }
         }
 
-        Text(
-            text = "Long press a tile to see what it does",
+        TranslatableText(
+            stringResId = R.string.qs_tiles_long_press_info,
             style = MaterialTheme.typography.labelMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(top = 8.dp),
@@ -416,15 +417,15 @@ fun QuickSettingsTilesSettingsUI(
                     tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.size(26.dp),
                 )
-                Text(
-                    text = stringResource(R.string.qs_tiles_widget_name),
+                TranslatableText(
+                    stringResId = R.string.qs_tiles_widget_name,
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.primary,
                 )
             }
 
-            Text(
-                text = "Long press tiles to add",
+            TranslatableText(
+                stringResId = R.string.qs_tiles_long_press_add,
                 style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(start = 12.dp),
@@ -440,8 +441,8 @@ fun QuickSettingsTilesSettingsUI(
                             .padding(24.dp),
                     contentAlignment = Alignment.Center,
                 ) {
-                    Text(
-                        text = stringResource(R.string.qs_tiles_widget_empty_state),
+                    TranslatableText(
+                        stringResId = R.string.qs_tiles_widget_empty_state,
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
@@ -593,8 +594,8 @@ fun QSTileCard(
             )
 
             Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = stringResource(tile.titleRes),
+                TranslatableText(
+                    stringResId = tile.titleRes,
                     style = MaterialTheme.typography.titleMedium,
                     color = contentColor,
                     maxLines = 1,
@@ -603,7 +604,7 @@ fun QSTileCard(
                 Text(
                     text =
                         if (isMissingPermissions) {
-                            "Grant permission"
+                            stringResource(R.string.qs_tiles_grant_permission)
                         } else if (isAdded) {
                             stringResource(R.string.action_added)
                         } else {
@@ -669,7 +670,7 @@ fun QSTileCard(
                 if (onHelpClick != null) {
                     com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem(
                         text = {
-                            Text(stringResource(R.string.action_what_is_this))
+                            TranslatableText(R.string.action_what_is_this)
                         },
                         onClick = {
                             showMenu = false

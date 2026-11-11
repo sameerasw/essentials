@@ -64,6 +64,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.repeatOnLifecycle
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.utils.AppUtil
 import com.sameerasw.essentials.utils.HapticUtil
 import kotlinx.coroutines.delay
@@ -406,8 +407,8 @@ private fun CloseButton(
                 contentColor = MaterialTheme.colorScheme.onPrimary,
             ),
     ) {
-        Text(
-            text = stringResource(R.string.conscious_gate_close_button),
+        TranslatableText(
+            stringResId = R.string.conscious_gate_close_button,
             style = MaterialTheme.typography.labelLarge,
             fontWeight = FontWeight.Medium,
         )

@@ -668,7 +668,6 @@
     <string name="perm_battery_optimization_title">Optimisation de la batterie</string>
     <string name="perm_battery_optimization_desc">Assure que le service ne soit pas fermé par le système pour économise de l\'énergie.</string>
     <!-- Tabs -->
-    <string name="tab_essentials">Essentials</string>
     <string name="tab_freeze">Gel d\'applis</string>
     <string name="tab_freeze_title">Gel d\'applis</string>
     <string name="tab_diy">DIY</string>

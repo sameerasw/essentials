@@ -36,12 +36,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.genai.AutomationSuggestion
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.utils.HapticUtil
 
@@ -81,8 +81,8 @@ fun GenAIAutomationPreviewSheet(
                     tint = MaterialTheme.colorScheme.primary,
                 )
                 Spacer(modifier = Modifier.width(12.dp))
-                Text(
-                    text = stringResource(R.string.diy_genai_preview_title),
+                TranslatableText(
+                    stringResId = R.string.diy_genai_preview_title,
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface,
@@ -208,8 +208,8 @@ fun GenAIAutomationPreviewSheet(
                                 shape = RoundedCornerShape(16.dp),
                                 modifier = Modifier.fillMaxWidth(),
                             ) {
-                                Text(
-                                    text = "No actions defined",
+                                TranslatableText(
+                                    stringResId = R.string.diy_no_actions_defined,
                                     style = MaterialTheme.typography.bodyMedium,
                                     color = MaterialTheme.colorScheme.onPrimaryContainer,
                                     modifier = Modifier.padding(14.dp),
@@ -223,8 +223,8 @@ fun GenAIAutomationPreviewSheet(
             Spacer(modifier = Modifier.height(16.dp))
 
             // Disclaimer
-            Text(
-                text = stringResource(R.string.diy_genai_disclaimer),
+            TranslatableText(
+                stringResId = R.string.diy_genai_disclaimer,
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier =
@@ -249,7 +249,7 @@ fun GenAIAutomationPreviewSheet(
                             .weight(1f)
                             .height(48.dp),
                 ) {
-                    Text(text = stringResource(R.string.action_dismiss))
+                    TranslatableText(stringResId = R.string.action_dismiss)
                 }
 
                 Button(
@@ -262,7 +262,7 @@ fun GenAIAutomationPreviewSheet(
                             .weight(1f)
                             .height(48.dp),
                 ) {
-                    Text(text = stringResource(R.string.action_create))
+                    TranslatableText(stringResId = R.string.action_create)
                 }
             }
         }

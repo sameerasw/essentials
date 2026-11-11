@@ -198,7 +198,7 @@ class WatermarkViewModel(
                 "${exif.make} ${exif.model}"
             }
         } else {
-            exif.model ?: exif.make ?: "Shot on Device"
+            exif.model ?: exif.make ?: context.getString(R.string.watermark_shot_on_device)
         }
 
     /**
@@ -319,7 +319,7 @@ class WatermarkViewModel(
                 _previewUiState.value = WatermarkUiState.Success(file, result)
             } catch (e: Exception) {
                 e.printStackTrace()
-                _previewUiState.value = WatermarkUiState.Error(e.message ?: "Unknown error")
+                _previewUiState.value = WatermarkUiState.Error(e.message ?: context.getString(R.string.error_unknown))
             }
         }
     }
@@ -648,7 +648,7 @@ class WatermarkViewModel(
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
-                _uiState.value = WatermarkUiState.Error(e.message ?: "Unknown error")
+                _uiState.value = WatermarkUiState.Error(e.message ?: context.getString(R.string.error_unknown))
             }
         }
     }
@@ -683,11 +683,11 @@ class WatermarkViewModel(
                     _uiState.value = WatermarkUiState.Idle
                     onShareReady(savedUri)
                 } else {
-                    _uiState.value = WatermarkUiState.Error("Failed to prepare image for sharing")
+                    _uiState.value = WatermarkUiState.Error(context.getString(R.string.watermark_share_prepare_failed))
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
-                _uiState.value = WatermarkUiState.Error(e.message ?: "Unknown error")
+                _uiState.value = WatermarkUiState.Error(e.message ?: context.getString(R.string.error_unknown))
             }
         }
     }

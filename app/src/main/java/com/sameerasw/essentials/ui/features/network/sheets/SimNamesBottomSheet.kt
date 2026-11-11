@@ -30,7 +30,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -51,6 +50,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.SettingsRepository
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.utils.HapticUtil
@@ -104,8 +104,8 @@ fun SimNamesBottomSheet(onDismissRequest: () -> Unit) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            Text(
-                text = stringResource(R.string.feat_sim_names_title),
+            TranslatableText(
+                stringResId = R.string.feat_sim_names_title,
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSurface,
@@ -117,8 +117,8 @@ fun SimNamesBottomSheet(onDismissRequest: () -> Unit) {
                     color = MaterialTheme.colorScheme.primary,
                 )
             } else if (simList.isEmpty()) {
-                Text(
-                    text = stringResource(R.string.sim_names_no_sim),
+                TranslatableText(
+                    stringResId = R.string.sim_names_no_sim,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(32.dp),
@@ -137,13 +137,9 @@ fun SimNamesBottomSheet(onDismissRequest: () -> Unit) {
                                     .padding(16.dp),
                             verticalArrangement = Arrangement.spacedBy(12.dp),
                         ) {
-                            Text(
-                                text =
-                                    stringResource(
-                                        R.string.sim_names_slot_format,
-                                        sim.simSlotIndex + 1,
-                                        sim.displayName.ifBlank { sim.defaultCarrierName },
-                                    ),
+                            TranslatableText(
+                                stringResId = R.string.sim_names_slot_format,
+                                formatArgs = listOf(sim.simSlotIndex + 1, sim.displayName.ifBlank { sim.defaultCarrierName }),
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.SemiBold,
                                 color = MaterialTheme.colorScheme.onSurface,
@@ -157,7 +153,7 @@ fun SimNamesBottomSheet(onDismissRequest: () -> Unit) {
                                 OutlinedTextField(
                                     value = currentText,
                                     onValueChange = { carrierNameInputs[sim.subId] = it },
-                                    label = { Text(stringResource(R.string.sim_names_carrier_label)) },
+                                    label = { TranslatableText(R.string.sim_names_carrier_label) },
                                     modifier = Modifier.weight(1f),
                                     singleLine = true,
                                 )
@@ -207,7 +203,7 @@ fun SimNamesBottomSheet(onDismissRequest: () -> Unit) {
                         onDismissRequest()
                     },
                 ) {
-                    Text(stringResource(R.string.action_cancel))
+                    TranslatableText(R.string.action_cancel)
                 }
 
                 Button(
@@ -232,7 +228,7 @@ fun SimNamesBottomSheet(onDismissRequest: () -> Unit) {
                         }
                     },
                 ) {
-                    Text(stringResource(R.string.action_save))
+                    TranslatableText(R.string.action_save)
                 }
             }
         }

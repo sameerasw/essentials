@@ -44,6 +44,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.DIYTabs
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.translation.TranslationManager
 import com.sameerasw.essentials.translation.ui.TranslationBottomSheet
 import com.sameerasw.essentials.translation.ui.TranslationMenuItems
@@ -109,8 +110,8 @@ fun DefaultTabPicker(
                 ),
             content = {
                 Box {
-                    Text(
-                        text = stringResource(R.string.label_default_tab),
+                    TranslatableText(
+                        stringResId = R.string.label_default_tab,
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurface,
                     )

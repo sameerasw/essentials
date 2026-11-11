@@ -73,6 +73,7 @@ import androidx.compose.ui.platform.LocalDensity
 import com.sameerasw.essentials.island.plugins.calendar.CalendarExpanded
 import com.sameerasw.essentials.island.plugins.soften
 import com.sameerasw.essentials.island.ui.IslandHaptics
+import com.sameerasw.essentials.translation.TranslatableText
 import kotlinx.coroutines.launch
 import android.os.BatteryManager
 import android.os.Build
@@ -106,7 +107,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -526,8 +526,8 @@ private fun BriefOverview(
                     ) {
                         when {
                             list == null -> Unit
-                            list.isEmpty() -> Text(
-                                text = stringResource(R.string.island_brief_no_events),
+                            list.isEmpty() -> TranslatableText(
+                                stringResId = R.string.island_brief_no_events,
                                 style = IslandTextStyles.body,
                             )
                             else -> list.forEach { event -> BriefEventRow(event, now, accent) { onEventClick(event) } }
@@ -555,7 +555,7 @@ private fun BriefOverview(
                         val list = events
                         when {
                             list == null -> Unit
-                            list.isEmpty() -> add { Text(stringResource(R.string.island_brief_no_events), style = IslandTextStyles.body) }
+                            list.isEmpty() -> add { TranslatableText(R.string.island_brief_no_events, style = IslandTextStyles.body) }
                             else -> list.forEach { event -> add { BriefEventRow(event, now, accent) { onEventClick(event) } } }
                         }
                     }

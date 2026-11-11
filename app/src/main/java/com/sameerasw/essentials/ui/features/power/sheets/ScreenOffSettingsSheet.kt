@@ -24,7 +24,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -34,12 +33,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.ScreenOffMethod
 import com.sameerasw.essentials.domain.diy.Action
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.pickers.HapticFeedbackPicker
 import com.sameerasw.essentials.ui.core.pickers.ScreenOffMethodPicker
@@ -70,16 +69,16 @@ fun ScreenOffSettingsSheet(
                     .fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            Text(
-                text = stringResource(R.string.diy_action_screen_off),
+            TranslatableText(
+                stringResId = R.string.diy_action_screen_off,
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSurface,
             )
 
             // Screen Off Method
-            Text(
-                text = stringResource(R.string.screen_off_method_title),
+            TranslatableText(
+                stringResId = R.string.screen_off_method_title,
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -93,7 +92,7 @@ fun ScreenOffSettingsSheet(
                             android.widget.Toast
                                 .makeText(
                                     context,
-                                    "Shizuku/Root permission required for Input method",
+                                    context.getString(R.string.screen_off_input_permission_required),
                                     android.widget.Toast.LENGTH_SHORT,
                                 ).show()
                         } else {
@@ -104,8 +103,8 @@ fun ScreenOffSettingsSheet(
             }
 
             // Haptic Feedback
-            Text(
-                text = stringResource(R.string.settings_section_haptic),
+            TranslatableText(
+                stringResId = R.string.settings_section_haptic,
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -147,7 +146,7 @@ fun ScreenOffSettingsSheet(
                     modifier = Modifier.weight(1f),
                     shape = RoundedCornerShape(28.dp),
                 ) {
-                    Text(stringResource(R.string.action_cancel))
+                    TranslatableText(R.string.action_cancel)
                 }
 
                 Button(
@@ -158,7 +157,7 @@ fun ScreenOffSettingsSheet(
                     modifier = Modifier.weight(1f),
                     shape = RoundedCornerShape(28.dp),
                 ) {
-                    Text(stringResource(R.string.action_save))
+                    TranslatableText(R.string.action_save)
                 }
             }
         }

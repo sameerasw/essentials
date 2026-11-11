@@ -56,6 +56,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.model.UpdateInfo
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.components.text.SimpleMarkdown
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.utils.HapticUtil
@@ -146,8 +147,8 @@ fun AddRepoBottomSheet(
                         .padding(16.dp)
                         .verticalScroll(rememberScrollState()),
             ) {
-                Text(
-                    text = stringResource(R.string.label_readme),
+                TranslatableText(
+                    stringResId = R.string.label_readme,
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(bottom = 16.dp),
@@ -203,7 +204,7 @@ fun AddRepoBottomSheet(
                     value = searchQuery,
                     onValueChange = { viewModel.onSearchQueryChanged(it) },
                     modifier = Modifier.fillMaxWidth(),
-                    label = { Text(stringResource(R.string.prompt_enter_repo_url)) },
+                    label = { TranslatableText(R.string.prompt_enter_repo_url) },
                     singleLine = true,
                     isError = errorMessage != null,
                 )
@@ -228,7 +229,7 @@ fun AddRepoBottomSheet(
                         },
                         modifier = Modifier.weight(1f),
                     ) {
-                        Text(stringResource(R.string.action_cancel))
+                        TranslatableText(R.string.action_cancel)
                     }
                     Button(
                         onClick = {
@@ -241,7 +242,7 @@ fun AddRepoBottomSheet(
                         if (isSearching) {
                             LoadingIndicator(modifier = Modifier.size(24.dp))
                         } else {
-                            Text(stringResource(R.string.action_search))
+                            TranslatableText(R.string.action_search)
                         }
                     }
                 }
@@ -322,12 +323,9 @@ fun AddRepoBottomSheet(
                                             contentDescription = null,
                                             modifier = Modifier.size(24.dp),
                                         )
-                                        Text(
-                                            text =
-                                                stringResource(
-                                                    R.string.label_stars,
-                                                    searchResult!!.stars,
-                                                ),
+                                        TranslatableText(
+                                            stringResId = R.string.label_stars,
+                                            formatArgs = listOf(searchResult!!.stars),
                                             style = MaterialTheme.typography.labelMedium,
                                             fontWeight = FontWeight.Bold,
                                         )
@@ -347,7 +345,7 @@ fun AddRepoBottomSheet(
                                             Modifier.size(24.dp),
                                         )
                                         Spacer(Modifier.width(8.dp))
-                                        Text(stringResource(R.string.action_view_readme))
+                                        TranslatableText(R.string.action_view_readme)
                                     }
                                 }
                             }
@@ -372,8 +370,8 @@ fun AddRepoBottomSheet(
                                 verticalAlignment = Alignment.CenterVertically,
                             ) {
                                 Column(modifier = Modifier.weight(1f)) {
-                                    Text(
-                                        text = stringResource(R.string.label_latest_release),
+                                    TranslatableText(
+                                        stringResId = R.string.label_latest_release,
                                         style = MaterialTheme.typography.labelMedium,
                                         fontWeight = FontWeight.Bold,
                                         color = MaterialTheme.colorScheme.primary,
@@ -415,8 +413,8 @@ fun AddRepoBottomSheet(
                             modifier = Modifier.fillMaxWidth(),
                             verticalArrangement = Arrangement.spacedBy(8.dp),
                         ) {
-                            Text(
-                                text = stringResource(R.string.label_found_apks),
+                            TranslatableText(
+                                stringResId = R.string.label_found_apks,
                                 style = MaterialTheme.typography.titleSmall,
                                 fontWeight = FontWeight.Bold,
                                 modifier = Modifier.padding(top = 8.dp, start = 12.dp),
@@ -477,8 +475,8 @@ fun AddRepoBottomSheet(
                     modifier = Modifier.fillMaxWidth(),
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
-                    Text(
-                        text = stringResource(R.string.label_installed_app),
+                    TranslatableText(
+                        stringResId = R.string.label_installed_app,
                         style = MaterialTheme.typography.titleSmall,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.padding(top = 8.dp, start = 12.dp),
@@ -501,8 +499,8 @@ fun AddRepoBottomSheet(
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.SpaceBetween,
                             ) {
-                                Text(
-                                    text = stringResource(R.string.label_not_installed),
+                                TranslatableText(
+                                    stringResId = R.string.label_not_installed,
                                     style = MaterialTheme.typography.bodyMedium,
                                     fontWeight = if (selectedApp == null) FontWeight.Bold else FontWeight.Normal,
                                     color =
@@ -574,8 +572,8 @@ fun AddRepoBottomSheet(
                                             modifier = Modifier.size(24.dp),
                                             tint = MaterialTheme.colorScheme.onSurfaceVariant,
                                         )
-                                        Text(
-                                            text = stringResource(R.string.action_pick_app),
+                                        TranslatableText(
+                                            stringResId = R.string.action_pick_app,
                                             style = MaterialTheme.typography.bodyMedium,
                                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                                         )
@@ -596,8 +594,8 @@ fun AddRepoBottomSheet(
                         modifier = Modifier.fillMaxWidth(),
                         verticalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
-                        Text(
-                            text = stringResource(R.string.label_options),
+                        TranslatableText(
+                            stringResId = R.string.label_options,
                             style = MaterialTheme.typography.titleSmall,
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier.padding(top = 8.dp, start = 12.dp),
@@ -620,8 +618,8 @@ fun AddRepoBottomSheet(
                                     verticalAlignment = Alignment.CenterVertically,
                                     horizontalArrangement = Arrangement.SpaceBetween,
                                 ) {
-                                    Text(
-                                        text = stringResource(R.string.option_allow_prereleases),
+                                    TranslatableText(
+                                        stringResId = R.string.option_allow_prereleases,
                                         style = MaterialTheme.typography.bodyMedium,
                                         color = MaterialTheme.colorScheme.onSurface,
                                     )
@@ -651,8 +649,8 @@ fun AddRepoBottomSheet(
                                     verticalAlignment = Alignment.CenterVertically,
                                     horizontalArrangement = Arrangement.SpaceBetween,
                                 ) {
-                                    Text(
-                                        text = stringResource(R.string.option_notifications),
+                                    TranslatableText(
+                                        stringResId = R.string.option_notifications,
                                         style = MaterialTheme.typography.bodyMedium,
                                         color = MaterialTheme.colorScheme.onSurface,
                                     )
@@ -688,7 +686,7 @@ fun AddRepoBottomSheet(
                             modifier = Modifier.weight(1f),
                             colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.error),
                         ) {
-                            Text(stringResource(R.string.action_untrack))
+                            TranslatableText(R.string.action_untrack)
                         }
                     } else {
                         OutlinedButton(
@@ -698,7 +696,7 @@ fun AddRepoBottomSheet(
                             },
                             modifier = Modifier.weight(1f),
                         ) {
-                            Text(stringResource(R.string.action_cancel))
+                            TranslatableText(R.string.action_cancel)
                         }
                     }
 

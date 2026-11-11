@@ -64,6 +64,7 @@ import com.sameerasw.essentials.domain.diy.Automation
 import com.sameerasw.essentials.domain.diy.Trigger
 import com.sameerasw.essentials.domain.diy.systemMetricText
 import com.sameerasw.essentials.domain.diy.State as DIYState
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenu
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
@@ -143,7 +144,7 @@ fun AutomationItem(
                     },
                 )
                 SegmentedDropdownMenuItem(
-                    text = { Text(stringResource(R.string.action_test)) },
+                    text = { TranslatableText(R.string.action_test) },
                     onClick = {
                         showMenu = false
                         onTest()
@@ -156,7 +157,7 @@ fun AutomationItem(
                     },
                 )
                 SegmentedDropdownMenuItem(
-                    text = { Text(stringResource(R.string.action_edit)) },
+                    text = { TranslatableText(R.string.action_edit) },
                     onClick = {
                         showMenu = false
                         onClick()
@@ -169,7 +170,7 @@ fun AutomationItem(
                     },
                 )
                 SegmentedDropdownMenuItem(
-                    text = { Text(stringResource(R.string.action_select)) },
+                    text = { TranslatableText(R.string.action_select) },
                     onClick = {
                         showMenu = false
                         onSelectedChange(true)
@@ -182,7 +183,7 @@ fun AutomationItem(
                     },
                 )
                 SegmentedDropdownMenuItem(
-                    text = { Text(stringResource(R.string.action_delete)) },
+                    text = { TranslatableText(R.string.action_delete) },
                     onClick = {
                         showMenu = false
                         onDelete()
@@ -560,8 +561,9 @@ fun ActionItem(
             }
             if (moreCount > 0) {
                 Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    text = stringResource(R.string.diy_more_actions, moreCount),
+                TranslatableText(
+                    stringResId = R.string.diy_more_actions,
+                    formatArgs = listOf(moreCount),
                     style = MaterialTheme.typography.labelLarge,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )

@@ -45,6 +45,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.diy.Trigger
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.core.pickers.MultiSegmentedPicker
 import com.sameerasw.essentials.utils.HapticUtil
 import java.util.Calendar
@@ -160,8 +161,8 @@ fun TimeSelectionSheet(
                 verticalArrangement = Arrangement.spacedBy(12.dp),
                 modifier = Modifier.fillMaxWidth(),
             ) {
-                Text(
-                    text = stringResource(R.string.diy_repeat_days_label),
+                TranslatableText(
+                    stringResId = R.string.diy_repeat_days_label,
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onSurface,
                 )
@@ -219,7 +220,7 @@ fun TimeSelectionSheet(
                         modifier = Modifier.size(20.dp),
                     )
                     Spacer(modifier = Modifier.size(8.dp))
-                    Text(stringResource(R.string.action_cancel))
+                    TranslatableText(R.string.action_cancel)
                 }
 
                 Button(
@@ -253,7 +254,7 @@ fun TimeSelectionSheet(
                         modifier = Modifier.size(20.dp),
                     )
                     Spacer(modifier = Modifier.size(8.dp))
-                    Text(stringResource(R.string.action_save))
+                    TranslatableText(R.string.action_save)
                 }
             }
         }

@@ -52,6 +52,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.diy.Trigger
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.utils.HapticUtil
@@ -147,8 +148,8 @@ fun LocationTriggerSheet(
 
             if (isAccuracyOff) {
                 RoundedCardContainer {
-                    Text(
-                        text = stringResource(R.string.diy_location_accuracy_off),
+                    TranslatableText(
+                        stringResId = R.string.diy_location_accuracy_off,
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.error,
                         modifier = Modifier.padding(16.dp),
@@ -198,8 +199,8 @@ fun LocationTriggerSheet(
                             modifier = Modifier.size(20.dp),
                         )
                         Spacer(modifier = Modifier.size(12.dp))
-                        Text(
-                            text = stringResource(R.string.diy_location_approximate),
+                        TranslatableText(
+                            stringResId = R.string.diy_location_approximate,
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onTertiaryContainer,
                             modifier = Modifier.weight(1f),
@@ -211,7 +212,7 @@ fun LocationTriggerSheet(
                             },
                             colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.onTertiaryContainer),
                         ) {
-                            Text(stringResource(R.string.diy_location_confirm_place), fontWeight = FontWeight.Bold)
+                            TranslatableText(R.string.diy_location_confirm_place, fontWeight = FontWeight.Bold)
                         }
                     }
                 }
@@ -228,7 +229,7 @@ fun LocationTriggerSheet(
                 ) {
                     Icon(painterResource(R.drawable.rounded_map_24), contentDescription = null, modifier = Modifier.size(20.dp))
                     Spacer(modifier = Modifier.size(8.dp))
-                    Text(stringResource(R.string.diy_location_open_maps))
+                    TranslatableText(R.string.diy_location_open_maps)
                 }
                 OutlinedButton(
                     onClick = {
@@ -245,14 +246,14 @@ fun LocationTriggerSheet(
                 ) {
                     Icon(painterResource(R.drawable.rounded_content_paste_24), contentDescription = null, modifier = Modifier.size(20.dp))
                     Spacer(modifier = Modifier.size(8.dp))
-                    Text(stringResource(R.string.diy_location_paste_link))
+                    TranslatableText(R.string.diy_location_paste_link)
                 }
             }
 
             OutlinedTextField(
                 value = placeName,
                 onValueChange = { placeName = it },
-                label = { Text(stringResource(R.string.diy_location_name_label)) },
+                label = { TranslatableText(R.string.diy_location_name_label) },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
             )
@@ -288,7 +289,7 @@ fun LocationTriggerSheet(
                 ) {
                     Icon(painterResource(R.drawable.rounded_close_24), contentDescription = null, modifier = Modifier.size(20.dp))
                     Spacer(modifier = Modifier.size(8.dp))
-                    Text(stringResource(R.string.action_cancel))
+                    TranslatableText(R.string.action_cancel)
                 }
 
                 Button(
@@ -301,7 +302,7 @@ fun LocationTriggerSheet(
                 ) {
                     Icon(painterResource(R.drawable.rounded_check_24), contentDescription = null, modifier = Modifier.size(20.dp))
                     Spacer(modifier = Modifier.size(8.dp))
-                    Text(stringResource(R.string.action_save))
+                    TranslatableText(R.string.action_save)
                 }
             }
         }

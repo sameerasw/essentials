@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials.services.tiles
 
+import com.sameerasw.essentials.R
 import android.app.PendingIntent
 import android.content.Intent
 import android.os.Build
@@ -39,9 +40,9 @@ class AppFreezingTileService : BaseTileService() {
         }
     }
 
-    override fun getTileLabel(): String = "App Freezing"
+    override fun getTileLabel(): String = getString(R.string.tile_app_freezing)
 
-    override fun getTileSubtitle(): String = "Launch grid"
+    override fun getTileSubtitle(): String = getString(R.string.tile_launch_grid)
 
     override fun hasFeaturePermission(): Boolean = true
 

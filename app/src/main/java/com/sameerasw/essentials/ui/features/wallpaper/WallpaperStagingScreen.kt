@@ -73,6 +73,7 @@ import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.data.repository.WallpaperStagingRepository
 import com.sameerasw.essentials.domain.model.WallpaperInfo
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.components.EssentialsFloatingToolbar
 import com.sameerasw.essentials.ui.modifiers.BlurDirection
 import com.sameerasw.essentials.ui.modifiers.progressiveBlur
@@ -283,16 +284,17 @@ fun WallpaperStagingScreen(
                                     .background(MaterialTheme.colorScheme.primary, CircleShape)
                                     .padding(horizontal = 8.dp, vertical = 3.dp),
                         ) {
-                            Text(
-                                text = stringResource(R.string.wallpaper_staging_staged_badge),
+                            TranslatableText(
+                                stringResId = R.string.wallpaper_staging_staged_badge,
                                 style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
                                 color = MaterialTheme.colorScheme.onPrimary,
                             )
                         }
                     }
 
-                    Text(
-                        text = "Photo by ${currentPhoto.authorName}",
+                    TranslatableText(
+                        stringResId = R.string.wallpaper_photo_by,
+                        formatArgs = listOf(currentPhoto.authorName),
                         style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Medium),
                         color = MaterialTheme.colorScheme.onSurface,
                         maxLines = 1,
@@ -328,8 +330,8 @@ fun WallpaperStagingScreen(
                         tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.size(56.dp),
                     )
-                    Text(
-                        text = stringResource(R.string.wallpaper_staging_error),
+                    TranslatableText(
+                        stringResId = R.string.wallpaper_staging_error,
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
@@ -339,7 +341,7 @@ fun WallpaperStagingScreen(
                             showApiKeyDialog = true
                         },
                     ) {
-                        Text(stringResource(R.string.wallpaper_staging_set_api_key))
+                        TranslatableText(R.string.wallpaper_staging_set_api_key)
                     }
                 }
             }
@@ -416,7 +418,7 @@ fun WallpaperStagingScreen(
                             } else {
                                 Toast.makeText(
                                     context,
-                                    "Failed to commit. Ensure GitHub token is connected in Settings.",
+                                    context.getString(R.string.wallpaper_commit_failed),
                                     Toast.LENGTH_LONG,
                                 ).show()
                             }
@@ -484,8 +486,8 @@ fun WallpaperStagingScreen(
                             .height(52.dp),
                     shape = ButtonGroupDefaults.connectedTrailingButtonShapes().shape,
                 ) {
-                    Text(
-                        text = stringResource(R.string.wallpaper_staging_next),
+                    TranslatableText(
+                        stringResId = R.string.wallpaper_staging_next,
                         style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                     )
                     Spacer(modifier = Modifier.width(6.dp))
@@ -522,18 +524,18 @@ fun WallpaperStagingScreen(
         if (showApiKeyDialog) {
             AlertDialog(
                 onDismissRequest = { showApiKeyDialog = false },
-                title = { Text(stringResource(R.string.wallpaper_staging_set_api_key)) },
+                title = { TranslatableText(R.string.wallpaper_staging_set_api_key) },
                 text = {
                     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                        Text(
-                            text = stringResource(R.string.wallpaper_staging_api_key_desc),
+                        TranslatableText(
+                            stringResId = R.string.wallpaper_staging_api_key_desc,
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                         OutlinedTextField(
                             value = tempApiKey,
                             onValueChange = { tempApiKey = it },
-                            placeholder = { Text(stringResource(R.string.wallpaper_staging_api_key_hint)) },
+                            placeholder = { TranslatableText(R.string.wallpaper_staging_api_key_hint) },
                             singleLine = true,
                             modifier = Modifier.fillMaxWidth(),
                         )
@@ -549,12 +551,12 @@ fun WallpaperStagingScreen(
                             loadData()
                         },
                     ) {
-                        Text("Save")
+                        TranslatableText(R.string.action_save)
                     }
                 },
                 dismissButton = {
                     TextButton(onClick = { showApiKeyDialog = false }) {
-                        Text("Cancel")
+                        TranslatableText(R.string.action_cancel)
                     }
                 },
             )

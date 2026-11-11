@@ -34,6 +34,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.SettingsRepository
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
 import com.sameerasw.essentials.ui.core.cards.ConfigPickerItem
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
@@ -106,8 +107,8 @@ fun StatusGlanceCalendarOptionsBottomSheet(
                 .verticalScroll(scrollState),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            Text(
-                text = stringResource(R.string.status_glance_calendar_options_title),
+            TranslatableText(
+                stringResId = R.string.status_glance_calendar_options_title,
                 style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.padding(start = 8.dp, bottom = 4.dp),
@@ -188,8 +189,8 @@ fun StatusGlanceCalendarOptionsBottomSheet(
                 }
             }
 
-            Text(
-                text = stringResource(R.string.status_glance_calendar_select_calendars_title),
+            TranslatableText(
+                stringResId = R.string.status_glance_calendar_select_calendars_title,
                 style = MaterialTheme.typography.titleSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(start = 8.dp),
@@ -197,8 +198,8 @@ fun StatusGlanceCalendarOptionsBottomSheet(
 
             val calendars = viewModel.statusGlanceAvailableCalendars
             if (calendars.isEmpty()) {
-                Text(
-                    text = stringResource(R.string.status_glance_calendar_no_calendars),
+                TranslatableText(
+                    stringResId = R.string.status_glance_calendar_no_calendars,
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.padding(start = 8.dp),
                     color = MaterialTheme.colorScheme.onSurfaceVariant,

@@ -458,8 +458,8 @@ class AmbientGlanceHandler(
     }
 
     private fun updateMetadata() {
-        titleView?.text = trackTitle ?: "Unknown Track"
-        artistView?.text = artistName ?: "Unknown Artist"
+        titleView?.text = trackTitle ?: service.getString(R.string.music_unknown_track)
+        artistView?.text = artistName ?: service.getString(R.string.music_unknown_artist)
 
         likeStatusView?.setImageResource(if (isAlreadyLiked) R.drawable.round_favorite_24 else R.drawable.rounded_favorite_24)
 
@@ -1003,7 +1003,7 @@ class AmbientGlanceHandler(
 
         titleView =
             TextView(context).apply {
-                text = trackTitle ?: "Unknown Track"
+                text = trackTitle ?: service.getString(R.string.music_unknown_track)
                 textSize = 22f
                 typeface = googleSansFlex
                 setTextColor(Color.WHITE)
@@ -1021,7 +1021,7 @@ class AmbientGlanceHandler(
 
         artistView =
             TextView(context).apply {
-                text = artistName ?: "Unknown Artist"
+                text = artistName ?: service.getString(R.string.music_unknown_artist)
                 textSize = 15f
                 typeface = googleSansFlex
                 setTextColor(0xCCFFFFFF.toInt())

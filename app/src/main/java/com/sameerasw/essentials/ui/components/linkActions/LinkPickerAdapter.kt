@@ -119,6 +119,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.SettingsRepository
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.modifiers.BlurDirection
 import com.sameerasw.essentials.ui.modifiers.progressiveBlur
 import com.sameerasw.essentials.ui.modifiers.scrollMotionBlur
@@ -458,7 +459,7 @@ fun LinkPickerScreen(
                         .padding(start = 16.dp, end = 16.dp, top = 0.dp, bottom = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
-                val domain = currentUri.host ?: currentUri.scheme ?: "Link"
+                val domain = currentUri.host ?: currentUri.scheme ?: stringResource(R.string.link_fallback_label)
                 val hasTrackingParams = hasTrackingParameters(currentUri)
 
                 Card(
@@ -504,7 +505,7 @@ fun LinkPickerScreen(
                                                     .data(linkPreviewData?.faviconUrl)
                                                     .crossfade(true)
                                                     .build(),
-                                            contentDescription = "Website Icon",
+                                            contentDescription = stringResource(R.string.content_desc_website_icon),
                                             modifier =
                                                 Modifier
                                                     .size(24.dp)
@@ -513,7 +514,7 @@ fun LinkPickerScreen(
                                     } else {
                                         Icon(
                                             painter = painterResource(id = R.drawable.rounded_link_24),
-                                            contentDescription = "Link Icon",
+                                            contentDescription = stringResource(R.string.content_desc_link_icon),
                                             modifier = Modifier.size(22.dp),
                                             tint = MaterialTheme.colorScheme.onPrimaryContainer,
                                         )
@@ -682,8 +683,8 @@ fun LinkPickerScreen(
                                             tint = MaterialTheme.colorScheme.onSurface,
                                         )
                                         Spacer(modifier = Modifier.width(6.dp))
-                                        Text(
-                                            text = stringResource(id = action.titleRes),
+                                        TranslatableText(
+                                            stringResId = action.titleRes,
                                             style = MaterialTheme.typography.labelMedium,
                                             color = MaterialTheme.colorScheme.onSurface,
                                             maxLines = 1,
@@ -697,7 +698,7 @@ fun LinkPickerScreen(
                                         onDismissRequest = { showSettingsMenu = false },
                                     ) {
                                         SegmentedDropdownMenuItem(
-                                            text = { Text(text = stringResource(R.string.link_preview_show_preview)) },
+                                            text = { TranslatableText(stringResId = R.string.link_preview_show_preview) },
                                             onClick = {
                                                 val next = !isLinkPreviewEnabled
                                                 isLinkPreviewEnabled = next
@@ -715,7 +716,7 @@ fun LinkPickerScreen(
                                             },
                                         )
                                         SegmentedDropdownMenuItem(
-                                            text = { Text(text = stringResource(R.string.link_preview_show_images)) },
+                                            text = { TranslatableText(stringResId = R.string.link_preview_show_images) },
                                             onClick = {
                                                 if (isLinkPreviewEnabled) {
                                                     val next = !isLinkPreviewImagesEnabled
@@ -833,8 +834,8 @@ fun LinkPickerScreen(
                                 .padding(top = 0.dp, bottom = 0.dp, start = 16.dp, end = 16.dp),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
-                        Text(
-                            text = stringResource(R.string.label_share_with),
+                        TranslatableText(
+                            stringResId = R.string.label_share_with,
                             style = MaterialTheme.typography.titleMedium,
                             color = MaterialTheme.colorScheme.onSurface,
                         )
@@ -923,7 +924,7 @@ fun LinkPickerScreen(
                                 .data(linkPreviewData?.imageUrl)
                                 .crossfade(true)
                                 .build(),
-                        contentDescription = "Link Preview",
+                        contentDescription = stringResource(R.string.content_desc_link_preview),
                         contentScale = ContentScale.Crop,
                         modifier = Modifier.fillMaxSize(),
                         onSuccess = { isPreviewImageLoaded = true },
@@ -1022,8 +1023,8 @@ fun LinkPickerScreen(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Text(
-                        text = "Edit Link",
+                    TranslatableText(
+                        stringResId = R.string.link_edit_title,
                         style = MaterialTheme.typography.titleLarge,
                         color = MaterialTheme.colorScheme.onSurface,
                     )
@@ -1036,7 +1037,7 @@ fun LinkPickerScreen(
                                 Toast
                                     .makeText(
                                         context,
-                                        "Invalid Link: Contains spaces",
+                                        context.getString(R.string.link_invalid_spaces),
                                         Toast.LENGTH_SHORT,
                                     ).show()
                                 return@FilledIconButton
@@ -1053,7 +1054,7 @@ fun LinkPickerScreen(
                                         Toast
                                             .makeText(
                                                 context,
-                                                "Invalid Link: Missing scheme",
+                                                context.getString(R.string.link_invalid_scheme),
                                                 Toast.LENGTH_SHORT,
                                             ).show()
                                     } else {
@@ -1062,7 +1063,7 @@ fun LinkPickerScreen(
                                     }
                                 } catch (_: Exception) {
                                     Toast
-                                        .makeText(context, "Invalid URI", Toast.LENGTH_SHORT)
+                                        .makeText(context, context.getString(R.string.link_invalid_uri), Toast.LENGTH_SHORT)
                                         .show()
                                 }
                             }
@@ -1070,7 +1071,7 @@ fun LinkPickerScreen(
                     ) {
                         Icon(
                             painter = painterResource(id = R.drawable.rounded_save_24),
-                            contentDescription = "Save changes",
+                            contentDescription = stringResource(R.string.action_save_changes),
                             modifier = Modifier.size(24.dp),
                             tint = MaterialTheme.colorScheme.onPrimary,
                         )
@@ -1084,7 +1085,7 @@ fun LinkPickerScreen(
                         Modifier
                             .fillMaxWidth()
                             .focusRequester(focusRequester),
-                    label = { Text("URL") },
+                    label = { TranslatableText(R.string.label_url) },
                     maxLines = 5,
                     shape = RoundedCornerShape(12.dp),
                 )

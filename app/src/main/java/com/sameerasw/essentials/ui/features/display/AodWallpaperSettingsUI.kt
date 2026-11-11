@@ -37,6 +37,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.SettingsRepository
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
 import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
 import com.sameerasw.essentials.ui.core.cards.ConfigPickerItem
@@ -168,7 +169,7 @@ fun AodWallpaperSettingsUI(
                         onValueChange = { viewModel.setAodWallpaperBlur(it) },
                         valueRange = 0f..25f,
                         increment = 1f,
-                        valueFormatter = { if (it == 0f) "Off" else "${it.toInt()}" },
+                        valueFormatter = { if (it == 0f) context.getString(R.string.off) else "${it.toInt()}" },
                         iconRes = R.drawable.rounded_blur_on_24,
                     )
 
@@ -178,7 +179,7 @@ fun AodWallpaperSettingsUI(
                         onValueChange = { viewModel.setAodWallpaperVignette(it) },
                         valueRange = 0f..100f,
                         increment = 5f,
-                        valueFormatter = { if (it == 0f) "Off" else "${it.toInt()}%" },
+                        valueFormatter = { if (it == 0f) context.getString(R.string.off) else "${it.toInt()}%" },
                         iconRes = R.drawable.rounded_grain_24,
                     )
 
@@ -188,7 +189,7 @@ fun AodWallpaperSettingsUI(
                         onValueChange = { viewModel.setAodWallpaperBlackThreshold(it) },
                         valueRange = 0f..50f,
                         increment = 1f,
-                        valueFormatter = { if (it == 0f) "Off" else "${it.toInt()}" },
+                        valueFormatter = { if (it == 0f) context.getString(R.string.off) else "${it.toInt()}" },
                         iconRes = R.drawable.rounded_invert_colors_24,
                     )
 
@@ -252,8 +253,8 @@ fun AodWallpaperSettingsUI(
         val isKeepOnMedia = viewModel.isAodWallpaperKeepOnMedia.value
         val isTimeoutNever = viewModel.aodWallpaperTimeout.value == "never" || viewModel.aodWallpaperTimeout.value == "0"
 
-        Text(
-            text = stringResource(R.string.feat_aod_wallpaper_media_section_title),
+        TranslatableText(
+            stringResId = R.string.feat_aod_wallpaper_media_section_title,
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(start = 16.dp, top = 8.dp),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -340,8 +341,8 @@ fun AodWallpaperSettingsUI(
 
         val isExtendedMedia = viewModel.isAodWallpaperExtendedMedia.value
 
-        Text(
-            text = stringResource(R.string.feat_aod_wallpaper_extended_section_title),
+        TranslatableText(
+            stringResId = R.string.feat_aod_wallpaper_extended_section_title,
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(start = 16.dp, top = 8.dp),
             color = MaterialTheme.colorScheme.onSurfaceVariant,

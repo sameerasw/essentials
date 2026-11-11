@@ -17,9 +17,9 @@ import android.service.quicksettings.Tile
 import com.sameerasw.essentials.R
 
 class TapToWakeTileService : BaseTileService() {
-    override fun getTileLabel(): String = "Tap to Wake"
+    override fun getTileLabel(): String = getString(R.string.tile_tap_to_wake)
 
-    override fun getTileSubtitle(): String = if (isTapToWakeEnabled()) "On" else "Off"
+    override fun getTileSubtitle(): String = getString(if (isTapToWakeEnabled()) R.string.on else R.string.off)
 
     override fun hasFeaturePermission(): Boolean =
         checkCallingOrSelfPermission(Manifest.permission.WRITE_SECURE_SETTINGS) == PackageManager.PERMISSION_GRANTED

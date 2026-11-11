@@ -18,7 +18,7 @@ enum class DIYTabs(
     val iconRes: Int,
 ) {
     ESSENTIALS(
-        R.string.tab_essentials,
+        R.string.app_name,
         if (com.sameerasw.essentials.BuildConfig.DEBUG) "=^._.^= ∫ Debug" else "=^..^=",
         R.drawable.ic_stat_name,
     ),

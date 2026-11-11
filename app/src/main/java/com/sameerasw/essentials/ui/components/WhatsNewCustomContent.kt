@@ -44,6 +44,7 @@ import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.island.remote.OvercastLink
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.theme.GoogleSansFlexRounded
@@ -144,8 +145,8 @@ fun WhatsNewCustomContent(
             )
         }
 
-        Text(
-            text = stringResource(R.string.whats_new_previous_updates),
+        TranslatableText(
+            stringResId = R.string.whats_new_previous_updates,
             style = MaterialTheme.typography.titleSmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(start = 8.dp, top = 8.dp),
@@ -164,8 +165,8 @@ fun WhatsNewCustomContent(
             onToggle = { toggle(1) },
             icon = { SectionIcon(R.drawable.rounded_watch_24) },
         ) {
-            Text(
-                text = stringResource(R.string.whats_new_watchface_desc),
+            TranslatableText(
+                stringResId = R.string.whats_new_watchface_desc,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )

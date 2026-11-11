@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials.ui.activities
 
+import androidx.compose.ui.res.stringResource
 import android.content.Intent
 import android.content.res.Configuration
 import android.hardware.Sensor
@@ -622,7 +623,7 @@ private fun CompassScreen(
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.rounded_map_24),
-                contentDescription = "Map Settings",
+                contentDescription = stringResource(R.string.travel_compass_map_settings),
                 tint = primaryColor,
             )
         }

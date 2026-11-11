@@ -28,7 +28,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -50,6 +49,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.model.AppIcon
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.translation.TranslationManager
 import com.sameerasw.essentials.translation.ui.TranslationBottomSheet
 import com.sameerasw.essentials.translation.ui.TranslationMenuItems
@@ -115,13 +115,13 @@ fun AppIconPicker(
             content = {
                 Box {
                     Column {
-                        Text(
-                            text = stringResource(R.string.setting_app_icon_title),
+                        TranslatableText(
+                            stringResId = R.string.setting_app_icon_title,
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurface,
                         )
-                        Text(
-                            text = stringResource(R.string.setting_app_icon_desc),
+                        TranslatableText(
+                            stringResId = R.string.setting_app_icon_desc,
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
