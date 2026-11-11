@@ -37,6 +37,7 @@ fun EssentialsBottomSheet(
     containerColor: Color = MaterialTheme.colorScheme.surfaceContainerHigh,
     scrimColor: Color = BottomSheetDefaults.ScrimColor,
     dragHandle: @Composable (() -> Unit)? = { BottomSheetDefaults.DragHandle() },
+    edgeToEdge: Boolean = false,
     content: @Composable ColumnScope.() -> Unit,
 ) {
     ModalBottomSheet(
@@ -55,7 +56,9 @@ fun EssentialsBottomSheet(
                     .imePadding(),
         ) {
             content()
-            Spacer(modifier = Modifier.windowInsetsBottomHeight(WindowInsets.navigationBars))
+            if (!edgeToEdge) {
+                Spacer(modifier = Modifier.windowInsetsBottomHeight(WindowInsets.navigationBars))
+            }
         }
     }
 }

@@ -55,6 +55,20 @@ body:
     validations:
       required: true
   - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      description: Which part of the app is affected? (optional)
+      options:
+        - System
+        - Interface
+        - Interaction
+        - Display
+        - Connectivity
+        - Protection
+        - Tools
+        - Other
+  - type: dropdown
     id: android-version
     attributes:
       label: Android Version

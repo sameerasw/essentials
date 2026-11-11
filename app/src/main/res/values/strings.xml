@@ -2530,6 +2530,16 @@
     <!-- Bug Report Enhancement -->
     <string name="bug_report_feedback_placeholder">Describe the issue or provide feedback…</string>
     <string name="bug_report_contact_email_label">Contact email</string>
+    <string name="bug_report_issue_details">Issue details</string>
+    <string name="bug_report_field_severity">Severity</string>
+    <string name="bug_report_field_area">Area (optional)</string>
+    <string name="bug_report_field_android_version">Android version</string>
+    <string name="bug_report_field_oem">Device (OEM)</string>
+    <string name="bug_report_field_device">Device model</string>
+    <string name="bug_report_field_app_version">App version</string>
+    <string name="bug_report_github_missing_fields">Describe the issue and pick a severity first</string>
+    <string name="bug_report_github_created">GitHub issue created</string>
+    <string name="bug_report_github_failed">Couldn\'t create the issue, opening GitHub instead</string>
     <string name="action_send_feedback">Send Feedback</string>
     <string name="msg_feedback_sent">Feedback sent successfully! Thanks for helping us improve the app.</string>
     <string name="label_alternatively">Alternatively</string>
