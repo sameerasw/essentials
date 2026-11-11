@@ -350,6 +350,7 @@ class IslandCoordinator(
     private fun onOutsideTouch() {
         if (!running || !settings.isIslandDismissOnOutsideEnabled()) return
         if (textInputActive) return
+        if (settings.getIslandPreviewStage() == SettingsRepository.ISLAND_PREVIEW_STAGE_EXPANDED) return
         if (controller.state.value.stage != IslandStage.Expanded) return
         if (SystemClock.uptimeMillis() - autoExpandedAt < OUTSIDE_DISMISS_GRACE_MS) return
         mainHandler.post { controller.collapse() }
@@ -811,6 +812,7 @@ class IslandCoordinator(
             neuralExpressiveAlways = settings.isIslandNeuralExpressiveAlwaysEnabled(),
             glowIntensity = if (settings.isIslandShowGlowEnabled()) settings.getIslandGlowIntensity().coerceIn(0f, 2f) else 0f,
             transparency = transparent,
+            transparencyIntensity = settings.getIslandTransparencyIntensity().coerceIn(0.25f, 2f),
             progressiveBlur = transparent && !powerSaving && settings.isIslandProgressiveBlurEnabled(),
             maxExpandedHeight = if (isLandscape) ((geo.screenHeight - geo.surfaceTop) / density - 12f).dp else Dp.Unspecified,
             outlineColor = if (settings.isIslandBorderOutlineEnabled()) {
@@ -1118,6 +1120,7 @@ class IslandCoordinator(
             SettingsRepository.KEY_ISLAND_NEURAL_EXPRESSIVE,
             SettingsRepository.KEY_ISLAND_NEURAL_EXPRESSIVE_ALWAYS,
             SettingsRepository.KEY_ISLAND_TRANSPARENCY,
+            SettingsRepository.KEY_ISLAND_TRANSPARENCY_INTENSITY,
             SettingsRepository.KEY_ISLAND_PROGRESSIVE_BLUR,
             SettingsRepository.KEY_ISLAND_SHOW_GLOW,
             SettingsRepository.KEY_ISLAND_GLOW_INTENSITY,

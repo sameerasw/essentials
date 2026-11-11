@@ -674,6 +674,7 @@ class SettingsRepository(
         const val KEY_ISLAND_NEURAL_EXPRESSIVE = "island_neural_expressive"
         const val KEY_ISLAND_NEURAL_EXPRESSIVE_ALWAYS = "island_neural_expressive_always"
         const val KEY_ISLAND_TRANSPARENCY = "island_transparency"
+        const val KEY_ISLAND_TRANSPARENCY_INTENSITY = "island_transparency_intensity"
         const val KEY_ISLAND_PROGRESSIVE_BLUR = "island_progressive_blur"
         const val KEY_ISLAND_STATUSBAR_AWARE_WIDTH = "island_statusbar_aware_width"
         const val KEY_ISLAND_STATUSBAR_AWARE_WIDTH_RESET_V1 = "island_statusbar_aware_width_reset_v1"
@@ -4493,6 +4494,10 @@ class SettingsRepository(
     fun setIslandProgressiveBlurEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_PROGRESSIVE_BLUR, enabled)
 
     fun setIslandTransparencyEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_TRANSPARENCY, enabled)
+
+    fun getIslandTransparencyIntensity(): Float = getFloat(KEY_ISLAND_TRANSPARENCY_INTENSITY, 1f)
+
+    fun setIslandTransparencyIntensity(value: Float) = putFloat(KEY_ISLAND_TRANSPARENCY_INTENSITY, value)
 
     fun isIslandStatusBarAwareWidthEnabled(): Boolean = getDisplayBoolean(KEY_ISLAND_STATUSBAR_AWARE_WIDTH, false)
 

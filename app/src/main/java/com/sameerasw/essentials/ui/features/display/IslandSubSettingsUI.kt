@@ -41,6 +41,7 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import kotlin.math.roundToInt
 import com.sameerasw.essentials.FeatureSettingsActivity
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.translation.TranslatableText
@@ -580,6 +581,23 @@ fun IslandVisualsSettingsUI(
                 },
                 modifier = Modifier.highlight(highlightSetting == "island_transparency"),
             )
+
+            if (viewModel.isIslandTransparency.value) {
+                ConfigSliderItem(
+                    title = stringResource(R.string.island_transparency_intensity_title),
+                    value = viewModel.islandTransparencyIntensity.floatValue,
+                    onValueChange = {
+                        HapticUtil.performUIHaptic(view)
+                        viewModel.setIslandTransparencyIntensity(it)
+                    },
+                    valueRange = 0.25f..2f,
+                    increment = 0.05f,
+                    iconRes = R.drawable.rounded_blur_on_24,
+                    valueFormatter = { "%d%%".format((it * 100).roundToInt()) },
+                    allowDecimals = true,
+                    modifier = Modifier.highlight(highlightSetting == "island_transparency_intensity"),
+                )
+            }
 
             IconToggleItem(
                 iconRes = R.drawable.rounded_blur_on_24,
