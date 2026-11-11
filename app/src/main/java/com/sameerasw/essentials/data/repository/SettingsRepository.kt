@@ -675,6 +675,8 @@ class SettingsRepository(
         const val KEY_ISLAND_NEURAL_EXPRESSIVE_ALWAYS = "island_neural_expressive_always"
         const val KEY_ISLAND_TRANSPARENCY = "island_transparency"
         const val KEY_ISLAND_TRANSPARENCY_INTENSITY = "island_transparency_intensity"
+        const val KEY_ISLAND_BACKDROP_BLUR = "island_backdrop_blur"
+        const val KEY_ISLAND_BACKDROP_BLUR_RADIUS = "island_backdrop_blur_radius"
         const val KEY_ISLAND_PROGRESSIVE_BLUR = "island_progressive_blur"
         const val KEY_ISLAND_STATUSBAR_AWARE_WIDTH = "island_statusbar_aware_width"
         const val KEY_ISLAND_STATUSBAR_AWARE_WIDTH_RESET_V1 = "island_statusbar_aware_width_reset_v1"
@@ -4494,6 +4496,14 @@ class SettingsRepository(
     fun setIslandProgressiveBlurEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_PROGRESSIVE_BLUR, enabled)
 
     fun setIslandTransparencyEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_TRANSPARENCY, enabled)
+
+    fun isIslandBackdropBlurEnabled(): Boolean = getBoolean(KEY_ISLAND_BACKDROP_BLUR, false)
+
+    fun setIslandBackdropBlurEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_BACKDROP_BLUR, enabled)
+
+    fun getIslandBackdropBlurRadius(): Float = getFloat(KEY_ISLAND_BACKDROP_BLUR_RADIUS, 40f)
+
+    fun setIslandBackdropBlurRadius(value: Float) = putFloat(KEY_ISLAND_BACKDROP_BLUR_RADIUS, value)
 
     fun getIslandTransparencyIntensity(): Float = getFloat(KEY_ISLAND_TRANSPARENCY_INTENSITY, 1f)
 

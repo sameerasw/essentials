@@ -919,6 +919,9 @@ private fun IslandRootContent(
                     compositingStrategy = CompositingStrategy.ModulateAlpha
                 },
             ) {
+                if (spec.backdropBlur) {
+                    IslandBackdropBlur({ visualFrame() }, with(density) { spec.backdropBlurRadius.toPx() }, Modifier.matchParentSize())
+                }
                 MediaSurface(glow, spec.expandedCorner, { visualFrame().pulse }, geometry, camera, Modifier.matchParentSize(), transparent = spec.transparency, transparencyIntensity = spec.transparencyIntensity, progressiveBlur = spec.progressiveBlur, glowIntensity = spec.glowIntensity)
                 if (spec.neuralExpressive && (spec.neuralExpressiveAlways || ownerItem?.expandedParticles == true)) {
                     GeminiParticlePill(

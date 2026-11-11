@@ -246,6 +246,8 @@ class MainViewModel : ViewModel() {
     val isIslandNeuralExpressiveAlways = mutableStateOf(false)
     val isIslandTransparency = mutableStateOf(true)
     val islandTransparencyIntensity = mutableFloatStateOf(1f)
+    val isIslandBackdropBlur = mutableStateOf(false)
+    val islandBackdropBlurRadius = mutableFloatStateOf(40f)
     val isIslandProgressiveBlur = mutableStateOf(true)
     val isIslandStatusBarAwareWidth = mutableStateOf(false)
     val isIslandStatusBarIgnoreNotifications = mutableStateOf(true)
@@ -2559,6 +2561,8 @@ class MainViewModel : ViewModel() {
         isIslandNeuralExpressiveAlways.value = settingsRepository.isIslandNeuralExpressiveAlwaysEnabled()
         isIslandTransparency.value = settingsRepository.isIslandTransparencyEnabled()
         islandTransparencyIntensity.floatValue = settingsRepository.getIslandTransparencyIntensity()
+        isIslandBackdropBlur.value = settingsRepository.isIslandBackdropBlurEnabled()
+        islandBackdropBlurRadius.floatValue = settingsRepository.getIslandBackdropBlurRadius()
         isIslandProgressiveBlur.value = settingsRepository.isIslandProgressiveBlurEnabled()
         isIslandStatusBarAwareWidth.value = settingsRepository.isIslandStatusBarAwareWidthEnabled()
         isIslandStatusBarIgnoreNotifications.value = settingsRepository.isIslandStatusBarIgnoreNotificationsEnabled()
@@ -6065,6 +6069,16 @@ class MainViewModel : ViewModel() {
     fun setIslandProgressiveBlur(enabled: Boolean) {
         isIslandProgressiveBlur.value = enabled
         settingsRepository.setIslandProgressiveBlurEnabled(enabled)
+    }
+
+    fun setIslandBackdropBlurRadius(value: Float) {
+        islandBackdropBlurRadius.floatValue = value
+        settingsRepository.setIslandBackdropBlurRadius(value)
+    }
+
+    fun setIslandBackdropBlur(enabled: Boolean) {
+        isIslandBackdropBlur.value = enabled
+        settingsRepository.setIslandBackdropBlurEnabled(enabled)
     }
 
     fun setIslandTransparencyIntensity(value: Float) {

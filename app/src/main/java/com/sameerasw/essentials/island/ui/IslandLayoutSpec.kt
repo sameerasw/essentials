@@ -34,6 +34,8 @@ data class IslandLayoutSpec(
     val glowIntensity: Float = 1f,
     val transparency: Boolean = true,
     val transparencyIntensity: Float = 1f,
+    val backdropBlur: Boolean = false,
+    val backdropBlurRadius: Dp = 40.dp,
     val progressiveBlur: Boolean = true,
     val landscape: Boolean = false,
     val cameraAnchor: CameraAnchor = CameraAnchor.Center,
