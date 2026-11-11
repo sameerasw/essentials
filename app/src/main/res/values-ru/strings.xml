@@ -1730,8 +1730,8 @@
     <string name="island_catch_up_timeout_title">Время удержания </string>
     <string name="island_show_timers_title">Таймеры и секундомеры </string>
     <string name="feat_conscious_gate_title">Осознанная пауза</string>
-    <string name="island_show_glow_title">Expanded accent glow</string>
-    <string name="island_glow_intensity_title">Glow intensity</string>
+    <string name="island_show_glow_title">Показывать акцентное свечение</string>
+    <string name="island_glow_intensity_title">Интенсивность свечения </string>
     <string name="island_glow_size_title">Glow size</string>
     <string name="island_glow_rim_title">Rim light</string>
     <string name="island_expanded_dark_theme_warning">Expanded dark theme is on. If the island text or colors look wrong, filter Essentials out of it in Display settings.</string>
@@ -1778,7 +1778,7 @@
     <string name="island_show_network_title">Сетевая активность</string>
     <string name="island_section_placement">Расположение</string>
     <string name="island_section_visuals">Оформление</string>
-    <string name="island_section_duration">Timing</string>
+    <string name="island_section_duration">Длительность</string>
     <string name="island_section_behavior">Поведение</string>
     <string name="island_section_interactions">Interactions</string>
     <string name="island_section_gestures">Gestures</string>
@@ -2028,7 +2028,7 @@
     <string name="battery_separate_channels_title">Отдельные каналы батареи </string>
     <string name="battery_separate_channels_desc">Отдельные LR-каналы </string>
     <string name="batteries_notification_title">Уведомление о батареях </string>
-    <string name="island_navigation_peek_after_expand_title">Keep showing in peek</string>
+    <string name="island_navigation_peek_after_expand_title">Линия заглядывает после расширения </string>
     <string name="island_navigation_expand_title">Расширьте перед поворотом </string>
     <string name="island_navigation_on_new_title">Новая инструкция </string>
     <string name="island_notif_hub_title">Центр уведомлений </string>
@@ -2121,15 +2121,15 @@
     <string name="button_remap_power_camera_flip_title">Перевернуть камеру при двойном нажатии</string>
     <string name="island_statusbar_aware_width_info">This may not work on all devices. It works best on Pixels and devices with a status bar close to AOSP.</string>
     <string name="island_statusbar_aware_width_info_tip">Even on those devices, try reducing the number of visible status bar icons to give the island more space.</string>
-    <string name="island_dismiss_direction_title">Dismiss swipe</string>
+    <string name="island_dismiss_direction_title">Отставка</string>
     <string name="island_dismiss_direction_horizontal">Горизонтально</string>
     <string name="island_dismiss_direction_down">Вниз</string>
     <string name="island_media_bubble_title">Show as a bubble</string>
     <string name="island_media_bubble_wide_title">Wider pill</string>
     <string name="island_media_bubble_fill_art_title">Fill album art</string>
     <string name="island_transparency_title">Прозрачность острова </string>
-    <string name="island_transparency_intensity_title">Transparency intensity</string>
-    <string name="island_backdrop_blur_title">Backdrop blur</string>
+    <string name="island_transparency_intensity_title">Интенсивность прозрачности </string>
+    <string name="island_backdrop_blur_title">Размытие сзади</string>
     <string name="island_backdrop_blur_unavailable_os">Backdrop blur needs Android 12 or newer. This device runs an older version, so the system can\'t blur what is behind the island.</string>
     <string name="island_backdrop_blur_unavailable_disabled">Your system currently has window blur turned off. This usually happens when Battery Saver is on, when \"Disable window blurs\" is enabled in Developer options, or when the device doesn\'t support it. This option unlocks automatically once window blur is back on.</string>
     <string name="island_backdrop_blur_unavailable_api">This device\'s system doesn\'t expose the blur feature the island needs for backdrop blur, so it can\'t be enabled here.</string>
@@ -2145,4 +2145,12 @@
     <string name="app_icon_gta">6</string>
     <string name="island_notif_lock_hidden_title">Hidden</string>
     <string name="text_snippets_how_to_use">1. Turn on Text Snippets and grant the Accessibility permission so shortcuts can expand in any app.\n\n2. Pick a Trigger Prefix: ; : @@ or a space.\n\n3. Tap the + button to add a snippet. Enter a keyword without spaces and the text it should expand into.\n\n4. Type the prefix followed by the keyword, for example ;brb, to expand it. With the space prefix, type the keyword and press space.\n\nTips: keywords only expand at the start of a word, so URLs and times are left alone. Password fields are always ignored. Some apps do not allow text replacement and will not expand snippets.</string>
+    <string name="island_notif_queue_style_stack">Стопка</string>
+    <string name="island_notif_queue_style_overlap">Внахлест</string>
+    <string name="island_notif_queue_inline_title">Очередь внутри острова </string>
+    <string name="island_notif_queue_inline_desc">Покажите очередь внутри острова </string>
+    <string name="island_navigation_peek_after_expand_desc">Когда выключено остров возвращается в компактный режим</string>
+    <string name="island_secondary_style_title">Стиль вторичных предметов </string>
+    <string name="duo_section_what_to_show">Что показать </string>
+    <string name="island_progressive_blur_title">Прогрессивная анимация размытия </string>
 </resources>
