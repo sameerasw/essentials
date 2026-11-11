@@ -151,11 +151,11 @@ fun SnippetsSettingsUI(
     // Set Prefix Bottom Sheet using EssentialsBottomSheet (Options Only)
     if (showPrefixSheet) {
         val options = listOf(
-            Triple(";", stringResource(R.string.snippets_prefix_semicolon), ";brb"),
-            Triple(":", stringResource(R.string.snippets_prefix_colon), ":brb"),
+            Triple(";", stringResource(R.string.snippets_prefix_semicolon), ";shrug"),
+            Triple(":", stringResource(R.string.snippets_prefix_colon), ":shrug"),
             Triple("@@", stringResource(R.string.snippets_prefix_at), "@@email"),
-            Triple("//", stringResource(R.string.snippets_prefix_slash), "//addr"),
-            Triple("", stringResource(R.string.snippets_prefix_space), "brb ␣"),
+            Triple("//", stringResource(R.string.snippets_prefix_slash), "//app"),
+            Triple("", stringResource(R.string.snippets_prefix_space), "shrug ␣"),
         )
 
         EssentialsBottomSheet(onDismissRequest = { showPrefixSheet = false }) {
