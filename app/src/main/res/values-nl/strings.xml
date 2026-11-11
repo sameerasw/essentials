@@ -1569,6 +1569,7 @@
     <string name="feat_flashlight_desc">Brightness, fading and safety controls</string>
     <string name="qs_secure_sensitive_tiles_title">Beveilig gevoelige tegels</string>
     <string name="qs_secure_sensitive_tiles_desc">Vraag om ontgrendeling voor het gebruik van gevoelige tegels wanneer het apparaat is vergrendeld</string>
+    <string name="watchface_clock_24h_title">24-hour clock</string>
     <string name="watchface_clock_dual_tone_title">Duo tinen</string>
     <string name="watch_notif_sync_choose_apps">Selecteer apps</string>
     <string name="watch_notif_sync_choose_apps_desc">Alleen de gekozen apps zullen worden gesynchroniseerd met het horloge</string>

@@ -112,6 +112,7 @@ fun CompactTemplate(
     onCellTap: (String) -> Unit,
     onCellLongPress: (String) -> Unit,
     sideBubble: () -> Float = { 0f },
+    bubbleSide: () -> Float = { 0f },
     bubbleExtent: () -> Int = { 0 },
     onSlack: (Int) -> Unit = {},
     onBaseWidth: (Int) -> Unit = {},
@@ -270,7 +271,11 @@ fun CompactTemplate(
         val bubbleNow = if (state.sideBubble != null) bubbleExtent().coerceAtLeast(0) else 0
         com.sameerasw.essentials.island.state.CompactCellWidths.bubbleExtent =
             if (state.sideBubble != null) maxOf(bubbleNow, com.sameerasw.essentials.island.state.CompactCellWidths.bubbleExtent) else 0
-        val bodyLimitLeft = if (limitLeft == Int.MAX_VALUE) limitLeft else (limitLeft - bubbleNow).coerceAtLeast(0)
+        val side = if (spec.growDirection == 0) bubbleSide().coerceIn(0f, 1f) else 0f
+        val bubbleOnRight = side >= 0.5f
+        fun bodyLimit(limit: Int) = if (limit == Int.MAX_VALUE) limit else (limit - bubbleNow).coerceAtLeast(0)
+        val bodyLimitLeft = if (bubbleOnRight) limitLeft else bodyLimit(limitLeft)
+        val bodyLimitRight = if (bubbleOnRight) bodyLimit(limitRight) else limitRight
         val measuredSlots = arrayOfNulls<Placeable>(measurables.size)
         fun measureBudgeted(order: List<Int>, limit: Int) {
             var budget = if (limit == Int.MAX_VALUE) Int.MAX_VALUE else (limit - reserve).coerceAtLeast(0)
@@ -288,7 +293,7 @@ fun CompactTemplate(
             spec.growDirection < 0 -> measureBudgeted(all.reversed(), limitLeft)
             else -> {
                 measureBudgeted((beforeCount - 1 downTo 0).toList(), bodyLimitLeft)
-                measureBudgeted((beforeCount until measurables.size).toList(), limitRight)
+                measureBudgeted((beforeCount until measurables.size).toList(), bodyLimitRight)
             }
         }
         val placeables = measuredSlots.map { it!! }
@@ -347,13 +352,15 @@ fun CompactTemplate(
         val t = if (hasCells) sideBubble().coerceIn(0f, 1f) else 0f
         val mirrored = maxOf(needLeft, needRight)
         val extent = if (spec.balanceCompact) bubbleExtent().coerceAtLeast(0) else 0
-        val balancedLeft = if (spec.balanceCompact) maxOf(needLeft, needRight - extent) else needLeft
-        val balancedRight = if (spec.balanceCompact) balancedLeft + extent else needRight
+        val leftNear = maxOf(needLeft, needRight - extent)
+        val rightNear = maxOf(needRight, needLeft - extent)
+        val balancedLeft = if (spec.balanceCompact) leftNear + (rightNear + extent - leftNear) * side else needLeft.toFloat()
+        val balancedRight = if (spec.balanceCompact) leftNear + extent + (rightNear - leftNear - extent) * side else needRight.toFloat()
         onSlack(if (spec.balanceCompact) extent else needRight - needLeft)
         val leftSide = (mirrored + (balancedLeft - mirrored) * t).roundToInt().coerceAtMost(bodyLimitLeft)
-        val rightSide = (mirrored + (balancedRight - mirrored) * t).roundToInt().coerceAtMost(limitRight)
-        onBaseWidth(minOf(mirrored, bodyLimitLeft, limitRight) * 2 + cameraSlot)
-        onNeedLeft(needLeft)
+        val rightSide = (mirrored + (balancedRight - mirrored) * t).roundToInt().coerceAtMost(bodyLimitRight)
+        onBaseWidth(minOf(mirrored, bodyLimitLeft, bodyLimitRight) * 2 + cameraSlot)
+        onNeedLeft(if (bubbleOnRight) needRight else needLeft)
         val width = leftSide + rightSide + cameraSlot
         layout(width, height) {
             var x = spacing + leftInset

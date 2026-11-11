@@ -2530,6 +2530,17 @@
     <!-- Bug Report Enhancement -->
     <string name="bug_report_feedback_placeholder">Describe the issue or provide feedback…</string>
     <string name="bug_report_contact_email_label">Contact email</string>
+    <string name="bug_report_issue_details">Issue details</string>
+    <string name="bug_report_field_severity">Severity</string>
+    <string name="bug_report_field_area">Area (optional)</string>
+    <string name="bug_report_source_feature">Feature: %1$s</string>
+    <string name="bug_report_field_android_version">Android version</string>
+    <string name="bug_report_field_oem">Device (OEM)</string>
+    <string name="bug_report_field_device">Device model</string>
+    <string name="bug_report_field_app_version">App version</string>
+    <string name="bug_report_github_missing_fields">Describe the issue and pick a severity first</string>
+    <string name="bug_report_github_created">GitHub issue created</string>
+    <string name="bug_report_github_failed">Couldn\'t create the issue, opening GitHub instead</string>
     <string name="action_send_feedback">Send Feedback</string>
     <string name="msg_feedback_sent">Feedback sent successfully! Thanks for helping us improve the app.</string>
     <string name="label_alternatively">Alternatively</string>
@@ -2916,6 +2927,7 @@
     <string name="watchface_show_glow_desc">Dynamic top accent gradient approaching events and travel</string>
     <string name="watchface_category_clock">Clock</string>
     <string name="watchface_clock_font_size">Font size</string>
+    <string name="watchface_clock_24h_title">24-hour clock</string>
     <string name="watchface_clock_dual_tone_title">Dual tone</string>
     <string name="watchface_clock_dual_tone_desc">Hours in white, minutes in accent color</string>
     <string name="watchface_clock_outline_title">Outline only</string>
@@ -3450,6 +3462,7 @@
     <string name="island_live_updates_count_title">Live updates count</string>
     <string name="island_live_updates_expanded_title">Expanded live update</string>
     <string name="island_secondary_bubbles_count_title">Secondary bubbles count</string>
+    <string name="island_secondary_bubble_side_title">Secondary bubble placement</string>
     <string name="island_progress_open">Open</string>
     <string name="island_travel_pause">Pause</string>
     <string name="island_travel_resume">Resume</string>

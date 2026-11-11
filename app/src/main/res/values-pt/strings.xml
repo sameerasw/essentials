@@ -1576,6 +1576,7 @@
     <string name="island_live_updates_count_title">Live updates count</string>
     <string name="island_live_updates_expanded_title">Expanded live update</string>
     <string name="island_secondary_bubbles_count_title">Secondary bubbles count</string>
+    <string name="island_secondary_bubble_side_title">Secondary bubble placement</string>
     <string name="button_remap_pause_on_volume_dialog_title">Desativa remapeamento de tecla temporáriamente quando a caixa de diálogo do volume é aberta</string>
     <string name="screen_locked_disable_notification_interactions_title">desativar interações de notificações </string>
     <string name="screen_locked_disable_notification_interactions_desc">Impeça que a barra de notificações e as Configurações Rápidas sejam exibidas enquanto o dispositivo estiver bloqueado.</string>
@@ -1731,6 +1732,7 @@
     <string name="watch_complications_title">compilações </string>
     <string name="watch_esim_install_title">Instalar eSIM</string>
     <string name="watch_esim_install_desc">Mesmo em regiões sem suporte</string>
+    <string name="watchface_clock_24h_title">24-hour clock</string>
     <string name="watchface_clock_dual_tone_title">bicolor</string>
     <string name="watchface_clock_dual_tone_desc">Horas em branco, minutos em cor de destaque</string>
     <string name="watchface_clock_outline_title">Apenas o esboço</string>

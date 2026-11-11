@@ -1710,6 +1710,7 @@
     <string name="watchface_glance_complications_desc">Выберите, что показывать</string>
     <string name="watchface_show_glow_title">Показывать свечение</string>
     <string name="watchface_show_glow_desc">Динамический градиент акцентного цвета сверху при приближении событий и поездок</string>
+    <string name="watchface_clock_24h_title">24-hour clock</string>
     <string name="watchface_clock_dual_tone_title">Двойной тон</string>
     <string name="watchface_clock_dual_tone_desc">Часы белым, минуты акцентным цветом</string>
     <string name="pocket_mode_use_light_desc">Используйте уровень освещенности в дополнение к близости для повышения точности</string>
@@ -1723,6 +1724,7 @@
     <string name="island_live_updates_count_title">Live updates count</string>
     <string name="island_live_updates_expanded_title">Expanded live update</string>
     <string name="island_secondary_bubbles_count_title">Считать вторые пузыри</string>
+    <string name="island_secondary_bubble_side_title">Secondary bubble placement</string>
     <string name="island_catch_up_title">Удержание</string>
     <string name="island_catch_up_desc">Держать последнее уведомление в острове дольше</string>
     <string name="island_catch_up_timeout_title">Время удержания </string>

@@ -1,5 +1,7 @@
 package com.sameerasw.essentials.island.ui
 
+import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.animation.animateColorAsState
 import com.sameerasw.essentials.island.ui.components.islandAccent
 
@@ -291,6 +293,9 @@ fun IslandStackOverlap(
     overflow: QueueOverflow = QueueOverflow.Number,
     spread: () -> Float = { 1f },
     gatherToEnd: Boolean = true,
+    side: (() -> Float)? = null,
+    sideTarget: Boolean = false,
+    travel: () -> Float = { 0f },
 ) {
     val slots = overlapSlots(icons, maxIcons)
     val shown = queueVisible(icons, slots, overflow)
@@ -337,8 +342,25 @@ fun IslandStackOverlap(
                         modifier = Modifier
                             .offset {
                                 val s = spread().coerceIn(0f, 1f)
-                                val anchor = if (gatherToEnd) (width - boxWidth).toPx() else 0f
-                                val px = anchor + (x.value.toPx() - anchor) * s
+                                val endAnchor = (width - boxWidth).toPx()
+                                val px = if (side == null) {
+                                    val anchor = if (gatherToEnd) endAnchor else 0f
+                                    anchor + (x.value.toPx() - anchor) * s
+                                } else {
+                                    val global = side()
+                                    val rank = (order.size - 1 - index).coerceAtLeast(0)
+                                    val lag = SIDE_STAGGER * rank
+                                    val span = 1f + SIDE_STAGGER * (order.size - 1).coerceAtLeast(0)
+                                    val local = if (sideTarget) {
+                                        (global * span - lag).coerceIn(0f, 1f)
+                                    } else {
+                                        1f - ((1f - global) * span - lag).coerceIn(0f, 1f)
+                                    }
+                                    val anchor = endAnchor * (1f - local)
+                                    val leftX = x.value.toPx()
+                                    val laid = leftX + (endAnchor - leftX - leftX) * local
+                                    anchor + (laid - anchor) * s + travel() * (local - global)
+                                }
                                 IntOffset(px.roundToInt(), if (isDot) ((size - boxSize) / 2).roundToPx() else 0)
                             }
                             .liquid(entryLiquid),
@@ -395,6 +417,7 @@ fun IslandStackPill(
     outlineThickness: Dp = 1.dp,
     bond: LiquidBond? = null,
     accent: Color? = null,
+    reversed: Boolean = false,
     onInteraction: () -> Unit = {},
 ) {
     val ring by animateColorAsState(accent ?: islandAccent(), label = "stackRing")
@@ -449,6 +472,7 @@ fun IslandStackPill(
             .animateContentSize(IslandMotion.compactSize)
             .padding(vertical = 5.dp),
     ) {
+        CompositionLocalProvider(LocalLayoutDirection provides if (reversed) LayoutDirection.Rtl else LayoutDirection.Ltr) {
         HorizontalUncontainedCarousel(
             state = carouselState,
             itemWidth = itemWidth,
@@ -479,10 +503,12 @@ fun IslandStackPill(
                 CompositionLocalProvider(
                     LocalIslandBitmapFlat provides true,
                     LocalIslandIconColor provides if (accent != null) ring else LocalIslandIconColor.current,
+                    LocalLayoutDirection provides LayoutDirection.Ltr,
                 ) {
                     Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { icon.content(itemWidth) }
                 }
             }
+        }
         }
     }
 }
@@ -500,6 +526,9 @@ fun IslandSideBubble(
     overflow: QueueOverflow = QueueOverflow.Number,
     spread: () -> Float = { 1f },
     gatherToEnd: Boolean = true,
+    side: (() -> Float)? = null,
+    sideTarget: Boolean = false,
+    travel: () -> Float = { 0f },
 ) {
     Box(modifier.height(size)) {
         AnimatedContent(
@@ -532,6 +561,9 @@ fun IslandSideBubble(
                         overflow = overflow,
                         spread = spread,
                         gatherToEnd = gatherToEnd,
+                        side = side,
+                        sideTarget = sideTarget,
+                        travel = travel,
                     )
                 } else {
                     IslandStackBubble(bubble.icons, size, outlineColor = outlineColor, outlineThickness = outlineThickness)
@@ -552,3 +584,5 @@ fun inlineBubbleCell(bubble: SideBubble, overlap: Boolean): CompactCell = Compac
         else -> IslandStackBubble(bubble.icons, 26.dp, modifier = tap)
     }
 }
+
+private const val SIDE_STAGGER = 0.18f

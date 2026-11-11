@@ -771,6 +771,7 @@ class SettingsRepository(
         const val KEY_ISLAND_LIVE_UPDATES_EXPANDED = "island_live_updates_expanded"
         const val KEY_ISLAND_NOTIF_QUEUE = "island_notif_queue"
         const val KEY_ISLAND_NOTIF_QUEUE_STYLE = "island_notif_queue_style"
+        const val KEY_ISLAND_SECONDARY_BUBBLE_SIDE = "island_secondary_bubble_side"
         const val ISLAND_NOTIF_QUEUE_STYLE_STACK = "stack"
         const val ISLAND_NOTIF_QUEUE_STYLE_OVERLAP = "overlap"
         const val KEY_ISLAND_NOTIF_QUEUE_INLINE = "island_notif_queue_inline"
@@ -4611,6 +4612,11 @@ class SettingsRepository(
         if (getString(KEY_ISLAND_NOTIF_QUEUE_STYLE, null) == ISLAND_NOTIF_QUEUE_STYLE_OVERLAP) ISLAND_NOTIF_QUEUE_STYLE_OVERLAP
         else ISLAND_NOTIF_QUEUE_STYLE_STACK
     fun setIslandNotifQueueStyle(style: String) = putString(KEY_ISLAND_NOTIF_QUEUE_STYLE, style)
+
+    fun getIslandSecondaryBubbleSide(): String =
+        if (getString(KEY_ISLAND_SECONDARY_BUBBLE_SIDE, null) == ISLAND_CAMERA_POSITION_RIGHT) ISLAND_CAMERA_POSITION_RIGHT
+        else ISLAND_CAMERA_POSITION_LEFT
+    fun setIslandSecondaryBubbleSide(side: String) = putString(KEY_ISLAND_SECONDARY_BUBBLE_SIDE, side)
 
     fun isIslandNotifQueueInlineEnabled(): Boolean = getBoolean(KEY_ISLAND_NOTIF_QUEUE_INLINE, false)
     fun setIslandNotifQueueInlineEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_NOTIF_QUEUE_INLINE, enabled)

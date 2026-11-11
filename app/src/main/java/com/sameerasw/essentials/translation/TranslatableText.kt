@@ -23,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import com.sameerasw.essentials.translation.ui.TranslationBottomSheet
@@ -38,6 +39,7 @@ fun TranslatableText(
     style: TextStyle = LocalTextStyle.current,
     maxLines: Int = Int.MAX_VALUE,
     overflow: TextOverflow = TextOverflow.Clip,
+    onTextLayout: (TextLayoutResult) -> Unit = {},
 ) {
     val context = LocalContext.current
     val view = LocalView.current
@@ -96,6 +98,7 @@ fun TranslatableText(
                 style = style,
                 maxLines = maxLines,
                 overflow = overflow,
+                onTextLayout = onTextLayout,
             )
         }
 

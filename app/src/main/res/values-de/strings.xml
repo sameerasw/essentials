@@ -1656,6 +1656,7 @@ Zudem muss die Einstellung unter Umständen mehrfach angewendet werden, damit si
     <string name="watch_watchface_title">Zifferblatt</string>
     <string name="watch_watchface_desc">Das Zifferblatt anpassen</string>
     <string name="watchface_clock_font_size">Schriftgröße</string>
+    <string name="watchface_clock_24h_title">24-hour clock</string>
     <string name="watchface_clock_dual_tone_title">Zweifarbig</string>
     <string name="watchface_clock_dual_tone_desc">Stunden in Weiß, Minuten in Akzentfarbe</string>
     <string name="watchface_clock_outline_title">Nur Gliederung</string>
@@ -1848,6 +1849,7 @@ Zugriff auf die Barrierefreiheit ist erforderlich, um die Überlagerung zu zeich
     <string name="island_live_updates_count_title">Live updates count</string>
     <string name="island_live_updates_expanded_title">Expanded live update</string>
     <string name="island_secondary_bubbles_count_title">Secondary bubbles count</string>
+    <string name="island_secondary_bubble_side_title">Secondary bubble placement</string>
     <string name="island_notif_queue_title">Benachrichtigungswarteschlange</string>
     <string name="island_catch_up_timeout_title">Nachholdauer</string>
     <string name="island_show_calls_title">Anrufe</string>

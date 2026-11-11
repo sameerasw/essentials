@@ -660,6 +660,14 @@ private fun IslandRootContent(
         if (inspection) sideWidthAnim.snapTo(sideWidthPx.toFloat()) else sideWidthAnim.animateTo(sideWidthPx.toFloat(), IslandMotion.showBubble())
     }
     fun sideWidthLive(): Int = sideWidthAnim.value.roundToInt()
+    val bubbleRight = spec.growDirection > 0 || (spec.growDirection == 0 && spec.bubbleOnRight)
+    val bubbleSideAnim = remember { Animatable(if (bubbleRight) 1f else 0f) }
+    LaunchedEffect(bubbleRight) {
+        val to = if (bubbleRight) 1f else 0f
+        if (inspection || spec.growDirection != 0) bubbleSideAnim.snapTo(to) else bubbleSideAnim.animateTo(to, IslandMotion.expressiveSlowSpatial())
+    }
+    fun bubbleSide(): Float = bubbleSideAnim.value
+    fun balanceSign(): Float = if (spec.balanceCompact && spec.growDirection == 0) 1f - 2f * bubbleSide() else 1f
     val bubbleGapPx = with(density) { spec.cameraGap.roundToPx() }
     fun sideBubbleProgress(): Float =
         if (spec.growDirection == 0 && (hasCompactCells || stage == IslandStage.Hidden)) catchUpAnim.value.coerceIn(0f, 1f) else 0f
@@ -667,7 +675,7 @@ private fun IslandRootContent(
     LaunchedEffect(slackTarget) {
         if (inspection) slackAnim.snapTo(slackTarget.toFloat()) else slackAnim.animateTo(slackTarget.toFloat(), IslandMotion.smoothSpatial())
     }
-    fun catchShiftPx(): Float = sideBubbleProgress() * slackAnim.value / 2f
+    fun catchShiftPx(): Float = sideBubbleProgress() * slackAnim.value / 2f * balanceSign()
     val lineShift = remember { Animatable(0f) }
     val liveSurfaceHeight = remember { mutableIntStateOf(0) }
     val liveSurfaceWidth = remember { mutableIntStateOf(0) }
@@ -678,28 +686,24 @@ private fun IslandRootContent(
         lineShift.value.roundToInt() + catchShiftPx().roundToInt()
     // Bonded to the edge, the bubble closes the gap and slightly overlaps, so the liquid neck merges both into one body
     fun bondedGapPx(): Int = (bubbleGapPx * (1f - bond) - compactHeightPx * 0.08f * bond).roundToInt()
+    fun lerpSide(left: Int, right: Int): Int = (left + (right - left) * bubbleSide()).roundToInt()
     fun bubbleX(width: Int): Int =
-        if (spec.growDirection > 0) surfaceLeft(width) + width + bondedGapPx() else surfaceLeft(width) - bondedGapPx() - sideWidthLive()
+        lerpSide(surfaceLeft(width) - bondedGapPx() - sideWidthLive(), surfaceLeft(width) + width + bondedGapPx())
     fun liveBubbleX(width: Int): Int {
         if (stage == IslandStage.Compact) bubbleAnchorWidth[0] = width
         val anchorW = if (bubbleTucking && bubbleAnchorWidth[0] > 0 && collapse.value <= 0f) bubbleAnchorWidth[0] else width
         val endX = bubbleX(anchorW)
-        val cameraX = if (spec.growDirection <= 0) {
-            windowWidth / 2 - sideWidthLive() + bubbleSizePx / 2
-        } else {
-            windowWidth / 2 - bubbleSizePx / 2
-        }
+        val cameraX = lerpSide(windowWidth / 2 - sideWidthLive() + bubbleSizePx / 2, windowWidth / 2 - bubbleSizePx / 2)
         val startX = when {
             bubbleTucking && bubbleAbsorbing -> endX
             bubbleTucking || stage == IslandStage.Hidden -> cameraX
-            spec.growDirection > 0 -> surfaceLeft(width) + width - sideWidthLive()
-            else -> surfaceLeft(width)
+            else -> lerpSide(surfaceLeft(width), surfaceLeft(width) + width - sideWidthLive())
         }
         val x = (startX + (endX - startX) * catchUpAnim.value.coerceIn(0f, 1f)).roundToInt()
-        return if (spec.growDirection > 0) {
-            maxOf(x, windowWidth / 2 - bubbleSizePx / 2)
-        } else {
-            minOf(x, windowWidth / 2 + bubbleSizePx / 2 - sideWidthLive())
+        return when {
+            bubbleSide() >= 1f -> maxOf(x, windowWidth / 2 - bubbleSizePx / 2)
+            bubbleSide() <= 0f -> minOf(x, windowWidth / 2 + bubbleSizePx / 2 - sideWidthLive())
+            else -> x
         }
     }
     val focusedItem = state.focused
@@ -787,14 +791,14 @@ private fun IslandRootContent(
 
     LaunchedEffect(
         target, windowWidth, stage, queueShown, pillSize, lineInsetActive, catchUpShown, hasCompactCells,
-        bubbleOnlyLayout, condensedLineActive, queueWidthPx, sideWidthPx, slackTarget,
+        bubbleOnlyLayout, condensedLineActive, queueWidthPx, sideWidthPx, slackTarget, bubbleRight,
     ) {
         if (target == IntSize.Zero || windowWidth == 0) return@LaunchedEffect
         val g = if (stage == IslandStage.Expanded) outsetPx.roundToInt() else 0
         val shift = when {
             spec.growDirection != 0 || condensedLineActive -> 0
             lineInsetActive -> (queueWidthPx + bubbleGapPx) / 2
-            catchUpShown && hasCompactCells -> slackTarget / 2
+            catchUpShown && hasCompactCells -> if (bubbleRight && spec.balanceCompact) -slackTarget / 2 else slackTarget / 2
             else -> 0
         }
         val left = windowWidth / 2 - target.width / 2 + surfaceShiftFor(target.width) + shift
@@ -808,7 +812,7 @@ private fun IslandRootContent(
             val bx = windowWidth / 2 - sideWidthPx / 2
             bounds = IntRect(bx, surfaceTopPx, bx + sideWidthPx, surfaceTopPx + bubbleSizePx)
         } else if (catchUpShown) {
-            val bx = if (spec.growDirection > 0) left + target.width + bubbleGapPx else left - bubbleGapPx - sideWidthPx
+            val bx = if (bubbleRight) left + target.width + bubbleGapPx else left - bubbleGapPx - sideWidthPx
             bounds = IntRect(minOf(bounds.left, bx), bounds.top, maxOf(bounds.right, bx + sideWidthPx), maxOf(bounds.bottom, surfaceTopPx + bubbleSizePx))
         }
         if (queueShown && stage == IslandStage.Expanded && pillSize != IntSize.Zero) {
@@ -1003,6 +1007,7 @@ private fun IslandRootContent(
                     outlineThickness = spec.outlineThickness,
                     bond = pillBond,
                     accent = focusedItem?.queueAccent,
+                    reversed = bubbleRight,
                     onInteraction = actions::onInteraction,
                     modifier = Modifier
                         .queueSlot(0.5f, 1f, slides = true) { k -> ((k - 0.3f) / 0.7f).coerceIn(0f, 1f) }
@@ -1058,7 +1063,7 @@ private fun IslandRootContent(
                 })
             }
             val bubbleLiquid = rememberLiquidBody(LiquidSpec.Droplet, bubbleBond, liquidField)
-            val towardCamera = if (spec.growDirection > 0) -1f else 1f
+            val towardCamera = if (bubbleRight) -1f else 1f
             val maxDrag = with(density) { 56.dp.toPx() }
             val threshold = with(density) { 28.dp.toPx() }
             Box(Modifier.fillMaxSize()) {
@@ -1099,6 +1104,9 @@ private fun IslandRootContent(
                     overflow = lastCatchUp?.overflow ?: com.sameerasw.essentials.island.model.QueueOverflow.Number,
                     spread = { catchUpAnim.value },
                     gatherToEnd = spec.growDirection <= 0,
+                    side = if (spec.growDirection == 0) ::bubbleSide else null,
+                    sideTarget = bubbleRight,
+                    travel = { (visibleWidth() + bondedGapPx() * 2 + sideWidthLive()).toFloat() },
                     modifier = Modifier
                         .offset {
                             if (bubbleOnlyLayout) {
@@ -1122,7 +1130,8 @@ private fun IslandRootContent(
                             scaleY = appearScale
                             val bubbleW = sideWidthLive().coerceAtLeast(1).toFloat()
                             val gatherX = (bubbleSizePx / 2f / bubbleW).coerceIn(0f, 1f)
-                            transformOrigin = TransformOrigin(if (spec.growDirection <= 0) 1f - gatherX else gatherX, 0.5f)
+                            val leftOrigin = if (spec.growDirection <= 0) 1f - gatherX else gatherX
+                            transformOrigin = TransformOrigin(leftOrigin + (gatherX - leftOrigin) * bubbleSide(), 0.5f)
                         }
                         .pointerInput(Unit) {
                             detectTapGestures {
@@ -1414,9 +1423,10 @@ private fun IslandRootContent(
                     }
                     fun switchTarget(dir: Float): (() -> Unit)? {
                         val focused = currentState.focused ?: return null
+                        val forward = if (bubbleSideAnim.targetValue > 0.5f) dir > 0f else dir < 0f
                         val index = focused.stack.indexOfFirst { it.current }
-                        if (index >= 0) return focused.stack.getOrNull(if (dir < 0f) index + 1 else index - 1)?.onSelect
-                        return if (dir < 0f) focused.queue?.let { { actions.onAdvance() } } else null
+                        if (index >= 0) return focused.stack.getOrNull(if (forward) index + 1 else index - 1)?.onSelect
+                        return if (forward) focused.queue?.let { { actions.onAdvance() } } else null
                     }
                     var crossed = false
                     var progress = 0f
@@ -1781,6 +1791,7 @@ private fun IslandRootContent(
                             onCellTap = ::handleTap,
                             onCellLongPress = ::handleLongPress,
                             sideBubble = ::sideBubbleProgress,
+                            bubbleSide = ::bubbleSide,
                             bubbleExtent = { bubbleGapPx + sideWidthLive() },
                             onSlack = { if (current) compactSlack.intValue = it },
                             onBaseWidth = { if (current) compactBaseWidth.intValue = it },
@@ -1836,6 +1847,7 @@ private fun IslandRootContent(
                             onCellTap = {},
                             onCellLongPress = {},
                             sideBubble = ::sideBubbleProgress,
+                            bubbleSide = ::bubbleSide,
                             bubbleExtent = { bubbleGapPx + sideWidthLive() },
                             onSlack = { compactSlack.intValue = it },
                             onBaseWidth = { compactBaseWidth.intValue = it },
@@ -1942,6 +1954,7 @@ private fun StageContent(
     onCellTap: (String) -> Unit = {},
     onCellLongPress: (String) -> Unit = {},
     sideBubble: () -> Float = { 0f },
+    bubbleSide: () -> Float = { 0f },
     bubbleExtent: () -> Int = { 0 },
     onSlack: (Int) -> Unit = {},
     onBaseWidth: (Int) -> Unit = {},
@@ -1962,6 +1975,7 @@ private fun StageContent(
                     onCellTap = { if (interactive) onCellTap(it) },
                     onCellLongPress = { if (interactive) onCellLongPress(it) },
                     sideBubble = sideBubble,
+                    bubbleSide = bubbleSide,
                     bubbleExtent = bubbleExtent,
                     onSlack = onSlack,
                     onBaseWidth = onBaseWidth,

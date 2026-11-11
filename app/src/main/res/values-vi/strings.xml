@@ -1663,6 +1663,7 @@ Cần có quyền quản trị thiết bị nếu sử dụng chế độ khóa.
     <string name="watch_watchface_title">Mặt đồng hồ</string>
     <string name="watch_watchface_desc">Tùy chỉnh mặt đồng hồ</string>
     <string name="watchface_clock_font_size">Kích cỡ chữ</string>
+    <string name="watchface_clock_24h_title">24-hour clock</string>
     <string name="watchface_clock_dual_tone_title">Hai tông màu</string>
     <string name="watchface_clock_dual_tone_desc">Giờ hiển thị bằng màu trắng, phút hiển thị bằng màu nhấn</string>
     <string name="watchface_clock_outline_title">Chỉ có đường viền</string>
@@ -1832,6 +1833,7 @@ Cần có quyền quản trị thiết bị nếu sử dụng chế độ khóa.
     <string name="island_live_updates_count_title">Live updates count</string>
     <string name="island_live_updates_expanded_title">Expanded live update</string>
     <string name="island_secondary_bubbles_count_title">Secondary bubbles count</string>
+    <string name="island_secondary_bubble_side_title">Secondary bubble placement</string>
     <string name="island_notif_queue_title">Hàng đợi thông báo</string>
     <string name="island_catch_up_title">Bắt kịp</string>
     <string name="island_catch_up_desc">Giữ thông báo cuối cùng trên island lâu hơn</string>
