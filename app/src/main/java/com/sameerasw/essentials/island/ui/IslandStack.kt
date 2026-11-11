@@ -1,5 +1,7 @@
 package com.sameerasw.essentials.island.ui
 
+import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.animation.animateColorAsState
 import com.sameerasw.essentials.island.ui.components.islandAccent
 
@@ -415,6 +417,7 @@ fun IslandStackPill(
     outlineThickness: Dp = 1.dp,
     bond: LiquidBond? = null,
     accent: Color? = null,
+    reversed: Boolean = false,
     onInteraction: () -> Unit = {},
 ) {
     val ring by animateColorAsState(accent ?: islandAccent(), label = "stackRing")
@@ -469,6 +472,7 @@ fun IslandStackPill(
             .animateContentSize(IslandMotion.compactSize)
             .padding(vertical = 5.dp),
     ) {
+        CompositionLocalProvider(LocalLayoutDirection provides if (reversed) LayoutDirection.Rtl else LayoutDirection.Ltr) {
         HorizontalUncontainedCarousel(
             state = carouselState,
             itemWidth = itemWidth,
@@ -499,10 +503,12 @@ fun IslandStackPill(
                 CompositionLocalProvider(
                     LocalIslandBitmapFlat provides true,
                     LocalIslandIconColor provides if (accent != null) ring else LocalIslandIconColor.current,
+                    LocalLayoutDirection provides LayoutDirection.Ltr,
                 ) {
                     Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { icon.content(itemWidth) }
                 }
             }
+        }
         }
     }
 }

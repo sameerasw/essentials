@@ -1007,6 +1007,7 @@ private fun IslandRootContent(
                     outlineThickness = spec.outlineThickness,
                     bond = pillBond,
                     accent = focusedItem?.queueAccent,
+                    reversed = bubbleRight,
                     onInteraction = actions::onInteraction,
                     modifier = Modifier
                         .queueSlot(0.5f, 1f, slides = true) { k -> ((k - 0.3f) / 0.7f).coerceIn(0f, 1f) }
@@ -1422,9 +1423,10 @@ private fun IslandRootContent(
                     }
                     fun switchTarget(dir: Float): (() -> Unit)? {
                         val focused = currentState.focused ?: return null
+                        val forward = if (bubbleSideAnim.targetValue > 0.5f) dir > 0f else dir < 0f
                         val index = focused.stack.indexOfFirst { it.current }
-                        if (index >= 0) return focused.stack.getOrNull(if (dir < 0f) index + 1 else index - 1)?.onSelect
-                        return if (dir < 0f) focused.queue?.let { { actions.onAdvance() } } else null
+                        if (index >= 0) return focused.stack.getOrNull(if (forward) index + 1 else index - 1)?.onSelect
+                        return if (forward) focused.queue?.let { { actions.onAdvance() } } else null
                     }
                     var crossed = false
                     var progress = 0f
