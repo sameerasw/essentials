@@ -48,6 +48,7 @@ import com.sameerasw.essentials.services.handlers.DuoOverlayHandler
 import com.sameerasw.essentials.services.handlers.FlashlightHandler
 import com.sameerasw.essentials.island.service.IslandCoordinator
 import com.sameerasw.essentials.services.handlers.NotificationLightingHandler
+import com.sameerasw.essentials.services.handlers.SnippetExpansionHandler
 import com.sameerasw.essentials.services.handlers.OmniGestureOverlayHandler
 import com.sameerasw.essentials.services.handlers.FaceUnlockBrightnessHandler
 import com.sameerasw.essentials.services.handlers.PocketModeHandler
@@ -102,6 +103,7 @@ class ScreenOffAccessibilityService :
     private lateinit var screenshotAutoCleanHandler: ScreenshotAutoCleanHandler
     private lateinit var lockscreenShortcutsHandler: LockscreenShortcutsHandler
     private lateinit var appVolumeOverlayHandler: AppVolumeOverlayHandler
+    private lateinit var snippetExpansionHandler: SnippetExpansionHandler
     private lateinit var statusBarSectionsDebugHandler: com.sameerasw.essentials.services.handlers.StatusBarSectionsDebugHandler
 
     private var lightSensor: Sensor? = null
@@ -445,6 +447,7 @@ class ScreenOffAccessibilityService :
         appVolumeOverlayHandler = AppVolumeOverlayHandler(this)
         screenshotShareCleanupHandler = ScreenshotShareCleanupHandler(this, serviceScope)
         screenshotAutoCleanHandler = ScreenshotAutoCleanHandler(this, serviceScope)
+        snippetExpansionHandler = SnippetExpansionHandler(this, serviceScope)
 
         flashlightHandler.register()
         statusBarIconHandler.register()
@@ -621,6 +624,7 @@ class ScreenOffAccessibilityService :
         isA11yConnected = true
         serviceInfo =
             serviceInfo.apply {
+                eventTypes = eventTypes or AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED
                 flags = flags or
                     AccessibilityServiceInfo.FLAG_REQUEST_FILTER_KEY_EVENTS or
                     AccessibilityServiceInfo.FLAG_RETRIEVE_INTERACTIVE_WINDOWS
@@ -744,6 +748,10 @@ class ScreenOffAccessibilityService :
 
         if (event.eventType == AccessibilityEvent.TYPE_VIEW_CLICKED) {
             screenshotShareCleanupHandler.onViewClicked(event, appFlowHandler.currentPackage)
+        }
+
+        if (event.eventType == AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED) {
+            snippetExpansionHandler.onTextChanged(event)
         }
 
         if (event.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED ||
