@@ -1942,6 +1942,7 @@ class NotificationListener : NotificationListenerService() {
             title = extras.getCharSequence(Notification.EXTRA_TITLE)?.toString(),
             text = extras.getCharSequence(Notification.EXTRA_TEXT)?.toString(),
             iconIsGlyph = iconIsGlyph,
+            isSilent = !LiveUpdateSnoozer.isLiveUpdate(sbn) && !isFakeLiveUpdate(sbn) && isSilentNotification(sbn),
             shortText = extras.getCharSequence("android.shortCriticalText")?.toString()?.trim()?.takeIf { it.isNotEmpty() },
             appName = try {
                 packageManager.getApplicationLabel(packageManager.getApplicationInfo(sbn.packageName, 0)).toString()
