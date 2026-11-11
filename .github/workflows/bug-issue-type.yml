@@ -1,0 +1,22 @@
+name: Bug Issue Type
+
+on:
+  issues:
+    types: [labeled]
+
+permissions:
+  issues: write
+
+jobs:
+  set-type:
+    if: github.event.label.name == 'bug' && github.event.issue.type.name != 'Bug'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            await github.request('PATCH /repos/{owner}/{repo}/issues/{issue_number}', {
+              ...context.repo,
+              issue_number: context.issue.number,
+              type: 'Bug',
+            });
