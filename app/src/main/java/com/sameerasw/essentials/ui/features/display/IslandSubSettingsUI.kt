@@ -811,6 +811,24 @@ fun IslandVisualsSettingsUI(
             spacing = 2.dp,
             cornerRadius = 24.dp,
         ) {
+            val chipSettings = remember { SettingsRepository(context) }
+            var chips by remember { mutableStateOf(chipSettings.getBoolean(SettingsRepository.KEY_ISLAND_CHIPS, false)) }
+            IconToggleItem(
+                iconRes = R.drawable.rounded_palette_24,
+                title = stringResource(R.string.island_chips_title),
+                isChecked = chips,
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    chips = checked
+                    chipSettings.putBoolean(SettingsRepository.KEY_ISLAND_CHIPS, checked)
+                },
+            )
+        }
+
+        RoundedCardContainer(
+            spacing = 2.dp,
+            cornerRadius = 24.dp,
+        ) {
             IconToggleItem(
                 iconRes = R.drawable.rounded_square_24,
                 title = stringResource(R.string.island_border_outline_title),
@@ -898,17 +916,6 @@ fun IslandVisualsSettingsUI(
                 },
             )
 
-            var chips by remember { mutableStateOf(iconSettings.getBoolean(SettingsRepository.KEY_ISLAND_CHIPS, false)) }
-            IconToggleItem(
-                iconRes = R.drawable.rounded_palette_24,
-                title = stringResource(R.string.island_chips_title),
-                isChecked = chips,
-                onCheckedChange = { checked ->
-                    HapticUtil.performVirtualKeyHaptic(view)
-                    chips = checked
-                    iconSettings.putBoolean(SettingsRepository.KEY_ISLAND_CHIPS, checked)
-                },
-            )
         }
 
         RoundedCardContainer(
