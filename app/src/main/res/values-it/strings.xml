@@ -1558,6 +1558,7 @@
     <string name="island_section_gestures">Gestures</string>
     <string name="island_section_expanded">Expanded island</string>
     <string name="island_section_landscape">Landscape</string>
+    <string name="island_section_experimental">Experimental</string>
     <string name="island_call_options_title">Chiamate</string>
     <string name="diy_category_notifications">Notifiche</string>
     <string name="island_show_timers_title">Timer e cronometri</string>

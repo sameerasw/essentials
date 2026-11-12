@@ -1776,6 +1776,7 @@
     <string name="island_section_gestures">Gestures</string>
     <string name="island_section_expanded">Expanded island</string>
     <string name="island_section_landscape">Landscape</string>
+    <string name="island_section_experimental">Experimental</string>
     <string name="duo_hide_when_locked_title">Скрывать когда заблокировано</string>
     <string name="island_preview_ring_title">Показывать подсказку выравнивания</string>
     <string name="diy_volume_channel_alarm">Будильник</string>

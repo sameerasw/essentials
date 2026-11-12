@@ -125,6 +125,12 @@ fun IslandPlacementSettingsUI(
         displayConfiguration.orientation) {
         viewModel.refreshIslandCameraPlacement()
     }
+    var showStatusBarAwareInfo by remember { mutableStateOf(false) }
+
+    if (showStatusBarAwareInfo) {
+        StatusBarAwareWidthInfoBottomSheet(onDismissRequest = { showStatusBarAwareInfo = false })
+    }
+
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -495,6 +501,44 @@ fun IslandPlacementSettingsUI(
                 }
             }
         }
+
+        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            TranslatableText(
+                stringResId = R.string.island_section_experimental,
+                style = MaterialTheme.typography.titleSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(start = 8.dp),
+            )
+            RoundedCardContainer(
+                spacing = 2.dp,
+                cornerRadius = 24.dp,
+            ) {
+                IconToggleItem(
+                    iconRes = R.drawable.rounded_arrows_outward_24,
+                    title = stringResource(R.string.island_statusbar_aware_width_title),
+                    isChecked = viewModel.isIslandStatusBarAwareWidth.value,
+                    onCheckedChange = { checked ->
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        viewModel.setIslandStatusBarAwareWidth(checked)
+                    },
+                    onInfoClick = { showStatusBarAwareInfo = true },
+                    modifier = Modifier.highlight(highlightSetting == "island_statusbar_aware_width"),
+                )
+
+                if (viewModel.isIslandStatusBarAwareWidth.value) {
+                    IconToggleItem(
+                        iconRes = R.drawable.rounded_notifications_unread_24,
+                        title = stringResource(R.string.island_statusbar_ignore_notifications_title),
+                        isChecked = viewModel.isIslandStatusBarIgnoreNotifications.value,
+                        onCheckedChange = { checked ->
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            viewModel.setIslandStatusBarIgnoreNotifications(checked)
+                        },
+                        modifier = Modifier.highlight(highlightSetting == "island_statusbar_ignore_notifications"),
+                    )
+                }
+            }
+        }
     }
 }
 
@@ -508,7 +552,6 @@ fun IslandVisualsSettingsUI(
     val context = LocalContext.current
     val view = LocalView.current
     var showBorderOutlineSheet by remember { mutableStateOf(false) }
-    var showStatusBarAwareInfo by remember { mutableStateOf(false) }
     var showPreferStillInfo by remember { mutableStateOf(false) }
     var showBackdropBlurInfo by remember { mutableStateOf(false) }
     var windowBlurEnabled by remember { mutableStateOf(IslandBackdropBlurSupport.windowBlurEnabled(context)) }
@@ -522,10 +565,6 @@ fun IslandVisualsSettingsUI(
     }
     val backdropBlurStatus = IslandBackdropBlurSupport.status(context, windowBlurEnabled)
     val backdropBlurAvailable = backdropBlurStatus == IslandBackdropBlurSupport.Status.Available
-
-    if (showStatusBarAwareInfo) {
-        StatusBarAwareWidthInfoBottomSheet(onDismissRequest = { showStatusBarAwareInfo = false })
-    }
 
     if (showPreferStillInfo) {
         PreferStillIslandInfoBottomSheet(onDismissRequest = { showPreferStillInfo = false })
@@ -604,31 +643,6 @@ fun IslandVisualsSettingsUI(
                 onSettingsClick = { showBorderOutlineSheet = true },
                 modifier = Modifier.highlight(highlightSetting == "island_border_outline_enabled"),
             )
-
-            IconToggleItem(
-                iconRes = R.drawable.rounded_arrows_outward_24,
-                title = stringResource(R.string.island_statusbar_aware_width_title),
-                isChecked = viewModel.isIslandStatusBarAwareWidth.value,
-                onCheckedChange = { checked ->
-                    HapticUtil.performVirtualKeyHaptic(view)
-                    viewModel.setIslandStatusBarAwareWidth(checked)
-                },
-                onInfoClick = { showStatusBarAwareInfo = true },
-                modifier = Modifier.highlight(highlightSetting == "island_statusbar_aware_width"),
-            )
-
-            if (viewModel.isIslandStatusBarAwareWidth.value) {
-                IconToggleItem(
-                    iconRes = R.drawable.rounded_notifications_unread_24,
-                    title = stringResource(R.string.island_statusbar_ignore_notifications_title),
-                    isChecked = viewModel.isIslandStatusBarIgnoreNotifications.value,
-                    onCheckedChange = { checked ->
-                        HapticUtil.performVirtualKeyHaptic(view)
-                        viewModel.setIslandStatusBarIgnoreNotifications(checked)
-                    },
-                    modifier = Modifier.highlight(highlightSetting == "island_statusbar_ignore_notifications"),
-                )
-            }
 
             IconToggleItem(
                 iconRes = R.drawable.rounded_blur_on_24,
