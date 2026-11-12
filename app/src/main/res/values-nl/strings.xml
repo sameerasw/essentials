@@ -1687,6 +1687,7 @@
     <string name="island_section_interactions">Interactions</string>
     <string name="island_section_gestures">Gestures</string>
     <string name="island_section_expanded">Expanded island</string>
+    <string name="island_section_landscape">Landscape</string>
     <string name="island_show_when_title">Toon wanneer</string>
     <string name="island_show_when_unlocked">Ontgrendeld</string>
     <string name="island_show_when_screen_on">Scherm aan</string>

@@ -1783,4 +1783,5 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla s
     <string name="island_section_interactions">Interactions</string>
     <string name="island_section_gestures">Gestures</string>
     <string name="island_section_expanded">Expanded island</string>
+    <string name="island_section_landscape">Landscape</string>
 </resources>

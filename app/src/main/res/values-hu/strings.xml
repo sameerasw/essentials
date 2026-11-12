@@ -1494,6 +1494,7 @@
     <string name="island_section_interactions">Interactions</string>
     <string name="island_section_gestures">Gestures</string>
     <string name="island_section_expanded">Expanded island</string>
+    <string name="island_section_landscape">Landscape</string>
     <string name="island_call_options_title">Hívások</string>
     <string name="island_show_timers_title">Időzítők és stopperek</string>
     <string name="duo_show_media_title">Médialejátszás</string>
