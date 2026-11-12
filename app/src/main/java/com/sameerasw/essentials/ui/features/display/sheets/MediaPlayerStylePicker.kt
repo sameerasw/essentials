@@ -84,6 +84,57 @@ fun MediaPlayerStylePicker(
 private fun PlayerStylePreview(style: MediaPlayerStyle, modifier: Modifier = Modifier) {
     val primary = MaterialTheme.colorScheme.primary
     val tertiary = MaterialTheme.colorScheme.tertiary
+    if (style == MediaPlayerStyle.Tall) {
+        BoxWithConstraints(modifier, contentAlignment = Alignment.Center) {
+            val cardH = maxHeight
+            val cardW = minOf(maxWidth, cardH * 0.9f)
+            val pad = cardH * 0.06f
+            Column(
+                Modifier
+                    .size(cardW, cardH)
+                    .clip(RoundedCornerShape(cardH * 0.18f))
+                    .background(Color.Black)
+                    .padding(pad),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(pad * 0.5f),
+            ) {
+                val art = cardH * 0.3f
+                Box(
+                    Modifier
+                        .size(art)
+                        .clip(RoundedCornerShape(art * 0.18f))
+                        .background(Brush.linearGradient(listOf(primary, tertiary))),
+                )
+                val line = cardH * 0.05f
+                PreviewLine(0.55f, line, Color.White)
+                PreviewLine(0.35f, line, Color.White.copy(alpha = 0.55f))
+                Box(
+                    Modifier
+                        .fillMaxWidth(0.9f)
+                        .height(line * 0.45f)
+                        .clip(CircleShape)
+                        .background(primary.copy(alpha = 0.5f)),
+                )
+                Row(
+                    Modifier
+                        .fillMaxWidth(0.9f)
+                        .height(cardH * 0.16f),
+                    horizontalArrangement = Arrangement.spacedBy(2.dp),
+                ) {
+                    repeat(4) { i ->
+                        Box(
+                            Modifier
+                                .weight(1f)
+                                .fillMaxHeight()
+                                .clip(RoundedCornerShape(if (i == 0 || i == 3) cardH * 0.08f else cardH * 0.02f))
+                                .background(if (i == 2) primary else Color.White.copy(alpha = 0.18f)),
+                        )
+                    }
+                }
+            }
+        }
+        return
+    }
     BoxWithConstraints(modifier, contentAlignment = Alignment.Center) {
         val cardW = minOf(maxWidth, maxHeight * 2.7f)
         val cardH = cardW / 2.7f
