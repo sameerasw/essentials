@@ -84,7 +84,6 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
     private var level = -1
     private var charging = false
     private var shielded = false
-    private var limited = false
     private var powerSave = false
     private var registered = false
     private var peekUntil = 0L
@@ -213,7 +212,6 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
         val plugged = status == BatteryManager.BATTERY_STATUS_CHARGING || status == BatteryManager.BATTERY_STATUS_FULL
         shielded = com.sameerasw.essentials.utils.battery.ChargeLimitUtil.isShielded(context, level, plugged)
         charging = plugged && !shielded
-        limited = plugged && com.sameerasw.essentials.utils.battery.ChargeLimitUtil.isLimitActive(context)
         powerSave = (context.getSystemService(Context.POWER_SERVICE) as? PowerManager)?.isPowerSaveMode ?: false
     }
 
@@ -259,7 +257,7 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
         val batteryLevel = level
         val isCharging = charging
         val isSaving = powerSave
-        val isLimited = limited
+        val isLimited = shielded
         val stateColor = stateColor()
         val displayColor = stateColor ?: idleColor()
         val iconStyle = settings.getIslandBatteryStyle() == SettingsRepository.ISLAND_BATTERY_STYLE_ICON
@@ -368,7 +366,7 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
             charging && settings.isDuoBatteryChargingColorEnabled() ->
                 if (charge.equals("auto", ignoreCase = true)) AUTO_CHARGING else parse(charge, AUTO_CHARGING)
             powerSave && settings.isDuoBatteryPowerSaveColorEnabled() ->
-                parse(settings.getDuoBatteryPowerSaveColor(), AndroidColor.rgb(255, 196, 0))
+                parse(settings.getDuoBatteryPowerSaveColor(), AndroidColor.rgb(255, 152, 0))
             level in 0..settings.getDuoBatteryCriticalLevel() && settings.isDuoBatteryCriticalColorEnabled() ->
                 parse(settings.getDuoBatteryCriticalColor(), AndroidColor.rgb(244, 67, 54))
             level in 0..settings.getDuoBatteryLowLevel() && settings.isDuoBatteryLowColorEnabled() ->
