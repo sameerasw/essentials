@@ -967,7 +967,7 @@ private fun IslandRootContent(
                             val sideX = queueX(w) + queueWidthLive() / 2f
                             val sideY = surfaceTopPx + bubbleSizePx / 2f
                             val belowX = surfaceLeft(w) + w / 2f
-                            val belowY = surfaceTopPx + liveSurfaceHeight.intValue + pillGapPx + p.height / 2f
+                            val belowY = surfaceTopPx - edgeShift.floatValue + liveSurfaceHeight.intValue + pillGapPx + p.height / 2f
                             val k = t()
                             val cx = sideX + (belowX - sideX) * k
                             val cy = sideY + (belowY - sideY) * k
