@@ -316,7 +316,7 @@ fun MediaExpanded(
             }
         }
         if (style == MediaPlayerStyle.Tall) {
-            val playPauseContainer = LocalIslandIconColor.current ?: accent
+            val playPauseContainer = accent
             val playPauseInk = if (playPauseContainer.luminance() > 0.5f) Color.Black else Color.White
             val controls: @Composable (Dp) -> Unit = { rowHeight ->
                 ConnectedButtonRow(
@@ -324,16 +324,16 @@ fun MediaExpanded(
                     items = listOfNotNull(
                         actions.like?.let {
                             ConnectedItem(it) {
-                                IslandIcon(
+                                ButtonGlyph(
                                     if (liked) R.drawable.round_favorite_24 else R.drawable.rounded_favorite_24,
-                                    tint = if (liked) accent else Color.White,
-                                    size = 24.dp,
+                                    if (liked) accent else Color.White,
+                                    24.dp,
                                 )
                             }
                         },
                         actions.previous?.let {
                             ConnectedItem(it, enabled = canSkipBack) {
-                                IslandIcon(R.drawable.rounded_skip_previous_24, size = 24.dp)
+                                ButtonGlyph(R.drawable.rounded_skip_previous_24, accent.copy(alpha = if (canSkipBack) 1f else 0.38f), 24.dp)
                             }
                         },
                         ConnectedItem(actions.playPause, container = playPauseContainer) {
@@ -342,13 +342,14 @@ fun MediaExpanded(
                                 transitionSpec = { fadeIn(IslandMotion.contentIn()) togetherWith fadeOut(IslandMotion.contentOut()) },
                                 label = "playPause",
                             ) {
-                                IslandIcon(if (it) R.drawable.rounded_pause_24 else R.drawable.rounded_play_arrow_24, tint = playPauseInk, size = 26.dp)
+                                ButtonGlyph(if (it) R.drawable.rounded_pause_24 else R.drawable.rounded_play_arrow_24, playPauseInk, 26.dp)
                             }
                         },
                         ConnectedItem(actions.next, enabled = canSkipForward) {
-                            IslandIcon(R.drawable.rounded_skip_next_24, size = 24.dp)
+                            ButtonGlyph(R.drawable.rounded_skip_next_24, accent.copy(alpha = if (canSkipForward) 1f else 0.38f), 24.dp)
                         },
                     ),
+                    container = accent.copy(alpha = 0.16f),
                 )
             }
             if (spec.landscape) {
