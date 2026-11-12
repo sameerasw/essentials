@@ -2004,8 +2004,6 @@
     <string name="island_themed_text_title">Тематический цвет текста</string>
     <string name="island_section_icon_color">Цвет иконок</string>
     <string name="app_colors_custom">Свой</string>
-    <string name="island_notif_queue_style_stack">Стопка</string>
-    <string name="island_notif_queue_style_overlap">Внахлест</string>
     <string name="island_hide_in_fullscreen_title">Скрыть в полноэкранном режиме</string>
     <string name="lockscreen_shortcuts_enable_title">Включить быстрые действия на заблокированном экране </string>
     <string name="feat_back_gesture_desc">Ширина областей жеста «Назад» для приложений</string>
@@ -2090,7 +2088,6 @@
     <string name="island_battery_icon_conditional_title">Иконки только для нижеуказанных условий </string>
     <string name="duo_battery_low_color_title">Низкий заряд</string>
     <string name="island_navigation_peek_after_expand_desc">Когда выключено остров возвращается в компактный режим</string>
-    <string name="island_secondary_style_title">Стиль вторичных предметов </string>
     <string name="island_pulse_shadow_spread_title">Распространение </string>
     <string name="island_pulse_shadow_duration_title">Продолжительность пульсации</string>
     <string name="about_desc_safe_volume">Европейские правила требуют, чтобы смартфоны предупреждали при превышении определённых уровней объёма (85 дБ). Это предупреждение должно отображаться один раз после каждой перезагрузки или после 20 часов непрерывного воспроизведения музыки. Используйте этот переключатель, чтобы отключить его навсегда. </string>

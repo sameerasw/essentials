@@ -681,9 +681,7 @@ fun IslandSettingsUI(
                             modifier = Modifier.highlight(highlightSetting == "island_media_use_art_color"),
                         )
                     }
-                    if (viewModel.isIslandSecondaryBubble.value &&
-                        viewModel.islandNotifQueueStyle.value == SettingsRepository.ISLAND_NOTIF_QUEUE_STYLE_OVERLAP
-                    ) {
+                    if (viewModel.isIslandSecondaryBubble.value) {
                         RoundedCardContainer(spacing = 2.dp, cornerRadius = 24.dp) {
                             IconToggleItem(
                                 iconRes = R.drawable.rounded_bubble_24,

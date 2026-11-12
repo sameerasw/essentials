@@ -78,8 +78,6 @@ import com.sameerasw.essentials.island.ui.IslandFontFamily
 import com.sameerasw.essentials.island.ui.IslandLayoutSpec
 import com.sameerasw.essentials.island.ui.IslandMotion
 import com.sameerasw.essentials.island.ui.IslandRoot
-import com.sameerasw.essentials.island.ui.QueueStyle
-import com.sameerasw.essentials.island.ui.IslandStackBubble
 import com.sameerasw.essentials.island.ui.IslandStackOverlap
 import com.sameerasw.essentials.island.model.SideBubble
 import com.sameerasw.essentials.island.model.SideBubblePriority
@@ -620,7 +618,6 @@ class IslandCoordinator(
                         service.getString(R.string.island_preview_sample_title),
                         service.getString(R.string.island_preview_sample_text),
                         layout,
-                        overlap = settings.getIslandNotifQueueStyle() == SettingsRepository.ISLAND_NOTIF_QUEUE_STYLE_OVERLAP,
                     ),
                 ),
             )
@@ -685,14 +682,14 @@ class IslandCoordinator(
 
     private enum class QueuePreviewLayout { Peek, MinimalInline, MinimalStack }
 
-    private fun queuePreviewItem(title: String, text: String, layout: QueuePreviewLayout, overlap: Boolean): IslandItem {
+    private fun queuePreviewItem(title: String, text: String, layout: QueuePreviewLayout): IslandItem {
         fun icon(key: String, current: Boolean = false) = StackIcon(key, current = current) { size ->
             IslandIcon(R.drawable.rounded_notifications_unread_24, size = size * 0.7f)
         }
         val waiting = listOf(icon("$QUEUE_PREVIEW_KEY.1"), icon("$QUEUE_PREVIEW_KEY.2"))
         val iconCell = CompactCell("preview.queue.icon") { IslandIcon(R.drawable.rounded_notifications_unread_24, size = 18.dp) }
         val queueCell = CompactCell("preview.queue.stack") {
-            if (overlap) IslandStackOverlap(waiting, 22.dp) else IslandStackBubble(waiting, 26.dp)
+            IslandStackOverlap(waiting, 22.dp)
         }
         return IslandItem(
             key = QUEUE_PREVIEW_KEY,
@@ -833,10 +830,6 @@ class IslandCoordinator(
             pulseOffsetY = settings.getIslandPulseShadowOffsetY().coerceIn(-8f, 16f).dp,
             pulseOpacity = settings.getIslandPulseShadowOpacity().coerceIn(0.1f, 1f),
             pulseDurationMs = settings.getIslandPulseShadowDurationMs().coerceIn(300f, 4000f).toInt(),
-            queueStyle = when (settings.getIslandNotifQueueStyle()) {
-                SettingsRepository.ISLAND_NOTIF_QUEUE_STYLE_OVERLAP -> QueueStyle.Overlap
-                else -> QueueStyle.Stack
-            },
             queueInline = settings.isIslandNotifQueueInlineEnabled(),
             bubbleOnRight = settings.getIslandSecondaryBubbleSide() == SettingsRepository.ISLAND_CAMERA_POSITION_RIGHT,
             iconColorCustom = if (iconCustomMode && !iconMaterialYou) {
@@ -861,7 +854,6 @@ class IslandCoordinator(
         controller.chipsEnabled = settings.getBoolean(SettingsRepository.KEY_ISLAND_CHIPS, false)
         controller.secondaryBubbleEnabled = settings.isIslandSecondaryBubbleEnabled()
         controller.secondaryBubbleMax = settings.getIslandNotifHubIcons()
-        controller.secondaryBubbleOverlap = settings.getIslandNotifQueueStyle() == SettingsRepository.ISLAND_NOTIF_QUEUE_STYLE_OVERLAP
         controller.bubbleOnRight = settings.getIslandSecondaryBubbleSide() == SettingsRepository.ISLAND_CAMERA_POSITION_RIGHT
         controller.relayout()
         controller.expandedTimeoutMs = settings.getIslandExpandedTimeoutMs()
@@ -1076,7 +1068,6 @@ class IslandCoordinator(
         )
         val CONFIG_KEYS = setOf(
             SettingsRepository.KEY_ISLAND_NOTIF_THEMED_BUBBLE,
-            SettingsRepository.KEY_ISLAND_NOTIF_QUEUE_STYLE,
             SettingsRepository.KEY_ISLAND_SECONDARY_BUBBLE_SIDE,
             SettingsRepository.KEY_ISLAND_NOTIF_QUEUE_INLINE,
             SettingsRepository.KEY_ISLAND_USE_AUTO_DETECT,
@@ -1132,7 +1123,6 @@ class IslandCoordinator(
             SettingsRepository.KEY_ISLAND_GLOW_INTENSITY,
             SettingsRepository.KEY_ISLAND_SECONDARY_BUBBLE,
             SettingsRepository.KEY_ISLAND_NOTIF_HUB_ICONS,
-            SettingsRepository.KEY_ISLAND_NOTIF_QUEUE_STYLE,
             SettingsRepository.KEY_ISLAND_SECONDARY_BUBBLE_SIDE,
             SettingsRepository.KEY_ISLAND_MAX_ITEMS,
             SettingsRepository.KEY_ISLAND_STATUSBAR_AWARE_WIDTH,

@@ -1062,11 +1062,6 @@ object FeatureRegistry {
                             R.string.island_section_behavior,
                             "island_secondary_bubble",
                         ),
-                        SearchSetting(
-                            R.string.island_secondary_style_title,
-                            R.string.island_notif_queue_style_search_desc,
-                            "island_secondary_style",
-                        ),
                     ),
             ) {
                 override fun isEnabled(viewModel: MainViewModel) = true

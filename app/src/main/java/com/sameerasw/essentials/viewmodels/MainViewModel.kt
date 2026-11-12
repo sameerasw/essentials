@@ -307,7 +307,6 @@ class MainViewModel : ViewModel() {
     val islandNotifPeekStyle = mutableStateOf(SettingsRepository.ISLAND_NOTIF_PEEK_STYLE_FULL)
     val isIslandNotifKeepProgress = mutableStateOf(true)
     val isIslandNotifQueue = mutableStateOf(true)
-    val islandNotifQueueStyle = mutableStateOf(SettingsRepository.ISLAND_NOTIF_QUEUE_STYLE_STACK)
     val islandSecondaryBubbleSide = mutableStateOf(SettingsRepository.ISLAND_CAMERA_POSITION_LEFT)
     val isIslandNotifQueueInline = mutableStateOf(false)
     val isIslandNotifSkipSilent = mutableStateOf(true)
@@ -1008,9 +1007,6 @@ class MainViewModel : ViewModel() {
 
                     SettingsRepository.KEY_ISLAND_NOTIF_QUEUE ->
                         isIslandNotifQueue.value = settingsRepository.isIslandNotifQueueEnabled()
-
-                    SettingsRepository.KEY_ISLAND_NOTIF_QUEUE_STYLE ->
-                        islandNotifQueueStyle.value = settingsRepository.getIslandNotifQueueStyle()
 
                     SettingsRepository.KEY_ISLAND_SECONDARY_BUBBLE_SIDE ->
                         islandSecondaryBubbleSide.value = settingsRepository.getIslandSecondaryBubbleSide()
@@ -2639,7 +2635,6 @@ class MainViewModel : ViewModel() {
         islandNotifPeekStyle.value = settingsRepository.getIslandNotifPeekStyle()
         isIslandNotifKeepProgress.value = settingsRepository.isIslandNotifKeepProgressEnabled()
         isIslandNotifQueue.value = settingsRepository.isIslandNotifQueueEnabled()
-        islandNotifQueueStyle.value = settingsRepository.getIslandNotifQueueStyle()
         islandSecondaryBubbleSide.value = settingsRepository.getIslandSecondaryBubbleSide()
         isIslandNotifQueueInline.value = settingsRepository.isIslandNotifQueueInlineEnabled()
         isIslandNotifSkipSilent.value = settingsRepository.isIslandNotifSkipSilentEnabled()
@@ -6321,10 +6316,6 @@ class MainViewModel : ViewModel() {
         settingsRepository.setIslandSecondaryBubbleSide(side)
     }
 
-    fun setIslandNotifQueueStyle(style: String) {
-        islandNotifQueueStyle.value = style
-        settingsRepository.setIslandNotifQueueStyle(style)
-    }
 
     fun setIslandNotifQueue(enabled: Boolean) {
         isIslandNotifQueue.value = enabled

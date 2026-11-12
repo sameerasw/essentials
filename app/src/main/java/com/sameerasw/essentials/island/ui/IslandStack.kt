@@ -74,7 +74,6 @@ import com.sameerasw.essentials.island.model.StackIcon
 import com.sameerasw.essentials.island.model.QueueOverflow
 import kotlin.math.roundToInt
 
-private const val BUBBLE_MAX_MINIS = 3
 private const val PILL_MAX_ICONS = 5
 
 private class QueueEntry(
@@ -127,63 +126,6 @@ private val QueueExit = scaleOut(IslandMotion.expressiveFastEffects(), targetSca
 
 val LocalBubbleIconFraction = androidx.compose.runtime.compositionLocalOf { 0.72f }
 val LocalIslandCellSize = androidx.compose.runtime.compositionLocalOf { 24.dp }
-
-@Composable
-fun IslandStackBubble(
-    icons: List<StackIcon>,
-    size: Dp,
-    modifier: Modifier = Modifier,
-    outlineColor: Color? = null,
-    outlineThickness: Dp = 1.dp,
-    bond: LiquidBond? = null,
-) {
-    val shown = queueVisible(icons, BUBBLE_MAX_MINIS)
-    val count = shown.size
-    val fit = LocalBubbleIconFraction.current / 0.72f
-    val iconSize = when (count) {
-        1 -> size * 0.62f
-        2 -> size * 0.42f
-        else -> size * 0.36f
-    } * fit
-    val r = size * 0.19f * fit
-    fun slot(i: Int): Pair<Dp, Dp> = when (count) {
-        1 -> 0.dp to 0.dp
-        2 -> listOf(-r to 0.dp, r to 0.dp)[i]
-        else -> listOf(0.dp to -r, -r to r * 0.7f, r to r * 0.7f)[i]
-    }
-
-    val liquid = rememberLiquidBody(LiquidSpec.Droplet, bond)
-    Box(
-        modifier = modifier
-            .liquid(liquid)
-            .size(size)
-            .clip(CircleShape)
-            .background(Color.Black)
-            .islandOutline(outlineColor, outlineThickness, CircleShape),
-        contentAlignment = Alignment.Center,
-    ) {
-        rememberQueueEntries(shown).forEach { entry ->
-            key(entry.icon.key) {
-                QueueExitWatcher(entry)
-                val held = remember { arrayOfNulls<Pair<Dp, Dp>>(1) }
-                val index = shown.indexOfFirst { it.key == entry.icon.key }
-                val target = if (index >= 0) slot(index).also { held[0] = it } else held[0] ?: (0.dp to 0.dp)
-                val x by animateDpAsState(target.first, IslandMotion.expressiveDefaultSpatial(), label = "bubbleX")
-                val y by animateDpAsState(target.second, IslandMotion.expressiveDefaultSpatial(), label = "bubbleY")
-                val s by animateDpAsState(iconSize, IslandMotion.expressiveDefaultSpatial(), label = "bubbleSize")
-                val miniLiquid = rememberLiquidBody(LiquidSpec.Droplet)
-                AnimatedVisibility(
-                    visibleState = entry.visibility,
-                    enter = QueueEnter,
-                    exit = QueueExit,
-                    modifier = Modifier.offset(x, y).liquid(miniLiquid),
-                ) {
-                    Box(Modifier.size(s), contentAlignment = Alignment.Center) { entry.icon.content(s) }
-                }
-            }
-        }
-    }
-}
 
 @Composable
 fun IslandQueueCount(
@@ -523,7 +465,6 @@ fun IslandSideBubble(
     bubbleFor: (String) -> SideBubble?,
     size: Dp,
     modifier: Modifier = Modifier,
-    style: QueueStyle = QueueStyle.Stack,
     outlineColor: Color? = null,
     outlineThickness: Dp = 1.dp,
     maxIcons: Int = OVERLAP_MAX,
@@ -555,7 +496,7 @@ fun IslandSideBubble(
                             .islandOutline(outlineColor, outlineThickness, CircleShape),
                         contentAlignment = Alignment.Center,
                     ) { content(size * LocalBubbleIconFraction.current) }
-                } else if (style == QueueStyle.Overlap) {
+                } else {
                     IslandStackOverlap(
                         bubble.icons,
                         size,
@@ -569,24 +510,22 @@ fun IslandSideBubble(
                         sideTarget = sideTarget,
                         travel = travel,
                     )
-                } else {
-                    IslandStackBubble(bubble.icons, size, outlineColor = outlineColor, outlineThickness = outlineThickness)
                 }
             }
         }
     }
 }
 
-fun inlineBubbleCell(bubble: SideBubble, overlap: Boolean): CompactCell = CompactCell("bubble.inline") {
+fun inlineBubbleCell(bubble: SideBubble): CompactCell = CompactCell("bubble.inline") {
     val tap = Modifier.pointerInput(bubble) { detectTapGestures { bubble.onOpen() } }
     val content = bubble.content
     val cell = LocalIslandCellSize.current
-    when {
-        content != null -> Box(tap.size(cell * 0.92f).clip(CircleShape).background(Color.Black), contentAlignment = Alignment.Center) {
+    if (content != null) {
+        Box(tap.size(cell * 0.92f).clip(CircleShape).background(Color.Black), contentAlignment = Alignment.Center) {
             content(cell * 0.67f)
         }
-        overlap -> IslandStackOverlap(bubble.icons, cell * 0.92f, modifier = tap)
-        else -> IslandStackBubble(bubble.icons, cell * 1.08f, modifier = tap)
+    } else {
+        IslandStackOverlap(bubble.icons, cell * 0.92f, modifier = tap)
     }
 }
 
