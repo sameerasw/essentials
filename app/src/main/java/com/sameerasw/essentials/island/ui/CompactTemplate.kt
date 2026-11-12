@@ -210,6 +210,7 @@ fun CompactTemplate(
                 .height(spec.cellSize),
         ) { k ->
             val unit = k?.let { known[it] }
+            val live = k != null && k == target
             if (unit != null) {
                 val tap = Modifier.pointerInput(unit.itemKey) {
                     detectTapGestures(
@@ -219,7 +220,7 @@ fun CompactTemplate(
                 }
                 val measured = tap.clipToBounds().layout { measurable, c ->
                     val p = measurable.measure(c.copy(maxWidth = Constraints.Infinity))
-                    com.sameerasw.essentials.island.state.CompactCellWidths.record(unit.cells.map { it.cell.key }, p.width)
+                    if (live) com.sameerasw.essentials.island.state.CompactCellWidths.record(unit.cells.map { it.cell.key }, p.width)
                     val w = p.width.coerceIn(c.minWidth, c.maxWidth)
                     layout(w, p.height) { p.place(0, 0) }
                 }
