@@ -1513,7 +1513,7 @@
     <string name="island_pulse_shadow_title">Pulse for new notifications</string>
     <string name="island_statusbar_aware_width_info">This may not work on all devices. It works best on Pixels and devices with a status bar close to AOSP.</string>
     <string name="island_statusbar_aware_width_info_tip">Even on those devices, try reducing the number of visible status bar icons to give the island more space.</string>
-    <string name="island_dismiss_direction_title">Dismissals</string>
+    <string name="island_dismiss_direction_title">Dismiss swipe</string>
     <string name="island_dismiss_direction_horizontal">Horizontal</string>
     <string name="island_dismiss_direction_down">Down</string>
     <string name="island_media_bubble_title">Show as a bubble</string>
@@ -1541,4 +1541,11 @@
     <string name="feat_lockscreen_shortcuts_title">අගුළු තිර කෙටිමං</string>
     <string name="cat_navigation">සංචාලනය</string>
     <string name="feat_power_saving_title">බලශක්ති ඉතිරිකිරීම</string>
+    <string name="island_section_interactions">Interactions</string>
+    <string name="island_section_gestures">Gestures</string>
+    <string name="island_section_expanded">Expanded island</string>
+    <string name="island_section_landscape">Landscape</string>
+    <string name="island_section_experimental">Experimental</string>
+    <string name="island_padding_around_title">Padding around</string>
+    <string name="island_notif_lock_hidden_title">Hidden</string>
 </resources>

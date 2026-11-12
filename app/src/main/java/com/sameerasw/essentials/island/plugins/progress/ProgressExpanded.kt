@@ -52,7 +52,7 @@ fun ProgressExpanded(
         Column(Modifier.fillMaxWidth().padding(spec.expandedOutset)) {
             Spacer(Modifier.height(spec.expandedTopPadding))
             scope.CameraRow(
-                horizontalPadding = spec.cameraGap + spec.expandedCorner * 0.35f,
+                horizontalPadding = spec.contentGap + spec.expandedCorner * 0.35f,
                 title = title,
                 start = {
                     IslandBitmap(icon, spec.cellSize, fallbackRes = R.drawable.rounded_downloading_24, tint = if (iconIsGlyph) accent else null)

@@ -1744,8 +1744,13 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="watchface_show_glow_desc">Degradado dinámico en la parte superior para eventos y viajes</string>
     <string name="setting_hidden_debugging_title">Ocultar soporte de Depuración</string>
     <string name="island_section_visuals">Visuales</string>
-    <string name="island_section_duration">Duracion</string>
+    <string name="island_section_duration">Timing</string>
     <string name="island_section_behavior">Comportamiento</string>
+    <string name="island_section_interactions">Interactions</string>
+    <string name="island_section_gestures">Gestures</string>
+    <string name="island_section_expanded">Expanded island</string>
+    <string name="island_section_landscape">Landscape</string>
+    <string name="island_section_experimental">Experimental</string>
     <string name="island_section_placement">Posicion</string>
     <string name="island_brief_show_alarm_title">Mostrar las siguientes alarmas</string>
     <string name="island_brief_two_line_header_title">Encabezado de 2 líneas</string>
@@ -1770,7 +1775,7 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="island_font_scale_title">Tamaño de Fuente</string>
     <string name="island_expanded_roundness_title">Radio de las Esquinas Expandida</string>
     <string name="island_border_outline_title">Lineas del Borde</string>
-    <string name="island_show_glow_title">Activar brillo de Acento</string>
+    <string name="island_show_glow_title">Expanded accent glow</string>
     <string name="island_glow_intensity_title">Glow intensity</string>
     <string name="island_prefer_still_title">Prefer still island</string>
     <string name="island_prefer_still_info">Stops the island\'s animations after a few seconds without interaction, so the display can drop to a low refresh rate and save battery. Media visualizers, second by second counters and other looping animations pause until you interact with the island again.</string>
@@ -1806,6 +1811,7 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="island_call_show_expanded">Expandido</string>
     <string name="island_expanded_width_title">Ancho expandido</string>
     <string name="island_cutout_gap_title">Espacio de la cámara</string>
+    <string name="island_padding_around_title">Padding around</string>
     <string name="island_keep_on_landscape_title">Mantener Horizontal</string>
     <string name="island_expanded_scale_desc">Expandir la isla de manera uniforme en todos los lados</string>
     <string name="island_expanded_padding_title">Márgen Expandido</string>
@@ -1826,7 +1832,7 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="island_border_outline_dynamic_title">Colores dinamicos</string>
     <string name="button_remap_pause_on_volume_dialog_title">Deshabilirar si el panel de volumen esta abierto</string>
     <string name="island_navigation_expand_title">Expandir antes de una curva</string>
-    <string name="island_navigation_peek_after_expand_title">Línea compacta después expandir</string>
+    <string name="island_navigation_peek_after_expand_title">Keep showing in peek</string>
     <string name="island_secondary_bubble_title">Burbuja secundaria</string>
     <string name="island_balance_compact_title">Isla compacta visualmente equilibrada</string>
     <string name="island_neural_expressive_title">Neural Expressive expanded animations</string>
@@ -1919,7 +1925,6 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="watch_esim_install_title">Instalar eSIM</string>
     <string name="watch_esim_install_desc">En regiones insoportadas</string>
     <string name="island_bond_edge_title">Union con la Isla si esta inactuva</string>
-    <string name="island_navigation_peek_after_expand_desc">Si esta desactivado, la Isla vuelve a ser compacta</string>
     <string name="island_navigation_on_new_title">Nueva instrucción</string>
     <string name="feat_screenshots_title">Limpieza de capturas de pantalla</string>
     <string name="feat_screenshots_desc">Limpiar capturas de pantallas compartidas y viejas</string>
@@ -1952,7 +1957,7 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="island_statusbar_ignore_notifications_title">Ignorar notificaciones</string>
     <string name="island_statusbar_aware_width_info">This may not work on all devices. It works best on Pixels and devices with a status bar close to AOSP.</string>
     <string name="island_statusbar_aware_width_info_tip">Even on those devices, try reducing the number of visible status bar icons to give the island more space.</string>
-    <string name="island_dismiss_direction_title">Dismissals</string>
+    <string name="island_dismiss_direction_title">Dismiss swipe</string>
     <string name="island_dismiss_direction_horizontal">Horizontal</string>
     <string name="island_dismiss_direction_down">Down</string>
     <string name="island_media_bubble_title">Show as a bubble</string>
@@ -1973,7 +1978,6 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="shut_up_how_to_use">1. Grant Write secure settings and Usage access from the permissions prompt. Shizuku is needed for freezing apps.\n\n2. Tap Select Apps and pick the apps that refuse to run with developer options, debugging or accessibility turned on, such as banking or payment apps.\n\n3. Tap an app to choose what gets hidden for it: Developer Options, USB Debugging, Wireless Debugging and Accessibility Services. You can also turn on Auto Freeze to freeze the app after you leave it, and Restore keyboard to switch back to your keyboard afterwards.\n\n4. Tap Create shortcut for each app and add it to your home screen. Always open the app from this shortcut, never from its normal icon, so the settings are turned off before the app starts and can check them.\n\n5. When you leave the app, Shut-Up! waits for the Restoration Delay and then shows a notification. Tap it to turn everything back on. Set Restore mode to Auto if you would rather have the settings restored on their own.\n\nTips: if wireless debugging was turned off, Shizuku may stop working, so enable Attempt Shizuku restart. Use the Keyboard option to pick the keyboard to restore, or leave it on Skip. With Auto Freeze, a notification counts down and lets you freeze now or abort.</string>
     <string name="island_secondary_bubbles_count_title">Numero de burbujas secundarias</string>
     <string name="island_secondary_bubble_side_title">Secondary bubble placement</string>
-    <string name="island_secondary_style_title">Estilo de iconos secundarios</string>
     <string name="island_live_updates_expanded_title">Expandir las actualizaciones en vivo</string>
     <string name="island_live_updates_title">Actualizaciones en vivo</string>
     <string name="island_live_updates_count_title">Conteo de actualizaciones en vivo</string>
@@ -2008,4 +2012,5 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="flashlight_pulse_disable_on_dnd_title">No usar en No Molestar</string>
     <string name="hilight_only_screen_off_title">Solo si la pantalla esta apagada</string>
     <string name="diy_wait_duration">Duracion</string>
+    <string name="island_notif_lock_hidden_title">Hidden</string>
 </resources>
