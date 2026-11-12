@@ -48,6 +48,7 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.sameerasw.essentials.EssentialsApp
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.island.service.CameraGeometryResolver
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.data.repository.UpdateRepository
 import com.sameerasw.essentials.utils.LogManager
@@ -230,6 +231,7 @@ class MainViewModel : ViewModel() {
     val islandCameraSize = mutableFloatStateOf(1.0f)
     val islandMaxWidth = mutableFloatStateOf(360f)
     val islandCutoutGap = mutableFloatStateOf(6f)
+    val islandPaddingAround = mutableFloatStateOf(6f)
     val islandExpandedWidth = mutableFloatStateOf(360f)
     val islandExpandedRoundness = mutableFloatStateOf(24f)
     val islandFontScale = mutableFloatStateOf(1f)
@@ -305,9 +307,7 @@ class MainViewModel : ViewModel() {
     val islandNotifPeekStyle = mutableStateOf(SettingsRepository.ISLAND_NOTIF_PEEK_STYLE_FULL)
     val isIslandNotifKeepProgress = mutableStateOf(true)
     val isIslandNotifQueue = mutableStateOf(true)
-    val islandNotifQueueStyle = mutableStateOf(SettingsRepository.ISLAND_NOTIF_QUEUE_STYLE_STACK)
     val islandSecondaryBubbleSide = mutableStateOf(SettingsRepository.ISLAND_CAMERA_POSITION_LEFT)
-    val isIslandNotifQueueInline = mutableStateOf(false)
     val isIslandNotifSkipSilent = mutableStateOf(true)
     val isIslandNotifFollowDnd = mutableStateOf(true)
     val isIslandNotifFilterApps = mutableStateOf(false)
@@ -961,6 +961,9 @@ class MainViewModel : ViewModel() {
                     SettingsRepository.KEY_ISLAND_CUTOUT_GAP ->
                         islandCutoutGap.floatValue = settingsRepository.getIslandCutoutGap()
 
+                    SettingsRepository.KEY_ISLAND_PADDING_AROUND ->
+                        islandPaddingAround.floatValue = settingsRepository.getIslandPaddingAround()
+
                     SettingsRepository.KEY_ISLAND_SUPPRESS_SYSTEM_HEADS_UP ->
                         isIslandSuppressSystemHeadsUp.value = settingsRepository.isIslandSuppressSystemHeadsUpEnabled()
 
@@ -1004,14 +1007,8 @@ class MainViewModel : ViewModel() {
                     SettingsRepository.KEY_ISLAND_NOTIF_QUEUE ->
                         isIslandNotifQueue.value = settingsRepository.isIslandNotifQueueEnabled()
 
-                    SettingsRepository.KEY_ISLAND_NOTIF_QUEUE_STYLE ->
-                        islandNotifQueueStyle.value = settingsRepository.getIslandNotifQueueStyle()
-
                     SettingsRepository.KEY_ISLAND_SECONDARY_BUBBLE_SIDE ->
                         islandSecondaryBubbleSide.value = settingsRepository.getIslandSecondaryBubbleSide()
-
-                    SettingsRepository.KEY_ISLAND_NOTIF_QUEUE_INLINE ->
-                        isIslandNotifQueueInline.value = settingsRepository.isIslandNotifQueueInlineEnabled()
 
                     SettingsRepository.KEY_ISLAND_NOTIF_SKIP_SILENT ->
                         isIslandNotifSkipSilent.value = settingsRepository.isIslandNotifSkipSilentEnabled()
@@ -2545,6 +2542,7 @@ class MainViewModel : ViewModel() {
         islandCameraSize.floatValue = settingsRepository.getIslandCameraSize()
         islandMaxWidth.floatValue = settingsRepository.getIslandMaxWidth()
         islandCutoutGap.floatValue = settingsRepository.getIslandCutoutGap()
+        islandPaddingAround.floatValue = settingsRepository.getIslandPaddingAround()
         islandExpandedWidth.floatValue = settingsRepository.getIslandExpandedWidth()
         islandExpandedRoundness.floatValue = settingsRepository.getIslandExpandedRoundness()
         islandFontScale.floatValue = settingsRepository.getIslandFontScale()
@@ -2633,9 +2631,7 @@ class MainViewModel : ViewModel() {
         islandNotifPeekStyle.value = settingsRepository.getIslandNotifPeekStyle()
         isIslandNotifKeepProgress.value = settingsRepository.isIslandNotifKeepProgressEnabled()
         isIslandNotifQueue.value = settingsRepository.isIslandNotifQueueEnabled()
-        islandNotifQueueStyle.value = settingsRepository.getIslandNotifQueueStyle()
         islandSecondaryBubbleSide.value = settingsRepository.getIslandSecondaryBubbleSide()
-        isIslandNotifQueueInline.value = settingsRepository.isIslandNotifQueueInlineEnabled()
         isIslandNotifSkipSilent.value = settingsRepository.isIslandNotifSkipSilentEnabled()
         isIslandNotifFollowDnd.value = settingsRepository.isIslandNotifFollowDndEnabled()
         isIslandNotifFilterApps.value = settingsRepository.isIslandNotifFilterAppsEnabled()
@@ -5565,6 +5561,7 @@ class MainViewModel : ViewModel() {
         isIslandAutoDetect.value = settingsRepository.isIslandAutoDetectEnabled()
         islandMaxWidth.floatValue = settingsRepository.getIslandMaxWidth()
         islandCutoutGap.floatValue = settingsRepository.getIslandCutoutGap()
+        islandPaddingAround.floatValue = settingsRepository.getIslandPaddingAround()
         islandExpandedWidth.floatValue = settingsRepository.getIslandExpandedWidth()
         islandExpandedRoundness.floatValue = settingsRepository.getIslandExpandedRoundness()
         islandExpandedPadding.floatValue = settingsRepository.getIslandExpandedPadding()
@@ -5815,20 +5812,14 @@ class MainViewModel : ViewModel() {
     fun autoAlignIslandWithCamera(context: Context): Boolean {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) return false
         val wm = context.getSystemService(Context.WINDOW_SERVICE) as? WindowManager ?: return false
+        val bounds = CameraGeometryResolver.cutoutBounds(wm) ?: return false
         val metrics = wm.maximumWindowMetrics
-        val rect =
-            try {
-                metrics.windowInsets.displayCutout?.boundingRects
-                    ?.let { rects -> rects.find { it.top == 0 } ?: rects.firstOrNull() }
-            } catch (_: Exception) {
-                null
-            } ?: return false
         val density = context.resources.displayMetrics.density
         val screenWidth = metrics.bounds.width().toFloat()
         val screenHeight = metrics.bounds.height().toFloat()
-        val radius = (minOf(rect.width(), rect.height()) / 2f).coerceAtLeast(12f * density)
-        setIslandCameraOffsetX((rect.exactCenterX() / screenWidth * 100f).coerceIn(0f, 100f))
-        setIslandCameraOffsetY((rect.exactCenterY() / screenHeight * 100f).coerceIn(0f, 20f))
+        val radius = CameraGeometryResolver.lensRadius(bounds, density)
+        setIslandCameraOffsetX((bounds.centerX() / screenWidth * 100f).coerceIn(0f, 100f))
+        setIslandCameraOffsetY((bounds.centerY() / screenHeight * 100f).coerceIn(0f, 20f))
         setIslandCameraSize((radius / (16f * density)).coerceIn(0.05f, 2.0f))
         setIslandAutoDetect(false)
         return true
@@ -5857,6 +5848,11 @@ class MainViewModel : ViewModel() {
     fun setIslandCutoutGap(value: Float) {
         islandCutoutGap.floatValue = value
         settingsRepository.setIslandCutoutGap(value)
+    }
+
+    fun setIslandPaddingAround(value: Float) {
+        islandPaddingAround.floatValue = value
+        settingsRepository.setIslandPaddingAround(value)
     }
 
     fun setIslandExpandedWidth(value: Float) {
@@ -6305,20 +6301,12 @@ class MainViewModel : ViewModel() {
         islandCatchUpTimeoutMs.longValue = settingsRepository.getIslandCatchUpStoredMs()
     }
 
-    fun setIslandNotifQueueInline(enabled: Boolean) {
-        isIslandNotifQueueInline.value = enabled
-        settingsRepository.setIslandNotifQueueInlineEnabled(enabled)
-    }
 
     fun setIslandSecondaryBubbleSide(side: String) {
         islandSecondaryBubbleSide.value = side
         settingsRepository.setIslandSecondaryBubbleSide(side)
     }
 
-    fun setIslandNotifQueueStyle(style: String) {
-        islandNotifQueueStyle.value = style
-        settingsRepository.setIslandNotifQueueStyle(style)
-    }
 
     fun setIslandNotifQueue(enabled: Boolean) {
         isIslandNotifQueue.value = enabled

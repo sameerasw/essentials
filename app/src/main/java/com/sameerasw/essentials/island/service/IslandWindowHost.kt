@@ -4,6 +4,7 @@ import com.sameerasw.essentials.island.state.CameraAnchor
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.PixelFormat
+import android.graphics.Rect
 import android.os.Build
 import android.util.Log
 import android.view.Gravity
@@ -30,10 +31,8 @@ class IslandWindowHost(
     private val context: Context,
     private val wm: WindowManager,
 ) {
-    private var drawRoot: FrameLayout? = null
     private var composeView: ComposeView? = null
-    private var owner: OverlayLifecycleOwner? = null
-    private var drawParams: WindowManager.LayoutParams? = null
+    private var drawRect: Rect? = null
     private var touchView: View? = null
     private var touchParams: WindowManager.LayoutParams? = null
     private var touchAdded = false
@@ -59,11 +58,10 @@ class IslandWindowHost(
 
     fun attach(geometry: CameraGeometry, content: @Composable () -> Unit): Boolean {
         this.geometry = geometry
-        if (drawRoot != null) {
+        if (composeView != null) {
             layoutDrawWindow()
             return true
         }
-        val lifecycle = OverlayLifecycleOwner().also { it.onCreate() }
         val compose = ComposeView(context).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnDetachedFromWindow)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
@@ -74,30 +72,14 @@ class IslandWindowHost(
                 CompositionLocalProvider(LocalHapticFeedback provides gated) { content() }
             }
         }
-        val frame = FrameLayout(context).apply {
-            setViewTreeLifecycleOwner(lifecycle)
-            setViewTreeSavedStateRegistryOwner(lifecycle)
-            setViewTreeViewModelStoreOwner(lifecycle)
-            addView(compose)
-        }
-        val lp = baseParams(touchable = false)
-        try {
-            drawRoot = frame
-            composeView = compose
-            owner = lifecycle
-            drawParams = lp
-            applyDrawSize(lp)
-            wm.addView(frame, lp)
-            return true
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to add island window", e)
-            drawRoot = null
-            composeView = null
-            drawParams = null
-            owner = null
-            lifecycle.onDestroy()
+        val rect = currentRect() ?: return false
+        if (!SharedOverlayWindow.attach(context, wm, SharedOverlayWindow.Layer.Island, compose, rect)) {
+            Log.e(TAG, "Failed to add island to the shared overlay")
             return false
         }
+        composeView = compose
+        drawRect = rect
+        return true
     }
 
     fun updateGeometry(geometry: CameraGeometry) {
@@ -109,20 +91,18 @@ class IslandWindowHost(
     fun setTextInput(active: Boolean) {
         if (textInput == active) return
         textInput = active
-        val lp = drawParams ?: return
-        val view = drawRoot ?: return
-        applyDrawSize(lp)
-        val inert = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
-        lp.flags = if (active) lp.flags and inert.inv() else lp.flags or inert
-        lp.softInputMode = if (active) {
-            WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING or WindowManager.LayoutParams.SOFT_INPUT_STATE_UNCHANGED
+        if (composeView == null) return
+        val rect = currentRect() ?: return
+        drawRect = rect
+        SharedOverlayWindow.setRect(SharedOverlayWindow.Layer.Island, rect)
+        if (active) {
+            SharedOverlayWindow.setWindowRect(
+                rect,
+                focusable = true,
+                softInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING or WindowManager.LayoutParams.SOFT_INPUT_STATE_UNCHANGED,
+            )
         } else {
-            WindowManager.LayoutParams.SOFT_INPUT_STATE_UNSPECIFIED
-        }
-        try {
-            wm.updateViewLayout(view, lp)
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to switch island input mode", e)
+            SharedOverlayWindow.setWindowRect(null, focusable = false)
         }
         layoutTouchWindow()
     }
@@ -150,21 +130,14 @@ class IslandWindowHost(
     }
 
     fun detach() {
+        if (textInput) SharedOverlayWindow.setWindowRect(null, focusable = false)
         textInput = false
         removeTouchWindow()
         removeGestureWindow()
         alwaysGestures = false
-        drawRoot?.let {
-            try {
-                wm.removeViewImmediate(it)
-            } catch (_: Exception) {
-            }
-        }
-        owner?.onDestroy()
-        drawRoot = null
+        SharedOverlayWindow.detach(SharedOverlayWindow.Layer.Island)
         composeView = null
-        owner = null
-        drawParams = null
+        drawRect = null
         targetBounds = null
     }
 
@@ -186,41 +159,32 @@ class IslandWindowHost(
         }
     }
 
-    private fun applyDrawSize(lp: WindowManager.LayoutParams) {
-        val geo = geometry ?: return
+    private fun currentRect(): Rect? {
+        val geo = geometry ?: return null
         if (textInput) {
             val reach = maxWidthPx + 32 * density
             val width = if (geo.anchor == CameraAnchor.Center) reach.roundToInt().coerceAtMost(geo.screenWidth) else (reach * 2).roundToInt()
-            lp.width = width
-            lp.height = if (geo.screenWidth > geo.screenHeight) geo.screenHeight else (geo.screenHeight * 0.6f).roundToInt()
-            lp.x = (geo.centerX - width / 2f).roundToInt()
-            lp.y = 0
-            return
+            val height = if (geo.screenWidth > geo.screenHeight) geo.screenHeight else (geo.screenHeight * 0.6f).roundToInt()
+            val left = (geo.centerX - width / 2f).roundToInt()
+            return Rect(left, 0, left + width, height)
         }
         val viewport = islandDrawViewport(geo)
-        lp.width = viewport.width
-        lp.height = viewport.height
-        lp.x = viewport.left
-        lp.y = viewport.top
+        return Rect(viewport.left, viewport.top, viewport.right, viewport.bottom)
     }
 
     private fun layoutDrawWindow() {
-        val lp = drawParams ?: return
-        val view = drawRoot ?: return
-        val before = Triple(lp.width, lp.height, lp.x)
-        applyDrawSize(lp)
-        if (before == Triple(lp.width, lp.height, lp.x)) return
-        try {
-            wm.updateViewLayout(view, lp)
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to update island window", e)
-        }
+        if (composeView == null) return
+        val rect = currentRect() ?: return
+        if (rect == drawRect) return
+        drawRect = rect
+        SharedOverlayWindow.setRect(SharedOverlayWindow.Layer.Island, rect)
+        if (textInput) SharedOverlayWindow.setWindowRect(rect, focusable = true, softInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING or WindowManager.LayoutParams.SOFT_INPUT_STATE_UNCHANGED)
     }
 
     @SuppressLint("ClickableViewAccessibility")
     private fun layoutGestureWindow() {
         val geo = geometry
-        if (geo == null || drawParams == null || !alwaysGestures || (stage != IslandStage.Hidden && !gestureTouching) || textInput || interactionsDisabled) {
+        if (geo == null || drawRect == null || !alwaysGestures || (stage != IslandStage.Hidden && !gestureTouching) || textInput || interactionsDisabled) {
             removeGestureWindow()
             return
         }
@@ -258,15 +222,15 @@ class IslandWindowHost(
     @SuppressLint("ClickableViewAccessibility")
     private fun layoutTouchWindow() {
         layoutGestureWindow()
-        val draw = drawParams
+        val draw = drawRect
         val bounds = targetBounds
         if (draw == null || bounds == null || stage == IslandStage.Hidden || textInput || interactionsDisabled) {
             removeTouchWindow()
             return
         }
         val lp = touchParams ?: baseParams(touchable = true).also { touchParams = it }
-        lp.x = draw.x + bounds.left - touchPad
-        lp.y = draw.y + bounds.top - touchPad
+        lp.x = draw.left + bounds.left - touchPad
+        lp.y = draw.top + bounds.top - touchPad
         lp.width = bounds.width + touchPad * 2
         lp.height = bounds.height + touchPad * 2
         val view = touchView ?: View(context).also { v ->
@@ -282,10 +246,10 @@ class IslandWindowHost(
             return false
         }
         val target = composeView ?: return false
-        val draw = drawParams ?: return false
+        val draw = drawRect ?: return false
         val touch = touchParams ?: return false
         val copy = MotionEvent.obtain(event)
-        copy.offsetLocation((touch.x - draw.x).toFloat(), (touch.y - draw.y).toFloat())
+        copy.offsetLocation((touch.x - draw.left).toFloat(), (touch.y - draw.top).toFloat())
         target.dispatchTouchEvent(copy)
         copy.recycle()
         return true

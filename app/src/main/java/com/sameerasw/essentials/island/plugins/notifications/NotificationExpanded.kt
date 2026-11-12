@@ -146,7 +146,7 @@ fun NotificationExpanded(
             Column(Modifier.weight(1f, fill = false)) {
                 Spacer(Modifier.height(spec.expandedTopPadding))
                 scope.CameraRow(
-                    horizontalPadding = spec.cameraGap + spec.expandedCorner * 0.35f,
+                    horizontalPadding = spec.contentGap + spec.expandedCorner * 0.35f,
                     title = sender,
                     start = {
                         IslandBitmap(alert.chatIcon ?: alert.appIcon ?: alert.icon, spec.cellSize, fallbackRes = R.drawable.rounded_notifications_unread_24)

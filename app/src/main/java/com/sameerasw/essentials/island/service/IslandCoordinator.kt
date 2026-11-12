@@ -78,8 +78,6 @@ import com.sameerasw.essentials.island.ui.IslandFontFamily
 import com.sameerasw.essentials.island.ui.IslandLayoutSpec
 import com.sameerasw.essentials.island.ui.IslandMotion
 import com.sameerasw.essentials.island.ui.IslandRoot
-import com.sameerasw.essentials.island.ui.QueueStyle
-import com.sameerasw.essentials.island.ui.IslandStackBubble
 import com.sameerasw.essentials.island.ui.IslandStackOverlap
 import com.sameerasw.essentials.island.model.SideBubble
 import com.sameerasw.essentials.island.model.SideBubblePriority
@@ -609,7 +607,7 @@ class IslandCoordinator(
                 settings.getIslandNotifPeekStyle() == SettingsRepository.ISLAND_NOTIF_PEEK_STYLE_MINIMAL
             val layout = when {
                 !minimal -> QueuePreviewLayout.Peek
-                settings.isIslandNotifQueueInlineEnabled() -> QueuePreviewLayout.MinimalInline
+                !settings.isIslandSecondaryBubbleEnabled() -> QueuePreviewLayout.MinimalInline
                 else -> QueuePreviewLayout.MinimalStack
             }
             controller.holdFocus = layout == QueuePreviewLayout.Peek
@@ -620,7 +618,6 @@ class IslandCoordinator(
                         service.getString(R.string.island_preview_sample_title),
                         service.getString(R.string.island_preview_sample_text),
                         layout,
-                        overlap = settings.getIslandNotifQueueStyle() == SettingsRepository.ISLAND_NOTIF_QUEUE_STYLE_OVERLAP,
                     ),
                 ),
             )
@@ -685,14 +682,14 @@ class IslandCoordinator(
 
     private enum class QueuePreviewLayout { Peek, MinimalInline, MinimalStack }
 
-    private fun queuePreviewItem(title: String, text: String, layout: QueuePreviewLayout, overlap: Boolean): IslandItem {
+    private fun queuePreviewItem(title: String, text: String, layout: QueuePreviewLayout): IslandItem {
         fun icon(key: String, current: Boolean = false) = StackIcon(key, current = current) { size ->
             IslandIcon(R.drawable.rounded_notifications_unread_24, size = size * 0.7f)
         }
         val waiting = listOf(icon("$QUEUE_PREVIEW_KEY.1"), icon("$QUEUE_PREVIEW_KEY.2"))
         val iconCell = CompactCell("preview.queue.icon") { IslandIcon(R.drawable.rounded_notifications_unread_24, size = 18.dp) }
         val queueCell = CompactCell("preview.queue.stack") {
-            if (overlap) IslandStackOverlap(waiting, 22.dp) else IslandStackBubble(waiting, 26.dp)
+            IslandStackOverlap(waiting, 22.dp)
         }
         return IslandItem(
             key = QUEUE_PREVIEW_KEY,
@@ -790,6 +787,7 @@ class IslandCoordinator(
         spec.value = IslandLayoutSpec(
             cameraDiameter = (geo.diameter / density).dp,
             cameraGap = (geo.gap / density).dp,
+            contentGap = (geo.contentGap / density).dp,
             verticalGap = (geo.verticalGap / density).dp,
             surfaceTop = (geo.surfaceTop / density).dp,
             lineWidth = lineWidth.dp,
@@ -832,11 +830,7 @@ class IslandCoordinator(
             pulseOffsetY = settings.getIslandPulseShadowOffsetY().coerceIn(-8f, 16f).dp,
             pulseOpacity = settings.getIslandPulseShadowOpacity().coerceIn(0.1f, 1f),
             pulseDurationMs = settings.getIslandPulseShadowDurationMs().coerceIn(300f, 4000f).toInt(),
-            queueStyle = when (settings.getIslandNotifQueueStyle()) {
-                SettingsRepository.ISLAND_NOTIF_QUEUE_STYLE_OVERLAP -> QueueStyle.Overlap
-                else -> QueueStyle.Stack
-            },
-            queueInline = settings.isIslandNotifQueueInlineEnabled(),
+            queueInline = !settings.isIslandSecondaryBubbleEnabled(),
             bubbleOnRight = settings.getIslandSecondaryBubbleSide() == SettingsRepository.ISLAND_CAMERA_POSITION_RIGHT,
             iconColorCustom = if (iconCustomMode && !iconMaterialYou) {
                 runCatching {
@@ -860,7 +854,6 @@ class IslandCoordinator(
         controller.chipsEnabled = settings.getBoolean(SettingsRepository.KEY_ISLAND_CHIPS, false)
         controller.secondaryBubbleEnabled = settings.isIslandSecondaryBubbleEnabled()
         controller.secondaryBubbleMax = settings.getIslandNotifHubIcons()
-        controller.secondaryBubbleOverlap = settings.getIslandNotifQueueStyle() == SettingsRepository.ISLAND_NOTIF_QUEUE_STYLE_OVERLAP
         controller.bubbleOnRight = settings.getIslandSecondaryBubbleSide() == SettingsRepository.ISLAND_CAMERA_POSITION_RIGHT
         controller.relayout()
         controller.expandedTimeoutMs = settings.getIslandExpandedTimeoutMs()
@@ -949,21 +942,21 @@ class IslandCoordinator(
 
     private val widthRelayout = Runnable { controller.relayout() }
 
-    private fun compactCellUnitPx(): Float = geometry?.let { it.diameter + it.gap } ?: 0f
+    private fun compactCellUnitPx(): Float = geometry?.let { it.contentSize + it.contentGap } ?: 0f
 
     private fun compactCellUnits(key: String): Float {
         val px = CompactCellWidths.get(key) ?: return 1f
         if (px == 0) return 0f
         val unit = compactCellUnitPx().takeIf { it > 0f } ?: return 1f
-        return (((px + (geometry?.gap ?: 0f)) / unit) * 4f).roundToInt() / 4f
+        return (((px + (geometry?.contentGap ?: 0f)) / unit) * 4f).roundToInt() / 4f
     }
 
     private fun fitsCompactWidth(before: List<String>, after: List<String>, leftExtra: Int, growing: Boolean): Int? {
         val geo = geometry ?: return 0
         val density = service.resources.displayMetrics.density
-        val cell = geo.diameter.toInt()
-        val spacing = geo.gap.toInt()
-        val inset = (geo.compactHeight * 0.15f).toInt()
+        val cell = geo.contentSize.toInt()
+        val spacing = geo.contentGap.toInt()
+        val inset = geo.edgeInset.toInt()
         fun need(keys: List<String>, extra: Int): Int =
             if (keys.isEmpty() && extra == 0) 0 else keys.sumOf { CompactCellWidths.get(it) ?: cell } + spacing * keys.size + inset +
                 if (extra > 0) maxOf(CompactCellWidths.bubbleExtent, extra * (cell + spacing)) else 0
@@ -1075,15 +1068,15 @@ class IslandCoordinator(
         )
         val CONFIG_KEYS = setOf(
             SettingsRepository.KEY_ISLAND_NOTIF_THEMED_BUBBLE,
-            SettingsRepository.KEY_ISLAND_NOTIF_QUEUE_STYLE,
             SettingsRepository.KEY_ISLAND_SECONDARY_BUBBLE_SIDE,
-            SettingsRepository.KEY_ISLAND_NOTIF_QUEUE_INLINE,
+            SettingsRepository.KEY_ISLAND_SECONDARY_BUBBLE,
             SettingsRepository.KEY_ISLAND_USE_AUTO_DETECT,
             SettingsRepository.KEY_ISLAND_CAMERA_OFFSET_X,
             SettingsRepository.KEY_ISLAND_CAMERA_OFFSET_Y,
             SettingsRepository.KEY_ISLAND_CAMERA_SIZE,
             SettingsRepository.KEY_ISLAND_MAX_WIDTH,
             SettingsRepository.KEY_ISLAND_CUTOUT_GAP,
+            SettingsRepository.KEY_ISLAND_PADDING_AROUND,
             SettingsRepository.KEY_ISLAND_EXPANDED_WIDTH,
             SettingsRepository.KEY_ISLAND_ICON_COLOR_MODE,
             SettingsRepository.KEY_ISLAND_ICON_COLOR_CUSTOM,
@@ -1130,7 +1123,6 @@ class IslandCoordinator(
             SettingsRepository.KEY_ISLAND_GLOW_INTENSITY,
             SettingsRepository.KEY_ISLAND_SECONDARY_BUBBLE,
             SettingsRepository.KEY_ISLAND_NOTIF_HUB_ICONS,
-            SettingsRepository.KEY_ISLAND_NOTIF_QUEUE_STYLE,
             SettingsRepository.KEY_ISLAND_SECONDARY_BUBBLE_SIDE,
             SettingsRepository.KEY_ISLAND_MAX_ITEMS,
             SettingsRepository.KEY_ISLAND_STATUSBAR_AWARE_WIDTH,

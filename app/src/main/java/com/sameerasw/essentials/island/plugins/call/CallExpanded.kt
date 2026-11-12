@@ -67,7 +67,7 @@ fun CallExpanded(
             Column {
                 Spacer(Modifier.height(spec.expandedTopPadding))
                 scope.CameraRow(
-                    horizontalPadding = spec.cameraGap + spec.expandedCorner * 0.35f,
+                    horizontalPadding = spec.contentGap + spec.expandedCorner * 0.35f,
                     title = caller,
                     start = {
                         IslandBitmap(photo, spec.cellSize, circle = true, fallbackRes = R.drawable.rounded_call_24)

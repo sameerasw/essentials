@@ -1513,6 +1513,7 @@
     <string name="island_max_width_title">Largura máxima </string>
     <string name="island_expanded_width_title">Largura expandido </string>
     <string name="island_cutout_gap_title">Distância da câmera </string>
+    <string name="island_padding_around_title">Padding around</string>
     <string name="setting_show_legacy_features_title">mostrar funções legacy (nota: legacy no português é legado)</string>
     <string name="setting_show_legacy_features_desc">Essas funcionalidades não vão receber atualizações futuras devido a limitações técnicas ou por não serem consideradas essenciais.</string>
     <string name="setting_app_icon_title">ícone do aplicativo (nota deixa ele mais estiloso)</string>
@@ -1534,7 +1535,7 @@
     <string name="duo_action_horizontal_slide_track_desc">Ativo somente enquanto a mídia estiver sendo reproduzida.</string>
     <string name="cat_navigation">navegação</string>
     <string name="island_timeout_title">duração na tela</string>
-    <string name="island_show_glow_title">Mostrar o brilho do destaque</string>
+    <string name="island_show_glow_title">Expanded accent glow</string>
     <string name="island_glow_intensity_title">Glow intensity</string>
     <string name="island_prefer_still_title">Prefer still island</string>
     <string name="island_prefer_still_info">Stops the island\'s animations after a few seconds without interaction, so the display can drop to a low refresh rate and save battery. Media visualizers, second by second counters and other looping animations pause until you interact with the island again.</string>
@@ -1627,8 +1628,13 @@
     <string name="label_battery_avg_remaining">Tempo médio restante</string>
     <string name="island_section_placement">posicionamento </string>
     <string name="island_section_visuals">Visual</string>
-    <string name="island_section_duration">Duração </string>
+    <string name="island_section_duration">Timing</string>
     <string name="island_section_behavior">Comportamento</string>
+    <string name="island_section_interactions">Interactions</string>
+    <string name="island_section_gestures">Gestures</string>
+    <string name="island_section_expanded">Expanded island</string>
+    <string name="island_section_landscape">Landscape</string>
+    <string name="island_section_experimental">Experimental</string>
     <string name="island_call_options_title">chamadas telefônicas</string>
     <string name="island_section_notifications">notificações </string>
     <string name="island_show_timers_title">Temporizadores e cronômetros</string>
@@ -1834,7 +1840,7 @@ adicionar algum app</string>
     <string name="island_statusbar_ignore_notifications_title">Ignore notifications</string>
     <string name="island_statusbar_aware_width_info">This may not work on all devices. It works best on Pixels and devices with a status bar close to AOSP.</string>
     <string name="island_statusbar_aware_width_info_tip">Even on those devices, try reducing the number of visible status bar icons to give the island more space.</string>
-    <string name="island_dismiss_direction_title">Dismissals</string>
+    <string name="island_dismiss_direction_title">Dismiss swipe</string>
     <string name="island_dismiss_direction_horizontal">Horizontal</string>
     <string name="island_dismiss_direction_down">Down</string>
     <string name="island_media_bubble_title">Show as a bubble</string>
@@ -1854,4 +1860,5 @@ adicionar algum app</string>
     <string name="label_how_to_use">How to use</string>
     <string name="shut_up_how_to_use">1. Grant Write secure settings and Usage access from the permissions prompt. Shizuku is needed for freezing apps.\n\n2. Tap Select Apps and pick the apps that refuse to run with developer options, debugging or accessibility turned on, such as banking or payment apps.\n\n3. Tap an app to choose what gets hidden for it: Developer Options, USB Debugging, Wireless Debugging and Accessibility Services. You can also turn on Auto Freeze to freeze the app after you leave it, and Restore keyboard to switch back to your keyboard afterwards.\n\n4. Tap Create shortcut for each app and add it to your home screen. Always open the app from this shortcut, never from its normal icon, so the settings are turned off before the app starts and can check them.\n\n5. When you leave the app, Shut-Up! waits for the Restoration Delay and then shows a notification. Tap it to turn everything back on. Set Restore mode to Auto if you would rather have the settings restored on their own.\n\nTips: if wireless debugging was turned off, Shizuku may stop working, so enable Attempt Shizuku restart. Use the Keyboard option to pick the keyboard to restore, or leave it on Skip. With Auto Freeze, a notification counts down and lets you freeze now or abort.</string>
     <string name="widget_stack_interval_seconds">Notifique-nos sobre novas atualizações. </string>
+    <string name="island_notif_lock_hidden_title">Hidden</string>
 </resources>

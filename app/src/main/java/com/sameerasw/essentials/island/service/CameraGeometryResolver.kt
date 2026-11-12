@@ -3,11 +3,13 @@ package com.sameerasw.essentials.island.service
 import android.content.Context
 import android.content.res.Configuration
 import android.graphics.Point
+import android.graphics.RectF
 import android.os.Build
 import android.view.WindowManager
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.island.state.CameraAnchor
 import com.sameerasw.essentials.island.state.CameraGeometry
+import com.sameerasw.essentials.utils.DeviceUtils
 
 object CameraGeometryResolver {
     fun resolve(context: Context, wm: WindowManager, settings: SettingsRepository): CameraGeometry {
@@ -23,25 +25,22 @@ object CameraGeometryResolver {
         }
         val sizeScale = settings.getIslandCameraSize()
         val gap = settings.getIslandCutoutGap() * density
-        val verticalGap = 6f * density
+        val contentGap = settings.getIslandPaddingAround() * density
+        val verticalGap = VERTICAL_GAP_DP * density
 
         val manualInLandscape = settings.isIslandKeepOnLandscapeEnabled() &&
             context.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
 
         if (!manualInLandscape && settings.isIslandAutoDetectEnabled() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            val rect = try {
-                wm.maximumWindowMetrics.windowInsets.displayCutout?.boundingRects
-                    ?.let { rects -> rects.find { it.top == 0 } ?: rects.firstOrNull() }
-            } catch (_: Exception) {
-                null
-            }
+            val rect = cutoutBounds(wm)
             if (rect != null) {
-                val base = (minOf(rect.width(), rect.height()) / 2f).coerceAtLeast(12f * density)
+                val base = cutoutRadius(rect, density)
                 return CameraGeometry(
-                    centerX = rect.exactCenterX(),
-                    centerY = rect.exactCenterY(),
+                    centerX = rect.centerX(),
+                    centerY = rect.centerY(),
                     radius = base * sizeScale,
                     gap = gap,
+                    contentGap = contentGap,
                     verticalGap = verticalGap,
                     screenWidth = screenWidth,
                     screenHeight = screenHeight,
@@ -62,6 +61,7 @@ object CameraGeometryResolver {
             centerY = centerY,
             radius = radius,
             gap = gap,
+            contentGap = contentGap,
             verticalGap = verticalGap,
             screenWidth = screenWidth,
             screenHeight = screenHeight,
@@ -69,6 +69,39 @@ object CameraGeometryResolver {
             hasCamera = !manualInLandscape,
         )
     }
+
+    fun cutoutBounds(wm: WindowManager): RectF? {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) return null
+        val cutout = try {
+            wm.maximumWindowMetrics.windowInsets.displayCutout
+        } catch (_: Exception) {
+            null
+        } ?: return null
+        val rect = cutout.boundingRects.let { rects -> rects.find { it.top == 0 } ?: rects.firstOrNull() } ?: return null
+        val loose = RectF(rect)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val tight = RectF()
+            try {
+                cutout.cutoutPath?.computeBounds(tight, true)
+            } catch (_: Exception) {
+                tight.setEmpty()
+            }
+            if (!tight.isEmpty && RectF(loose).apply { inset(-1f, -1f) }.contains(tight)) return tight
+        }
+        return loose
+    }
+
+    fun cutoutRadius(bounds: RectF, density: Float): Float =
+        (minOf(bounds.width(), bounds.height()) / 2f).coerceAtLeast(6f * density)
+
+    fun lensRadius(bounds: RectF, density: Float): Float {
+        val radius = minOf(bounds.width(), bounds.height()) / 2f
+        val trimmed = if (DeviceUtils.isGoogleDevice()) radius * PIXEL_LENS_RATIO else radius
+        return trimmed.coerceAtLeast(6f * density)
+    }
+
+    private const val PIXEL_LENS_RATIO = 0.67f
+    private const val VERTICAL_GAP_DP = 6f
 
     @Suppress("UNUSED_PARAMETER")
     private fun anchorFor(settings: SettingsRepository): CameraAnchor = when (settings.getIslandCameraPosition()) {

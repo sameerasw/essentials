@@ -1763,13 +1763,14 @@
     <string name="island_max_width_title">最大幅</string>
     <string name="island_expanded_width_title">拡張幅</string>
     <string name="island_cutout_gap_title">カメラの隙間</string>
+    <string name="island_padding_around_title">Padding around</string>
     <string name="island_expanded_roundness_title">展開時のコーナー半径</string>
     <string name="island_expanded_padding_title">展開時の横のパディング</string>
     <string name="island_expanded_top_padding_title">展開時の上部のパディング</string>
     <string name="island_timeout_title">表示時間</string>
     <string name="island_expanded_timeout_title">タイムアウトの延長</string>
     <string name="island_expanded_timeout_desc">折りたたまれたピルに戻るまでの時間（0は無限大）</string>
-    <string name="island_show_glow_title">アクセントの輝きを表示する</string>
+    <string name="island_show_glow_title">Expanded accent glow</string>
     <string name="island_glow_intensity_title">Glow intensity</string>
     <string name="island_prefer_still_title">Prefer still island</string>
     <string name="island_prefer_still_info">Stops the island\'s animations after a few seconds without interaction, so the display can drop to a low refresh rate and save battery. Media visualizers, second by second counters and other looping animations pause until you interact with the island again.</string>
@@ -1818,8 +1819,13 @@
     <string name="duo_combine_with_island">DuoとIslandを統合する</string>
     <string name="island_section_placement">位置</string>
     <string name="island_section_visuals">表示</string>
-    <string name="island_section_duration">遅延</string>
+    <string name="island_section_duration">Timing</string>
     <string name="island_section_behavior">動作</string>
+    <string name="island_section_interactions">Interactions</string>
+    <string name="island_section_gestures">Gestures</string>
+    <string name="island_section_expanded">Expanded island</string>
+    <string name="island_section_landscape">Landscape</string>
+    <string name="island_section_experimental">Experimental</string>
     <string name="island_call_options_title">通話</string>
     <string name="island_section_notifications">通知</string>
     <string name="island_show_timers_title">タイマーとストップウォッチ</string>
@@ -2002,7 +2008,7 @@
     <string name="island_neural_expressive_always_title">Always show on expansion</string>
     <string name="island_statusbar_aware_width_info">This may not work on all devices. It works best on Pixels and devices with a status bar close to AOSP.</string>
     <string name="island_statusbar_aware_width_info_tip">Even on those devices, try reducing the number of visible status bar icons to give the island more space.</string>
-    <string name="island_dismiss_direction_title">Dismissals</string>
+    <string name="island_dismiss_direction_title">Dismiss swipe</string>
     <string name="island_dismiss_direction_horizontal">Horizontal</string>
     <string name="island_dismiss_direction_down">Down</string>
     <string name="island_media_bubble_title">Show as a bubble</string>
@@ -2021,4 +2027,5 @@
     <string name="label_feature_designed_by">Designed by</string>
     <string name="label_how_to_use">How to use</string>
     <string name="shut_up_how_to_use">1. Grant Write secure settings and Usage access from the permissions prompt. Shizuku is needed for freezing apps.\n\n2. Tap Select Apps and pick the apps that refuse to run with developer options, debugging or accessibility turned on, such as banking or payment apps.\n\n3. Tap an app to choose what gets hidden for it: Developer Options, USB Debugging, Wireless Debugging and Accessibility Services. You can also turn on Auto Freeze to freeze the app after you leave it, and Restore keyboard to switch back to your keyboard afterwards.\n\n4. Tap Create shortcut for each app and add it to your home screen. Always open the app from this shortcut, never from its normal icon, so the settings are turned off before the app starts and can check them.\n\n5. When you leave the app, Shut-Up! waits for the Restoration Delay and then shows a notification. Tap it to turn everything back on. Set Restore mode to Auto if you would rather have the settings restored on their own.\n\nTips: if wireless debugging was turned off, Shizuku may stop working, so enable Attempt Shizuku restart. Use the Keyboard option to pick the keyboard to restore, or leave it on Skip. With Auto Freeze, a notification counts down and lets you freeze now or abort.</string>
+    <string name="island_notif_lock_hidden_title">Hidden</string>
 </resources>

@@ -1818,6 +1818,7 @@ Zugriff auf die Barrierefreiheit ist erforderlich, um die Überlagerung zu zeich
     <string name="island_max_width_title">Maximale Breite</string>
     <string name="island_expanded_width_title">Erweiterte Breite</string>
     <string name="island_cutout_gap_title">Kameralücke</string>
+    <string name="island_padding_around_title">Padding around</string>
     <string name="island_expanded_roundness_title">Erweiterter Eckradius</string>
     <string name="island_expanded_padding_title">Erweiterter Abstand</string>
     <string name="island_expanded_top_padding_title">Erweiterter oberer Abstand</string>
@@ -1826,7 +1827,7 @@ Zugriff auf die Barrierefreiheit ist erforderlich, um die Überlagerung zu zeich
     <string name="island_expanded_timeout_desc">Dauer vor Rückkehr zur reduzierten Pille (0 für Unendlich)</string>
     <string name="duo_hide_when_screen_off_title">Ausblenden, wenn Bildschirm aus</string>
     <string name="island_tap_action_title">Tippaktion</string>
-    <string name="island_show_glow_title">Akzentleuchten anzeigen</string>
+    <string name="island_show_glow_title">Expanded accent glow</string>
     <string name="island_glow_intensity_title">Glow intensity</string>
     <string name="island_prefer_still_title">Prefer still island</string>
     <string name="island_prefer_still_info">Stops the island\'s animations after a few seconds without interaction, so the display can drop to a low refresh rate and save battery. Media visualizers, second by second counters and other looping animations pause until you interact with the island again.</string>
@@ -1941,11 +1942,6 @@ Eingeschränkt – Niedrigste Priorität (Android 12+); etwa einmal täglich geb
     <string name="island_notif_follow_dnd_title">Nicht stören beachten</string>
     <string name="island_notif_follow_dnd_desc">Benachrichtigungen ausblenden, die durch Nicht stören stummgeschaltet werden</string>
     <string name="island_notif_keep_progress_desc">Downloads und andere laufende Fortschritte anzeigen</string>
-    <string name="island_notif_queue_inline_title">Warteschlange innerhalb der Insel</string>
-    <string name="island_notif_queue_inline_desc">Warteschlange innerhalb der Insel anzeigen</string>
-    <string name="island_notif_queue_style_overlap">Überlappen</string>
-    <string name="island_notif_queue_style_stack">Stapeln</string>
-    <string name="island_notif_queue_style_title">Schwanzstil</string>
     <string name="island_otp_enabled_title">OTP-Codes erkennen</string>
     <string name="perm_sensitive_notifications_title">Sensible Benachrichtigungen lesen</string>
     <string name="perm_sensitive_notifications_instructions">Erteilen Sie die Berechtigung mit Shizuku oder als Root oder führen Sie den Befehl über ADB aus.</string>
@@ -1953,8 +1949,7 @@ Eingeschränkt – Niedrigste Priorität (Android 12+); etwa einmal täglich geb
     <string name="island_otp_dismiss_after_copy_title">Benachrichtigung nach dem Kopieren ausblenden</string>
     <string name="island_otp_bypass_filter_title">Codes aus jeder App anzeigen</string>
     <string name="island_otp_timeout_title">Codes anzeigen für</string>
-    <string name="island_navigation_peek_after_expand_title">Linienansicht nach dem Erweitern</string>
-    <string name="island_navigation_peek_after_expand_desc">Im ausgeschalteten Zustand fährt die Insel direkt wieder in die kompakte Position zurück</string>
+    <string name="island_navigation_peek_after_expand_title">Keep showing in peek</string>
     <string name="island_navigation_expand_title">Vor einer Kurve erweitern</string>
     <string name="island_navigation_on_new_title">Neue Anweisung</string>
     <string name="conscious_gate_reappear_off">Aus</string>
@@ -2036,12 +2031,16 @@ Die Stufen können nur von der normalen Lautstärke abwärts, niemals darüber h
     <string name="feat_screenshots_title">Bildschirmfotos aufräumen </string>
     <string name="feat_aod_wallpaper_extended_media">Wiedergabeinformationen zeigen</string>
     <string name="island_section_behavior">Verhalten</string>
-    <string name="island_section_duration">Dauer</string>
+    <string name="island_section_interactions">Interactions</string>
+    <string name="island_section_gestures">Gestures</string>
+    <string name="island_section_expanded">Expanded island</string>
+    <string name="island_section_landscape">Landscape</string>
+    <string name="island_section_experimental">Experimental</string>
+    <string name="island_section_duration">Timing</string>
     <string name="island_section_visuals">Anzeige</string>
     <string name="island_section_placement">Position</string>
     <string name="app_colors_custom">Benutzerdefiniert</string>
     <string name="island_themed_text_title">Text Farbe ändern</string>
-    <string name="island_secondary_style_title">Anzeige der Blasen</string>
     <string name="island_hide_in_fullscreen_title">Bei Vollbild ausblenden </string>
     <string name="disable_interactions_in_full_screen_title">Bei Vollbild Interaktion verhindern </string>
     <string name="island_hide_status_bar_title">Statusleiste ausblenden</string>
@@ -2082,7 +2081,7 @@ Die Stufen können nur von der normalen Lautstärke abwärts, niemals darüber h
     <string name="island_statusbar_ignore_notifications_title">Ignore notifications</string>
     <string name="island_statusbar_aware_width_info">This may not work on all devices. It works best on Pixels and devices with a status bar close to AOSP.</string>
     <string name="island_statusbar_aware_width_info_tip">Even on those devices, try reducing the number of visible status bar icons to give the island more space.</string>
-    <string name="island_dismiss_direction_title">Dismissals</string>
+    <string name="island_dismiss_direction_title">Dismiss swipe</string>
     <string name="island_dismiss_direction_horizontal">Horizontal</string>
     <string name="island_dismiss_direction_down">Down</string>
     <string name="island_media_bubble_title">Show as a bubble</string>
@@ -2101,4 +2100,5 @@ Die Stufen können nur von der normalen Lautstärke abwärts, niemals darüber h
     <string name="label_feature_designed_by">Designed by</string>
     <string name="label_how_to_use">How to use</string>
     <string name="shut_up_how_to_use">1. Grant Write secure settings and Usage access from the permissions prompt. Shizuku is needed for freezing apps.\n\n2. Tap Select Apps and pick the apps that refuse to run with developer options, debugging or accessibility turned on, such as banking or payment apps.\n\n3. Tap an app to choose what gets hidden for it: Developer Options, USB Debugging, Wireless Debugging and Accessibility Services. You can also turn on Auto Freeze to freeze the app after you leave it, and Restore keyboard to switch back to your keyboard afterwards.\n\n4. Tap Create shortcut for each app and add it to your home screen. Always open the app from this shortcut, never from its normal icon, so the settings are turned off before the app starts and can check them.\n\n5. When you leave the app, Shut-Up! waits for the Restoration Delay and then shows a notification. Tap it to turn everything back on. Set Restore mode to Auto if you would rather have the settings restored on their own.\n\nTips: if wireless debugging was turned off, Shizuku may stop working, so enable Attempt Shizuku restart. Use the Keyboard option to pick the keyboard to restore, or leave it on Skip. With Auto Freeze, a notification counts down and lets you freeze now or abort.</string>
+    <string name="island_notif_lock_hidden_title">Hidden</string>
 </resources>

@@ -3237,7 +3237,6 @@
     <string name="island_keep_on_landscape_title">Keep on landscape</string>
     <string name="island_landscape_top_spacing_title">Landscape top spacing</string>
     <string name="island_bond_edge_title">Bond with notch when inactive</string>
-    <string name="island_secondary_style_title">Secondary item style</string>
     <string name="island_section_hiding">Hiding</string>
     <string name="island_section_statusbar">Statusbar</string>
     <string name="island_hide_in_fullscreen_title">Hide in full screen</string>
@@ -3250,7 +3249,7 @@
     <string name="island_always_gestures_title">Always available gestures</string>
     <string name="island_always_gestures_desc">Keep the gesture area available even while island is hidden</string>
     <string name="island_section_visuals">Visuals</string>
-    <string name="island_section_duration">Duration</string>
+    <string name="island_section_duration">Timing</string>
     <string name="island_section_notifications">Notifications</string>
     <string name="island_auto_detect_title">Auto-detect camera</string>
     <string name="island_auto_detect_desc">Automatically locate the front camera cutout</string>
@@ -3260,6 +3259,11 @@
     <string name="island_max_width_title">Maximum width</string>
     <string name="island_max_width_desc">Limit expanded width across the screen</string>
     <string name="island_section_behavior">Behavior</string>
+    <string name="island_section_interactions">Interactions</string>
+    <string name="island_section_gestures">Gestures</string>
+    <string name="island_section_expanded">Expanded island</string>
+    <string name="island_section_landscape">Landscape</string>
+    <string name="island_section_experimental">Experimental</string>
     <string name="island_suppress_system_heads_up_title">Hide system notification banner</string>
     <string name="island_suppress_system_heads_up_desc">Prevent default Android heads-up banners</string>
     <string name="island_hide_when_screen_off_title">Hide when screen off</string>
@@ -3314,7 +3318,7 @@
 
     <string name="island_preview_title">Island</string>
     <string name="island_preview_sample">Dynamic notifications preview</string>
-    <string name="island_show_glow_title">Show accent glow</string>
+    <string name="island_show_glow_title">Expanded accent glow</string>
     <string name="island_glow_intensity_title">Glow intensity</string>
     <string name="island_prefer_still_title">Prefer still island</string>
     <string name="island_prefer_still_info">Stops the island\'s animations after a few seconds without interaction, so the display can drop to a low refresh rate and save battery. Media visualizers, second by second counters and other looping animations pause until you interact with the island again.</string>
@@ -3336,6 +3340,7 @@
     <string name="island_notif_themed_bubble_needs_themed_icons">Turn on Use themed app icons in Visuals</string>
     <string name="island_expanded_width_title">Expanded width</string>
     <string name="island_cutout_gap_title">Camera gap</string>
+    <string name="island_padding_around_title">Padding around</string>
     <string name="island_expanded_width_desc">Width when long pressed to expand</string>
     <string name="island_expanded_roundness_title">Expanded corner radius</string>
     <string name="island_expanded_roundness_desc">Roundness of expanded card</string>
@@ -3428,8 +3433,7 @@
     <string name="island_navigation_expand_title">Expand before a turn</string>
     <string name="island_navigation_expand_off">Off</string>
     <string name="island_navigation_expand_meters">%d m</string>
-    <string name="island_navigation_peek_after_expand_title">Line peek after expanding</string>
-    <string name="island_navigation_peek_after_expand_desc">When off, the island goes straight back to compact</string>
+    <string name="island_navigation_peek_after_expand_title">Keep showing in peek</string>
     <string name="island_show_hotspot_title">Hotspot</string>
     <string name="island_hotspot_desc">Shows while your hotspot is on, with connected devices and data shared</string>
     <plurals name="island_hotspot_clients">
@@ -3553,12 +3557,9 @@
     <string name="island_notif_skip_silent_title">Skip silent notifications</string>
     <string name="island_notif_filter_apps_title">Filter apps</string>
     <string name="island_notif_condensed_info_title">Peek style</string>
-    <string name="island_notif_condensed_info_desc">App icon and title only. Tap to expand for the content and actions</string>
     <string name="island_notif_peek_style_compact">Compact</string>
     <string name="island_notif_peek_style_full">Wide</string>
-    <string name="island_notif_peek_style_full_desc">Title and message</string>
     <string name="island_notif_peek_style_expanded">Expanded</string>
-    <string name="island_notif_peek_style_expanded_desc">Opens expanded with the content and actions</string>
     <string name="island_notif_peek_style_search_desc">Full or compact peeks</string>
     <string name="island_notif_show_title">Show notifications</string>
     <string name="island_notif_hub_desc">Replace statusbar notification icons with island</string>
@@ -3579,6 +3580,7 @@
     <string name="island_notif_section_heads_up">Heads up</string>
     <string name="island_notif_section_in_island">In the island</string>
     <string name="island_notif_section_lock_screen">Lock screen</string>
+    <string name="island_notif_lock_hidden_title">Hidden</string>
     <string name="island_otp_section">OTP codes</string>
     <string name="island_otp_enabled_title">Detect OTP codes</string>
     <string name="island_otp_enabled_desc">Show one-time codes from notifications with a copy button</string>
@@ -3601,12 +3603,6 @@
     <string name="island_notif_follow_dnd_desc">Hide notifications that Do Not Disturb silences</string>
     <string name="island_notif_keep_progress_desc">Show downloads and other ongoing progress</string>
     <string name="island_notif_queue_desc">Stagger notification previews</string>
-    <string name="island_notif_queue_style_title">Queue style</string>
-    <string name="island_notif_queue_style_stack">Stack</string>
-    <string name="island_notif_queue_style_overlap">Overlap</string>
-    <string name="island_notif_queue_inline_title">Queue inside the island</string>
-    <string name="island_notif_queue_inline_desc">Show the queue inside the island</string>
-    <string name="island_notif_queue_style_search_desc">Stack or overlapping queue icons</string>
     <string name="island_media_peek_song_change_title">Peek song change</string>
     <string name="island_media_keep_when_paused_title">Keep in catchup when paused</string>
     <string name="island_media_show_previous_title">Show previous track button</string>
@@ -3745,7 +3741,7 @@
     <string name="island_statusbar_ignore_notifications_title">Ignore notifications</string>
     <string name="island_statusbar_aware_width_info">This may not work on all devices. It works best on Pixels and devices with a status bar close to AOSP.</string>
     <string name="island_statusbar_aware_width_info_tip">Even on those devices, try reducing the number of visible status bar icons to give the island more space.</string>
-    <string name="island_dismiss_direction_title">Dismissals</string>
+    <string name="island_dismiss_direction_title">Dismiss swipe</string>
     <string name="island_dismiss_direction_horizontal">Horizontal</string>
     <string name="island_dismiss_direction_down">Down</string>
     <string name="island_media_bubble_title">Show as a bubble</string>

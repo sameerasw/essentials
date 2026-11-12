@@ -76,7 +76,6 @@ class ProgressPlugin : BaseIslandPlugin() {
     override val settingKeys = setOf(
         SettingsRepository.KEY_ISLAND_NOTIF_KEEP_PROGRESS,
         SettingsRepository.KEY_ISLAND_NOTIF_SKIP_SILENT,
-        SettingsRepository.KEY_ISLAND_NOTIF_QUEUE_STYLE,
         SettingsRepository.KEY_ISLAND_SECONDARY_BUBBLE,
         SettingsRepository.KEY_ISLAND_LIVE_UPDATES_COUNT,
         SettingsRepository.KEY_ISLAND_LIVE_UPDATES_EXPANDED,
@@ -144,9 +143,7 @@ class ProgressPlugin : BaseIslandPlugin() {
         render()
     }
 
-    private fun bubblesMode(): Boolean =
-        settings.isIslandSecondaryBubbleEnabled() &&
-            settings.getIslandNotifQueueStyle() == SettingsRepository.ISLAND_NOTIF_QUEUE_STYLE_OVERLAP
+    private fun bubblesMode(): Boolean = settings.isIslandSecondaryBubbleEnabled()
 
     private fun select(key: String) {
         selectedKey = key

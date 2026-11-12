@@ -48,7 +48,6 @@ class IslandController(
     var balanceCompact: Boolean = true
     var chipsEnabled: Boolean = false
     var secondaryBubbleEnabled: Boolean = true
-    var secondaryBubbleOverlap: Boolean = false
     var secondaryBubbleMax: Int = 0
     var bubbleOnRight: Boolean = false
     private var feedbackActive = false
@@ -347,7 +346,7 @@ class IslandController(
     private fun inlineBubbleIfDisabled(item: IslandItem): IslandItem {
         val bubble = item.sideBubble
         if (secondaryBubbleEnabled || bubble == null || bubble.whenOccupiedOnly) return item
-        return item.withInlineBubble(inlineBubbleCell(bubble, secondaryBubbleOverlap))
+        return item.withInlineBubble(inlineBubbleCell(bubble))
     }
 
     private fun recompute() {
@@ -362,7 +361,7 @@ class IslandController(
             item.sideBubble?.let { it.priority == SideBubblePriority.PROGRESS && !it.whenOccupiedOnly && it.icons.isNotEmpty() } == true
         }
         val mediaItem = items.values.firstOrNull { it.sideBubble?.priority == SideBubblePriority.MEDIA }
-        val mediaBubble = mediaItem?.sideBubble?.takeIf { secondaryBubbleEnabled && secondaryBubbleOverlap && !liveProgress }
+        val mediaBubble = mediaItem?.sideBubble?.takeIf { secondaryBubbleEnabled && !liveProgress }
         val bubbleOwner = items.values
             .filter { secondaryBubbleEnabled && it.sideBubble != null && it.sideBubble.priority != SideBubblePriority.MEDIA }
             .sortedBy { it.sideBubble!!.priority }
@@ -374,7 +373,7 @@ class IslandController(
                         it.sideBubble?.whenOccupiedOnly != true
                 }
             }
-        val merged = if (secondaryBubbleOverlap) mergedBubble(items, bubbleOwner, mediaBubble) else null
+        val merged = mergedBubble(items, bubbleOwner, mediaBubble)
         val usesBubbleOnly = merged == null && bubbleOwner?.sideBubble?.whenOccupiedOnly == true
         val anchor = anchorProvider()
         val mirrored = bubbleOnRight && anchor == CameraAnchor.Center

@@ -81,7 +81,7 @@ private fun ChipUnit(color: Color, spec: IslandLayoutSpec, startNeighbor: Boolea
                 .defaultMinSize(minWidth = spec.cellSize)
                 .clip(RoundedCornerShape(topStart = startRadius, bottomStart = startRadius, topEnd = endRadius, bottomEnd = endRadius))
                 .background(container)
-                .padding(horizontal = 3.dp),
+                .padding(horizontal = spec.contentGap / 2),
             horizontalArrangement = Arrangement.spacedBy(spec.cellSpacing / 2),
             verticalAlignment = Alignment.CenterVertically,
         ) { content() }
@@ -238,7 +238,7 @@ fun CompactTemplate(
                                             if (member.cell.key.endsWith(".art") || member.cell.key.endsWith(".avatar")) {
                                                 Modifier
                                             } else {
-                                                Modifier.defaultMinSize(minWidth = spec.cellSize).padding(horizontal = 4.dp)
+                                                Modifier.defaultMinSize(minWidth = spec.cellSize).padding(horizontal = spec.contentGap * 2 / 3)
                                             },
                                         ),
                                     contentAlignment = Alignment.Center,
@@ -268,7 +268,7 @@ fun CompactTemplate(
         val cameraSlot = spec.cameraSlotWidth.roundToPx()
         val limitLeft = CompactSideLimits.left.intValue
         val limitRight = CompactSideLimits.right.intValue
-        val reserve = spacing + (spec.compactHeight.roundToPx() * OPTICAL_INSET_RATIO).toInt()
+        val reserve = spacing + spec.edgeInset.roundToPx()
         val bubbleNow = if (state.sideBubble != null) bubbleExtent().coerceAtLeast(0) else 0
         com.sameerasw.essentials.island.state.CompactCellWidths.bubbleExtent =
             if (state.sideBubble != null) maxOf(bubbleNow, com.sameerasw.essentials.island.state.CompactCellWidths.bubbleExtent) else 0
@@ -308,7 +308,7 @@ fun CompactTemplate(
         val height = spec.compactHeight.roundToPx()
         
         val squareCell = spec.cellSize.roundToPx()
-        val opticalInset = (height * OPTICAL_INSET_RATIO).toInt()
+        val opticalInset = spec.edgeInset.roundToPx()
         fun edgeInset(outer: Placeable?) = if (outer != null && outer.width > squareCell && outer !in chipPlaceables) opticalInset else 0
         if (cameraSlot == 0) {
             val cells = left + right
