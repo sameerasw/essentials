@@ -1114,35 +1114,6 @@ fun IslandBehaviorSettingsUI(
                 modifier = Modifier.highlight(highlightSetting == "island_secondary_bubble"),
             )
 
-            val secondaryStyle = viewModel.islandNotifQueueStyle.value
-            val stackLabel = stringResource(R.string.island_notif_queue_style_stack)
-            val overlapLabel = stringResource(R.string.island_notif_queue_style_overlap)
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(MaterialTheme.colorScheme.surfaceBright, MaterialTheme.shapes.extraSmall)
-                    .padding(top = 12.dp)
-                    .highlight(highlightSetting == "island_secondary_style"),
-            ) {
-                TranslatableText(
-                    stringResId = R.string.island_secondary_style_title,
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier.padding(horizontal = 16.dp),
-                )
-                SegmentedPicker(
-                    items = listOf(
-                        SettingsRepository.ISLAND_NOTIF_QUEUE_STYLE_STACK,
-                        SettingsRepository.ISLAND_NOTIF_QUEUE_STYLE_OVERLAP,
-                    ),
-                    selectedItem = secondaryStyle,
-                    onItemSelected = { viewModel.setIslandNotifQueueStyle(it) },
-                    labelProvider = { if (it == SettingsRepository.ISLAND_NOTIF_QUEUE_STYLE_OVERLAP) overlapLabel else stackLabel },
-                    title = R.string.island_secondary_style_title,
-                    modifier = Modifier.fillMaxWidth(),
-                )
-            }
-
             val sideEnabled = viewModel.islandCameraPosition.value == SettingsRepository.ISLAND_CAMERA_POSITION_CENTER
             val sideLeftLabel = stringResource(R.string.island_camera_position_left)
             val sideRightLabel = stringResource(R.string.island_camera_position_right)

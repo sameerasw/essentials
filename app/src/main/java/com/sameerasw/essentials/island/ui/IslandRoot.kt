@@ -657,7 +657,7 @@ private fun IslandRootContent(
         }
     } ?: OVERLAP_MAX
     val sideBubbleWidth = lastCatchUp
-        ?.takeIf { spec.queueStyle == QueueStyle.Overlap && it.content == null && it.icons.isNotEmpty() }
+        ?.takeIf { it.content == null && it.icons.isNotEmpty() }
         ?.let {
             stackOverlapWidth(it.icons.size, spec.compactHeight, overlapSlots(it.icons, bubbleMaxIcons), it.overflow) +
                 overlapExtraWidth(it.icons, spec.compactHeight, bubbleMaxIcons, it.overflow)
@@ -747,10 +747,7 @@ private fun IslandRootContent(
         if (spec.growDirection > 0) surfaceLeft(width) + width + bubbleGapPx else surfaceLeft(width) - bubbleGapPx - queueWidthLive()
     val inlineQueueIcons = queuedIcons.ifEmpty { lastQueuedIcons }
     val inlineQueue = LineLeading(
-        width = when (spec.queueStyle) {
-            QueueStyle.Stack -> spec.cellSize
-            QueueStyle.Overlap -> stackOverlapWidth(inlineQueueIcons.size, spec.cellSize)
-        },
+        width = stackOverlapWidth(inlineQueueIcons.size, spec.cellSize),
     ) {
         val tapToAdvance = Modifier.pointerInput(Unit) {
             detectTapGestures {
@@ -758,10 +755,7 @@ private fun IslandRootContent(
                 if (currentState.focused?.queue != null) actions.onAdvance() else lastQueuedIcons.firstOrNull()?.onSelect?.invoke()
             }
         }
-        when (spec.queueStyle) {
-            QueueStyle.Stack -> IslandStackBubble(inlineQueueIcons, spec.cellSize, modifier = tapToAdvance)
-            QueueStyle.Overlap -> IslandStackOverlap(inlineQueueIcons, spec.cellSize, modifier = tapToAdvance)
-        }
+        IslandStackOverlap(inlineQueueIcons, spec.cellSize, modifier = tapToAdvance)
     }
     val lineInsetActive = queueShown && stage == IslandStage.Line
     val lineInset = if (lineInsetActive) queueWidth + spec.contentGap else 0.dp
@@ -1116,7 +1110,6 @@ private fun IslandRootContent(
                     ownerKey = lastBubbleKey,
                     bubbleFor = { knownBubbles[it] },
                     size = spec.compactHeight,
-                    style = spec.queueStyle,
                     outlineColor = outlineFor(1f),
                     outlineThickness = spec.outlineThickness,
                     maxIcons = bubbleMaxIcons,

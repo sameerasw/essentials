@@ -2216,9 +2216,6 @@ Tính năng này chỉ được dùng cho trình khởi chạy và không phải
     <string name="island_hide_live_updates_title">Xóa các bản cập nhật trực tiếp khi island đang hiển thị</string>
     <string name="island_hide_icons_title">Ẩn các biểu tượng trên thanh trạng thái khi có Dynamic Island</string>
     <string name="island_dynamic_hide_status_bar_title">Ẩn các mục trên thanh trạng thái khi được mở rộng</string>
-    <string name="island_secondary_style_title">Kiểu mục phụ</string>
-    <string name="island_notif_queue_style_stack">Ngăn xếp</string>
-    <string name="island_notif_queue_style_overlap">Chồng chéo</string>
     <string name="island_section_icon_color">Màu biểu tượng</string>
     <string name="app_colors_custom">Tùy chỉnh</string>
     <string name="island_themed_text_title">Màu văn bản theo chủ đề</string>

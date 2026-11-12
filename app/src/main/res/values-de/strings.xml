@@ -1944,9 +1944,6 @@ Eingeschränkt – Niedrigste Priorität (Android 12+); etwa einmal täglich geb
     <string name="island_notif_keep_progress_desc">Downloads und andere laufende Fortschritte anzeigen</string>
     <string name="island_notif_queue_inline_title">Warteschlange innerhalb der Insel</string>
     <string name="island_notif_queue_inline_desc">Warteschlange innerhalb der Insel anzeigen</string>
-    <string name="island_notif_queue_style_overlap">Überlappen</string>
-    <string name="island_notif_queue_style_stack">Stapeln</string>
-    <string name="island_notif_queue_style_title">Schwanzstil</string>
     <string name="island_otp_enabled_title">OTP-Codes erkennen</string>
     <string name="perm_sensitive_notifications_title">Sensible Benachrichtigungen lesen</string>
     <string name="perm_sensitive_notifications_instructions">Erteilen Sie die Berechtigung mit Shizuku oder als Root oder führen Sie den Befehl über ADB aus.</string>
@@ -2047,7 +2044,6 @@ Die Stufen können nur von der normalen Lautstärke abwärts, niemals darüber h
     <string name="island_section_placement">Position</string>
     <string name="app_colors_custom">Benutzerdefiniert</string>
     <string name="island_themed_text_title">Text Farbe ändern</string>
-    <string name="island_secondary_style_title">Anzeige der Blasen</string>
     <string name="island_hide_in_fullscreen_title">Bei Vollbild ausblenden </string>
     <string name="disable_interactions_in_full_screen_title">Bei Vollbild Interaktion verhindern </string>
     <string name="island_hide_status_bar_title">Statusleiste ausblenden</string>

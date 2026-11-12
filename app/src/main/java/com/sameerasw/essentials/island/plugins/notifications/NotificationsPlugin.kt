@@ -34,7 +34,6 @@ import com.sameerasw.essentials.island.plugins.BaseIslandPlugin
 import com.sameerasw.essentials.island.plugins.launchPackage
 import com.sameerasw.essentials.island.plugins.sendPendingIntent
 import com.sameerasw.essentials.island.plugins.soften
-import com.sameerasw.essentials.island.ui.IslandStackBubble
 import com.sameerasw.essentials.island.ui.IslandStackOverlap
 import com.sameerasw.essentials.island.ui.components.IslandBitmap
 import com.sameerasw.essentials.island.ui.components.NotificationGlyph
@@ -48,7 +47,6 @@ class NotificationsPlugin : BaseIslandPlugin() {
     override val settingKeys = setOf(
         SettingsRepository.KEY_ISLAND_CATCH_UP_ENABLED,
         SettingsRepository.KEY_ISLAND_NOTIF_PEEK_STYLE,
-        SettingsRepository.KEY_ISLAND_NOTIF_QUEUE_STYLE,
         SettingsRepository.KEY_ISLAND_NOTIF_QUEUE_INLINE,
         SettingsRepository.KEY_ISLAND_LINE_STAGE_ENABLED,
         SettingsRepository.KEY_ISLAND_SHOW_GLOW,
@@ -514,7 +512,7 @@ class NotificationsPlugin : BaseIslandPlugin() {
     }
 
     private fun bubbleCells(): Int {
-        if (!hub() || settings.getIslandNotifQueueStyle() != SettingsRepository.ISLAND_NOTIF_QUEUE_STYLE_OVERLAP) return 1
+        if (!hub()) return 1
         val cap = settings.getIslandNotifHubIcons().let { if (it == 0) AUTO_CELL_ICONS else it }
         val count = hubEntries().size
         val shown = count.coerceIn(1, cap)
@@ -717,10 +715,7 @@ class NotificationsPlugin : BaseIslandPlugin() {
     private fun queueEnabled() = settings.isIslandNotifQueueEnabled()
 
     private fun queueCell(icons: List<StackIcon>): CompactCell = CompactCell("notif.queue") {
-        when (settings.getIslandNotifQueueStyle()) {
-            SettingsRepository.ISLAND_NOTIF_QUEUE_STYLE_OVERLAP -> IslandStackOverlap(icons, 22.dp)
-            else -> IslandStackBubble(icons, 26.dp)
-        }
+        IslandStackOverlap(icons, 22.dp)
     }
 
     private fun clearWaiting() {
