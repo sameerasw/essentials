@@ -1,5 +1,10 @@
 package com.sameerasw.essentials.ui.features.display.sheets
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -73,14 +78,16 @@ fun IslandNavigationOptionsBottomSheet(
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.padding(horizontal = 16.dp),
                     )
-                    val labels = mapOf(
-                        SettingsRepository.ISLAND_NAVIGATION_ON_NEW_EXPAND to stringResource(R.string.island_navigation_on_new_expand),
-                        SettingsRepository.ISLAND_NAVIGATION_ON_NEW_PEEK to stringResource(R.string.island_navigation_on_new_peek),
-                        SettingsRepository.ISLAND_NAVIGATION_ON_NEW_OFF to stringResource(R.string.island_navigation_expand_off),
-                    )
+                    val linePeekOn = viewModel.isIslandLineStageEnabled.value
+                    val labels = buildMap {
+                        put(SettingsRepository.ISLAND_NAVIGATION_ON_NEW_EXPAND, stringResource(R.string.island_navigation_on_new_expand))
+                        if (linePeekOn) put(SettingsRepository.ISLAND_NAVIGATION_ON_NEW_PEEK, stringResource(R.string.island_navigation_on_new_peek))
+                        put(SettingsRepository.ISLAND_NAVIGATION_ON_NEW_OFF, stringResource(R.string.island_navigation_expand_off))
+                    }
+                    val onNew = viewModel.islandNavigationOnNew.value
                     SegmentedPicker(
                         items = labels.keys.toList(),
-                        selectedItem = viewModel.islandNavigationOnNew.value,
+                        selectedItem = if (!linePeekOn && onNew == SettingsRepository.ISLAND_NAVIGATION_ON_NEW_PEEK) SettingsRepository.ISLAND_NAVIGATION_ON_NEW_EXPAND else onNew,
                         onItemSelected = { viewModel.setIslandNavigationOnNew(it) },
                         labelProvider = { labels[it].orEmpty() },
                         title = R.string.island_navigation_on_new_title,
@@ -105,16 +112,21 @@ fun IslandNavigationOptionsBottomSheet(
                     }
                 }
 
-                IconToggleItem(
-                    iconRes = R.drawable.round_navigation_24,
-                    title = stringResource(R.string.island_navigation_peek_after_expand_title),
-                    description = stringResource(R.string.island_navigation_peek_after_expand_desc),
-                    isChecked = viewModel.isIslandNavigationPeekAfterExpand.value,
-                    onCheckedChange = {
-                        HapticUtil.performVirtualKeyHaptic(view)
-                        viewModel.setIslandNavigationPeekAfterExpand(it)
-                    },
-                )
+                AnimatedVisibility(
+                    visible = viewModel.isIslandLineStageEnabled.value,
+                    enter = expandVertically() + fadeIn(),
+                    exit = shrinkVertically() + fadeOut(),
+                ) {
+                    IconToggleItem(
+                        iconRes = R.drawable.round_navigation_24,
+                        title = stringResource(R.string.island_navigation_peek_after_expand_title),
+                        isChecked = viewModel.isIslandNavigationPeekAfterExpand.value,
+                        onCheckedChange = {
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            viewModel.setIslandNavigationPeekAfterExpand(it)
+                        },
+                    )
+                }
             }
         }
     }

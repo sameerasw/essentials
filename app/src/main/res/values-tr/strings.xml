@@ -2048,7 +2048,6 @@ Bazı seçenekler Shizuku veya erişilebilirlik izni gerektirir ve sonuçlar cih
     <string name="island_otp_dismiss_after_copy_title">Kopyaladıktan sonra bildirimi kapat</string>
     <string name="island_otp_bypass_filter_title">Herhangi bir uygulamadan kodları göster</string>
     <string name="island_navigation_expand_title">Dönüşten önce genişlet</string>
-    <string name="island_navigation_peek_after_expand_desc">Kapalıyken ada hemen kompakt haline geri döner</string>
     <string name="island_media_peek_song_change_title">Şarkı değişiminde görüntüle</string>
     <string name="island_media_keep_when_paused_title">Duraklatıldığında da aktif tut</string>
     <string name="island_media_show_previous_title">Önceki parça düğmesini göster</string>

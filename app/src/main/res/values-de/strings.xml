@@ -1949,8 +1949,7 @@ Eingeschränkt – Niedrigste Priorität (Android 12+); etwa einmal täglich geb
     <string name="island_otp_dismiss_after_copy_title">Benachrichtigung nach dem Kopieren ausblenden</string>
     <string name="island_otp_bypass_filter_title">Codes aus jeder App anzeigen</string>
     <string name="island_otp_timeout_title">Codes anzeigen für</string>
-    <string name="island_navigation_peek_after_expand_title">Linienansicht nach dem Erweitern</string>
-    <string name="island_navigation_peek_after_expand_desc">Im ausgeschalteten Zustand fährt die Insel direkt wieder in die kompakte Position zurück</string>
+    <string name="island_navigation_peek_after_expand_title">Keep showing in peek</string>
     <string name="island_navigation_expand_title">Vor einer Kurve erweitern</string>
     <string name="island_navigation_on_new_title">Neue Anweisung</string>
     <string name="conscious_gate_reappear_off">Aus</string>

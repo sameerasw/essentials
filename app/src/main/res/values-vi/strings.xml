@@ -2181,8 +2181,7 @@ Tính năng này chỉ được dùng cho trình khởi chạy và không phải
     <string name="island_alarm_hide_time_title">Ẩn thời gian</string>
     <string name="duo_battery_low_level_title">Mức pin yếu</string>
     <string name="duo_battery_critical_level_title">Mức pin yếu nghiêm trọng</string>
-    <string name="island_navigation_peek_after_expand_title">Xem trước dòng sau khi mở rộng</string>
-    <string name="island_navigation_peek_after_expand_desc">Khi tắt, island sẽ lập tức trở lại trạng thái thu gọn</string>
+    <string name="island_navigation_peek_after_expand_title">Keep showing in peek</string>
     <string name="island_navigation_on_new_title">Đường dẫn mới</string>
     <string name="island_navigation_expand_title">Mở rộng trước khi rẽ</string>
     <string name="island_notif_keep_progress_desc">Hiển thị nội dung tải xuống và các tiến trình khác đang diễn ra</string>
