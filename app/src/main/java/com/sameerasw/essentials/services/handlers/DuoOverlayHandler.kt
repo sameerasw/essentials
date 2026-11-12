@@ -62,6 +62,7 @@ import com.sameerasw.essentials.utils.NetworkUtil
 import com.sameerasw.essentials.utils.AppUtil
 import com.sameerasw.essentials.utils.DuoOverlayView
 import com.sameerasw.essentials.utils.FlashlightUtil
+import com.sameerasw.essentials.island.service.SharedOverlayWindow
 import com.sameerasw.essentials.utils.OverlayHelper
 import java.io.File
 import java.text.SimpleDateFormat
@@ -945,20 +946,14 @@ class DuoOverlayHandler(
             }
 
             if (!isOverlayAdded) {
-                val params = OverlayHelper.createOverlayLayoutParams(
-                    WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY,
-                    WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
-                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE or
-                        WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
-                        WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
-                    isTouchable = false
-                )
                 try {
-                    overlayView?.let { runCatching { wm.removeViewImmediate(it) } }
+                    SharedOverlayWindow.detach(SharedOverlayWindow.Layer.Duo)
                     overlayView?.playEnter()
-                    wm.addView(overlayView, params)
-                    isOverlayAdded = true
-                    registerRotationListener()
+                    val added = overlayView?.let {
+                        SharedOverlayWindow.attach(service, wm, SharedOverlayWindow.Layer.Duo, it)
+                    } == true
+                    isOverlayAdded = added
+                    if (added) registerRotationListener()
                 } catch (e: Exception) {
                     Log.e("DuoOverlayHandler", "Failed to add Duo overlay", e)
                 }
@@ -1373,9 +1368,7 @@ class DuoOverlayHandler(
                 isOverlayAdded = false
                 val remove = {
                     if (!isOverlayAdded) {
-                        try {
-                            windowManager?.removeView(fading)
-                        } catch (_: Exception) {}
+                        SharedOverlayWindow.detach(SharedOverlayWindow.Layer.Duo)
                     }
                 }
                 if (animate) fading.playExit(remove) else remove()
