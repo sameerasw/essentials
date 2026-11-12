@@ -307,6 +307,26 @@ fun IslandPlacementSettingsUI(
             )
         }
 
+        RoundedCardContainer(
+            spacing = 2.dp,
+            cornerRadius = 24.dp,
+        ) {
+            ConfigSliderItem(
+                title = stringResource(R.string.island_padding_around_title),
+                value = viewModel.islandPaddingAround.floatValue,
+                onValueChange = {
+                    HapticUtil.performUIHaptic(view)
+                    viewModel.setIslandPaddingAround(it)
+                },
+                valueRange = 0f..16f,
+                increment = 1f,
+                iconRes = R.drawable.rounded_arrows_outward_24,
+                valueFormatter = { "%.1f dp".format(it) },
+                allowDecimals = true,
+                modifier = Modifier.highlight(highlightSetting == "island_padding_around"),
+            )
+        }
+
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             TranslatableText(
                 stringResId = R.string.island_section_expanded,

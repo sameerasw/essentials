@@ -1639,6 +1639,7 @@
     <string name="island_max_width_title">Maximum breedte</string>
     <string name="island_expanded_width_title">Uitgeklapte breedte</string>
     <string name="island_cutout_gap_title">Camera ruimte</string>
+    <string name="island_padding_around_title">Padding around</string>
     <string name="island_preview_ring_title">Toon uitlijnhulp</string>
     <string name="island_preview_stage_title">Voorbeeld</string>
     <string name="island_call_show_expanded">Uitgeklapt</string>

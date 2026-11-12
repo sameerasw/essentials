@@ -1724,6 +1724,7 @@
     <string name="island_preview_stage_title">预览</string>
     <string name="app_colors_auto">自动</string>
     <string name="island_cutout_gap_title">摄像头宽度</string>
+    <string name="island_padding_around_title">Padding around</string>
     <string name="island_keep_on_landscape_title">跟随旋转</string>
     <string name="island_timeout_title">显示时长</string>
     <string name="feat_aod_wallpaper_desc">通过使用叠加层</string>

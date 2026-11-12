@@ -950,7 +950,7 @@ class IslandCoordinator(
 
     private val widthRelayout = Runnable { controller.relayout() }
 
-    private fun compactCellUnitPx(): Float = geometry?.let { it.diameter + it.contentGap } ?: 0f
+    private fun compactCellUnitPx(): Float = geometry?.let { it.contentSize + it.contentGap } ?: 0f
 
     private fun compactCellUnits(key: String): Float {
         val px = CompactCellWidths.get(key) ?: return 1f
@@ -962,9 +962,9 @@ class IslandCoordinator(
     private fun fitsCompactWidth(before: List<String>, after: List<String>, leftExtra: Int, growing: Boolean): Int? {
         val geo = geometry ?: return 0
         val density = service.resources.displayMetrics.density
-        val cell = geo.diameter.toInt()
+        val cell = geo.contentSize.toInt()
         val spacing = geo.contentGap.toInt()
-        val inset = (geo.compactHeight * 0.15f).toInt()
+        val inset = geo.edgeInset.toInt()
         fun need(keys: List<String>, extra: Int): Int =
             if (keys.isEmpty() && extra == 0) 0 else keys.sumOf { CompactCellWidths.get(it) ?: cell } + spacing * keys.size + inset +
                 if (extra > 0) maxOf(CompactCellWidths.bubbleExtent, extra * (cell + spacing)) else 0
@@ -1085,6 +1085,7 @@ class IslandCoordinator(
             SettingsRepository.KEY_ISLAND_CAMERA_SIZE,
             SettingsRepository.KEY_ISLAND_MAX_WIDTH,
             SettingsRepository.KEY_ISLAND_CUTOUT_GAP,
+            SettingsRepository.KEY_ISLAND_PADDING_AROUND,
             SettingsRepository.KEY_ISLAND_EXPANDED_WIDTH,
             SettingsRepository.KEY_ISLAND_ICON_COLOR_MODE,
             SettingsRepository.KEY_ISLAND_ICON_COLOR_CUSTOM,

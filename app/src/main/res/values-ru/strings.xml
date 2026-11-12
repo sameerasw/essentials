@@ -1813,6 +1813,7 @@
     <string name="island_max_width_title">Максимальная ширина</string>
     <string name="island_expanded_width_title">Ширина в развёрнутом виде</string>
     <string name="island_cutout_gap_title">Отступ от камеры</string>
+    <string name="island_padding_around_title">Padding around</string>
     <string name="island_expanded_scale_title">Масштаб в развёрнутом виде</string>
     <string name="island_expanded_scale_desc">Равномерно увеличивать развёрнутый остров со всех сторон</string>
     <string name="island_expanded_roundness_title">Радиус скругления в развёрнутом виде</string>

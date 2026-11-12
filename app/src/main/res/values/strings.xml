@@ -3340,6 +3340,7 @@
     <string name="island_notif_themed_bubble_needs_themed_icons">Turn on Use themed app icons in Visuals</string>
     <string name="island_expanded_width_title">Expanded width</string>
     <string name="island_cutout_gap_title">Camera gap</string>
+    <string name="island_padding_around_title">Padding around</string>
     <string name="island_expanded_width_desc">Width when long pressed to expand</string>
     <string name="island_expanded_roundness_title">Expanded corner radius</string>
     <string name="island_expanded_roundness_desc">Roundness of expanded card</string>

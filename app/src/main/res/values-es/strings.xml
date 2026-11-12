@@ -1810,6 +1810,7 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="island_call_show_expanded">Expandido</string>
     <string name="island_expanded_width_title">Ancho expandido</string>
     <string name="island_cutout_gap_title">Espacio de la cámara</string>
+    <string name="island_padding_around_title">Padding around</string>
     <string name="island_keep_on_landscape_title">Mantener Horizontal</string>
     <string name="island_expanded_scale_desc">Expandir la isla de manera uniforme en todos los lados</string>
     <string name="island_expanded_padding_title">Márgen Expandido</string>

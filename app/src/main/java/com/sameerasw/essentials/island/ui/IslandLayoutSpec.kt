@@ -61,8 +61,9 @@ data class IslandLayoutSpec(
 ) {
     val compactHeight: Dp get() = cameraDiameter + verticalGap * 2
     val cameraSlotWidth: Dp get() = (cameraDiameter + cameraGap * 2) * cameraPresence
-    val cellSize: Dp get() = cameraDiameter
+    val cellSize: Dp get() = (cameraDiameter + (verticalGap - contentGap) * 2).coerceAtLeast(cameraDiameter * 0.5f)
     val cellSpacing: Dp get() = contentGap
+    val edgeInset: Dp get() = compactHeight * OPTICAL_INSET_RATIO * (contentGap / 6.dp)
 
     val growDirection: Int get() = when (cameraAnchor) {
         CameraAnchor.Start -> 1
