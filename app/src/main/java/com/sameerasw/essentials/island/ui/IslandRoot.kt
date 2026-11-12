@@ -264,14 +264,21 @@ private fun IslandRootContent(
     }
     val iconColor = if (justCollapsed) iconTarget else lerp(iconAnim.value, collapsedIconTarget, collapseMix)
 
-    val outlineAlphaTarget = if (spec.outlineHiddenWhenExpanded && stage == IslandStage.Expanded) 0f else 1f
+    val outlineHidden = spec.outlineHiddenWhenExpanded && stage == IslandStage.Expanded
+    val outlineAlphaTarget = if (outlineHidden) 0f else 1f
     val outlineAlphaAnim = remember { Animatable(outlineAlphaTarget) }
     LaunchedEffect(outlineAlphaTarget) {
-        if (justCollapsed) outlineAlphaAnim.snapTo(outlineAlphaTarget) else outlineAlphaAnim.animateTo(outlineAlphaTarget)
+        if (justCollapsed) {
+            outlineAlphaAnim.snapTo(outlineAlphaTarget)
+        } else {
+            outlineAlphaAnim.animateTo(outlineAlphaTarget, if (outlineHidden) IslandMotion.contentOut() else IslandMotion.contentIn())
+        }
     }
+    // While collapsing from expanded, the outline draws back in over the second half of the shrink.
+    val outlineReveal = ((collapseMix - 0.5f) / 0.5f).coerceIn(0f, 1f)
     val outlineAlpha = when {
         justCollapsed -> outlineAlphaTarget
-        stage == IslandStage.Expanded -> outlineAlphaAnim.value + (1f - outlineAlphaAnim.value) * collapseMix
+        stage == IslandStage.Expanded -> outlineAlphaAnim.value + (1f - outlineAlphaAnim.value) * outlineReveal
         else -> outlineAlphaAnim.value
     }
 
@@ -1255,7 +1262,8 @@ private fun IslandRootContent(
                 }
                 .then(
                     outlineFor(1f - bond)
-                        ?.let { Modifier.border(spec.outlineThickness, it, surfaceShape) }
+                        // The stroke draws in from hairline to full width as it fades in
+                        ?.let { Modifier.border(spec.outlineThickness * (0.35f + 0.65f * outlineAlpha), it, surfaceShape) }
                         ?: Modifier,
                 )
                 // Finger-driven shrink sits inside the clip/background so the pill itself follows the drag.
