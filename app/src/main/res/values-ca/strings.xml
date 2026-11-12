@@ -1499,8 +1499,11 @@
     <string name="island_desc">Illa dinàmica</string>
     <string name="island_enable_title">Activar Illa</string>
     <string name="island_section_placement">Posició</string>
-    <string name="island_section_duration">Duració</string>
+    <string name="island_section_duration">Timing</string>
     <string name="island_section_behavior">Comportament </string>
+    <string name="island_section_interactions">Interactions</string>
+    <string name="island_section_gestures">Gestures</string>
+    <string name="island_section_expanded">Expanded island</string>
     <string name="island_max_items_title">Màxim d\'elements a mostrar</string>
     <string name="island_call_options_title">Trucades</string>
     <string name="island_section_notifications">Notificacions</string>

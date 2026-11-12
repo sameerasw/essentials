@@ -1552,8 +1552,11 @@
     <string name="island_enable_title">Abilita Island</string>
     <string name="island_section_placement">Posizionamento</string>
     <string name="island_section_visuals">Aspetto</string>
-    <string name="island_section_duration">Durata</string>
+    <string name="island_section_duration">Timing</string>
     <string name="island_section_behavior">Comportamento</string>
+    <string name="island_section_interactions">Interactions</string>
+    <string name="island_section_gestures">Gestures</string>
+    <string name="island_section_expanded">Expanded island</string>
     <string name="island_call_options_title">Chiamate</string>
     <string name="diy_category_notifications">Notifiche</string>
     <string name="island_show_timers_title">Timer e cronometri</string>

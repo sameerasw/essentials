@@ -1603,7 +1603,10 @@
     <string name="island_section_placement">位置</string>
     <string name="island_section_visuals">视觉效果</string>
     <string name="island_section_behavior">行为</string>
-    <string name="island_section_duration">时长</string>
+    <string name="island_section_interactions">Interactions</string>
+    <string name="island_section_gestures">Gestures</string>
+    <string name="island_section_expanded">Expanded island</string>
+    <string name="island_section_duration">Timing</string>
     <string name="conscious_gate_select_apps_title">选择受限制的应用</string>
     <string name="conscious_gate_enable_title">启用意识限制</string>
     <string name="conscious_gate_delay_title">暂停延迟</string>

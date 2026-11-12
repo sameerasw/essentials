@@ -1744,8 +1744,11 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="watchface_show_glow_desc">Degradado dinámico en la parte superior para eventos y viajes</string>
     <string name="setting_hidden_debugging_title">Ocultar soporte de Depuración</string>
     <string name="island_section_visuals">Visuales</string>
-    <string name="island_section_duration">Duracion</string>
+    <string name="island_section_duration">Timing</string>
     <string name="island_section_behavior">Comportamiento</string>
+    <string name="island_section_interactions">Interactions</string>
+    <string name="island_section_gestures">Gestures</string>
+    <string name="island_section_expanded">Expanded island</string>
     <string name="island_section_placement">Posicion</string>
     <string name="island_brief_show_alarm_title">Mostrar las siguientes alarmas</string>
     <string name="island_brief_two_line_header_title">Encabezado de 2 líneas</string>

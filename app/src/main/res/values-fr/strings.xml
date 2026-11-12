@@ -1696,6 +1696,9 @@ Les effets de la LED HiLight peuvent être aussi utilisés comme une action dans
     <string name="watch_esim_install_title">Installer une eSIM</string>
     <string name="watch_esim_install_desc">Même dans des régions non supportés</string>
     <string name="island_section_behavior">Comportement</string>
+    <string name="island_section_interactions">Interactions</string>
+    <string name="island_section_gestures">Gestures</string>
+    <string name="island_section_expanded">Expanded island</string>
     <string name="island_section_visuals">Visuels</string>
     <string name="diy_volume_channel_alarm">Alarme</string>
     <string name="label_charging_mode_limited">Limité</string>

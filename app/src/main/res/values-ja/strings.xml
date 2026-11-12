@@ -1818,8 +1818,11 @@
     <string name="duo_combine_with_island">DuoとIslandを統合する</string>
     <string name="island_section_placement">位置</string>
     <string name="island_section_visuals">表示</string>
-    <string name="island_section_duration">遅延</string>
+    <string name="island_section_duration">Timing</string>
     <string name="island_section_behavior">動作</string>
+    <string name="island_section_interactions">Interactions</string>
+    <string name="island_section_gestures">Gestures</string>
+    <string name="island_section_expanded">Expanded island</string>
     <string name="island_call_options_title">通話</string>
     <string name="island_section_notifications">通知</string>
     <string name="island_show_timers_title">タイマーとストップウォッチ</string>
