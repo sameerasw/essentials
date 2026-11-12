@@ -1535,7 +1535,7 @@
     <string name="duo_action_horizontal_slide_track_desc">Ativo somente enquanto a mídia estiver sendo reproduzida.</string>
     <string name="cat_navigation">navegação</string>
     <string name="island_timeout_title">duração na tela</string>
-    <string name="island_show_glow_title">Mostrar o brilho do destaque</string>
+    <string name="island_show_glow_title">Expanded accent glow</string>
     <string name="island_glow_intensity_title">Glow intensity</string>
     <string name="island_prefer_still_title">Prefer still island</string>
     <string name="island_prefer_still_info">Stops the island\'s animations after a few seconds without interaction, so the display can drop to a low refresh rate and save battery. Media visualizers, second by second counters and other looping animations pause until you interact with the island again.</string>
