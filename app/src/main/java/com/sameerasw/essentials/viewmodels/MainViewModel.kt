@@ -48,6 +48,7 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.sameerasw.essentials.EssentialsApp
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.island.service.CameraGeometryResolver
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.data.repository.UpdateRepository
 import com.sameerasw.essentials.utils.LogManager
@@ -5815,20 +5816,14 @@ class MainViewModel : ViewModel() {
     fun autoAlignIslandWithCamera(context: Context): Boolean {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) return false
         val wm = context.getSystemService(Context.WINDOW_SERVICE) as? WindowManager ?: return false
+        val bounds = CameraGeometryResolver.cutoutBounds(wm) ?: return false
         val metrics = wm.maximumWindowMetrics
-        val rect =
-            try {
-                metrics.windowInsets.displayCutout?.boundingRects
-                    ?.let { rects -> rects.find { it.top == 0 } ?: rects.firstOrNull() }
-            } catch (_: Exception) {
-                null
-            } ?: return false
         val density = context.resources.displayMetrics.density
         val screenWidth = metrics.bounds.width().toFloat()
         val screenHeight = metrics.bounds.height().toFloat()
-        val radius = (minOf(rect.width(), rect.height()) / 2f).coerceAtLeast(12f * density)
-        setIslandCameraOffsetX((rect.exactCenterX() / screenWidth * 100f).coerceIn(0f, 100f))
-        setIslandCameraOffsetY((rect.exactCenterY() / screenHeight * 100f).coerceIn(0f, 20f))
+        val radius = CameraGeometryResolver.lensRadius(bounds, density)
+        setIslandCameraOffsetX((bounds.centerX() / screenWidth * 100f).coerceIn(0f, 100f))
+        setIslandCameraOffsetY((bounds.centerY() / screenHeight * 100f).coerceIn(0f, 20f))
         setIslandCameraSize((radius / (16f * density)).coerceIn(0.05f, 2.0f))
         setIslandAutoDetect(false)
         return true
