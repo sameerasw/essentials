@@ -1832,7 +1832,7 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="island_border_outline_dynamic_title">Colores dinamicos</string>
     <string name="button_remap_pause_on_volume_dialog_title">Deshabilirar si el panel de volumen esta abierto</string>
     <string name="island_navigation_expand_title">Expandir antes de una curva</string>
-    <string name="island_navigation_peek_after_expand_title">Línea compacta después expandir</string>
+    <string name="island_navigation_peek_after_expand_title">Keep showing in peek</string>
     <string name="island_secondary_bubble_title">Burbuja secundaria</string>
     <string name="island_balance_compact_title">Isla compacta visualmente equilibrada</string>
     <string name="island_neural_expressive_title">Neural Expressive expanded animations</string>
@@ -1925,7 +1925,6 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="watch_esim_install_title">Instalar eSIM</string>
     <string name="watch_esim_install_desc">En regiones insoportadas</string>
     <string name="island_bond_edge_title">Union con la Isla si esta inactuva</string>
-    <string name="island_navigation_peek_after_expand_desc">Si esta desactivado, la Isla vuelve a ser compacta</string>
     <string name="island_navigation_on_new_title">Nueva instrucción</string>
     <string name="feat_screenshots_title">Limpieza de capturas de pantalla</string>
     <string name="feat_screenshots_desc">Limpiar capturas de pantallas compartidas y viejas</string>

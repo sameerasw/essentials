@@ -246,7 +246,7 @@ internal class NavigationTrigger {
                 Action.Expand
             }
             !announce -> Action.None
-            onNew == SettingsRepository.ISLAND_NAVIGATION_ON_NEW_EXPAND && canExpand -> Action.Expand
+            (onNew == SettingsRepository.ISLAND_NAVIGATION_ON_NEW_EXPAND || (onNew == SettingsRepository.ISLAND_NAVIGATION_ON_NEW_PEEK && !canPeek)) && canExpand -> Action.Expand
             onNew == SettingsRepository.ISLAND_NAVIGATION_ON_NEW_PEEK && canPeek -> Action.Peek
             else -> Action.None
         }

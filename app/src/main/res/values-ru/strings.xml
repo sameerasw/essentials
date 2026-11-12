@@ -2020,7 +2020,7 @@
     <string name="battery_separate_channels_title">Отдельные каналы батареи </string>
     <string name="battery_separate_channels_desc">Отдельные LR-каналы </string>
     <string name="batteries_notification_title">Уведомление о батареях </string>
-    <string name="island_navigation_peek_after_expand_title">Линия заглядывает после расширения </string>
+    <string name="island_navigation_peek_after_expand_title">Keep showing in peek</string>
     <string name="island_navigation_expand_title">Расширьте перед поворотом </string>
     <string name="island_navigation_on_new_title">Новая инструкция </string>
     <string name="island_notif_hub_title">Центр уведомлений </string>
@@ -2085,7 +2085,6 @@
     <string name="island_battery_peek_alerts_title">Показывать оповещения о просмотре </string>
     <string name="island_battery_icon_conditional_title">Иконки только для нижеуказанных условий </string>
     <string name="duo_battery_low_color_title">Низкий заряд</string>
-    <string name="island_navigation_peek_after_expand_desc">Когда выключено остров возвращается в компактный режим</string>
     <string name="island_pulse_shadow_spread_title">Распространение </string>
     <string name="island_pulse_shadow_duration_title">Продолжительность пульсации</string>
     <string name="about_desc_safe_volume">Европейские правила требуют, чтобы смартфоны предупреждали при превышении определённых уровней объёма (85 дБ). Это предупреждение должно отображаться один раз после каждой перезагрузки или после 20 часов непрерывного воспроизведения музыки. Используйте этот переключатель, чтобы отключить его навсегда. </string>
