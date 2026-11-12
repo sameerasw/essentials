@@ -235,6 +235,7 @@ private fun IslandRootContent(
             cameraDiameter = targetSpec.cameraDiameter * (1f - 0.3f * bond),
             verticalGap = targetSpec.verticalGap + (3.5.dp - targetSpec.verticalGap) * bond,
             cameraGap = targetSpec.cameraGap * (1f - 0.2f * bond),
+            contentGap = targetSpec.contentGap * (1f - 0.2f * bond),
         )
     }
 
@@ -565,7 +566,7 @@ private fun IslandRootContent(
     val bubbleOnlyLayout = !hasCompactCells && spec.cameraPresence <= 0f
     val catchUpAnim = remember { Animatable(0f) }
     val liquidField = remember { LiquidField() }
-    liquidField.reach = with(density) { spec.cameraGap.toPx() } * 0.8f
+    liquidField.reach = with(density) { spec.contentGap.toPx() } * 0.8f
     val surfaceBond = remember(compactHeightPx, expandedCornerPx, bubbleOnlyLayout) {
         LiquidBond(
             id = "surface",
@@ -644,7 +645,7 @@ private fun IslandRootContent(
         } else {
             val sizePx = with(density) { spec.compactHeight.toPx() }
             val budget = with(density) { spec.lineWidth.toPx() }
-            val gap = with(density) { spec.cameraGap.toPx() }
+            val gap = with(density) { spec.contentGap.toPx() }
             val needLeft = compactNeedLeft.intValue
             // Balanced, the bubble's room grows the pill on the far side, so only the near side's content eats into the budget
             val room = if (needLeft >= 0) {
@@ -676,7 +677,7 @@ private fun IslandRootContent(
     }
     fun bubbleSide(): Float = bubbleSideAnim.value
     fun balanceSign(): Float = if (spec.balanceCompact && spec.growDirection == 0) 1f - 2f * bubbleSide() else 1f
-    val bubbleGapPx = with(density) { spec.cameraGap.roundToPx() }
+    val bubbleGapPx = with(density) { spec.contentGap.roundToPx() }
     fun sideBubbleProgress(): Float =
         if (spec.growDirection == 0 && (hasCompactCells || stage == IslandStage.Hidden)) catchUpAnim.value.coerceIn(0f, 1f) else 0f
     val slackAnim = remember { Animatable(slackTarget.toFloat()) }
@@ -763,7 +764,7 @@ private fun IslandRootContent(
         }
     }
     val lineInsetActive = queueShown && stage == IslandStage.Line
-    val lineInset = if (lineInsetActive) queueWidth + spec.cameraGap else 0.dp
+    val lineInset = if (lineInsetActive) queueWidth + spec.contentGap else 0.dp
     val lineInsets = if (spec.growDirection > 0) 0.dp to lineInset else lineInset to 0.dp
     val condensedLineActive = spec.growDirection == 0 && stage == IslandStage.Line && focusedItem?.line?.condensed == true
     LaunchedEffect(lineInsetActive, spec.growDirection, condensedLineActive, queueWidthPx) {

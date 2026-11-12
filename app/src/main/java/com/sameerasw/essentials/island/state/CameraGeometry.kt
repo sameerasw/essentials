@@ -12,6 +12,7 @@ data class CameraGeometry(
     val anchor: CameraAnchor = CameraAnchor.Center,
     val verticalGap: Float = gap,
     val hasCamera: Boolean = true,
+    val contentGap: Float = gap,
 ) {
     val diameter: Float get() = radius * 2f
     val compactHeight: Float get() = diameter + verticalGap * 2f

@@ -67,7 +67,7 @@ fun LineTemplate(
         modifier = Modifier
             .width(spec.lineWidth - startInset - endInset)
             .height(spec.compactHeight)
-            .padding(start = spec.cameraGap, end = spec.cameraGap + textEndInset),
+            .padding(start = spec.contentGap, end = spec.contentGap + textEndInset),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         val icon: @Composable () -> Unit = {
@@ -78,7 +78,7 @@ fun LineTemplate(
         }
         if (spec.growDirection == 0) {
             Row(
-                modifier = Modifier.width((spec.lineWidth - spec.cameraSlotWidth) / 2 - spec.cameraGap - startInset),
+                modifier = Modifier.width((spec.lineWidth - spec.cameraSlotWidth) / 2 - spec.contentGap - startInset),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(spec.cellSpacing),
             ) {
@@ -96,7 +96,7 @@ fun LineTemplate(
                 endSlot()
             }
         } else {
-            if (spec.growDirection > 0) Spacer(Modifier.width((spec.cameraSlotWidth - spec.cameraGap).coerceAtLeast(0.dp)))
+            if (spec.growDirection > 0) Spacer(Modifier.width((spec.cameraSlotWidth - spec.contentGap).coerceAtLeast(0.dp)))
             Row(
                 modifier = Modifier.weight(1f),
                 verticalAlignment = Alignment.CenterVertically,
@@ -112,7 +112,7 @@ fun LineTemplate(
                 )
                 endSlot()
             }
-            if (spec.growDirection < 0) Spacer(Modifier.width((spec.cameraSlotWidth - spec.cameraGap).coerceAtLeast(0.dp)))
+            if (spec.growDirection < 0) Spacer(Modifier.width((spec.cameraSlotWidth - spec.contentGap).coerceAtLeast(0.dp)))
         }
     }
 }
@@ -147,7 +147,7 @@ private fun CondensedLine(line: LineContent, spec: IslandLayoutSpec, startInset:
     val leadingWidth = leading?.let { it.width + spec.cellSpacing } ?: 0.dp
 
     if (spec.growDirection == 0) {
-        val edgePad = spec.cameraGap + spec.compactHeight * OPTICAL_INSET_RATIO
+        val edgePad = spec.contentGap + spec.compactHeight * OPTICAL_INSET_RATIO
         val titleWidth = condensedTitleWidth(
             natural = natural,
             lineWidth = spec.lineWidth,
@@ -177,20 +177,20 @@ private fun CondensedLine(line: LineContent, spec: IslandLayoutSpec, startInset:
         }
     } else {
         val opticalInset = if (spec.growDirection > 0) spec.compactHeight * OPTICAL_INSET_RATIO else 0.dp
-        val fixed = spec.cameraGap + opticalInset + spec.cameraSlotWidth + spec.cellSize + spec.cellSpacing * 2 + leadingWidth
+        val fixed = spec.contentGap + opticalInset + spec.cameraSlotWidth + spec.cellSize + spec.cellSpacing * 2 + leadingWidth
         val maxText = (spec.lineWidth - startInset - endInset - fixed).coerceAtLeast(0.dp)
         Row(
             modifier = Modifier
                 .height(spec.compactHeight)
-                .padding(start = spec.cameraGap, end = spec.cameraGap + opticalInset),
+                .padding(start = spec.contentGap, end = spec.contentGap + opticalInset),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(spec.cellSpacing),
         ) {
-            if (spec.growDirection > 0) Spacer(Modifier.width((spec.cameraSlotWidth - spec.cameraGap).coerceAtLeast(0.dp)))
+            if (spec.growDirection > 0) Spacer(Modifier.width((spec.cameraSlotWidth - spec.contentGap).coerceAtLeast(0.dp)))
             leadingSlot()
             icon()
             title(natural.coerceAtMost(maxText))
-            if (spec.growDirection < 0) Spacer(Modifier.width((spec.cameraSlotWidth - spec.cameraGap).coerceAtLeast(0.dp)))
+            if (spec.growDirection < 0) Spacer(Modifier.width((spec.cameraSlotWidth - spec.contentGap).coerceAtLeast(0.dp)))
         }
     }
 }

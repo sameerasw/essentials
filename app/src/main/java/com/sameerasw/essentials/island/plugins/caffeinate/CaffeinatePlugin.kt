@@ -181,7 +181,7 @@ class CaffeinatePlugin : BaseIslandPlugin() {
             Column(Modifier.fillMaxWidth().padding(spec.expandedOutset)) {
                 Spacer(Modifier.height(spec.expandedTopPadding))
                 scope.CameraRow(
-                    horizontalPadding = spec.cameraGap + spec.expandedCorner * 0.35f,
+                    horizontalPadding = spec.contentGap + spec.expandedCorner * 0.35f,
                     title = title,
                     start = {
                         IslandIcon(R.drawable.rounded_coffee_24, size = 20.dp, tint = accent)

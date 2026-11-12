@@ -790,6 +790,7 @@ class IslandCoordinator(
         spec.value = IslandLayoutSpec(
             cameraDiameter = (geo.diameter / density).dp,
             cameraGap = (geo.gap / density).dp,
+            contentGap = (geo.contentGap / density).dp,
             verticalGap = (geo.verticalGap / density).dp,
             surfaceTop = (geo.surfaceTop / density).dp,
             lineWidth = lineWidth.dp,
@@ -949,20 +950,20 @@ class IslandCoordinator(
 
     private val widthRelayout = Runnable { controller.relayout() }
 
-    private fun compactCellUnitPx(): Float = geometry?.let { it.diameter + it.gap } ?: 0f
+    private fun compactCellUnitPx(): Float = geometry?.let { it.diameter + it.contentGap } ?: 0f
 
     private fun compactCellUnits(key: String): Float {
         val px = CompactCellWidths.get(key) ?: return 1f
         if (px == 0) return 0f
         val unit = compactCellUnitPx().takeIf { it > 0f } ?: return 1f
-        return (((px + (geometry?.gap ?: 0f)) / unit) * 4f).roundToInt() / 4f
+        return (((px + (geometry?.contentGap ?: 0f)) / unit) * 4f).roundToInt() / 4f
     }
 
     private fun fitsCompactWidth(before: List<String>, after: List<String>, leftExtra: Int, growing: Boolean): Int? {
         val geo = geometry ?: return 0
         val density = service.resources.displayMetrics.density
         val cell = geo.diameter.toInt()
-        val spacing = geo.gap.toInt()
+        val spacing = geo.contentGap.toInt()
         val inset = (geo.compactHeight * 0.15f).toInt()
         fun need(keys: List<String>, extra: Int): Int =
             if (keys.isEmpty() && extra == 0) 0 else keys.sumOf { CompactCellWidths.get(it) ?: cell } + spacing * keys.size + inset +

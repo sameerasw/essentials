@@ -25,6 +25,7 @@ object CameraGeometryResolver {
         }
         val sizeScale = settings.getIslandCameraSize()
         val gap = settings.getIslandCutoutGap() * density
+        val contentGap = CONTENT_GAP_DP * density
         val verticalGap = 6f * density
 
         val manualInLandscape = settings.isIslandKeepOnLandscapeEnabled() &&
@@ -39,6 +40,7 @@ object CameraGeometryResolver {
                     centerY = rect.centerY(),
                     radius = base * sizeScale,
                     gap = gap,
+                    contentGap = contentGap,
                     verticalGap = verticalGap,
                     screenWidth = screenWidth,
                     screenHeight = screenHeight,
@@ -59,6 +61,7 @@ object CameraGeometryResolver {
             centerY = centerY,
             radius = radius,
             gap = gap,
+            contentGap = contentGap,
             verticalGap = verticalGap,
             screenWidth = screenWidth,
             screenHeight = screenHeight,
@@ -98,6 +101,7 @@ object CameraGeometryResolver {
     }
 
     private const val PIXEL_LENS_RATIO = 0.67f
+    private const val CONTENT_GAP_DP = 6f
 
     @Suppress("UNUSED_PARAMETER")
     private fun anchorFor(settings: SettingsRepository): CameraAnchor = when (settings.getIslandCameraPosition()) {
