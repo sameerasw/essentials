@@ -12,6 +12,7 @@ enum class QueueStyle { Stack, Overlap }
 data class IslandLayoutSpec(
     val cameraDiameter: Dp = 28.dp,
     val cameraGap: Dp = 6.dp,
+    val contentGap: Dp = 6.dp,
     val verticalGap: Dp = 6.dp,
     val surfaceTop: Dp = 8.dp,
     val lineWidth: Dp = 360.dp,
@@ -61,7 +62,7 @@ data class IslandLayoutSpec(
     val compactHeight: Dp get() = cameraDiameter + verticalGap * 2
     val cameraSlotWidth: Dp get() = (cameraDiameter + cameraGap * 2) * cameraPresence
     val cellSize: Dp get() = cameraDiameter
-    val cellSpacing: Dp get() = cameraGap
+    val cellSpacing: Dp get() = contentGap
 
     val growDirection: Int get() = when (cameraAnchor) {
         CameraAnchor.Start -> 1

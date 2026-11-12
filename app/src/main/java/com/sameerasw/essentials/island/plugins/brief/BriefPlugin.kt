@@ -466,7 +466,7 @@ private fun BriefOverview(
         
         Column(Modifier.fillMaxWidth().padding(spec.expandedOutset).padding(bottom = spec.expandedBottomPadding)) {
             Spacer(Modifier.height(spec.expandedTopPadding))
-            val headerPadding = spec.cameraGap + spec.expandedCorner * 0.35f
+            val headerPadding = spec.contentGap + spec.expandedCorner * 0.35f
             scope.CameraRow(
                 horizontalPadding = headerPadding,
                 start = {
