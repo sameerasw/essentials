@@ -973,6 +973,11 @@ object FeatureRegistry {
                             "island_camera_position",
                         ),
                         SearchSetting(
+                            R.string.island_statusbar_aware_width_title,
+                            R.string.island_section_placement,
+                            "island_statusbar_aware_width",
+                        ),
+                        SearchSetting(
                             R.string.island_expanded_scale_title,
                             R.string.island_expanded_scale_desc,
                             "island_expanded_scale",
@@ -1002,11 +1007,6 @@ object FeatureRegistry {
                             R.string.island_balance_compact_title,
                             R.string.island_section_visuals,
                             "island_balance_compact",
-                        ),
-                        SearchSetting(
-                            R.string.island_statusbar_aware_width_title,
-                            R.string.island_section_visuals,
-                            "island_statusbar_aware_width",
                         ),
                     ),
             ) {

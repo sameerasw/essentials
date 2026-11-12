@@ -1869,6 +1869,7 @@ Düğme yeniden eşleme bir ses seviyesi tuşu için uzun basma eylemi varsa, o 
     <string name="island_section_gestures">Gestures</string>
     <string name="island_section_expanded">Expanded island</string>
     <string name="island_section_landscape">Landscape</string>
+    <string name="island_section_experimental">Experimental</string>
     <string name="about_desc_screenshots">Galeriyi tek seferlik ekran görüntülerinden arındırır. Paylaşılan ekran görüntüleri, paylaşımdan hemen sonra veya biraz sonra silinebilir ve her yeni ekran görüntüsü bildirimde görünmediği veya Fotoğraflar uygulamasında yıldızlanmadığı sürece birkaç gün sonra otomatik olarak silinebilir. Silinen ekran görüntüleri, Dosyalar veya Fotoğraflar uygulamasından 30 gün boyunca geri yüklenebilir.</string>
     <string name="screenshot_auto_clean_title">Ekran görüntülerini otomatik temizle</string>
     <string name="screenshot_auto_clean_note">Her yeni ekran görüntüsü için, kaydedilmesi gerektiğine dair sessiz bir bildirim gönderilir. Yıldızlanmış ekran görüntüleri her zaman saklanır.</string>

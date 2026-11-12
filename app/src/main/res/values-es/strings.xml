@@ -1750,6 +1750,7 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="island_section_gestures">Gestures</string>
     <string name="island_section_expanded">Expanded island</string>
     <string name="island_section_landscape">Landscape</string>
+    <string name="island_section_experimental">Experimental</string>
     <string name="island_section_placement">Posicion</string>
     <string name="island_brief_show_alarm_title">Mostrar las siguientes alarmas</string>
     <string name="island_brief_two_line_header_title">Encabezado de 2 líneas</string>

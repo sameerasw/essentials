@@ -1974,6 +1974,7 @@ Cần có quyền truy cập trợ năng để hiển thị lớp phủ và cầ
     <string name="island_section_gestures">Gestures</string>
     <string name="island_section_expanded">Expanded island</string>
     <string name="island_section_landscape">Landscape</string>
+    <string name="island_section_experimental">Experimental</string>
     <string name="setting_hidden_debugging_title">Hỗ trợ gỡ lỗi ẩn</string>
     <string name="island_always_gestures_title">Các cử chỉ luôn khả dụng</string>
     <string name="island_always_gestures_desc">Giữ cho vùng thao tác cử chỉ vẫn khả dụng ngay cả khi island đang ẩn đi </string>
