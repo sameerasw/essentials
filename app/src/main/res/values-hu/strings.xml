@@ -1489,8 +1489,11 @@
     <string name="island_enable_title">Sziget bekapcsolása</string>
     <string name="island_section_placement">Elhelyezkedés</string>
     <string name="island_section_visuals">Megjelenés</string>
-    <string name="island_section_duration">Időtartam</string>
+    <string name="island_section_duration">Timing</string>
     <string name="island_section_behavior">Viselkedés</string>
+    <string name="island_section_interactions">Interactions</string>
+    <string name="island_section_gestures">Gestures</string>
+    <string name="island_section_expanded">Expanded island</string>
     <string name="island_call_options_title">Hívások</string>
     <string name="island_show_timers_title">Időzítők és stopperek</string>
     <string name="duo_show_media_title">Médialejátszás</string>

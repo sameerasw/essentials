@@ -2036,7 +2036,10 @@ Die Stufen können nur von der normalen Lautstärke abwärts, niemals darüber h
     <string name="feat_screenshots_title">Bildschirmfotos aufräumen </string>
     <string name="feat_aod_wallpaper_extended_media">Wiedergabeinformationen zeigen</string>
     <string name="island_section_behavior">Verhalten</string>
-    <string name="island_section_duration">Dauer</string>
+    <string name="island_section_interactions">Interactions</string>
+    <string name="island_section_gestures">Gestures</string>
+    <string name="island_section_expanded">Expanded island</string>
+    <string name="island_section_duration">Timing</string>
     <string name="island_section_visuals">Anzeige</string>
     <string name="island_section_placement">Position</string>
     <string name="app_colors_custom">Benutzerdefiniert</string>

@@ -1663,7 +1663,7 @@
     <string name="island_pulse_shadow_desc">Toont een gloed achter het eiland in de appkleuren</string>
     <string name="island_pulse_shadow_spread_title">Snelheid gloed</string>
     <string name="island_pulse_shadow_duration_title">Puls duur</string>
-    <string name="island_section_duration">Duur</string>
+    <string name="island_section_duration">Timing</string>
     <string name="island_timeout_title">Duur weergave</string>
     <string name="island_expanded_timeout_title">Duur uitgeklapte staat</string>
     <string name="island_expanded_timeout_desc">De duur voordat het eiland weer inklapt (0 voor oneindig)</string>
@@ -1684,6 +1684,9 @@
     <string name="duo_action_horizontal_slide_track">Volgende/vorige nummer</string>
     <string name="duo_action_horizontal_slide_track_desc">Wanneer media afspeelt</string>
     <string name="island_section_behavior">Gedrag</string>
+    <string name="island_section_interactions">Interactions</string>
+    <string name="island_section_gestures">Gestures</string>
+    <string name="island_section_expanded">Expanded island</string>
     <string name="island_show_when_title">Toon wanneer</string>
     <string name="island_show_when_unlocked">Ontgrendeld</string>
     <string name="island_show_when_screen_on">Scherm aan</string>

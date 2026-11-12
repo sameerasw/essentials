@@ -1770,8 +1770,11 @@
     <string name="island_show_network_title">Сетевая активность</string>
     <string name="island_section_placement">Расположение</string>
     <string name="island_section_visuals">Оформление</string>
-    <string name="island_section_duration">Длительность</string>
+    <string name="island_section_duration">Timing</string>
     <string name="island_section_behavior">Поведение</string>
+    <string name="island_section_interactions">Interactions</string>
+    <string name="island_section_gestures">Gestures</string>
+    <string name="island_section_expanded">Expanded island</string>
     <string name="duo_hide_when_locked_title">Скрывать когда заблокировано</string>
     <string name="island_preview_ring_title">Показывать подсказку выравнивания</string>
     <string name="diy_volume_channel_alarm">Будильник</string>

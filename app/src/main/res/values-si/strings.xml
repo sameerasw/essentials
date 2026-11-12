@@ -1541,4 +1541,7 @@
     <string name="feat_lockscreen_shortcuts_title">අගුළු තිර කෙටිමං</string>
     <string name="cat_navigation">සංචාලනය</string>
     <string name="feat_power_saving_title">බලශක්ති ඉතිරිකිරීම</string>
+    <string name="island_section_interactions">Interactions</string>
+    <string name="island_section_gestures">Gestures</string>
+    <string name="island_section_expanded">Expanded island</string>
 </resources>

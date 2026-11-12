@@ -1701,4 +1701,7 @@ Aby ustawienie zadziałało, może być konieczne wielokrotne zastosowanie.</str
     <string name="label_soundtrigger_mode">Tryb wywalania dźwiękiem </string>
     <string name="label_disable_vibration">Wyłącz wibracje</string>
     <string name="desc_disable_vibration">Wyłącz globalnie wrażenia dotykowe i wibracje.</string>
+    <string name="island_section_interactions">Interactions</string>
+    <string name="island_section_gestures">Gestures</string>
+    <string name="island_section_expanded">Expanded island</string>
 </resources>

@@ -11,6 +11,7 @@ package com.sameerasw.essentials.domain.registry
 
 import com.sameerasw.essentials.ui.features.display.ISLAND_BEHAVIOR_FEATURE_ID
 import com.sameerasw.essentials.ui.features.display.ISLAND_DURATION_FEATURE_ID
+import com.sameerasw.essentials.ui.features.display.ISLAND_INTERACTIONS_FEATURE_ID
 import com.sameerasw.essentials.ui.features.display.ISLAND_NOTIFICATIONS_FEATURE_ID
 import com.sameerasw.essentials.ui.features.display.ISLAND_PLACEMENT_FEATURE_ID
 import com.sameerasw.essentials.ui.features.display.ISLAND_VISUALS_FEATURE_ID
@@ -971,6 +972,11 @@ object FeatureRegistry {
                             R.string.island_camera_position_center,
                             "island_camera_position",
                         ),
+                        SearchSetting(
+                            R.string.island_expanded_scale_title,
+                            R.string.island_expanded_scale_desc,
+                            "island_expanded_scale",
+                        ),
                     ),
             ) {
                 override fun isEnabled(viewModel: MainViewModel) = true
@@ -993,9 +999,9 @@ object FeatureRegistry {
                 searchableSettings =
                     listOf(
                         SearchSetting(
-                            R.string.island_expanded_scale_title,
-                            R.string.island_expanded_scale_desc,
-                            "island_expanded_scale",
+                            R.string.island_balance_compact_title,
+                            R.string.island_section_visuals,
+                            "island_balance_compact",
                         ),
                         SearchSetting(
                             R.string.island_statusbar_aware_width_title,
@@ -1061,15 +1067,41 @@ object FeatureRegistry {
                             R.string.island_notif_queue_style_search_desc,
                             "island_secondary_style",
                         ),
+                    ),
+            ) {
+                override fun isEnabled(viewModel: MainViewModel) = true
+
+                override fun onToggle(
+                    viewModel: MainViewModel,
+                    context: Context,
+                    enabled: Boolean,
+                ) {}
+            },
+            object : Feature(
+                id = ISLAND_INTERACTIONS_FEATURE_ID,
+                title = R.string.island_section_interactions,
+                iconRes = R.drawable.rounded_touch_app_24,
+                category = R.string.cat_interface,
+                description = R.string.island_section_interactions,
+                showToggle = false,
+                parentFeatureId = "Island",
+                isVisibleInMain = false,
+                searchableSettings =
+                    listOf(
                         SearchSetting(
-                            R.string.island_balance_compact_title,
-                            R.string.island_section_behavior,
-                            "island_balance_compact",
+                            R.string.island_dismiss_direction_title,
+                            R.string.island_section_interactions,
+                            "island_dismiss_direction",
                         ),
                         SearchSetting(
                             R.string.island_tap_to_open_expanded_title,
-                            R.string.island_section_behavior,
+                            R.string.island_section_interactions,
                             "island_tap_to_open_expanded",
+                        ),
+                        SearchSetting(
+                            R.string.island_dismiss_on_outside_title,
+                            R.string.island_section_interactions,
+                            "island_dismiss_on_outside",
                         ),
                     ),
             ) {

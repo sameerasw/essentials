@@ -129,11 +129,6 @@ fun IslandSettingsUI(
     var showAlarmOptionsSheet by remember { mutableStateOf(false) }
     var showNavigationOptionsSheet by remember { mutableStateOf(false) }
     var showBriefOptionsSheet by remember { mutableStateOf(highlightSetting == "island_brief_show_alarm") }
-    var pickingGesture by remember { mutableStateOf<String?>(null) }
-    var showSlideModeSheet by remember { mutableStateOf(false) }
-    val soundModeHandler = remember { SoundModeHandler(context) }
-    val essentialsPrefs = remember { context.getSharedPreferences("essentials_prefs", android.content.Context.MODE_PRIVATE) }
-    var soundModeUseShizuku by remember { mutableStateOf(essentialsPrefs.getBoolean("sound_mode_use_shizuku", true)) }
 
     if (requestingPermissionsFor != null) {
         val (titleRes, permKeys) = requestingPermissionsFor!!
@@ -199,6 +194,24 @@ fun IslandSettingsUI(
                     },
                 )
             }
+        }
+
+        RoundedCardContainer(
+            spacing = 2.dp,
+            cornerRadius = 24.dp,
+        ) {
+            IconToggleItem(
+                iconRes = R.drawable.rounded_calendar_today_24,
+                title = stringResource(R.string.island_brief_title),
+                description = stringResource(R.string.island_brief_desc),
+                isChecked = viewModel.isIslandBriefEnabled.value,
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    viewModel.setIslandBriefEnabled(checked)
+                },
+                onSettingsClick = { showBriefOptionsSheet = true },
+                modifier = Modifier.highlight(highlightSetting == "island_brief_enabled"),
+            )
         }
 
         TranslatableText(
@@ -558,166 +571,7 @@ fun IslandSettingsUI(
             onReset = { workingOrder = IslandPriorityEntries.defaultOrder(providerEntries) },
         )
 
-        RoundedCardContainer(
-            spacing = 2.dp,
-            cornerRadius = 24.dp,
-        ) {
-            IconToggleItem(
-                iconRes = R.drawable.rounded_calendar_today_24,
-                title = stringResource(R.string.island_brief_title),
-                description = stringResource(R.string.island_brief_desc),
-                isChecked = viewModel.isIslandBriefEnabled.value,
-                onCheckedChange = { checked ->
-                    HapticUtil.performVirtualKeyHaptic(view)
-                    viewModel.setIslandBriefEnabled(checked)
-                },
-                onSettingsClick = { showBriefOptionsSheet = true },
-                modifier = Modifier.highlight(highlightSetting == "island_brief_enabled"),
-            )
-        }
-
         IslandProvidersSection(onChanged = { providerVersion++ })
-
-        TranslatableText(
-            stringResId = R.string.duo_section_actions,
-            style = MaterialTheme.typography.titleSmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier.padding(start = 8.dp),
-        )
-
-        RoundedCardContainer(
-            spacing = 2.dp,
-            cornerRadius = 24.dp,
-        ) {
-            IconToggleItem(
-                iconRes = R.drawable.rounded_front_hand_24,
-                title = stringResource(R.string.duo_action_long_press_title),
-                description = if (viewModel.isIslandBriefEnabled.value) {
-                    stringResource(R.string.island_brief_title)
-                } else {
-                    viewModel.islandLongPressAction.value?.let { stringResource(it.title) }
-                        ?: stringResource(R.string.duo_action_none)
-                },
-                showToggle = false,
-                enabled = !viewModel.isIslandBriefEnabled.value,
-                onClick = {
-                    HapticUtil.performVirtualKeyHaptic(view)
-                    pickingGesture = "long_press"
-                },
-                modifier = Modifier.highlight(highlightSetting == "island_long_press_action"),
-            )
-
-            IconToggleItem(
-                iconRes = R.drawable.rounded_favorite_24,
-                title = stringResource(R.string.island_like_while_playing_title),
-                isChecked = viewModel.isIslandLikeWhilePlaying.value,
-                onCheckedChange = { checked ->
-                    HapticUtil.performVirtualKeyHaptic(view)
-                    viewModel.setIslandLikeWhilePlayingEnabled(checked)
-                },
-                modifier = Modifier.highlight(highlightSetting == "island_like_while_playing"),
-            )
-        }
-
-        RoundedCardContainer(
-            spacing = 2.dp,
-            cornerRadius = 24.dp,
-        ) {
-            IconToggleItem(
-                iconRes = R.drawable.rounded_compare_arrows_24,
-                title = stringResource(R.string.duo_action_horizontal_slide_title),
-                description = horizontalSlideDescription(viewModel.islandSlideMode.value, viewModel.isIslandSlideTrack.value),
-                showToggle = false,
-                onClick = {
-                    HapticUtil.performVirtualKeyHaptic(view)
-                    showSlideModeSheet = true
-                },
-                modifier = Modifier.highlight(highlightSetting == "island_slide_mode"),
-            )
-
-            IconToggleItem(
-                iconRes = R.drawable.rounded_skip_next_24,
-                title = stringResource(R.string.duo_action_horizontal_slide_track),
-                description = stringResource(R.string.duo_action_horizontal_slide_track_desc),
-                isChecked = viewModel.isIslandSlideTrack.value,
-                onCheckedChange = { checked ->
-                    HapticUtil.performVirtualKeyHaptic(view)
-                    viewModel.setIslandSlideTrackEnabled(checked)
-                },
-                modifier = Modifier.highlight(highlightSetting == "island_slide_track"),
-            )
-
-            AnimatedVisibility(
-                visible = viewModel.islandSlideMode.value == "sound_mode",
-                enter = expandVertically() + fadeIn(),
-                exit = shrinkVertically() + fadeOut(),
-            ) {
-                IconToggleItem(
-                    iconRes = R.drawable.rounded_adb_24,
-                    title = stringResource(R.string.sound_mode_use_shizuku_title),
-                    isChecked = soundModeUseShizuku,
-                    onCheckedChange = { checked ->
-                        HapticUtil.performVirtualKeyHaptic(view)
-                        soundModeUseShizuku = checked
-                        essentialsPrefs.edit().putBoolean("sound_mode_use_shizuku", checked).apply()
-                        if (!soundModeHandler.canChangeMode() || (checked && !soundModeHandler.isShizukuReady())) {
-                            viewModel.check(context)
-                            requestingPermissionsFor =
-                                R.string.duo_action_horizontal_slide_sound_mode to
-                                if (checked) listOf("SHIZUKU") else listOf("NOTIFICATION_POLICY")
-                        }
-                    },
-                    modifier = Modifier.highlight(highlightSetting == "island_slide_sound_mode_shizuku"),
-                )
-            }
-
-            AnimatedVisibility(
-                visible = viewModel.isIslandSlideTrack.value || viewModel.islandSlideMode.value == "sound_mode",
-                enter = expandVertically() + fadeIn(),
-                exit = shrinkVertically() + fadeOut(),
-            ) {
-                IconToggleItem(
-                    iconRes = R.drawable.rounded_compare_arrows_24,
-                    title = stringResource(R.string.duo_slide_mirror_direction_title),
-                    isChecked = viewModel.isIslandSlideInvertDirection.value,
-                    onCheckedChange = { checked ->
-                        HapticUtil.performVirtualKeyHaptic(view)
-                        viewModel.setIslandSlideInvertDirection(checked)
-                    },
-                    modifier = Modifier.highlight(highlightSetting == "island_slide_invert_direction"),
-                )
-            }
-        }
-
-        RoundedCardContainer(
-            spacing = 2.dp,
-            cornerRadius = 24.dp,
-        ) {
-            IconToggleItem(
-                iconRes = R.drawable.rounded_touch_app_24,
-                title = stringResource(R.string.island_always_gestures_title),
-                description = stringResource(R.string.island_always_gestures_desc),
-                isChecked = viewModel.isIslandAlwaysGestures.value,
-                onCheckedChange = { checked ->
-                    HapticUtil.performVirtualKeyHaptic(view)
-                    viewModel.setIslandAlwaysGestures(checked)
-                },
-                modifier = Modifier.highlight(highlightSetting == "island_always_gestures"),
-            )
-        }
-
-        AnimatedVisibility(
-            visible = !viewModel.isIslandShowTimeBattery.value,
-            enter = expandVertically() + fadeIn(),
-            exit = shrinkVertically() + fadeOut(),
-        ) {
-            TranslatableText(
-                stringResId = R.string.island_gesture_visuals_hint,
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(horizontal = 16.dp),
-            )
-        }
 
         AnimatedVisibility(
             visible = viewModel.isDuoEnabled.value && viewModel.isIslandEnabled.value,
@@ -742,29 +596,6 @@ fun IslandSettingsUI(
         }
 
         Spacer(modifier = Modifier.height(32.dp))
-    }
-
-    if (pickingGesture != null) {
-        GestureActionPickerSheet(
-            viewModel = viewModel,
-            currentAction = viewModel.islandLongPressAction.value,
-            onActionSelected = viewModel::setIslandLongPressAction,
-            onPickerClosed = { pickingGesture = null },
-        )
-    }
-
-    if (showSlideModeSheet) {
-        HorizontalSlideModeSheet(
-            mode = viewModel.islandSlideMode.value,
-            onModeSelected = { mode ->
-                viewModel.setIslandSlideMode(mode)
-                if (mode == "sound_mode" && !soundModeHandler.canChangeMode()) {
-                    viewModel.check(context)
-                    requestingPermissionsFor = R.string.duo_action_horizontal_slide_sound_mode to listOf("SHIZUKU", "NOTIFICATION_POLICY")
-                }
-            },
-            onDismissRequest = { showSlideModeSheet = false },
-        )
     }
 
     if (showMediaAppSelectionSheet) {

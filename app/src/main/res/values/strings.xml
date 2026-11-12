@@ -3250,7 +3250,7 @@
     <string name="island_always_gestures_title">Always available gestures</string>
     <string name="island_always_gestures_desc">Keep the gesture area available even while island is hidden</string>
     <string name="island_section_visuals">Visuals</string>
-    <string name="island_section_duration">Duration</string>
+    <string name="island_section_duration">Timing</string>
     <string name="island_section_notifications">Notifications</string>
     <string name="island_auto_detect_title">Auto-detect camera</string>
     <string name="island_auto_detect_desc">Automatically locate the front camera cutout</string>
@@ -3260,6 +3260,9 @@
     <string name="island_max_width_title">Maximum width</string>
     <string name="island_max_width_desc">Limit expanded width across the screen</string>
     <string name="island_section_behavior">Behavior</string>
+    <string name="island_section_interactions">Interactions</string>
+    <string name="island_section_gestures">Gestures</string>
+    <string name="island_section_expanded">Expanded island</string>
     <string name="island_suppress_system_heads_up_title">Hide system notification banner</string>
     <string name="island_suppress_system_heads_up_desc">Prevent default Android heads-up banners</string>
     <string name="island_hide_when_screen_off_title">Hide when screen off</string>
