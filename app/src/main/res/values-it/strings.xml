@@ -111,7 +111,7 @@
     <string name="caffeinate_skip_countdown_title">Salta il conto alla rovescia</string>
     <string name="caffeinate_skip_countdown_desc">Avvia subito Caffeina</string>
     <string name="caffeinate_timeout_presets_title">Preimpostazioni di timeout</string>
-    <string name="caffeinate_timeout_presets_desc">Seleziona le durate disponibili per il riquadro QS</string>
+    <string name="caffeinate_timeout_presets_desc">Seleziona le durate disponibili per il riquadro del pannello rapido</string>
     <string name="caffeinate_timeout_5m">5m</string>
     <string name="caffeinate_timeout_10m">10m</string>
     <string name="caffeinate_timeout_30m">30m</string>
@@ -344,7 +344,7 @@
     <string name="smart_data_desc">Nascondi i dati mobili in determinate modalità</string>
     <string name="action_reset_all_icons">Ripristina tutte le icone</string>
     <string name="status_bar_section_advanced">Altre impostazioni</string>
-    <string name="stb_advanced_flags_title">Advanced (Requires Shizuku/Root)</string>
+    <string name="stb_advanced_flags_title">Avanzato (Richiede Shizuku/Root)</string>
     <string name="hide_all_system_icons_title">Nascondi tutte le icone di sistema</string>
     <string name="hide_all_system_icons_desc">Rimuovi tutte le icone non di notifica dalla barra di stato</string>
     <string name="hide_system_icons_locked_only_title">Nascondi le icone di sistema solo quando  è bloccato</string>
@@ -393,7 +393,7 @@
     <string name="feat_statusbar_icons_desc">Controlla la visibilità delle icone della barra di stato</string>
     <string name="feat_caffeinate_title">Caffeina</string>
     <string name="feat_caffeinate_desc">Mantieni lo schermo attivo</string>
-    <string name="feat_maps_power_saving_title">Modalità di risparmio energetico della mappa</string>
+    <string name="feat_maps_power_saving_title">Modalità di risparmio energetico di Maps</string>
     <string name="feat_maps_power_saving_desc">Per qualsiasi dispositivo Android</string>
     <string name="feat_notification_lighting_title">Illuminazione di notifica</string>
     <string name="feat_notification_lighting_desc">Si illumina per le notifiche</string>
@@ -429,7 +429,7 @@
     <string name="feat_app_lock_desc">Proteggi le app con la biometria</string>
     <string name="app_lock_auto_lock_delay_title">Auto lock delay</string>
     <string name="app_lock_auto_lock_delay_desc">After leaving the app</string>
-    <string name="app_lock_auto_lock_delay_none">None</string>
+    <string name="app_lock_auto_lock_delay_none">Nulla</string>
     <string name="app_lock_auto_lock_delay_1min">1 minute</string>
     <string name="app_lock_auto_lock_delay_5min">5 minutes</string>
     <string name="app_lock_auto_lock_delay_10min">10 minutes</string>
@@ -1349,7 +1349,7 @@
     <!-- Empty State Actions -->
     <string name="msg_no_apps_frozen">No apps selected to freeze.</string>
     <string name="action_get_started">Get Started</string>
-    <string name="action_new_automation">New Automation</string>
+    <string name="action_new_automation">Nuova Automazione</string>
     <string name="action_add_repository">Add Repository</string>
     <!-- Bug Report Enhancement -->
     <string name="bug_report_feedback_placeholder">Describe the issue or provide feedback…</string>
@@ -1381,7 +1381,7 @@
     <string name="live_wallpaper_label">Live Wallpaper</string>
     <string name="live_wallpaper_description">A video live wallpaper that plays when unlocked.</string>
     <string name="live_wallpaper_playback_trigger_title">Play when</string>
-    <string name="live_wallpaper_trigger_unlock">Unlock</string>
+    <string name="live_wallpaper_trigger_unlock">Sbloccato</string>
     <string name="live_wallpaper_trigger_screen_on">Screen on</string>
     <string name="live_wallpaper_video_title">Video</string>
     <string name="btn_apply">Apply</string>
@@ -1421,7 +1421,7 @@
     <string name="lock_screen_clock_inflate">Inflate</string>
     <string name="lock_screen_clock_metro">Metro</string>
     <string name="lock_screen_clock_numoverlap">Number Overlap</string>
-    <string name="lock_screen_clock_weather">Weather</string>
+    <string name="lock_screen_clock_weather">Meteo</string>
     <string name="lock_screen_clock_select_label">Select Clock Style</string>
     <string name="lock_screen_clock_current_label">Current</string>
     <string name="lock_screen_clock_apply_label">Apply</string>
@@ -1645,11 +1645,11 @@
     <string name="smart_pixels_intensity_title">Intensità</string>
     <string name="pocket_mode_use_light_title">Usa il sensore di luce</string>
     <string name="pocket_mode_use_light_desc">Usa il sensore del livello di luminosità insieme a quello di prossimità per una migliore precisione</string>
-    <string name="pocket_mode_trigger_delay_title">Delay attivazione</string>
+    <string name="pocket_mode_trigger_delay_title">Ritardo attivazione</string>
     <string name="pocket_mode_lock_screen_only_title">Solo schermata di blocco</string>
     <string name="pocket_mode_lock_screen_only_desc">Attiva \"Modalità tasca\" solo quando il telefono è in tasca</string>
     <string name="feat_allow_overlays_in_settings_title">Permetti gli overlay nelle impostazioni</string>
-    <string name="feat_allow_overlays_in_settings_desc">permetti alle app di usare gli overlay sopra le impostazioni di sistema</string>
+    <string name="feat_allow_overlays_in_settings_desc">Permetti alle app di comparire sopra le Impostazioni di sistema</string>
     <string name="island_camera_position_left">Sinistra</string>
     <string name="island_camera_position_center">Centro</string>
     <string name="island_camera_position_right">Destra</string>
@@ -1732,8 +1732,44 @@
     <string name="island_transparency_intensity_title">Transparency intensity</string>
     <string name="island_backdrop_blur_title">Backdrop blur</string>
     <string name="island_backdrop_blur_radius_title">Blur amount</string>
-    <string name="what_is_this">What is this?</string>
+    <string name="what_is_this">Cosa è questo?</string>
     <string name="label_feature_designed_by">Designed by</string>
     <string name="label_how_to_use">How to use</string>
     <string name="shut_up_how_to_use">1. Grant Write secure settings and Usage access from the permissions prompt. Shizuku is needed for freezing apps.\n\n2. Tap Select Apps and pick the apps that refuse to run with developer options, debugging or accessibility turned on, such as banking or payment apps.\n\n3. Tap an app to choose what gets hidden for it: Developer Options, USB Debugging, Wireless Debugging and Accessibility Services. You can also turn on Auto Freeze to freeze the app after you leave it, and Restore keyboard to switch back to your keyboard afterwards.\n\n4. Tap Create shortcut for each app and add it to your home screen. Always open the app from this shortcut, never from its normal icon, so the settings are turned off before the app starts and can check them.\n\n5. When you leave the app, Shut-Up! waits for the Restoration Delay and then shows a notification. Tap it to turn everything back on. Set Restore mode to Auto if you would rather have the settings restored on their own.\n\nTips: if wireless debugging was turned off, Shizuku may stop working, so enable Attempt Shizuku restart. Use the Keyboard option to pick the keyboard to restore, or leave it on Skip. With Auto Freeze, a notification counts down and lets you freeze now or abort.</string>
+    <string name="label_notify_new_updates">Notifica per nuovi aggiornamenti</string>
+    <string name="btn_import_config">Importa Config.</string>
+    <string name="btn_export_config">Esporta Config.</string>
+    <string name="translation_logged_in_as">Accesso eseguito come %1$s</string>
+    <string name="auto_backup_title">Backup automatico configurazioni</string>
+    <string name="auto_backup_folder">Cartella di backup</string>
+    <string name="btn_grant_all_permissions">Consenti tutte le autorizzazioni</string>
+    <string name="btn_clear_search_history">Elimina cronologia di ricerca</string>
+    <string name="label_developer_options">Opzioni Sviluppatore</string>
+    <string name="action_licenses_and_credits">Licenze</string>
+    <string name="external_control_token_title">Token controllo esterno</string>
+    <string name="shizuku_auth_token_label">Token autorizz. Shizuku</string>
+    <string name="setting_privileged_mode_title">Accesso privilegiato</string>
+    <string name="settings_permissions_all">Tutte le autorizzazioni</string>
+    <string name="label_haptics_title">Aptica</string>
+    <string name="diy_no_automations">Ancora nessuna automazione</string>
+    <string name="action_backup_app_list">Backup lista app</string>
+    <string name="search_smart_pixels_enable_title">Abilita pixel smart</string>
+    <string name="pocket_mode_exclude_apps_title">Escludi app</string>
+    <string name="pocket_mode_warning">Tenere presente che attivare di Modalità Tasca su alcuni dispositivi con sensori mancanti potrebbe interrompere la sospensione e accelerare il consumo energetico.</string>
+    <string name="duo_section_what_to_show">Cosa mostrare</string>
+    <string name="island_max_items_title">Numero massimo di elementi da mostrare</string>
+    <string name="island_reorder_title">Riordina</string>
+    <string name="island_providers_title">App di Island</string>
+    <string name="island_like_while_playing_title">Metti mi piace alla musica in riproduzione</string>
+    <string name="duo_action_horizontal_slide_brightness">Luminosità</string>
+    <string name="duo_section_style">Stile</string>
+    <string name="duo_section_position">Posizione e dimensioni</string>
+    <string name="duo_section_behavior">Comportamento</string>
+    <string name="duo_section_actions">Azioni</string>
+    <string name="stb_hide_entire_status_bar_title">Nascondi tutta la barra di stato</string>
+    <string name="label_wallpaper_apply">Applica Sfondo</string>
+    <string name="label_wallpaper_auto_update">Aggiorna in automatico</string>
+    <string name="wallpaper_home_screen">Schermata Home</string>
+    <string name="wallpaper_lock_screen">Schermata di Blocco</string>
+    <string name="island_show_when_screen_on">Schermo acceso</string>
 </resources>
