@@ -1504,6 +1504,7 @@
     <string name="island_section_interactions">Interactions</string>
     <string name="island_section_gestures">Gestures</string>
     <string name="island_section_expanded">Expanded island</string>
+    <string name="island_section_landscape">Landscape</string>
     <string name="island_max_items_title">Màxim d\'elements a mostrar</string>
     <string name="island_call_options_title">Trucades</string>
     <string name="island_section_notifications">Notificacions</string>

@@ -133,6 +133,13 @@ fun IslandPlacementSettingsUI(
     ) {
         IslandPreviewControls()
 
+        val configuration = LocalConfiguration.current
+        val maxIslandWidth =
+            remember(configuration.screenWidthDp, configuration.screenHeightDp) {
+                (ceil(maxOf(configuration.screenWidthDp, configuration.screenHeightDp) / 10f) * 10f)
+                    .coerceAtLeast(500f)
+            }
+
         RoundedCardContainer(
             spacing = 2.dp,
             cornerRadius = 24.dp,
@@ -157,6 +164,7 @@ fun IslandPlacementSettingsUI(
                     onCheckedChange = { viewModel.setIslandHiddenInCurrentOrientation(it) },
                 )
             }
+
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -213,7 +221,12 @@ fun IslandPlacementSettingsUI(
                 Spacer(modifier = Modifier.size(8.dp))
                 TranslatableText(stringResId = R.string.island_auto_align_camera)
             }
+        }
 
+        RoundedCardContainer(
+            spacing = 2.dp,
+            cornerRadius = 24.dp,
+        ) {
             Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
                 ConfigSliderItem(
                     title = stringResource(R.string.island_camera_offset_x_title),
@@ -244,28 +257,6 @@ fun IslandPlacementSettingsUI(
             }
 
             ConfigSliderItem(
-                title = stringResource(R.string.island_camera_size_title),
-                value = viewModel.islandCameraSize.floatValue,
-                onValueChange = {
-                    HapticUtil.performUIHaptic(view)
-                    viewModel.setIslandCameraSize(it)
-                },
-                valueRange = 0.05f..2.0f,
-                increment = 0.05f,
-                iconRes = R.drawable.rounded_arrows_outward_24,
-                valueFormatter = { "%.2fx".format(it) },
-                allowDecimals = true,
-                modifier = Modifier.highlight(highlightSetting == "island_camera_size"),
-            )
-
-            val configuration = LocalConfiguration.current
-            val maxIslandWidth =
-                remember(configuration.screenWidthDp, configuration.screenHeightDp) {
-                    (ceil(maxOf(configuration.screenWidthDp, configuration.screenHeightDp) / 10f) * 10f)
-                        .coerceAtLeast(500f)
-                }
-
-            ConfigSliderItem(
                 title = stringResource(R.string.island_max_width_title),
                 value = viewModel.islandMaxWidth.floatValue,
                 onValueChange = {
@@ -279,20 +270,25 @@ fun IslandPlacementSettingsUI(
                 allowDecimals = true,
                 modifier = Modifier.highlight(highlightSetting == "island_max_width"),
             )
+        }
 
+        RoundedCardContainer(
+            spacing = 2.dp,
+            cornerRadius = 24.dp,
+        ) {
             ConfigSliderItem(
-                title = stringResource(R.string.island_expanded_width_title),
-                value = viewModel.islandExpandedWidth.floatValue,
+                title = stringResource(R.string.island_camera_size_title),
+                value = viewModel.islandCameraSize.floatValue,
                 onValueChange = {
                     HapticUtil.performUIHaptic(view)
-                    viewModel.setIslandExpandedWidth(it)
+                    viewModel.setIslandCameraSize(it)
                 },
-                valueRange = 200f..maxIslandWidth,
-                increment = 10f,
+                valueRange = 0.05f..2.0f,
+                increment = 0.05f,
                 iconRes = R.drawable.rounded_arrows_outward_24,
-                valueFormatter = { "%.1f dp".format(it) },
+                valueFormatter = { "%.2fx".format(it) },
                 allowDecimals = true,
-                modifier = Modifier.highlight(highlightSetting == "island_expanded_width"),
+                modifier = Modifier.highlight(highlightSetting == "island_camera_size"),
             )
 
             ConfigSliderItem(
@@ -311,65 +307,67 @@ fun IslandPlacementSettingsUI(
             )
         }
 
-        RoundedCardContainer(
-            spacing = 2.dp,
-            cornerRadius = 24.dp,
-        ) {
-            IconToggleItem(
-                iconRes = R.drawable.rounded_mobile_rotate_24,
-                title = stringResource(R.string.island_keep_on_landscape_title),
-                isChecked = viewModel.isIslandKeepOnLandscape.value,
-                onCheckedChange = { checked ->
-                    HapticUtil.performVirtualKeyHaptic(view)
-                    viewModel.setIslandKeepOnLandscape(checked)
-                },
-                modifier = Modifier.highlight(highlightSetting == "island_keep_on_landscape"),
+        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            TranslatableText(
+                stringResId = R.string.island_section_expanded,
+                style = MaterialTheme.typography.titleSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(start = 8.dp),
             )
-
-            if (viewModel.isIslandKeepOnLandscape.value) {
+            RoundedCardContainer(
+                spacing = 2.dp,
+                cornerRadius = 24.dp,
+            ) {
                 ConfigSliderItem(
-                    title = stringResource(R.string.island_landscape_top_spacing_title),
-                    value = viewModel.islandLandscapeTopSpacing.floatValue,
+                    title = stringResource(R.string.island_expanded_scale_title),
+                    description = stringResource(R.string.island_expanded_scale_desc),
+                    value = viewModel.islandExpandedScale.floatValue,
                     onValueChange = {
                         HapticUtil.performUIHaptic(view)
-                        viewModel.setIslandLandscapeTopSpacing(it)
+                        viewModel.setIslandExpandedScale(it)
                     },
-                    valueRange = 0f..60f,
-                    increment = 0.5f,
-                    iconRes = R.drawable.rounded_vertical_align_top_24,
-                    valueFormatter = { "%.1f dp".format(it) },
-                    modifier = Modifier.highlight(highlightSetting == "island_landscape_top_spacing"),
+                    valueRange = 1f..1.3f,
+                    increment = 0.02f,
+                    iconRes = R.drawable.rounded_magnify_fullscreen_24,
+                    valueFormatter = { "${(it * 100).toInt()}%" },
+                    modifier = Modifier.highlight(highlightSetting == "island_expanded_scale"),
                 )
 
-                IconToggleItem(
-                    iconRes = R.drawable.rounded_vertical_align_top_24,
-                    title = stringResource(R.string.island_bond_edge_title),
-                    isChecked = viewModel.isIslandBondEdge.value,
-                    onCheckedChange = { checked ->
-                        HapticUtil.performVirtualKeyHaptic(view)
-                        viewModel.setIslandBondEdge(checked)
+                ConfigSliderItem(
+                    title = stringResource(R.string.island_expanded_width_title),
+                    value = viewModel.islandExpandedWidth.floatValue,
+                    onValueChange = {
+                        HapticUtil.performUIHaptic(view)
+                        viewModel.setIslandExpandedWidth(it)
                     },
-                    modifier = Modifier.highlight(highlightSetting == "island_bond_edge"),
+                    valueRange = 200f..maxIslandWidth,
+                    increment = 10f,
+                    iconRes = R.drawable.rounded_arrows_outward_24,
+                    valueFormatter = { "%.1f dp".format(it) },
+                    allowDecimals = true,
+                    modifier = Modifier.highlight(highlightSetting == "island_expanded_width"),
+                )
+
+                ConfigSliderItem(
+                    title = stringResource(R.string.island_expanded_offset_y_title),
+                    value = viewModel.islandExpandedOffsetY.floatValue,
+                    onValueChange = {
+                        HapticUtil.performUIHaptic(view)
+                        viewModel.setIslandExpandedOffsetY(it)
+                    },
+                    valueRange = 0f..120f,
+                    increment = 2f,
+                    iconRes = R.drawable.rounded_south_24,
+                    valueFormatter = { "${it.toInt()} dp" },
+                    modifier = Modifier.highlight(highlightSetting == "island_expanded_offset_y"),
                 )
             }
         }
 
-        IslandSettingsSection(R.string.island_section_expanded) {
-            ConfigSliderItem(
-                title = stringResource(R.string.island_expanded_scale_title),
-                description = stringResource(R.string.island_expanded_scale_desc),
-                value = viewModel.islandExpandedScale.floatValue,
-                onValueChange = {
-                    HapticUtil.performUIHaptic(view)
-                    viewModel.setIslandExpandedScale(it)
-                },
-                valueRange = 1f..1.3f,
-                increment = 0.02f,
-                iconRes = R.drawable.rounded_magnify_fullscreen_24,
-                valueFormatter = { "${(it * 100).toInt()}%" },
-                modifier = Modifier.highlight(highlightSetting == "island_expanded_scale"),
-            )
-
+        RoundedCardContainer(
+            spacing = 2.dp,
+            cornerRadius = 24.dp,
+        ) {
             ConfigSliderItem(
                 title = stringResource(R.string.island_expanded_roundness_title),
                 value = viewModel.islandExpandedRoundness.floatValue,
@@ -413,20 +411,6 @@ fun IslandPlacementSettingsUI(
             )
 
             ConfigSliderItem(
-                title = stringResource(R.string.island_expanded_offset_y_title),
-                value = viewModel.islandExpandedOffsetY.floatValue,
-                onValueChange = {
-                    HapticUtil.performUIHaptic(view)
-                    viewModel.setIslandExpandedOffsetY(it)
-                },
-                valueRange = 0f..120f,
-                increment = 2f,
-                iconRes = R.drawable.rounded_south_24,
-                valueFormatter = { "${it.toInt()} dp" },
-                modifier = Modifier.highlight(highlightSetting == "island_expanded_offset_y"),
-            )
-
-            ConfigSliderItem(
                 title = stringResource(R.string.island_expanded_bottom_padding_title),
                 value = viewModel.islandExpandedBottomPadding.floatValue,
                 onValueChange = {
@@ -439,6 +423,57 @@ fun IslandPlacementSettingsUI(
                 valueFormatter = { "${it.toInt()} dp" },
                 modifier = Modifier.highlight(highlightSetting == "island_expanded_bottom_padding"),
             )
+        }
+
+        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            TranslatableText(
+                stringResId = R.string.island_section_landscape,
+                style = MaterialTheme.typography.titleSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(start = 8.dp),
+            )
+            RoundedCardContainer(
+                spacing = 2.dp,
+                cornerRadius = 24.dp,
+            ) {
+                IconToggleItem(
+                    iconRes = R.drawable.rounded_mobile_rotate_24,
+                    title = stringResource(R.string.island_keep_on_landscape_title),
+                    isChecked = viewModel.isIslandKeepOnLandscape.value,
+                    onCheckedChange = { checked ->
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        viewModel.setIslandKeepOnLandscape(checked)
+                    },
+                    modifier = Modifier.highlight(highlightSetting == "island_keep_on_landscape"),
+                )
+
+                if (viewModel.isIslandKeepOnLandscape.value) {
+                    ConfigSliderItem(
+                        title = stringResource(R.string.island_landscape_top_spacing_title),
+                        value = viewModel.islandLandscapeTopSpacing.floatValue,
+                        onValueChange = {
+                            HapticUtil.performUIHaptic(view)
+                            viewModel.setIslandLandscapeTopSpacing(it)
+                        },
+                        valueRange = 0f..60f,
+                        increment = 0.5f,
+                        iconRes = R.drawable.rounded_vertical_align_top_24,
+                        valueFormatter = { "%.1f dp".format(it) },
+                        modifier = Modifier.highlight(highlightSetting == "island_landscape_top_spacing"),
+                    )
+
+                    IconToggleItem(
+                        iconRes = R.drawable.rounded_vertical_align_top_24,
+                        title = stringResource(R.string.island_bond_edge_title),
+                        isChecked = viewModel.isIslandBondEdge.value,
+                        onCheckedChange = { checked ->
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            viewModel.setIslandBondEdge(checked)
+                        },
+                        modifier = Modifier.highlight(highlightSetting == "island_bond_edge"),
+                    )
+                }
+            }
         }
     }
 }
