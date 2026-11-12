@@ -30,6 +30,8 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.foundation.layout.offset
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.graphics.drawscope.clipRect
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.input.pointer.PointerEventPass
@@ -120,6 +122,8 @@ import com.sameerasw.essentials.island.plugins.media.particles.MediaCameraGeomet
 import com.sameerasw.essentials.island.plugins.media.particles.GeminiParticlePill
 import com.sameerasw.essentials.island.plugins.media.MediaSurface
 import com.sameerasw.essentials.island.ui.components.islandAccent
+import com.sameerasw.essentials.island.model.IslandShake
+import com.sameerasw.essentials.island.model.OutlineEffect
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import com.sameerasw.essentials.island.model.SideBubble
 import com.sameerasw.essentials.island.model.StackIcon
@@ -326,6 +330,68 @@ private fun IslandRootContent(
         }
         surfacePulse.animateTo(1f, motionTween(250, easing = LinearEasing))
         surfacePulse.animateTo(0f, motionTween(SURFACE_PULSE_DURATION_MS - 250, easing = LinearEasing))
+    }
+    val shakeMode = state.items.values.firstNotNullOfOrNull { it.shake }?.takeIf { stage != IslandStage.Expanded }
+    val shake = remember { Animatable(0f) }
+    LaunchedEffect(shakeMode) {
+        if (shakeMode == null || inspection) {
+            shake.snapTo(0f)
+            return@LaunchedEffect
+        }
+        val px = with(density) { 2.5.dp.toPx() }
+        suspend fun buzz() = repeat(2) { burst ->
+            if (burst > 0) delay(140)
+            repeat(7) { shake.animateTo(if (it % 2 == 0) px else -px, motionTween(28, easing = LinearEasing)) }
+            shake.animateTo(0f, motionTween(28, easing = LinearEasing))
+        }
+        if (shakeMode == IslandShake.Once) {
+            buzz()
+        } else {
+            while (true) {
+                buzz()
+                delay(900)
+            }
+        }
+    }
+    val outlineEffect = state.items.values.firstNotNullOfOrNull { it.outlineEffect }
+    val sweep = remember { Animatable(0f) }
+    val sweepAlpha = remember { Animatable(0f) }
+    var lastSweepColor by remember { mutableStateOf(Color.Transparent) }
+    if (outlineEffect != null) lastSweepColor = outlineEffect.color
+    val effectShadow = remember { Animatable(0f) }
+    LaunchedEffect(outlineEffect) {
+        if (inspection) {
+            sweepAlpha.snapTo(0f)
+            effectShadow.snapTo(0f)
+            return@LaunchedEffect
+        }
+        when (outlineEffect?.style) {
+            null -> {
+                launch { effectShadow.animateTo(0f, motionTween(400)) }
+                sweepAlpha.animateTo(0f, motionTween(700))
+            }
+            OutlineEffect.Style.Trace -> {
+                sweep.snapTo(0f)
+                sweepAlpha.snapTo(1f)
+                if (outlineEffect.shadow) effectShadow.snapTo(1f)
+                sweep.animateTo(1f, motionTween(1600))
+                sweepAlpha.animateTo(0.2f, motionTween(180))
+                sweepAlpha.animateTo(1f, motionTween(260))
+            }
+            OutlineEffect.Style.Pulse -> {
+                sweep.snapTo(1f)
+                sweepAlpha.snapTo(0f)
+                repeat(3) {
+                    sweepAlpha.animateTo(1f, motionTween(450))
+                    sweepAlpha.animateTo(0.15f, motionTween(450))
+                }
+                sweepAlpha.animateTo(1f, motionTween(450))
+            }
+        }
+        if (outlineEffect?.shadow == true) {
+            if (outlineEffect.style == OutlineEffect.Style.Pulse) effectShadow.animateTo(1f, motionTween(250, easing = LinearEasing))
+            effectShadow.animateTo(0f, motionTween((spec.pulseDurationMs - 250).coerceAtLeast(100), easing = LinearEasing))
+        }
     }
     val minSurfaceWidth = with(density) { spec.cameraDiameter.roundToPx() }
     val minSurfaceHeight = with(density) { spec.compactHeight.roundToPx() }
@@ -1203,7 +1269,7 @@ private fun IslandRootContent(
                         p.place(dx, 0)
                     }
                 }
-                .offset { IntOffset(0, (-edgeShift.floatValue - surfaceTopPx * bond - hideLift()).roundToInt()) }
+                .offset { IntOffset(shake.value.roundToInt(), (-edgeShift.floatValue - surfaceTopPx * bond - hideLift()).roundToInt()) }
                 .compactJelly(jelly, jellyRangePx)
                 .liquid(surfaceLiquid, TransformOrigin(0.5f, 0f))
                 .drawBehind {
@@ -1227,15 +1293,18 @@ private fun IslandRootContent(
                     drawPath(right, Color.Black)
                 }
                 .drawBehind {
-                    val p = pulse.value
-                    if (layeredSurface || pulseAccent == null || p <= 0f || !visible) return@drawBehind
+                    val effectP = effectShadow.value * sweepAlpha.value
+                    val p = if (effectP > 0f) effectP else if (layeredSurface) 0f else pulse.value
+                    val shadowColor = if (effectP > 0f) lastSweepColor else pulseAccent
+                    if (shadowColor == null || p <= 0f || !visible) return@drawBehind
                     val spread = spec.pulseSpread.toPx()
                     val dy = spec.pulseOffsetY.toPx()
                     val r = surfaceCornerPx(size.height, compactHeightPx, expandedCornerPx) + spread
-                    pulsePaint.color = pulseAccent.copy(alpha = spec.pulseOpacity * p).toArgb()
+                    pulsePaint.color = shadowColor.copy(alpha = spec.pulseOpacity * p).toArgb()
                     pulsePaint.maskFilter = pulseBlur
+                    val reach = if (effectP > 0f) size.width * sweep.value else size.width
                     drawContext.canvas.nativeCanvas.drawRoundRect(
-                        -spread, -spread + dy, size.width + spread, size.height + spread + dy, r, r, pulsePaint,
+                        -spread, -spread + dy, reach + spread, size.height + spread + dy, r, r, pulsePaint,
                     )
                 }
                 .graphicsLayer {
@@ -1261,11 +1330,27 @@ private fun IslandRootContent(
                     }
                 }
                 .then(
-                    outlineFor(1f - bond)
+                    outlineFor((1f - bond) * (1f - sweepAlpha.value))
                         // The stroke draws in from hairline to full width as it fades in
                         ?.let { Modifier.border(spec.outlineThickness * (0.35f + 0.65f * outlineAlpha), it, surfaceShape) }
                         ?: Modifier,
                 )
+                .drawWithContent {
+                    drawContent()
+                    val a = sweepAlpha.value
+                    if (a <= 0f) return@drawWithContent
+                    val stroke = 2.dp.toPx()
+                    val r = surfaceCornerPx(size.height, compactHeightPx, expandedCornerPx)
+                    clipRect(right = size.width * sweep.value) {
+                        drawRoundRect(
+                            lastSweepColor.copy(alpha = lastSweepColor.alpha * a),
+                            topLeft = Offset(stroke / 2f, stroke / 2f),
+                            size = Size(size.width - stroke, size.height - stroke),
+                            cornerRadius = CornerRadius((r - stroke / 2f).coerceAtLeast(0f)),
+                            style = Stroke(stroke),
+                        )
+                    }
+                }
                 // Finger-driven shrink sits inside the clip/background so the pill itself follows the drag.
                 .layout { measurable, constraints ->
                     val child = measurable.measure(constraints)

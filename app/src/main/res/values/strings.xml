@@ -3379,6 +3379,10 @@
     <string name="island_call_show_peek">Peek</string>
     <string name="island_call_show_compact">Compact</string>
     <string name="island_call_sticky_title">Do not auto collapse</string>
+    <string name="island_call_ring_shake_title">Shake while ringing</string>
+    <string name="island_sound_mode_vibrate_shake_title">Shake when switching to vibrate</string>
+    <string name="island_battery_charging_anim_title">Animate outline when charging</string>
+    <string name="island_battery_critical_anim_title">Pulse outline at critical battery</string>
     <string name="duo_hide_when_locked_title">Hide when locked</string>
     <string name="island_brief_two_line_header_title">2 line header</string>
     <string name="island_preview_ring_title">Show alignment hint</string>
