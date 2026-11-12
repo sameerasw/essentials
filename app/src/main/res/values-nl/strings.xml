@@ -1822,4 +1822,5 @@
     <string name="pixel_search_engine_desc">Standaard zoekmachine die wordt gebruikt voor het zoeken op het web</string>
     <string name="feat_widget_stack_title">Widget stapel</string>
     <string name="feat_widget_stack_desc">Stapel widgets en schakel tussen ze</string>
+    <string name="island_notif_lock_hidden_title">Hidden</string>
 </resources>
