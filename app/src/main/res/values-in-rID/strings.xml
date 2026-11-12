@@ -1801,4 +1801,5 @@
     <string name="island_section_gestures">Gestures</string>
     <string name="island_section_expanded">Expanded island</string>
     <string name="island_section_landscape">Landscape</string>
+    <string name="island_padding_around_title">Padding around</string>
 </resources>

@@ -1804,6 +1804,7 @@ Cần có quyền quản trị thiết bị nếu sử dụng chế độ khóa.
     <string name="island_camera_position_center">Giữa</string>
     <string name="island_camera_position_right">Phải</string>
     <string name="island_cutout_gap_title">Khoảng cách camera</string>
+    <string name="island_padding_around_title">Padding around</string>
     <string name="island_expanded_width_title">Chiều rộng mở rộng</string>
     <string name="island_max_width_title">Chiều rộng tối đa</string>
     <string name="island_expanded_scale_title">Quy mô mở rộng</string>

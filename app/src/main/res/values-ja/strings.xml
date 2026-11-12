@@ -1763,6 +1763,7 @@
     <string name="island_max_width_title">最大幅</string>
     <string name="island_expanded_width_title">拡張幅</string>
     <string name="island_cutout_gap_title">カメラの隙間</string>
+    <string name="island_padding_around_title">Padding around</string>
     <string name="island_expanded_roundness_title">展開時のコーナー半径</string>
     <string name="island_expanded_padding_title">展開時の横のパディング</string>
     <string name="island_expanded_top_padding_title">展開時の上部のパディング</string>

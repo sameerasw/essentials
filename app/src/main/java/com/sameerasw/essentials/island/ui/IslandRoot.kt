@@ -900,6 +900,8 @@ private fun IslandRootContent(
 
     CompositionLocalProvider(
         LocalLiquidField provides liquidField,
+        LocalIslandCellSize provides spec.cellSize,
+        LocalBubbleIconFraction provides (0.72f + ((6.dp - spec.contentGap) * 2) / spec.compactHeight).coerceIn(0.5f, 1f),
         LocalIslandIconColor provides iconColor,
         LocalIslandTextColor provides if (targetSpec.themedText) pastelOf(iconColor) else null,
     ) {
@@ -1107,6 +1109,9 @@ private fun IslandRootContent(
                             },
                     )
                 }
+                CompositionLocalProvider(
+                    LocalBubbleIconFraction provides (0.72f + ((6.dp - spec.contentGap) * 2) / spec.compactHeight).coerceIn(0.5f, 1f),
+                ) {
                 IslandSideBubble(
                     ownerKey = lastBubbleKey,
                     bubbleFor = { knownBubbles[it] },
@@ -1183,6 +1188,7 @@ private fun IslandRootContent(
                             )
                         },
                 )
+                }
             }
         }
         val collapseEndTarget = when {

@@ -1818,6 +1818,7 @@ Zugriff auf die Barrierefreiheit ist erforderlich, um die Überlagerung zu zeich
     <string name="island_max_width_title">Maximale Breite</string>
     <string name="island_expanded_width_title">Erweiterte Breite</string>
     <string name="island_cutout_gap_title">Kameralücke</string>
+    <string name="island_padding_around_title">Padding around</string>
     <string name="island_expanded_roundness_title">Erweiterter Eckradius</string>
     <string name="island_expanded_padding_title">Erweiterter Abstand</string>
     <string name="island_expanded_top_padding_title">Erweiterter oberer Abstand</string>

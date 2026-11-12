@@ -231,6 +231,7 @@ class MainViewModel : ViewModel() {
     val islandCameraSize = mutableFloatStateOf(1.0f)
     val islandMaxWidth = mutableFloatStateOf(360f)
     val islandCutoutGap = mutableFloatStateOf(6f)
+    val islandPaddingAround = mutableFloatStateOf(6f)
     val islandExpandedWidth = mutableFloatStateOf(360f)
     val islandExpandedRoundness = mutableFloatStateOf(24f)
     val islandFontScale = mutableFloatStateOf(1f)
@@ -961,6 +962,9 @@ class MainViewModel : ViewModel() {
 
                     SettingsRepository.KEY_ISLAND_CUTOUT_GAP ->
                         islandCutoutGap.floatValue = settingsRepository.getIslandCutoutGap()
+
+                    SettingsRepository.KEY_ISLAND_PADDING_AROUND ->
+                        islandPaddingAround.floatValue = settingsRepository.getIslandPaddingAround()
 
                     SettingsRepository.KEY_ISLAND_SUPPRESS_SYSTEM_HEADS_UP ->
                         isIslandSuppressSystemHeadsUp.value = settingsRepository.isIslandSuppressSystemHeadsUpEnabled()
@@ -2546,6 +2550,7 @@ class MainViewModel : ViewModel() {
         islandCameraSize.floatValue = settingsRepository.getIslandCameraSize()
         islandMaxWidth.floatValue = settingsRepository.getIslandMaxWidth()
         islandCutoutGap.floatValue = settingsRepository.getIslandCutoutGap()
+        islandPaddingAround.floatValue = settingsRepository.getIslandPaddingAround()
         islandExpandedWidth.floatValue = settingsRepository.getIslandExpandedWidth()
         islandExpandedRoundness.floatValue = settingsRepository.getIslandExpandedRoundness()
         islandFontScale.floatValue = settingsRepository.getIslandFontScale()
@@ -5566,6 +5571,7 @@ class MainViewModel : ViewModel() {
         isIslandAutoDetect.value = settingsRepository.isIslandAutoDetectEnabled()
         islandMaxWidth.floatValue = settingsRepository.getIslandMaxWidth()
         islandCutoutGap.floatValue = settingsRepository.getIslandCutoutGap()
+        islandPaddingAround.floatValue = settingsRepository.getIslandPaddingAround()
         islandExpandedWidth.floatValue = settingsRepository.getIslandExpandedWidth()
         islandExpandedRoundness.floatValue = settingsRepository.getIslandExpandedRoundness()
         islandExpandedPadding.floatValue = settingsRepository.getIslandExpandedPadding()
@@ -5852,6 +5858,11 @@ class MainViewModel : ViewModel() {
     fun setIslandCutoutGap(value: Float) {
         islandCutoutGap.floatValue = value
         settingsRepository.setIslandCutoutGap(value)
+    }
+
+    fun setIslandPaddingAround(value: Float) {
+        islandPaddingAround.floatValue = value
+        settingsRepository.setIslandPaddingAround(value)
     }
 
     fun setIslandExpandedWidth(value: Float) {

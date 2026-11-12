@@ -1831,4 +1831,5 @@ Les effets de la LED HiLight peuvent être aussi utilisés comme une action dans
     <string name="hilight_cooldown_desc">Attendre ce délai avant de s\'allumer à nouveau pour la même appli</string>
     <string name="hilight_repeats_title">Répéter</string>
     <string name="duo_action_horizontal_slide_brightness">Luminosité</string>
+    <string name="island_padding_around_title">Padding around</string>
 </resources>

@@ -125,6 +125,9 @@ private fun QueueExitWatcher(entry: QueueEntry) {
 private val QueueEnter = scaleIn(IslandMotion.expressiveFastSpatial(), initialScale = 0.4f) + fadeIn(IslandMotion.expressiveFastEffects())
 private val QueueExit = scaleOut(IslandMotion.expressiveFastEffects(), targetScale = 0.6f) + fadeOut(IslandMotion.expressiveFastEffects())
 
+val LocalBubbleIconFraction = androidx.compose.runtime.compositionLocalOf { 0.72f }
+val LocalIslandCellSize = androidx.compose.runtime.compositionLocalOf { 24.dp }
+
 @Composable
 fun IslandStackBubble(
     icons: List<StackIcon>,
@@ -136,12 +139,13 @@ fun IslandStackBubble(
 ) {
     val shown = queueVisible(icons, BUBBLE_MAX_MINIS)
     val count = shown.size
+    val fit = LocalBubbleIconFraction.current / 0.72f
     val iconSize = when (count) {
         1 -> size * 0.62f
         2 -> size * 0.42f
         else -> size * 0.36f
-    }
-    val r = size * 0.19f
+    } * fit
+    val r = size * 0.19f * fit
     fun slot(i: Int): Pair<Dp, Dp> = when (count) {
         1 -> 0.dp to 0.dp
         2 -> listOf(-r to 0.dp, r to 0.dp)[i]
@@ -395,7 +399,7 @@ fun IslandStackOverlap(
                                 },
                             contentAlignment = Alignment.Center,
                         ) {
-                            val iconSize = if (entry.icon.fill) boxSize else boxSize * 0.72f
+                            val iconSize = if (entry.icon.fill) boxSize else boxSize * LocalBubbleIconFraction.current
                             val contentWidth = if (entry.icon.fill) boxWidth else iconSize
                             Box(Modifier.size(contentWidth, iconSize), contentAlignment = Alignment.Center) { entry.icon.content(iconSize) }
                         }
@@ -550,7 +554,7 @@ fun IslandSideBubble(
                             .background(Color.Black)
                             .islandOutline(outlineColor, outlineThickness, CircleShape),
                         contentAlignment = Alignment.Center,
-                    ) { content(size * 0.72f) }
+                    ) { content(size * LocalBubbleIconFraction.current) }
                 } else if (style == QueueStyle.Overlap) {
                     IslandStackOverlap(
                         bubble.icons,
@@ -576,12 +580,13 @@ fun IslandSideBubble(
 fun inlineBubbleCell(bubble: SideBubble, overlap: Boolean): CompactCell = CompactCell("bubble.inline") {
     val tap = Modifier.pointerInput(bubble) { detectTapGestures { bubble.onOpen() } }
     val content = bubble.content
+    val cell = LocalIslandCellSize.current
     when {
-        content != null -> Box(tap.size(22.dp).clip(CircleShape).background(Color.Black), contentAlignment = Alignment.Center) {
-            content(16.dp)
+        content != null -> Box(tap.size(cell * 0.92f).clip(CircleShape).background(Color.Black), contentAlignment = Alignment.Center) {
+            content(cell * 0.67f)
         }
-        overlap -> IslandStackOverlap(bubble.icons, 22.dp, modifier = tap)
-        else -> IslandStackBubble(bubble.icons, 26.dp, modifier = tap)
+        overlap -> IslandStackOverlap(bubble.icons, cell * 0.92f, modifier = tap)
+        else -> IslandStackBubble(bubble.icons, cell * 1.08f, modifier = tap)
     }
 }
 
