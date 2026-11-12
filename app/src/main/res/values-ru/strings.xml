@@ -2032,8 +2032,6 @@
     <string name="island_notif_follow_dnd_title">Следуйте: не беспокойте </string>
     <string name="island_notif_follow_dnd_desc">Скрыть уведомления, которые не нарушают тишину </string>
     <string name="island_notif_keep_progress_desc">Показать загрузки и другой текущий прогресс </string>
-    <string name="island_notif_queue_inline_title">Очередь внутри острова </string>
-    <string name="island_notif_queue_inline_desc">Покажите очередь внутри острова </string>
     <string name="island_notif_queue_desc">Предварительные просмотры уведомлений </string>
     <string name="island_otp_enabled_title">Обнаружение кодов OTP </string>
     <string name="island_otp_tap_to_copy_title">Нажмите для копирования </string>

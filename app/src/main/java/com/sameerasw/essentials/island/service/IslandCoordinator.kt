@@ -607,7 +607,7 @@ class IslandCoordinator(
                 settings.getIslandNotifPeekStyle() == SettingsRepository.ISLAND_NOTIF_PEEK_STYLE_MINIMAL
             val layout = when {
                 !minimal -> QueuePreviewLayout.Peek
-                settings.isIslandNotifQueueInlineEnabled() -> QueuePreviewLayout.MinimalInline
+                !settings.isIslandSecondaryBubbleEnabled() -> QueuePreviewLayout.MinimalInline
                 else -> QueuePreviewLayout.MinimalStack
             }
             controller.holdFocus = layout == QueuePreviewLayout.Peek
@@ -830,7 +830,7 @@ class IslandCoordinator(
             pulseOffsetY = settings.getIslandPulseShadowOffsetY().coerceIn(-8f, 16f).dp,
             pulseOpacity = settings.getIslandPulseShadowOpacity().coerceIn(0.1f, 1f),
             pulseDurationMs = settings.getIslandPulseShadowDurationMs().coerceIn(300f, 4000f).toInt(),
-            queueInline = settings.isIslandNotifQueueInlineEnabled(),
+            queueInline = !settings.isIslandSecondaryBubbleEnabled(),
             bubbleOnRight = settings.getIslandSecondaryBubbleSide() == SettingsRepository.ISLAND_CAMERA_POSITION_RIGHT,
             iconColorCustom = if (iconCustomMode && !iconMaterialYou) {
                 runCatching {
@@ -1069,7 +1069,7 @@ class IslandCoordinator(
         val CONFIG_KEYS = setOf(
             SettingsRepository.KEY_ISLAND_NOTIF_THEMED_BUBBLE,
             SettingsRepository.KEY_ISLAND_SECONDARY_BUBBLE_SIDE,
-            SettingsRepository.KEY_ISLAND_NOTIF_QUEUE_INLINE,
+            SettingsRepository.KEY_ISLAND_SECONDARY_BUBBLE,
             SettingsRepository.KEY_ISLAND_USE_AUTO_DETECT,
             SettingsRepository.KEY_ISLAND_CAMERA_OFFSET_X,
             SettingsRepository.KEY_ISLAND_CAMERA_OFFSET_Y,

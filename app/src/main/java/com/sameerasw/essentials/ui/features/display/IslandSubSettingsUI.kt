@@ -1527,18 +1527,6 @@ fun IslandNotificationSettingsUI(
                         color = MaterialTheme.colorScheme.onSurface,
                         modifier = Modifier.padding(horizontal = 16.dp),
                     )
-                    Text(
-                        text = stringResource(
-                            when (peekStyle) {
-                                SettingsRepository.ISLAND_NOTIF_PEEK_STYLE_COMPACT -> R.string.island_notif_condensed_info_desc
-                                SettingsRepository.ISLAND_NOTIF_PEEK_STYLE_EXPANDED -> R.string.island_notif_peek_style_expanded_desc
-                                else -> R.string.island_notif_peek_style_full_desc
-                            },
-                        ),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.padding(horizontal = 16.dp),
-                    )
                     SegmentedPicker(
                         items = listOf(
                             SettingsRepository.ISLAND_NOTIF_PEEK_STYLE_FULL,
@@ -1574,24 +1562,6 @@ fun IslandNotificationSettingsUI(
                 enabled = !viewModel.isIslandNotifHub.value,
                 modifier = Modifier.highlight(highlightSetting == "island_notif_queue"),
             )
-
-            AnimatedVisibility(
-                visible = viewModel.isIslandNotifQueue.value && !viewModel.isIslandNotifHub.value,
-                enter = fadeIn() + expandVertically(),
-                exit = fadeOut() + shrinkVertically(),
-            ) {
-                IconToggleItem(
-                    iconRes = R.drawable.rounded_fullscreen_portrait_24,
-                    title = stringResource(R.string.island_notif_queue_inline_title),
-                    description = stringResource(R.string.island_notif_queue_inline_desc),
-                    isChecked = viewModel.isIslandNotifQueueInline.value,
-                    onCheckedChange = { checked ->
-                        HapticUtil.performVirtualKeyHaptic(view)
-                        viewModel.setIslandNotifQueueInline(checked)
-                    },
-                    modifier = Modifier.highlight(highlightSetting == "island_notif_queue_inline"),
-                )
-            }
 
             IconToggleItem(
                 iconRes = R.drawable.rounded_notifications_unread_24,

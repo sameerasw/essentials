@@ -1145,11 +1145,6 @@ object FeatureRegistry {
                             "island_notif_queue",
                         ),
                         SearchSetting(
-                            R.string.island_notif_queue_inline_title,
-                            R.string.island_notif_queue_inline_desc,
-                            "island_notif_queue_inline",
-                        ),
-                        SearchSetting(
                             R.string.island_catch_up_title,
                             R.string.island_catch_up_desc,
                             "island_catch_up",
