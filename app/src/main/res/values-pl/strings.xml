@@ -1696,4 +1696,6 @@ Aby ustawienie zadziałało, może być konieczne wielokrotne zastosowanie.</str
     <string name="label_soundtrigger_mode">Tryb wywalania dźwiękiem </string>
     <string name="label_disable_vibration">Wyłącz wibracje</string>
     <string name="desc_disable_vibration">Wyłącz globalnie wrażenia dotykowe i wibracje.</string>
+    <string name="label_notify_new_updates">Powiadom o aktualizacjach</string>
+    <string name="label_online_help_media">Pomoc Online</string>
 </resources>
