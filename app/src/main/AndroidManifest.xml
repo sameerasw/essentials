@@ -392,6 +392,7 @@
             android:label="@string/freeze_shortcut_short_label"
             android:launchMode="singleTask"
             android:taskAffinity="com.sameerasw.essentials.freezing"
+            android:windowSoftInputMode="adjustResize"
             android:theme="@style/Theme.Essentials" />
 
         <activity-alias
