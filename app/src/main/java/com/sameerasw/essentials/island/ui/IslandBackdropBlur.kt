@@ -5,6 +5,7 @@ import android.graphics.Canvas
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.view.View
+import android.view.WindowManager
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -15,7 +16,29 @@ import androidx.compose.ui.viewinterop.AndroidView
 import kotlin.math.roundToInt
 
 internal object IslandBackdropBlurSupport {
+    enum class Status { Available, UnsupportedOs, WindowBlurDisabled, ApiUnavailable }
+
     val available: Boolean get() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+
+    private val apiPresent: Boolean by lazy {
+        try {
+            Class.forName("android.view.ViewRootImpl").getMethod("createBackgroundBlurDrawable")
+            true
+        } catch (_: Throwable) {
+            false
+        }
+    }
+
+    fun windowBlurEnabled(context: Context): Boolean =
+        Build.VERSION.SDK_INT < Build.VERSION_CODES.S ||
+            runCatching { context.getSystemService(WindowManager::class.java).isCrossWindowBlurEnabled }.getOrDefault(true)
+
+    fun status(context: Context, windowBlurEnabled: Boolean = windowBlurEnabled(context)): Status = when {
+        !available -> Status.UnsupportedOs
+        !apiPresent -> Status.ApiUnavailable
+        !windowBlurEnabled -> Status.WindowBlurDisabled
+        else -> Status.Available
+    }
 }
 
 private class BackdropBlurView(context: Context) : View(context) {

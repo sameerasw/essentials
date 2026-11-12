@@ -1,6 +1,9 @@
 package com.sameerasw.essentials.ui.features.display
 
 import android.content.Intent
+import android.os.Build
+import android.view.WindowManager
+import androidx.core.content.ContextCompat
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
@@ -80,6 +83,7 @@ import com.sameerasw.essentials.utils.PermissionUtils
 import com.sameerasw.essentials.ui.core.sheets.HideStatusBarInfoBottomSheet
 import com.sameerasw.essentials.ui.core.sheets.StatusBarAwareWidthInfoBottomSheet
 import com.sameerasw.essentials.ui.core.sheets.PreferStillIslandInfoBottomSheet
+import com.sameerasw.essentials.ui.core.sheets.BackdropBlurUnavailableBottomSheet
 import com.sameerasw.essentials.utils.ShellUtils
 import com.sameerasw.essentials.viewmodels.MainViewModel
 
@@ -361,6 +365,18 @@ fun IslandVisualsSettingsUI(
     var showBorderOutlineSheet by remember { mutableStateOf(false) }
     var showStatusBarAwareInfo by remember { mutableStateOf(false) }
     var showPreferStillInfo by remember { mutableStateOf(false) }
+    var showBackdropBlurInfo by remember { mutableStateOf(false) }
+    var windowBlurEnabled by remember { mutableStateOf(IslandBackdropBlurSupport.windowBlurEnabled(context)) }
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        DisposableEffect(context) {
+            val wm = context.getSystemService(WindowManager::class.java)
+            val listener = java.util.function.Consumer<Boolean> { windowBlurEnabled = it }
+            wm.addCrossWindowBlurEnabledListener(ContextCompat.getMainExecutor(context), listener)
+            onDispose { wm.removeCrossWindowBlurEnabledListener(listener) }
+        }
+    }
+    val backdropBlurStatus = IslandBackdropBlurSupport.status(context, windowBlurEnabled)
+    val backdropBlurAvailable = backdropBlurStatus == IslandBackdropBlurSupport.Status.Available
 
     if (showStatusBarAwareInfo) {
         StatusBarAwareWidthInfoBottomSheet(onDismissRequest = { showStatusBarAwareInfo = false })
@@ -368,6 +384,10 @@ fun IslandVisualsSettingsUI(
 
     if (showPreferStillInfo) {
         PreferStillIslandInfoBottomSheet(onDismissRequest = { showPreferStillInfo = false })
+    }
+
+    if (showBackdropBlurInfo) {
+        BackdropBlurUnavailableBottomSheet(status = backdropBlurStatus, onDismissRequest = { showBackdropBlurInfo = false })
     }
 
     Column(
@@ -599,33 +619,34 @@ fun IslandVisualsSettingsUI(
                     modifier = Modifier.highlight(highlightSetting == "island_transparency_intensity"),
                 )
 
-                if (IslandBackdropBlurSupport.available) {
-                    IconToggleItem(
-                        iconRes = R.drawable.rounded_blur_on_24,
-                        title = stringResource(R.string.island_backdrop_blur_title),
-                        isChecked = viewModel.isIslandBackdropBlur.value,
-                        onCheckedChange = { checked ->
-                            HapticUtil.performVirtualKeyHaptic(view)
-                            viewModel.setIslandBackdropBlur(checked)
-                        },
-                        modifier = Modifier.highlight(highlightSetting == "island_backdrop_blur"),
-                    )
+                IconToggleItem(
+                    iconRes = R.drawable.rounded_blur_on_24,
+                    title = stringResource(R.string.island_backdrop_blur_title),
+                    isChecked = backdropBlurAvailable && viewModel.isIslandBackdropBlur.value,
+                    enabled = backdropBlurAvailable,
+                    onCheckedChange = { checked ->
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        viewModel.setIslandBackdropBlur(checked)
+                    },
+                    onDisabledClick = { showBackdropBlurInfo = true },
+                    onInfoClick = { showBackdropBlurInfo = true },
+                    modifier = Modifier.highlight(highlightSetting == "island_backdrop_blur"),
+                )
 
-                    if (viewModel.isIslandBackdropBlur.value) {
-                        ConfigSliderItem(
-                            title = stringResource(R.string.island_backdrop_blur_radius_title),
-                            value = viewModel.islandBackdropBlurRadius.floatValue,
-                            onValueChange = {
-                                HapticUtil.performUIHaptic(view)
-                                viewModel.setIslandBackdropBlurRadius(it)
-                            },
-                            valueRange = 5f..120f,
-                            increment = 5f,
-                            iconRes = R.drawable.rounded_blur_on_24,
-                            valueFormatter = { "%d dp".format(it.roundToInt()) },
-                            modifier = Modifier.highlight(highlightSetting == "island_backdrop_blur_radius"),
-                        )
-                    }
+                if (backdropBlurAvailable && viewModel.isIslandBackdropBlur.value) {
+                    ConfigSliderItem(
+                        title = stringResource(R.string.island_backdrop_blur_radius_title),
+                        value = viewModel.islandBackdropBlurRadius.floatValue,
+                        onValueChange = {
+                            HapticUtil.performUIHaptic(view)
+                            viewModel.setIslandBackdropBlurRadius(it)
+                        },
+                        valueRange = 5f..120f,
+                        increment = 5f,
+                        iconRes = R.drawable.rounded_blur_on_24,
+                        valueFormatter = { "%d dp".format(it.roundToInt()) },
+                        modifier = Modifier.highlight(highlightSetting == "island_backdrop_blur_radius"),
+                    )
                 }
             }
 

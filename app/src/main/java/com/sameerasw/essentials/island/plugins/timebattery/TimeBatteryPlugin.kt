@@ -255,6 +255,9 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
         val timeText = time
         val dayText = day
         val batteryLevel = level
+        val isCharging = charging
+        val isSaving = powerSave
+        val isLimited = shielded
         val stateColor = stateColor()
         val displayColor = stateColor ?: idleColor()
         val iconStyle = settings.getIslandBatteryStyle() == SettingsRepository.ISLAND_BATTERY_STYLE_ICON
@@ -303,7 +306,7 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
             compact = listOf(
                 CompactCell("battery") {
                     when {
-                        iconStyle -> BatteryGlyph(batteryLevel, displayColor ?: islandAccent(), showLevel = showLevel)
+                        iconStyle -> BatteryGlyph(batteryLevel, displayColor ?: islandAccent(), showLevel = showLevel, charging = isCharging, powerSave = isSaving, limited = isLimited)
                         else -> BatteryRing(batteryLevel, displayColor ?: islandAccent(), showLevel = showLevel)
                     }
                 },
