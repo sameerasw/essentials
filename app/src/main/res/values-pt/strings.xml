@@ -612,7 +612,6 @@
     <string name="perm_battery_optimization_title">Otimização da bateria</string>
     <string name="perm_battery_optimization_desc">Certifique-se de que o serviço não seja eliminado pelo sistema para economizar energia.</string>
     <!-- Tabs -->
-    <string name="tab_essentials">Fundamentos</string>
     <string name="tab_freeze">Congelar</string>
     <string name="tab_freeze_title">Congelado</string>
     <string name="tab_diy">faça você mesmo</string>
@@ -1576,6 +1575,7 @@
     <string name="island_live_updates_count_title">Live updates count</string>
     <string name="island_live_updates_expanded_title">Expanded live update</string>
     <string name="island_secondary_bubbles_count_title">Secondary bubbles count</string>
+    <string name="island_secondary_bubble_side_title">Secondary bubble placement</string>
     <string name="button_remap_pause_on_volume_dialog_title">Desativa remapeamento de tecla temporáriamente quando a caixa de diálogo do volume é aberta</string>
     <string name="screen_locked_disable_notification_interactions_title">desativar interações de notificações </string>
     <string name="screen_locked_disable_notification_interactions_desc">Impeça que a barra de notificações e as Configurações Rápidas sejam exibidas enquanto o dispositivo estiver bloqueado.</string>
@@ -1707,7 +1707,7 @@
     <string name="island_expanded_top_padding_title">Acolchoamento superior expandido</string>
     <string name="island_border_outline_title">Contorno da borda</string>
     <string name="island_border_outline_desc">Desenha um contorno fino ao redor da ilha.</string>
-    <string name="island_pulse_shadow_title">Pulse for new notifications</string>
+    <string name="island_pulse_shadow_title">Exibir sombra de pulso na notificação</string>
     <string name="island_pulse_shadow_desc">Brilha brevemente atrás da ilha na cor do aplicativo.</string>
     <string name="island_expanded_scale_desc">Expanda a ilha uniformemente em todos os lados.</string>
     <string name="island_line_peek_title">Espiada na linha</string>
@@ -1731,6 +1731,7 @@
     <string name="watch_complications_title">compilações </string>
     <string name="watch_esim_install_title">Instalar eSIM</string>
     <string name="watch_esim_install_desc">Mesmo em regiões sem suporte</string>
+    <string name="watchface_clock_24h_title">24-hour clock</string>
     <string name="watchface_clock_dual_tone_title">bicolor</string>
     <string name="watchface_clock_dual_tone_desc">Horas em branco, minutos em cor de destaque</string>
     <string name="watchface_clock_outline_title">Apenas o esboço</string>
@@ -1777,7 +1778,7 @@ adicionar algum app</string>
     <string name="about_desc_flashlight">Get more control over your flashlight.\n\nAdjust the brightness, fade it in and out smoothly, and use the volume keys to change the intensity. Show the brightness as a live update in the status bar.\n\nTurn it off automatically when your phone is in a pocket, lower the brightness during long use to prevent overheating, or always turn it off, even while the display is on.\n\nBrightness control needs hardware support that some devices lack.</string>
     <string name="about_desc_face_illumination">Helps face unlock recognize you in the dark.\n\nWhen the screen wakes up in low light, Essentials lights up the screen with a soft tinted glow so the front camera can see your face. You can set the ambient light threshold that decides when it kicks in, pick the light tint, and choose whether it illuminates automatically on wake-up or only when you trigger it.\n\nIt can also trigger the unlock for you. Accessibility permission is required.</string>
     <string name="about_desc_link_actions">Choose how links open instead of being stuck with one app.\n\nWhen you open a link, Essentials lets you pick between multiple apps to handle it, with the option to open it in a bubble, copy it, share it or shorten it and create a QR code.</string>
-    <string name="about_desc_daily_wallpaper">Keep your wallpaper fresh with a daily curated wallpaper, or set a live wallpaper.\n\nPick your wallpaper, review and queue tomorrow\'s wallpaper before it is applied, and manage your live wallpaper from one place.</string>
+    <string name="about_desc_daily_wallpaper">Keep your wallpaper fresh with a daily curated wallpaper, or set a live wallpaper.\n\nPick your wallpaper, review and queue the next wallpaper before it is applied, and manage your live wallpaper from one place.</string>
     <string name="about_desc_watch">Integrations between your phone and your Wear OS watch.\n\nInstall the Essentials companion on your watch to sync notifications and calls, lock your phone from the watch, customize the watchface and complications, sync sound mode and location status, install an eSIM and turn on wireless debugging remotely.</string>
     <string name="about_desc_network_download_rate_limit">Limit the system-wide download speed.\n\nUseful to stop large downloads and updates from using all of your bandwidth. Requires advanced permissions such as Shizuku or root.</string>
     <string name="about_desc_mobile_data_always_on">Keeps mobile data active even while connected to Wi-Fi.\n\nThis lets your phone switch to mobile data instantly when the Wi-Fi connection gets weak or drops, at the cost of some extra battery use.</string>
@@ -1827,7 +1828,7 @@ adicionar algum app</string>
     <string name="feat_transparent_navigation_bar_desc">Tornar o fundo da barra de navegação do sistema transparente</string>
     <string name="island_hide_in_fullscreen_title">esconder em tela cheia</string>
     <string name="island_hide_status_bar_title">esconder barra de status</string>
-    <string name="island_media_use_art_color_title">Advertise album art color</string>
+    <string name="island_media_use_art_color_title">Use album art color</string>
     <string name="island_media_player_style_title">Player style</string>
     <string name="debug_ui_margin_overlay_title">Debug UI margin overlay</string>
     <string name="island_statusbar_ignore_notifications_title">Ignore notifications</string>
@@ -1840,8 +1841,12 @@ adicionar algum app</string>
     <string name="island_media_bubble_wide_title">Wider pill</string>
     <string name="island_media_bubble_fill_art_title">Fill album art</string>
     <string name="island_transparency_title">Island transparency</string>
+    <string name="island_transparency_intensity_title">Transparency intensity</string>
+    <string name="island_backdrop_blur_title">Backdrop blur</string>
+    <string name="island_backdrop_blur_radius_title">Blur amount</string>
     <string name="what_is_this">What is this?</string>
     <string name="label_feature_designed_by">Designed by</string>
     <string name="label_how_to_use">How to use</string>
     <string name="shut_up_how_to_use">1. Grant Write secure settings and Usage access from the permissions prompt. Shizuku is needed for freezing apps.\n\n2. Tap Select Apps and pick the apps that refuse to run with developer options, debugging or accessibility turned on, such as banking or payment apps.\n\n3. Tap an app to choose what gets hidden for it: Developer Options, USB Debugging, Wireless Debugging and Accessibility Services. You can also turn on Auto Freeze to freeze the app after you leave it, and Restore keyboard to switch back to your keyboard afterwards.\n\n4. Tap Create shortcut for each app and add it to your home screen. Always open the app from this shortcut, never from its normal icon, so the settings are turned off before the app starts and can check them.\n\n5. When you leave the app, Shut-Up! waits for the Restoration Delay and then shows a notification. Tap it to turn everything back on. Set Restore mode to Auto if you would rather have the settings restored on their own.\n\nTips: if wireless debugging was turned off, Shizuku may stop working, so enable Attempt Shizuku restart. Use the Keyboard option to pick the keyboard to restore, or leave it on Skip. With Auto Freeze, a notification counts down and lets you freeze now or abort.</string>
+    <string name="widget_stack_interval_seconds">Notifique-nos sobre novas atualizações. </string>
 </resources>

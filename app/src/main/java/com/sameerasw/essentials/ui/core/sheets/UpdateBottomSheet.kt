@@ -55,6 +55,7 @@ import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.model.UpdateInfo
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.components.text.SimpleMarkdown
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.utils.AutoUpdateManagerHelper
@@ -189,8 +190,8 @@ fun UpdateBottomSheet(
                                             ),
                                     ),
                                 content = {
-                                    Text(
-                                        text = stringResource(R.string.warning_pre_release),
+                                    TranslatableText(
+                                        stringResId = R.string.warning_pre_release,
                                         style = MaterialTheme.typography.labelMedium,
                                         color = MaterialTheme.colorScheme.onErrorContainer,
                                     )
@@ -216,12 +217,9 @@ fun UpdateBottomSheet(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalAlignment = Alignment.Start,
                         ) {
-                            Text(
-                                text =
-                                    stringResource(
-                                        R.string.release_notes_format,
-                                        updateInfo.versionName,
-                                    ),
+                            TranslatableText(
+                                stringResId = R.string.release_notes_format,
+                                formatArgs = listOf(updateInfo.versionName),
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold,
                             )
@@ -254,7 +252,7 @@ fun UpdateBottomSheet(
                                 modifier = Modifier.size(24.dp),
                             )
                             Spacer(modifier = Modifier.width(8.dp))
-                            Text(stringResource(R.string.action_view_on_github))
+                            TranslatableText(R.string.action_view_on_github)
                         }
                     }
 
@@ -269,12 +267,9 @@ fun UpdateBottomSheet(
                                     modifier = Modifier.fillMaxWidth(),
                                 )
                                 Spacer(modifier = Modifier.height(8.dp))
-                                Text(
-                                    text =
-                                        stringResource(
-                                            R.string.downloading_update_progress,
-                                            downloadProgress,
-                                        ),
+                                TranslatableText(
+                                    stringResId = R.string.downloading_update_progress,
+                                    formatArgs = listOf(downloadProgress),
                                     style = MaterialTheme.typography.labelMedium,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 )
@@ -311,7 +306,7 @@ fun UpdateBottomSheet(
                                     modifier = Modifier.size(20.dp),
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
-                                Text(stringResource(R.string.action_install_update))
+                                TranslatableText(R.string.action_install_update)
                             }
                         }
                     }

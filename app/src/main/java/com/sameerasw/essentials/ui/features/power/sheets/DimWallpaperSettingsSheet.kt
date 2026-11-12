@@ -44,6 +44,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.diy.Action
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.utils.ColorUtil
 import com.sameerasw.essentials.utils.HapticUtil
 
@@ -69,8 +70,8 @@ fun DimWallpaperSettingsSheet(
                     .fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            Text(
-                text = stringResource(R.string.diy_action_dim_wallpaper),
+            TranslatableText(
+                stringResId = R.string.diy_action_dim_wallpaper,
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSurface,
@@ -108,8 +109,8 @@ fun DimWallpaperSettingsSheet(
                                 modifier = Modifier.size(24.dp),
                             )
                         }
-                        Text(
-                            text = stringResource(R.string.diy_dim_wallpaper_desc),
+                        TranslatableText(
+                            stringResId = R.string.diy_dim_wallpaper_desc,
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
@@ -134,11 +135,11 @@ fun DimWallpaperSettingsSheet(
                         ) {
                             Icon(
                                 painter = painterResource(R.drawable.rounded_adb_24),
-                                contentDescription = "Shizuku",
+                                contentDescription = stringResource(R.string.privileged_mode_shizuku),
                                 tint = MaterialTheme.colorScheme.primary,
                                 modifier = Modifier.size(20.dp),
                             )
-                            Text("Shizuku", style = MaterialTheme.typography.labelMedium)
+                            TranslatableText(R.string.privileged_mode_shizuku, style = MaterialTheme.typography.labelMedium)
                         }
 
                         // Root Icon
@@ -148,11 +149,11 @@ fun DimWallpaperSettingsSheet(
                         ) {
                             Icon(
                                 painter = painterResource(R.drawable.rounded_numbers_24),
-                                contentDescription = "Root",
+                                contentDescription = stringResource(R.string.privileged_mode_root),
                                 tint = MaterialTheme.colorScheme.primary,
                                 modifier = Modifier.size(20.dp),
                             )
-                            Text("Root", style = MaterialTheme.typography.labelMedium)
+                            TranslatableText(R.string.privileged_mode_root, style = MaterialTheme.typography.labelMedium)
                         }
                     }
                 }
@@ -172,8 +173,8 @@ fun DimWallpaperSettingsSheet(
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
-                        Text(
-                            text = "Dim Amount",
+                        TranslatableText(
+                            stringResId = R.string.dim_wallpaper_amount,
                             style = MaterialTheme.typography.titleMedium,
                             color = MaterialTheme.colorScheme.onSurface,
                         )
@@ -219,7 +220,7 @@ fun DimWallpaperSettingsSheet(
                         modifier = Modifier.size(20.dp),
                     )
                     Spacer(modifier = Modifier.size(8.dp))
-                    Text(stringResource(R.string.action_cancel))
+                    TranslatableText(R.string.action_cancel)
                 }
 
                 Button(
@@ -235,7 +236,7 @@ fun DimWallpaperSettingsSheet(
                         modifier = Modifier.size(20.dp),
                     )
                     Spacer(modifier = Modifier.size(8.dp))
-                    Text(stringResource(R.string.action_save))
+                    TranslatableText(R.string.action_save)
                 }
             }
         }

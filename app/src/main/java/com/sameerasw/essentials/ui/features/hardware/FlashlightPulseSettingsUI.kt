@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -30,6 +29,7 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
@@ -57,8 +57,8 @@ fun FlashlightPulseSettingsUI(
     val isNotificationListenerEnabled by viewModel.isNotificationListenerEnabled
 
     Column(modifier = modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-        Text(
-            text = stringResource(R.string.settings_section_flashlight_pulse),
+        TranslatableText(
+            stringResId = R.string.settings_section_flashlight_pulse,
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -130,7 +130,7 @@ fun FlashlightPulseSettingsUI(
             modifier = Modifier.fillMaxWidth(),
             enabled = viewModel.isFlashlightPulseEnabled.value && !viewModel.isFlashlightPulseUseLightingApps.value,
         ) {
-            Text(stringResource(R.string.action_select_apps))
+            TranslatableText(R.string.action_select_apps)
         }
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -145,7 +145,7 @@ fun FlashlightPulseSettingsUI(
                 },
                 modifier = Modifier.fillMaxWidth(),
             ) {
-                Text(stringResource(R.string.flashlight_pulse_preview))
+                TranslatableText(R.string.flashlight_pulse_preview)
             }
         }
 

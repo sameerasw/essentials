@@ -45,6 +45,7 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.model.AppTag
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.components.FreezeTagIconPicker
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
@@ -145,7 +146,7 @@ fun FreezeTagEditorSheet(
                     OutlinedTextField(
                         value = name,
                         onValueChange = { name = it },
-                        placeholder = { Text(stringResource(R.string.freeze_tag_name_hint)) },
+                        placeholder = { TranslatableText(R.string.freeze_tag_name_hint) },
                         modifier = Modifier.fillMaxWidth(),
                         singleLine = true,
                         shape = MaterialTheme.shapes.medium,
@@ -215,7 +216,7 @@ fun FreezeTagEditorSheet(
                         onDismissRequest()
                     },
                 ) {
-                    Text(stringResource(R.string.action_cancel))
+                    TranslatableText(R.string.action_cancel)
                 }
                 Spacer(modifier = Modifier.width(8.dp))
                 Button(
@@ -234,7 +235,7 @@ fun FreezeTagEditorSheet(
                     },
                     enabled = name.isNotBlank(),
                 ) {
-                    Text(stringResource(R.string.action_save))
+                    TranslatableText(R.string.action_save)
                 }
             }
         }

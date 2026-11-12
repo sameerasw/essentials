@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
 import com.sameerasw.essentials.ui.core.cards.ConfigPickerItem
 import com.sameerasw.essentials.ui.core.cards.FeatureCard
@@ -144,8 +145,8 @@ fun ConsciousGateSettingsUI(
                 .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
-        Text(
-            text = stringResource(R.string.feat_conscious_gate_title),
+        TranslatableText(
+            stringResId = R.string.feat_conscious_gate_title,
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -194,7 +195,7 @@ fun ConsciousGateSettingsUI(
             ) {
                 delaySecondsOptions.forEach { seconds ->
                     SegmentedDropdownMenuItem(
-                        text = { Text(stringResource(R.string.conscious_gate_delay_seconds_value, seconds)) },
+                        text = { TranslatableText(R.string.conscious_gate_delay_seconds_value, formatArgs = listOf(seconds)) },
                         onClick = {
                             HapticUtil.performVirtualKeyHaptic(view)
                             isDelayCustom = false
@@ -284,8 +285,8 @@ fun ConsciousGateSettingsUI(
             )
         }
 
-        Text(
-            text = stringResource(R.string.conscious_gate_appearance_title),
+        TranslatableText(
+            stringResId = R.string.conscious_gate_appearance_title,
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(start = 16.dp, top = 24.dp, bottom = 8.dp),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -319,8 +320,8 @@ fun ConsciousGateSettingsUI(
             )
         }
 
-        Text(
-            text = stringResource(R.string.conscious_gate_description),
+        TranslatableText(
+            stringResId = R.string.conscious_gate_description,
             style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier.padding(16.dp),
             color = MaterialTheme.colorScheme.onSurfaceVariant,

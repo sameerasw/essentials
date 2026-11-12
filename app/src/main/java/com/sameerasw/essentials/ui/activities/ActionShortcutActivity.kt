@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials.ui.activities
 
+import com.sameerasw.essentials.R
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -33,7 +34,7 @@ class ActionShortcutActivity : ComponentActivity() {
             }
         } else {
             Toast
-                .makeText(this, "No customized action shortcut configured", Toast.LENGTH_SHORT)
+                .makeText(this, getString(R.string.action_shortcut_not_configured), Toast.LENGTH_SHORT)
                 .show()
             finish()
         }

@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials.ui.activities
 
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.navigation.ProvideBottomBar
 import com.sameerasw.essentials.ui.navigation.BottomBarSpec
 import com.sameerasw.essentials.ui.navigation.AppRoutes
@@ -420,7 +421,7 @@ fun PixelSearchbarSettingsUI(
             IconToggleItem(
                 iconRes = R.drawable.rounded_search_24,
                 title = stringResource(R.string.feat_pixel_searchbar_title),
-                description = "Replace Pixel Launcher default searchbar",
+                description = stringResource(R.string.feat_pixel_searchbar_desc),
                 isChecked = isEnabled,
                 onCheckedChange = { enabled ->
                     if (viewModel.isWriteSecureSettingsEnabled.value ||
@@ -443,8 +444,8 @@ fun PixelSearchbarSettingsUI(
                 modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
-                Text(
-                    text = stringResource(R.string.label_replace_with),
+                TranslatableText(
+                    stringResId = R.string.label_replace_with,
                     style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.padding(start = 16.dp, top = 8.dp),
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -577,8 +578,8 @@ fun PixelSearchbarSettingsUI(
                                             containerColor = MaterialTheme.colorScheme.surfaceBright,
                                         ),
                                 ) {
-                                    Text(
-                                        text = stringResource(R.string.pixel_searchbar_widget_remove),
+                                    TranslatableText(
+                                        stringResId = R.string.pixel_searchbar_widget_remove,
                                         style = MaterialTheme.typography.bodyMedium,
                                         color = MaterialTheme.colorScheme.error,
                                     )
@@ -666,8 +667,8 @@ fun PixelSearchbarSettingsUI(
 
                         Spacer(modifier = Modifier.height(12.dp))
 
-                        Text(
-                            text = "Date Format",
+                        TranslatableText(
+                            stringResId = R.string.pixel_searchbar_date_format,
                             style = MaterialTheme.typography.titleMedium,
                             modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 8.dp),
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -728,8 +729,8 @@ fun PixelSearchbarSettingsUI(
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-                Text(
-                    text = "Tap Action",
+                TranslatableText(
+                    stringResId = R.string.pixel_searchbar_tap_action,
                     style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.padding(start = 16.dp, top = 8.dp),
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -777,8 +778,8 @@ fun PixelSearchbarSettingsUI(
                             )
                         },
                         supportingContent = {
-                            Text(
-                                text = stringResource(R.string.pixel_searchbar_tap_action_enabled_desc),
+                            TranslatableText(
+                                stringResId = R.string.pixel_searchbar_tap_action_enabled_desc,
                                 style = MaterialTheme.typography.labelMedium,
                                 color =
                                     if (tapActionEnabled) {
@@ -795,8 +796,8 @@ fun PixelSearchbarSettingsUI(
                                 containerColor = MaterialTheme.colorScheme.surfaceBright,
                             ),
                     ) {
-                        Text(
-                            text = stringResource(R.string.pixel_searchbar_tap_action_enabled),
+                        TranslatableText(
+                            stringResId = R.string.pixel_searchbar_tap_action_enabled,
                             style = MaterialTheme.typography.bodyMedium,
                             color =
                                 if (tapActionEnabled) {
@@ -812,8 +813,8 @@ fun PixelSearchbarSettingsUI(
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-                Text(
-                    text = stringResource(R.string.pixel_search_results_title),
+                TranslatableText(
+                    stringResId = R.string.pixel_search_results_title,
                     style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.padding(start = 16.dp, top = 8.dp),
                     color = MaterialTheme.colorScheme.onSurfaceVariant,

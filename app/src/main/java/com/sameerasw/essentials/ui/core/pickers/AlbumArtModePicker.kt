@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials.ui.core.pickers
 
+import androidx.compose.ui.res.stringResource
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -45,7 +46,7 @@ fun AlbumArtModePicker(
             R.drawable.rounded_award_star_24,
             R.drawable.rounded_fullscreen_portrait_24,
         )
-    val labels = listOf("Default", "Fill")
+    val labels = listOf(stringResource(R.string.label_mode_default), stringResource(R.string.album_art_mode_fill))
 
     val view = LocalView.current
 

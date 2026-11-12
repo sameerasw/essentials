@@ -11,11 +11,20 @@ object CompactCellWidths {
 
     fun record(cellKeys: List<String>, unitWidth: Int) {
         if (cellKeys.isEmpty() || unitWidth <= 0) return
-        val previous = widths[cellKeys[0]]
-        if (previous != null && kotlin.math.abs(previous - unitWidth) <= JITTER_PX) return
-        widths[cellKeys[0]] = unitWidth
-        cellKeys.drop(1).forEach { widths[it] = 0 }
-        onChange?.invoke()
+        val n = cellKeys.size
+        val share = unitWidth / n
+        val remainder = unitWidth - share * n
+        val sorted = cellKeys.sorted()
+        var changed = false
+        sorted.forEachIndexed { i, key ->
+            val value = share + if (i == 0) remainder else 0
+            val previous = widths[key]
+            if (previous == null || kotlin.math.abs(previous - value) > JITTER_PX / n) {
+                widths[key] = value
+                changed = true
+            }
+        }
+        if (changed) onChange?.invoke()
     }
 
     fun get(cellKey: String): Int? = widths[cellKey]

@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials.ui.composables
 
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.navigation.LocalSelectedFeatureIds
 import com.sameerasw.essentials.ui.navigation.LocalListPaneWidth
 import androidx.compose.foundation.layout.width
@@ -952,7 +953,7 @@ fun SetupFeatures(
         ) {
                 item {
                     PullTitleHeader(
-                        title = stringResource(R.string.tab_essentials),
+                        title = stringResource(R.string.app_name),
                         caption = appVersion,
                         state = headerState,
                     )
@@ -1012,8 +1013,9 @@ fun SetupFeatures(
                                     style = MaterialTheme.typography.bodyLarge,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 )
-                                Text(
-                                    text = stringResource(id = R.string.search_no_results, searchQuery),
+                                TranslatableText(
+                                    stringResId = R.string.search_no_results,
+                                    formatArgs = listOf(searchQuery),
                                     style = MaterialTheme.typography.bodyMedium,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                                     textAlign = androidx.compose.ui.text.style.TextAlign.Center,
@@ -1230,8 +1232,8 @@ private fun RecentSearchesSection(
                 modifier = Modifier.size(64.dp),
                 tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
             )
-            Text(
-                text = stringResource(R.string.label_no_recent_searches),
+            TranslatableText(
+                stringResId = R.string.label_no_recent_searches,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(top = 16.dp),
@@ -1246,13 +1248,13 @@ private fun RecentSearchesSection(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Text(
-                text = stringResource(R.string.label_recent_searches),
+            TranslatableText(
+                stringResId = R.string.label_recent_searches,
                 style = MaterialTheme.typography.titleSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
-            Text(
-                text = stringResource(R.string.label_clear_all),
+            TranslatableText(
+                stringResId = R.string.label_clear_all,
                 style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.clickable { viewModel.clearRecentSearches() },
@@ -1406,8 +1408,8 @@ private fun SearchResultsSection(
 
     if (matchingTiles.isNotEmpty() || nonQSSearchResults.isNotEmpty() || matchingPermissions.isNotEmpty() || matchingFrozenApps.isNotEmpty()) {
         if (nonQSSearchResults.isNotEmpty()) {
-            Text(
-                text = stringResource(R.string.search_results_title),
+            TranslatableText(
+                stringResId = R.string.search_results_title,
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(start = 32.dp, top = 16.dp, bottom = 8.dp),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,

@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials.services
 
+import com.sameerasw.essentials.R
 import com.sameerasw.essentials.utils.AppIconUtil
 import android.graphics.drawable.Icon
 import android.content.pm.LauncherApps
@@ -649,7 +650,7 @@ class NotificationListener : NotificationListenerService() {
                     android.widget.Toast
                         .makeText(
                             applicationContext,
-                            "Already Liked \u2665",
+                            applicationContext.getString(R.string.like_song_already_liked),
                             android.widget.Toast.LENGTH_SHORT,
                         ).show()
                 }
@@ -679,7 +680,7 @@ class NotificationListener : NotificationListenerService() {
                             android.widget.Toast
                                 .makeText(
                                     applicationContext,
-                                    "Liked song \u2665",
+                                    applicationContext.getString(R.string.like_song_liked),
                                     android.widget.Toast.LENGTH_SHORT,
                                 ).show()
                         }
@@ -711,7 +712,7 @@ class NotificationListener : NotificationListenerService() {
                                 android.widget.Toast
                                     .makeText(
                                         applicationContext,
-                                        "Liked song \u2665",
+                                        applicationContext.getString(R.string.like_song_liked),
                                         android.widget.Toast.LENGTH_SHORT,
                                     ).show()
                             }
@@ -1899,15 +1900,28 @@ class NotificationListener : NotificationListenerService() {
         }
 
         var bitmap: Bitmap? = null
-        try {
-            val largeIcon = notif.getLargeIcon()
-            if (largeIcon != null) {
-                val drawable = largeIcon.loadDrawable(this)
-                if (drawable != null) {
-                    bitmap = AppUtil.drawableToBitmap(drawable)
+        var iconIsGlyph = false
+        // Live updates carry their own status bar glyph; prefer it over the large or app icon, like the system chip does.
+        if (LiveUpdateSnoozer.isLiveUpdate(sbn) || isFakeLiveUpdate(sbn)) {
+            try {
+                notif.smallIcon?.loadDrawable(this)?.let {
+                    bitmap = AppUtil.drawableToBitmap(it)
+                    iconIsGlyph = true
                 }
-            }
-        } catch (_: Exception) {}
+            } catch (_: Exception) {}
+        }
+
+        if (bitmap == null) {
+            try {
+                val largeIcon = notif.getLargeIcon()
+                if (largeIcon != null) {
+                    val drawable = largeIcon.loadDrawable(this)
+                    if (drawable != null) {
+                        bitmap = AppUtil.drawableToBitmap(drawable)
+                    }
+                }
+            } catch (_: Exception) {}
+        }
 
         if (bitmap == null) {
             try {
@@ -1927,6 +1941,8 @@ class NotificationListener : NotificationListenerService() {
             postTime = postTime,
             title = extras.getCharSequence(Notification.EXTRA_TITLE)?.toString(),
             text = extras.getCharSequence(Notification.EXTRA_TEXT)?.toString(),
+            iconIsGlyph = iconIsGlyph,
+            isSilent = !LiveUpdateSnoozer.isLiveUpdate(sbn) && !isFakeLiveUpdate(sbn) && isSilentNotification(sbn),
             shortText = extras.getCharSequence("android.shortCriticalText")?.toString()?.trim()?.takeIf { it.isNotEmpty() },
             appName = try {
                 packageManager.getApplicationLabel(packageManager.getApplicationInfo(sbn.packageName, 0)).toString()
@@ -2132,10 +2148,11 @@ class NotificationListener : NotificationListenerService() {
         if (sbn.packageName == packageName || !hasReadableExtras(sbn) || isMediaNotification(sbn)) return null
         if (isHandledAsProgress(sbn) || isShownByDedicatedFeature(sbn)) return null
         if ((sbn.notification.flags and Notification.FLAG_GROUP_SUMMARY) != 0 && !isStandaloneSummary(sbn)) return null
+        val silent = isSilentNotification(sbn, rankingMap)
         return extractNotificationAlert(sbn)?.copy(
-            isSilent = isSilentNotification(sbn, rankingMap),
+            isSilent = silent,
             blockedByDnd = isBlockedByDnd(sbn, rankingMap),
-            ongoing = sbn.isOngoing,
+            ongoing = sbn.isOngoing && (!silent || LiveUpdateSnoozer.isLiveUpdate(sbn)),
             isConversation = isConversationNotification(sbn, rankingMap),
             hubOnly = true,
             timestamp = if (sbn.postTime > 0) sbn.postTime else System.currentTimeMillis(),

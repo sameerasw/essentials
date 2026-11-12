@@ -35,6 +35,7 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.modifiers.highlight
@@ -79,8 +80,8 @@ fun CalendarSyncSettingsUI(
 
         Spacer(modifier = Modifier.height(4.dp))
 
-        Text(
-            text = stringResource(R.string.calendar_sync_settings_title),
+        TranslatableText(
+            stringResId = R.string.calendar_sync_settings_title,
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 4.dp),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -117,16 +118,16 @@ fun CalendarSyncSettingsUI(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Text(
-            text = stringResource(R.string.calendar_sync_select_calendars),
+        TranslatableText(
+            stringResId = R.string.calendar_sync_select_calendars,
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(start = 16.dp, bottom = 4.dp),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
 
         if (calendars.isEmpty()) {
-            Text(
-                text = stringResource(R.string.calendar_sync_no_calendars),
+            TranslatableText(
+                stringResId = R.string.calendar_sync_no_calendars,
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.padding(16.dp),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,

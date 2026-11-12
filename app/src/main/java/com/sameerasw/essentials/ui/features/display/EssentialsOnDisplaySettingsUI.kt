@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -26,6 +25,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
@@ -129,8 +129,8 @@ fun EssentialsOnDisplaySettingsUI(
             }
         }
 
-        Text(
-            text = stringResource(R.string.essentials_on_display_album_art_title),
+        TranslatableText(
+            stringResId = R.string.essentials_on_display_album_art_title,
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -148,8 +148,8 @@ fun EssentialsOnDisplaySettingsUI(
             exit = androidx.compose.animation.shrinkVertically() + androidx.compose.animation.fadeOut(),
         ) {
             Column {
-                Text(
-                    text = stringResource(R.string.label_customization),
+                TranslatableText(
+                    stringResId = R.string.label_customization,
                     style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -173,8 +173,8 @@ fun EssentialsOnDisplaySettingsUI(
             exit = androidx.compose.animation.shrinkVertically() + androidx.compose.animation.fadeOut(),
         ) {
             Column {
-                Text(
-                    text = stringResource(R.string.essentials_on_display_clock_title),
+                TranslatableText(
+                    stringResId = R.string.essentials_on_display_clock_title,
                     style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
                     color = MaterialTheme.colorScheme.onSurfaceVariant,

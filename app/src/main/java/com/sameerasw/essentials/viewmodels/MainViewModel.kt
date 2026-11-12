@@ -245,6 +245,10 @@ class MainViewModel : ViewModel() {
     val isIslandNeuralExpressive = mutableStateOf(false)
     val isIslandNeuralExpressiveAlways = mutableStateOf(false)
     val isIslandTransparency = mutableStateOf(true)
+    val islandTransparencyIntensity = mutableFloatStateOf(1f)
+    val isIslandBackdropBlur = mutableStateOf(false)
+    val islandBackdropBlurRadius = mutableFloatStateOf(40f)
+    val isIslandProgressiveBlur = mutableStateOf(true)
     val isIslandStatusBarAwareWidth = mutableStateOf(false)
     val isIslandStatusBarIgnoreNotifications = mutableStateOf(true)
     val isDebugUiMarginOverlay = mutableStateOf(false)
@@ -280,6 +284,7 @@ class MainViewModel : ViewModel() {
     val islandDevicesBatteryOrder = mutableStateOf<List<String>>(emptyList())
     val islandExpandedPadding = mutableFloatStateOf(16f)
     val islandExpandedTopPadding = mutableFloatStateOf(0f)
+    val islandExpandedOffsetY = mutableFloatStateOf(0f)
     val islandExpandedBottomPadding = mutableFloatStateOf(12f)
     val islandExpandedTimeoutMs = mutableLongStateOf(0L)
     val isIslandSuppressSystemHeadsUp = mutableStateOf(false)
@@ -301,6 +306,7 @@ class MainViewModel : ViewModel() {
     val isIslandNotifKeepProgress = mutableStateOf(true)
     val isIslandNotifQueue = mutableStateOf(true)
     val islandNotifQueueStyle = mutableStateOf(SettingsRepository.ISLAND_NOTIF_QUEUE_STYLE_STACK)
+    val islandSecondaryBubbleSide = mutableStateOf(SettingsRepository.ISLAND_CAMERA_POSITION_LEFT)
     val isIslandNotifQueueInline = mutableStateOf(false)
     val isIslandNotifSkipSilent = mutableStateOf(true)
     val isIslandNotifFollowDnd = mutableStateOf(true)
@@ -1000,6 +1006,9 @@ class MainViewModel : ViewModel() {
 
                     SettingsRepository.KEY_ISLAND_NOTIF_QUEUE_STYLE ->
                         islandNotifQueueStyle.value = settingsRepository.getIslandNotifQueueStyle()
+
+                    SettingsRepository.KEY_ISLAND_SECONDARY_BUBBLE_SIDE ->
+                        islandSecondaryBubbleSide.value = settingsRepository.getIslandSecondaryBubbleSide()
 
                     SettingsRepository.KEY_ISLAND_NOTIF_QUEUE_INLINE ->
                         isIslandNotifQueueInline.value = settingsRepository.isIslandNotifQueueInlineEnabled()
@@ -2100,7 +2109,7 @@ class MainViewModel : ViewModel() {
                     Toast
                         .makeText(
                             context,
-                            "Accessibility auto-granted",
+                            context.getString(R.string.accessibility_auto_granted),
                             Toast.LENGTH_SHORT,
                         ).show()
                 }
@@ -2551,6 +2560,10 @@ class MainViewModel : ViewModel() {
         isIslandNeuralExpressive.value = settingsRepository.isIslandNeuralExpressiveEnabled()
         isIslandNeuralExpressiveAlways.value = settingsRepository.isIslandNeuralExpressiveAlwaysEnabled()
         isIslandTransparency.value = settingsRepository.isIslandTransparencyEnabled()
+        islandTransparencyIntensity.floatValue = settingsRepository.getIslandTransparencyIntensity()
+        isIslandBackdropBlur.value = settingsRepository.isIslandBackdropBlurEnabled()
+        islandBackdropBlurRadius.floatValue = settingsRepository.getIslandBackdropBlurRadius()
+        isIslandProgressiveBlur.value = settingsRepository.isIslandProgressiveBlurEnabled()
         isIslandStatusBarAwareWidth.value = settingsRepository.isIslandStatusBarAwareWidthEnabled()
         isIslandStatusBarIgnoreNotifications.value = settingsRepository.isIslandStatusBarIgnoreNotificationsEnabled()
         isDebugUiMarginOverlay.value = settingsRepository.isDebugUiMarginOverlayEnabled()
@@ -2591,6 +2604,7 @@ class MainViewModel : ViewModel() {
         islandDevicesBatteryOrder.value = settingsRepository.getIslandDevicesBatteryOrder()
         islandExpandedPadding.floatValue = settingsRepository.getIslandExpandedPadding()
         islandExpandedTopPadding.floatValue = settingsRepository.getIslandExpandedTopPadding()
+        islandExpandedOffsetY.floatValue = settingsRepository.getIslandExpandedOffsetY()
         islandExpandedBottomPadding.floatValue = settingsRepository.getIslandExpandedBottomPadding()
         islandExpandedTimeoutMs.longValue = settingsRepository.getIslandExpandedTimeoutMs()
         isIslandSuppressSystemHeadsUp.value = settingsRepository.isIslandSuppressSystemHeadsUpEnabled()
@@ -2620,6 +2634,7 @@ class MainViewModel : ViewModel() {
         isIslandNotifKeepProgress.value = settingsRepository.isIslandNotifKeepProgressEnabled()
         isIslandNotifQueue.value = settingsRepository.isIslandNotifQueueEnabled()
         islandNotifQueueStyle.value = settingsRepository.getIslandNotifQueueStyle()
+        islandSecondaryBubbleSide.value = settingsRepository.getIslandSecondaryBubbleSide()
         isIslandNotifQueueInline.value = settingsRepository.isIslandNotifQueueInlineEnabled()
         isIslandNotifSkipSilent.value = settingsRepository.isIslandNotifSkipSilentEnabled()
         isIslandNotifFollowDnd.value = settingsRepository.isIslandNotifFollowDndEnabled()
@@ -3326,7 +3341,7 @@ class MainViewModel : ViewModel() {
             } else {
                 workflowAuthState.value =
                     com.sameerasw.essentials.viewmodels.AuthState
-                        .Error("Failed to request device code")
+                        .Error(R.string.github_auth_device_code_failed)
             }
         }
     }
@@ -3370,7 +3385,7 @@ class MainViewModel : ViewModel() {
                             tokenResponse.error == "expired_token" -> {
                                 workflowAuthState.value =
                                     com.sameerasw.essentials.viewmodels.AuthState
-                                        .Error("Code expired. Please try again.")
+                                        .Error(R.string.github_auth_code_expired)
                                 workflowPollingJob?.cancel()
                                 return@launch
                             }
@@ -3378,7 +3393,7 @@ class MainViewModel : ViewModel() {
                             else -> {
                                 workflowAuthState.value =
                                     com.sameerasw.essentials.viewmodels.AuthState
-                                        .Error("Authentication failed: ${tokenResponse.error}")
+                                        .Error(R.string.github_auth_failed, tokenResponse.error)
                                 workflowPollingJob?.cancel()
                                 return@launch
                             }
@@ -5554,6 +5569,7 @@ class MainViewModel : ViewModel() {
         islandExpandedRoundness.floatValue = settingsRepository.getIslandExpandedRoundness()
         islandExpandedPadding.floatValue = settingsRepository.getIslandExpandedPadding()
         islandExpandedTopPadding.floatValue = settingsRepository.getIslandExpandedTopPadding()
+        islandExpandedOffsetY.floatValue = settingsRepository.getIslandExpandedOffsetY()
         islandExpandedBottomPadding.floatValue = settingsRepository.getIslandExpandedBottomPadding()
         islandExpandedScale.floatValue = settingsRepository.getIslandExpandedScale()
         islandFontScale.floatValue = settingsRepository.getIslandFontScale()
@@ -6050,6 +6066,26 @@ class MainViewModel : ViewModel() {
         settingsRepository.setIslandNeuralExpressiveAlwaysEnabled(enabled)
     }
 
+    fun setIslandProgressiveBlur(enabled: Boolean) {
+        isIslandProgressiveBlur.value = enabled
+        settingsRepository.setIslandProgressiveBlurEnabled(enabled)
+    }
+
+    fun setIslandBackdropBlurRadius(value: Float) {
+        islandBackdropBlurRadius.floatValue = value
+        settingsRepository.setIslandBackdropBlurRadius(value)
+    }
+
+    fun setIslandBackdropBlur(enabled: Boolean) {
+        isIslandBackdropBlur.value = enabled
+        settingsRepository.setIslandBackdropBlurEnabled(enabled)
+    }
+
+    fun setIslandTransparencyIntensity(value: Float) {
+        islandTransparencyIntensity.floatValue = value
+        settingsRepository.setIslandTransparencyIntensity(value)
+    }
+
     fun setIslandTransparency(enabled: Boolean) {
         isIslandTransparency.value = enabled
         settingsRepository.setIslandTransparencyEnabled(enabled)
@@ -6114,6 +6150,11 @@ class MainViewModel : ViewModel() {
     fun setIslandExpandedPadding(value: Float) {
         islandExpandedPadding.floatValue = value
         settingsRepository.setIslandExpandedPadding(value)
+    }
+
+    fun setIslandExpandedOffsetY(value: Float) {
+        islandExpandedOffsetY.floatValue = value
+        settingsRepository.setIslandExpandedOffsetY(value)
     }
 
     fun setIslandExpandedTopPadding(value: Float) {
@@ -6267,6 +6308,11 @@ class MainViewModel : ViewModel() {
     fun setIslandNotifQueueInline(enabled: Boolean) {
         isIslandNotifQueueInline.value = enabled
         settingsRepository.setIslandNotifQueueInlineEnabled(enabled)
+    }
+
+    fun setIslandSecondaryBubbleSide(side: String) {
+        islandSecondaryBubbleSide.value = side
+        settingsRepository.setIslandSecondaryBubbleSide(side)
     }
 
     fun setIslandNotifQueueStyle(style: String) {
@@ -6691,8 +6737,8 @@ class MainViewModel : ViewModel() {
 
                     while (cursor.moveToNext()) {
                         val id = cursor.getLong(idColumn)
-                        val name = cursor.getString(nameColumn) ?: "Unnamed Calendar"
-                        val account = cursor.getString(accountColumn) ?: "Local"
+                        val name = cursor.getString(nameColumn) ?: context.getString(R.string.calendar_unnamed)
+                        val account = cursor.getString(accountColumn) ?: context.getString(R.string.calendar_local)
 
                         calendars.add(
                             CalendarAccount(
@@ -7604,8 +7650,8 @@ class MainViewModel : ViewModel() {
 
                     while (cursor.moveToNext()) {
                         val id = cursor.getLong(idColumn)
-                        val name = cursor.getString(nameColumn) ?: "Unnamed Calendar"
-                        val account = cursor.getString(accountColumn) ?: "Local"
+                        val name = cursor.getString(nameColumn) ?: context.getString(R.string.calendar_unnamed)
+                        val account = cursor.getString(accountColumn) ?: context.getString(R.string.calendar_local)
 
                         calendars.add(
                             CalendarAccount(

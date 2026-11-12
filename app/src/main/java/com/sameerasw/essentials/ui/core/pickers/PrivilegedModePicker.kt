@@ -21,7 +21,6 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -31,9 +30,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenu
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
 import com.sameerasw.essentials.utils.HapticUtil
@@ -75,8 +74,8 @@ fun PrivilegedModePicker(
                     color = MaterialTheme.colorScheme.primaryContainer,
                     contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
                 ) {
-                    Text(
-                        text = stringResource(selectedMode.labelRes),
+                    TranslatableText(
+                        stringResId = selectedMode.labelRes,
                         style = MaterialTheme.typography.labelLarge,
                         modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp),
                     )
@@ -88,7 +87,7 @@ fun PrivilegedModePicker(
                 ) {
                     PrivilegedMode.entries.forEach { mode ->
                         SegmentedDropdownMenuItem(
-                            text = { Text(stringResource(mode.labelRes)) },
+                            text = { TranslatableText(mode.labelRes) },
                             onClick = {
                                 isMenuExpanded = false
                                 onModeSelected(mode)
@@ -101,8 +100,8 @@ fun PrivilegedModePicker(
         colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceBright),
         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
         content = {
-            Text(
-                text = stringResource(R.string.setting_privileged_mode_title),
+            TranslatableText(
+                stringResId = R.string.setting_privileged_mode_title,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurface,
             )

@@ -25,7 +25,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -43,6 +42,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import com.google.android.gms.wearable.Wearable
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.utils.HapticUtil
@@ -168,8 +168,8 @@ fun WatchWirelessDebuggingSettingsUI(
             )
         }
 
-        Text(
-            text = stringResource(R.string.watch_wireless_debugging_info_title),
+        TranslatableText(
+            stringResId = R.string.watch_wireless_debugging_info_title,
             style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(start = 16.dp)
@@ -224,7 +224,7 @@ fun WatchWirelessDebuggingSettingsUI(
                 modifier = Modifier.size(20.dp)
             )
             Spacer(modifier = Modifier.width(8.dp))
-            Text(text = stringResource(R.string.watch_wireless_debugging_refresh))
+            TranslatableText(stringResId = R.string.watch_wireless_debugging_refresh)
         }
     }
 }

@@ -10,6 +10,7 @@
 
 package com.sameerasw.essentials.viewmodels
 
+import com.sameerasw.essentials.R
 import android.content.Context
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -49,7 +50,7 @@ class GitHubAuthViewModel : ViewModel() {
                     )
                 startPolling(response.deviceCode, response.interval)
             } else {
-                _authState.value = AuthState.Error("Failed to request device code")
+                _authState.value = AuthState.Error(R.string.github_auth_device_code_failed)
             }
         }
     }
@@ -83,7 +84,7 @@ class GitHubAuthViewModel : ViewModel() {
                             }
 
                             tokenResponse.error == "expired_token" -> {
-                                _authState.value = AuthState.Error("Code expired. Please try again.")
+                                _authState.value = AuthState.Error(R.string.github_auth_code_expired)
                                 pollingJob?.cancel()
                                 return@launch
                             }
@@ -91,7 +92,7 @@ class GitHubAuthViewModel : ViewModel() {
                             else -> {
                                 // "access_denied" or other errors
                                 _authState.value =
-                                    AuthState.Error("Authentication failed: ${tokenResponse.error}")
+                                    AuthState.Error(R.string.github_auth_failed, tokenResponse.error)
                                 pollingJob?.cancel()
                                 return@launch
                             }
@@ -157,6 +158,7 @@ sealed class AuthState {
     ) : AuthState()
 
     data class Error(
-        val message: String,
+        val messageRes: Int,
+        val formatArg: String? = null,
     ) : AuthState()
 }

@@ -101,7 +101,7 @@ fun RemoteExpanded(
         modifier = Modifier.matchParentSize(),
         factory = { context ->
             SurfaceView(context).apply {
-                setZOrderMediaOverlay(true)
+                setZOrderOnTop(true)
                 holder.setFormat(PixelFormat.TRANSLUCENT)
                 outlineProvider = object : ViewOutlineProvider() {
                     override fun getOutline(view: View, outline: Outline) {

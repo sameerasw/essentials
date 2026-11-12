@@ -612,7 +612,6 @@
     <string name="perm_battery_optimization_title">Pil Optimizasyonu</string>
     <string name="perm_battery_optimization_desc">Güç tasarrufu sağlamak için hizmetin sistem tarafından sonlandırılmadığından emin olun.</string>
     <!-- Tabs -->
-    <string name="tab_essentials">Temeller</string>
     <string name="tab_freeze">Dondur</string>
     <string name="tab_freeze_title">Dondurulmuş</string>
     <string name="tab_diy">DIY</string>
@@ -2037,6 +2036,7 @@ Bazı seçenekler Shizuku veya erişilebilirlik izni gerektirir ve sonuçlar cih
     <string name="island_live_updates_count_title">Live updates count</string>
     <string name="island_live_updates_expanded_title">Expanded live update</string>
     <string name="island_secondary_bubbles_count_title">Secondary bubbles count</string>
+    <string name="island_secondary_bubble_side_title">Secondary bubble placement</string>
     <string name="island_notif_keep_progress_desc">İndirmeleri ve diğer devam eden işlemleri göster</string>
     <string name="island_otp_enabled_title">Doğrulama kodlarını algıla</string>
     <string name="island_otp_tap_to_copy_title">Dokunarak kopyala</string>
@@ -2077,6 +2077,9 @@ Bazı seçenekler Shizuku veya erişilebilirlik izni gerektirir ve sonuçlar cih
     <string name="island_media_bubble_wide_title">Wider pill</string>
     <string name="island_media_bubble_fill_art_title">Fill album art</string>
     <string name="island_transparency_title">Island transparency</string>
+    <string name="island_transparency_intensity_title">Transparency intensity</string>
+    <string name="island_backdrop_blur_title">Backdrop blur</string>
+    <string name="island_backdrop_blur_radius_title">Blur amount</string>
     <string name="what_is_this">What is this?</string>
     <string name="label_feature_designed_by">Designed by</string>
     <string name="label_how_to_use">How to use</string>

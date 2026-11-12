@@ -33,6 +33,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
 import com.sameerasw.essentials.ui.core.cards.FeatureCard
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
@@ -89,8 +90,8 @@ fun AppVolumeSettingsUI(
             )
         }
 
-        Text(
-            text = stringResource(R.string.app_volume_apps_section),
+        TranslatableText(
+            stringResId = R.string.app_volume_apps_section,
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(start = 16.dp, top = 20.dp, bottom = 4.dp),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -161,8 +162,8 @@ fun AppVolumeSettingsUI(
             )
         }
 
-        Text(
-            text = stringResource(R.string.app_volume_hint),
+        TranslatableText(
+            stringResId = R.string.app_volume_hint,
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -236,8 +237,8 @@ private fun AppVolumeSheet(
                     iconRes = R.drawable.rounded_volume_up_24,
                 )
             }
-            Text(
-                text = stringResource(R.string.app_volume_sheet_desc),
+            TranslatableText(
+                stringResId = R.string.app_volume_sheet_desc,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(horizontal = 16.dp),

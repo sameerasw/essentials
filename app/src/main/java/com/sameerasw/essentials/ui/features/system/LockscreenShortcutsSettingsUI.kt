@@ -40,6 +40,7 @@ import com.sameerasw.essentials.domain.diy.ActionRegistry
 import com.sameerasw.essentials.domain.model.ActivityIconSource
 import com.sameerasw.essentials.domain.model.LockscreenShortcutSide
 import com.sameerasw.essentials.domain.model.SystemShortcutsState
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.cards.SelectionCardItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
@@ -110,7 +111,7 @@ fun LockscreenShortcutsSettingsUI(
                         modifier = Modifier.fillMaxWidth(),
                         shape = MaterialTheme.shapes.extraLarge,
                     ) {
-                        Text(stringResource(R.string.lockscreen_shortcuts_open_wallpaper_style))
+                        TranslatableText(R.string.lockscreen_shortcuts_open_wallpaper_style)
                     }
                 }
             }
@@ -183,8 +184,8 @@ fun LockscreenShortcutsSettingsUI(
         }
 
         RoundedCardContainer {
-            Text(
-                text = stringResource(R.string.lockscreen_shortcuts_hint),
+            TranslatableText(
+                stringResId = R.string.lockscreen_shortcuts_hint,
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.padding(16.dp),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,

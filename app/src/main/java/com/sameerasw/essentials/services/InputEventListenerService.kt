@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials.services
 
+import com.sameerasw.essentials.R
 import android.app.Service
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -164,7 +165,7 @@ class InputEventListenerService : Service() {
             val channel =
                 android.app.NotificationChannel(
                     "service_channel",
-                    "Background Service",
+                    getString(R.string.input_listener_channel_name),
                     android.app.NotificationManager.IMPORTANCE_MIN,
                 )
             val manager = getSystemService(android.app.NotificationManager::class.java)
@@ -174,8 +175,8 @@ class InputEventListenerService : Service() {
         val notification =
             NotificationCompat
                 .Builder(this, "service_channel")
-                .setContentTitle("Volume Listener Running")
-                .setContentText("Listening for volume button long presses")
+                .setContentTitle(getString(R.string.input_listener_running_title))
+                .setContentText(getString(R.string.input_listener_running_text))
                 .setSmallIcon(android.R.drawable.star_on)
                 .setPriority(NotificationCompat.PRIORITY_MIN)
                 .build()
@@ -482,7 +483,7 @@ class InputEventListenerService : Service() {
         val notification =
             NotificationCompat
                 .Builder(this, "service_channel")
-                .setContentTitle("Volume Listener Running")
+                .setContentTitle(getString(R.string.input_listener_running_title))
                 .setSmallIcon(android.R.drawable.ic_dialog_info)
                 .setOngoing(true)
                 .build()

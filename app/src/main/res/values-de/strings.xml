@@ -612,7 +612,6 @@
     <string name="perm_battery_optimization_title">Akkuoptimierung</string>
     <string name="perm_battery_optimization_desc">Stelle sicher, dass der Service nicht von dem System gestoppt wird, um Strom zu sparen.</string>
     <!-- Tabs -->
-    <string name="tab_essentials">Essentials</string>
     <string name="tab_freeze">Einfrieren</string>
     <string name="tab_freeze_title">Eingefroren</string>
     <string name="tab_diy">DIY</string>
@@ -1656,6 +1655,7 @@ Zudem muss die Einstellung unter Umständen mehrfach angewendet werden, damit si
     <string name="watch_watchface_title">Zifferblatt</string>
     <string name="watch_watchface_desc">Das Zifferblatt anpassen</string>
     <string name="watchface_clock_font_size">Schriftgröße</string>
+    <string name="watchface_clock_24h_title">24-hour clock</string>
     <string name="watchface_clock_dual_tone_title">Zweifarbig</string>
     <string name="watchface_clock_dual_tone_desc">Stunden in Weiß, Minuten in Akzentfarbe</string>
     <string name="watchface_clock_outline_title">Nur Gliederung</string>
@@ -1848,6 +1848,7 @@ Zugriff auf die Barrierefreiheit ist erforderlich, um die Überlagerung zu zeich
     <string name="island_live_updates_count_title">Live updates count</string>
     <string name="island_live_updates_expanded_title">Expanded live update</string>
     <string name="island_secondary_bubbles_count_title">Secondary bubbles count</string>
+    <string name="island_secondary_bubble_side_title">Secondary bubble placement</string>
     <string name="island_notif_queue_title">Benachrichtigungswarteschlange</string>
     <string name="island_catch_up_timeout_title">Nachholdauer</string>
     <string name="island_show_calls_title">Anrufe</string>
@@ -2001,7 +2002,7 @@ Die Stufen können nur von der normalen Lautstärke abwärts, niemals darüber h
     <string name="about_desc_flashlight">Get more control over your flashlight.\n\nAdjust the brightness, fade it in and out smoothly, and use the volume keys to change the intensity. Show the brightness as a live update in the status bar.\n\nTurn it off automatically when your phone is in a pocket, lower the brightness during long use to prevent overheating, or always turn it off, even while the display is on.\n\nBrightness control needs hardware support that some devices lack.</string>
     <string name="about_desc_face_illumination">Helps face unlock recognize you in the dark.\n\nWhen the screen wakes up in low light, Essentials lights up the screen with a soft tinted glow so the front camera can see your face. You can set the ambient light threshold that decides when it kicks in, pick the light tint, and choose whether it illuminates automatically on wake-up or only when you trigger it.\n\nIt can also trigger the unlock for you. Accessibility permission is required.</string>
     <string name="about_desc_link_actions">Choose how links open instead of being stuck with one app.\n\nWhen you open a link, Essentials lets you pick between multiple apps to handle it, with the option to open it in a bubble, copy it, share it or shorten it and create a QR code.</string>
-    <string name="about_desc_daily_wallpaper">Keep your wallpaper fresh with a daily curated wallpaper, or set a live wallpaper.\n\nPick your wallpaper, review and queue tomorrow\'s wallpaper before it is applied, and manage your live wallpaper from one place.</string>
+    <string name="about_desc_daily_wallpaper">Keep your wallpaper fresh with a daily curated wallpaper, or set a live wallpaper.\n\nPick your wallpaper, review and queue the next wallpaper before it is applied, and manage your live wallpaper from one place.</string>
     <string name="about_desc_watch">Integrations between your phone and your Wear OS watch.\n\nInstall the Essentials companion on your watch to sync notifications and calls, lock your phone from the watch, customize the watchface and complications, sync sound mode and location status, install an eSIM and turn on wireless debugging remotely.</string>
     <string name="about_desc_network_download_rate_limit">Limit the system-wide download speed.\n\nUseful to stop large downloads and updates from using all of your bandwidth. Requires advanced permissions such as Shizuku or root.</string>
     <string name="about_desc_mobile_data_always_on">Keeps mobile data active even while connected to Wi-Fi.\n\nThis lets your phone switch to mobile data instantly when the Wi-Fi connection gets weak or drops, at the cost of some extra battery use.</string>
@@ -2088,6 +2089,9 @@ Die Stufen können nur von der normalen Lautstärke abwärts, niemals darüber h
     <string name="island_media_bubble_wide_title">Wider pill</string>
     <string name="island_media_bubble_fill_art_title">Fill album art</string>
     <string name="island_transparency_title">Island transparency</string>
+    <string name="island_transparency_intensity_title">Transparency intensity</string>
+    <string name="island_backdrop_blur_title">Backdrop blur</string>
+    <string name="island_backdrop_blur_radius_title">Blur amount</string>
     <string name="what_is_this">What is this?</string>
     <string name="label_feature_designed_by">Designed by</string>
     <string name="label_how_to_use">How to use</string>

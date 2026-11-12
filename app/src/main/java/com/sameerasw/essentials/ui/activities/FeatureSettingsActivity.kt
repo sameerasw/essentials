@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials
 
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.navigation.LocalSelectedFeatureIds
 import androidx.fragment.app.FragmentActivity
 import android.content.Intent
@@ -802,8 +803,8 @@ fun FeatureSettingsScreen(
 
                         sectionChildLists.forEach { sectionChildren ->
                             if (featureId == "Watch" && sectionChildren.any { it.id == "Calendar Sync" }) {
-                                Text(
-                                    text = stringResource(R.string.cat_sync),
+                                TranslatableText(
+                                    stringResId = R.string.cat_sync,
                                     style = MaterialTheme.typography.titleMedium,
                                     modifier = Modifier.padding(start = 32.dp, top = 24.dp, bottom = 4.dp),
                                     color = MaterialTheme.colorScheme.onSurfaceVariant,

@@ -49,6 +49,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.translation.TranslationManager
 import com.sameerasw.essentials.translation.ui.TranslationBottomSheet
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenu
@@ -216,7 +217,7 @@ fun ConfigSliderItem(
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.rounded_remove_24),
-                    contentDescription = "Decrease",
+                    contentDescription = stringResource(R.string.content_desc_decrease),
                     tint = MaterialTheme.colorScheme.primary,
                 )
             }
@@ -254,7 +255,7 @@ fun ConfigSliderItem(
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.rounded_add_24),
-                    contentDescription = "Increase",
+                    contentDescription = stringResource(R.string.content_desc_increase),
                     tint = MaterialTheme.colorScheme.primary,
                 )
             }
@@ -303,7 +304,7 @@ private fun SliderValueEntry(
                     text = input.copy(text = allowed)
                 },
                 singleLine = true,
-                label = { Text(stringResource(R.string.slider_value_label)) },
+                label = { TranslatableText(R.string.slider_value_label) },
                 supportingText = {
                     Text(
                         if (decimals) {

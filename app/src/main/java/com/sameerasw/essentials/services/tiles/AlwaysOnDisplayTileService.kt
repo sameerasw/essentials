@@ -19,13 +19,13 @@ import com.sameerasw.essentials.utils.ShellUtils
 
 @RequiresApi(Build.VERSION_CODES.N)
 class AlwaysOnDisplayTileService : BaseTileService() {
-    override fun getTileLabel(): String = "Always on Display"
+    override fun getTileLabel(): String = getString(R.string.feat_always_on_display_title)
 
     override fun getTileSubtitle(): String =
         when {
-            isGlanceEnabled() -> "Dynamic"
-            isAodEnabled() -> "On"
-            else -> "Off"
+            isGlanceEnabled() -> getString(R.string.tile_dynamic)
+            isAodEnabled() -> getString(R.string.on)
+            else -> getString(R.string.off)
         }
 
     override fun hasFeaturePermission(): Boolean =

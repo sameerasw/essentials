@@ -39,6 +39,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.components.LocationIconPicker
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.viewmodels.LocationReachedViewModel
@@ -95,8 +96,8 @@ fun LocationReachedBottomSheet(
                     ) {
                         LoadingIndicator()
                         Spacer(modifier = Modifier.height(16.dp))
-                        Text(
-                            text = stringResource(R.string.location_reached_resolving),
+                        TranslatableText(
+                            stringResId = R.string.location_reached_resolving,
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
@@ -114,8 +115,8 @@ fun LocationReachedBottomSheet(
                         OutlinedTextField(
                             value = currentAlarm.name,
                             onValueChange = { viewModel.setTempAlarm(currentAlarm.copy(name = it)) },
-                            label = { Text(stringResource(R.string.location_reached_name_label)) },
-                            placeholder = { Text(stringResource(R.string.location_reached_name_placeholder)) },
+                            label = { TranslatableText(R.string.location_reached_name_label) },
+                            placeholder = { TranslatableText(R.string.location_reached_name_placeholder) },
                             modifier = Modifier.fillMaxWidth(),
                             singleLine = true,
                             shape = MaterialTheme.shapes.large,
@@ -130,8 +131,8 @@ fun LocationReachedBottomSheet(
 
                         // Coordinates Display
                         Column {
-                            Text(
-                                text = "Coordinates",
+                            TranslatableText(
+                                stringResId = R.string.location_reached_coordinates,
                                 style = MaterialTheme.typography.labelMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
@@ -149,12 +150,9 @@ fun LocationReachedBottomSheet(
 
                         // Radius Slider
                         Column {
-                            Text(
-                                text =
-                                    stringResource(
-                                        R.string.location_reached_radius_label,
-                                        currentAlarm.radius,
-                                    ),
+                            TranslatableText(
+                                stringResId = R.string.location_reached_radius_label,
+                                formatArgs = listOf(currentAlarm.radius),
                                 style = MaterialTheme.typography.labelLarge,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
@@ -218,7 +216,7 @@ fun LocationReachedBottomSheet(
                             .height(56.dp),
                     shape = androidx.compose.foundation.shape.CircleShape,
                 ) {
-                    Text(stringResource(R.string.location_reached_cancel_btn))
+                    TranslatableText(R.string.location_reached_cancel_btn)
                 }
 
                 Button(
@@ -237,7 +235,7 @@ fun LocationReachedBottomSheet(
                             .height(56.dp),
                     shape = androidx.compose.foundation.shape.CircleShape,
                 ) {
-                    Text(stringResource(R.string.location_reached_save_btn))
+                    TranslatableText(R.string.location_reached_save_btn)
                 }
             }
         }

@@ -29,6 +29,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.utils.HapticUtil
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -84,8 +85,8 @@ fun PreReleaseConfirmationSheet(
                 modifier = Modifier.fillMaxWidth(),
             )
 
-            Text(
-                text = stringResource(R.string.pre_release_restart_notice),
+            TranslatableText(
+                stringResId = R.string.pre_release_restart_notice,
                 style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Medium),
                 color = MaterialTheme.colorScheme.primary,
                 textAlign = TextAlign.Start,
@@ -104,7 +105,7 @@ fun PreReleaseConfirmationSheet(
                     },
                     modifier = Modifier.weight(1f),
                 ) {
-                    Text(stringResource(R.string.action_abort))
+                    TranslatableText(R.string.action_abort)
                 }
 
                 Button(
@@ -114,7 +115,7 @@ fun PreReleaseConfirmationSheet(
                     },
                     modifier = Modifier.weight(1f),
                 ) {
-                    Text(stringResource(R.string.action_restart_app))
+                    TranslatableText(R.string.action_restart_app)
                 }
             }
         }

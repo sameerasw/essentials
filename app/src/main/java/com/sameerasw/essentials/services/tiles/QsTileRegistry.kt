@@ -280,18 +280,18 @@ object QsTileRegistry {
                 }
                 CaffeinateTileService::class.java.name -> {
                     if (com.sameerasw.essentials.domain.controller.CaffeinateController.isActive.value) {
-                        "Active"
+                        context.getString(R.string.tile_active)
                     } else if (com.sameerasw.essentials.domain.controller.CaffeinateController.isStarting.value) {
-                        "Starting"
+                        context.getString(R.string.tile_starting)
                     } else {
-                        "Off"
+                        context.getString(R.string.off)
                     }
                 }
 
                 FlashlightTileService::class.java.name -> {
                     val instance = ScreenOffAccessibilityService.instance
                     val isTorchOn = instance?.flashlightHandler?.isTorchOn ?: false
-                    if (isTorchOn) "On" else "Off"
+                    context.getString(if (isTorchOn) R.string.on else R.string.off)
                 }
 
                 else -> {

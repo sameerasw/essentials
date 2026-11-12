@@ -55,6 +55,7 @@ import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.model.AppSelection
 import com.sameerasw.essentials.domain.model.NotificationApp
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.core.cards.AppToggleItem
 import com.sameerasw.essentials.utils.AppUtil
 import com.sameerasw.essentials.utils.HapticUtil
@@ -187,7 +188,7 @@ fun AppSelectionSheet(
                         value = searchQuery,
                         onValueChange = { searchQuery = it },
                         modifier = Modifier.weight(1f),
-                        placeholder = { Text(stringResource(R.string.label_search)) },
+                        placeholder = { TranslatableText(R.string.label_search) },
                         leadingIcon = {
                             Icon(
                                 painter = painterResource(id = R.drawable.rounded_search_24),
@@ -243,8 +244,8 @@ fun AppSelectionSheet(
                         modifier = Modifier.size(24.dp),
                         tint = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
-                    Text(
-                        text = stringResource(R.string.toggle_show_system_apps),
+                    TranslatableText(
+                        stringResId = R.string.toggle_show_system_apps,
                         style = MaterialTheme.typography.bodyLarge,
                         modifier = Modifier.weight(1f),
                         color = MaterialTheme.colorScheme.onSurface,
@@ -367,8 +368,8 @@ fun SingleAppSelectionSheet(
                     .padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            Text(
-                text = stringResource(R.string.action_select_app),
+            TranslatableText(
+                stringResId = R.string.action_select_app,
                 style = MaterialTheme.typography.headlineSmall,
             )
 
@@ -376,7 +377,7 @@ fun SingleAppSelectionSheet(
                 value = searchQuery,
                 onValueChange = { searchQuery = it },
                 modifier = Modifier.fillMaxWidth(),
-                placeholder = { Text(stringResource(R.string.label_search)) },
+                placeholder = { TranslatableText(R.string.label_search) },
                 leadingIcon = {
                     Icon(
                         painter = painterResource(id = R.drawable.rounded_search_24),

@@ -62,13 +62,13 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.graphics.drawable.toBitmap
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.services.widgets.StackWidgetProvider
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.utils.HapticUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -107,8 +107,8 @@ fun WidgetPickerSheet(
                     .padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            Text(
-                text = stringResource(R.string.widget_picker_title),
+            TranslatableText(
+                stringResId = R.string.widget_picker_title,
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.SemiBold,
                 modifier = Modifier.align(Alignment.CenterHorizontally),
@@ -117,7 +117,7 @@ fun WidgetPickerSheet(
                 value = query,
                 onValueChange = { query = it },
                 modifier = Modifier.fillMaxWidth(),
-                placeholder = { Text(stringResource(R.string.widget_picker_search)) },
+                placeholder = { TranslatableText(R.string.widget_picker_search) },
                 leadingIcon = { Icon(painterResource(R.drawable.rounded_search_24), contentDescription = null) },
                 singleLine = true,
                 shape = RoundedCornerShape(28.dp),
@@ -145,8 +145,8 @@ fun WidgetPickerSheet(
                 }
 
             if (shown.isEmpty()) {
-                Text(
-                    text = stringResource(R.string.widget_picker_empty),
+                TranslatableText(
+                    stringResId = R.string.widget_picker_empty,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.align(Alignment.CenterHorizontally).padding(32.dp),
                 )
@@ -278,8 +278,9 @@ private fun WidgetOption(
             WidgetPreview(info)
         }
         Text(label, style = MaterialTheme.typography.titleSmall)
-        Text(
-            text = stringResource(R.string.widget_picker_size, cellsWide, cellsHigh),
+        TranslatableText(
+            stringResId = R.string.widget_picker_size,
+            formatArgs = listOf(cellsWide, cellsHigh),
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )

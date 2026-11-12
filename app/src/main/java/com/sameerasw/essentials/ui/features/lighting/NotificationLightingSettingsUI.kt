@@ -59,6 +59,7 @@ import com.sameerasw.essentials.domain.model.NotificationLightingColorMode
 import com.sameerasw.essentials.domain.model.NotificationLightingRipplePosition
 import com.sameerasw.essentials.domain.model.NotificationLightingStyle
 import com.sameerasw.essentials.domain.model.NotificationLightingSweepPosition
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.activities.RipplePositionPickerActivity
 import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
 import com.sameerasw.essentials.ui.core.cards.FeatureCard
@@ -208,15 +209,15 @@ fun NotificationLightingSettingsUI(
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.rounded_apps_24),
-                    contentDescription = "Apps",
+                    contentDescription = stringResource(R.string.tab_apps),
                 )
-                Text(stringResource(R.string.action_select_apps))
+                TranslatableText(R.string.action_select_apps)
             }
         }
 
         // Style Picker
-        Text(
-            text = stringResource(R.string.settings_section_style),
+        TranslatableText(
+            stringResId = R.string.settings_section_style,
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -246,8 +247,8 @@ fun NotificationLightingSettingsUI(
 
         // System Mode Sector (Only for SYSTEM style)
         if (style == NotificationLightingStyle.SYSTEM) {
-            Text(
-                text = stringResource(R.string.notification_lighting_system_mode_title),
+            TranslatableText(
+                stringResId = R.string.notification_lighting_system_mode_title,
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -263,8 +264,8 @@ fun NotificationLightingSettingsUI(
 
             // Show placement sliders for custom system ripple
             if (viewModel.notificationLightingSystemMode.intValue == 2) {
-                Text(
-                    text = stringResource(R.string.notification_lighting_indicator_adjustment_section),
+                TranslatableText(
+                    stringResId = R.string.notification_lighting_indicator_adjustment_section,
                     style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -306,8 +307,8 @@ fun NotificationLightingSettingsUI(
 
         // Stroke Adjustment Section (For STROKE and DASH styles, which share the outline)
         if (style == NotificationLightingStyle.STROKE || style == NotificationLightingStyle.DASH) {
-            Text(
-                text = stringResource(R.string.notification_lighting_stroke_adjustment_section),
+            TranslatableText(
+                stringResId = R.string.notification_lighting_stroke_adjustment_section,
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -376,8 +377,8 @@ fun NotificationLightingSettingsUI(
         }
 
         if (style == NotificationLightingStyle.DASH) {
-            Text(
-                text = stringResource(R.string.notification_lighting_dash_adjustment_section),
+            TranslatableText(
+                stringResId = R.string.notification_lighting_dash_adjustment_section,
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -469,8 +470,8 @@ fun NotificationLightingSettingsUI(
 
         // Glow Adjustment Section (For GLOW style)
         if (style == NotificationLightingStyle.GLOW) {
-            Text(
-                text = stringResource(R.string.notification_lighting_glow_adjustment_section),
+            TranslatableText(
+                stringResId = R.string.notification_lighting_glow_adjustment_section,
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -517,8 +518,8 @@ fun NotificationLightingSettingsUI(
 
         // Sweep Adjustment
         if (style == NotificationLightingStyle.SWEEP) {
-            Text(
-                text = stringResource(R.string.notification_lighting_sweep_position_title),
+            TranslatableText(
+                stringResId = R.string.notification_lighting_sweep_position_title,
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -606,8 +607,8 @@ fun NotificationLightingSettingsUI(
         }
 
         if (style == NotificationLightingStyle.RIPPLE) {
-            Text(
-                text = stringResource(R.string.notification_lighting_ripple_position_section),
+            TranslatableText(
+                stringResId = R.string.notification_lighting_ripple_position_section,
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -649,8 +650,8 @@ fun NotificationLightingSettingsUI(
                 }
             }
 
-            Text(
-                text = stringResource(R.string.notification_lighting_ripple_adjustment_section),
+            TranslatableText(
+                stringResId = R.string.notification_lighting_ripple_adjustment_section,
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -788,8 +789,8 @@ fun NotificationLightingSettingsUI(
 
         // Indicator Adjustment Section (For INDICATOR style)
         if (style == NotificationLightingStyle.INDICATOR) {
-            Text(
-                text = stringResource(R.string.notification_lighting_placement_section),
+            TranslatableText(
+                stringResId = R.string.notification_lighting_placement_section,
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -845,8 +846,8 @@ fun NotificationLightingSettingsUI(
                 )
             }
 
-            Text(
-                text = stringResource(R.string.notification_lighting_indicator_adjustment_section),
+            TranslatableText(
+                stringResId = R.string.notification_lighting_indicator_adjustment_section,
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -898,8 +899,8 @@ fun NotificationLightingSettingsUI(
             style == NotificationLightingStyle.SWEEP ||
             style == NotificationLightingStyle.DASH
         ) {
-            Text(
-                text = stringResource(R.string.settings_section_animation),
+            TranslatableText(
+                stringResId = R.string.settings_section_animation,
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -937,8 +938,8 @@ fun NotificationLightingSettingsUI(
 
         // Color Mode section
         if (style != NotificationLightingStyle.SYSTEM) {
-            Text(
-                text = stringResource(R.string.settings_section_color_mode),
+            TranslatableText(
+                stringResId = R.string.settings_section_color_mode,
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -1128,15 +1129,15 @@ fun NotificationLightingSettingsUI(
         }
 
         if (style != NotificationLightingStyle.SYSTEM) {
-            Text(
-                text = stringResource(R.string.settings_section_ambient_display),
+            TranslatableText(
+                stringResId = R.string.settings_section_ambient_display,
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(start = 16.dp, top = 16.dp),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
 
-            Text(
-                text = stringResource(R.string.ambient_display_hint),
+            TranslatableText(
+                stringResId = R.string.ambient_display_hint,
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 8.dp),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -1234,8 +1235,8 @@ fun NotificationLightingSettingsUI(
         }
 
         if (style == NotificationLightingStyle.SYSTEM) {
-            Text(
-                text = stringResource(R.string.notification_lighting_system_disclaimer),
+            TranslatableText(
+                stringResId = R.string.notification_lighting_system_disclaimer,
                 style = MaterialTheme.typography.bodySmall,
                 modifier =
                     Modifier

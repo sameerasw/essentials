@@ -37,6 +37,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.viewmodels.WatchViewModel
@@ -78,7 +79,7 @@ fun WatchSettingsUI(
                                 android.widget.Toast
                                     .makeText(
                                         context,
-                                        "Syncing...",
+                                        context.getString(R.string.watch_syncing),
                                         android.widget.Toast.LENGTH_SHORT,
                                     ).show()
                                 com.sameerasw.essentials.services.DeviceInfoSyncManager.forceSync(
@@ -116,8 +117,8 @@ fun WatchSettingsUI(
                         color = MaterialTheme.colorScheme.onSurface,
                     )
 
-                    Text(
-                        text = stringResource(R.string.watch_connected_status),
+                    TranslatableText(
+                        stringResId = R.string.watch_connected_status,
                         style = MaterialTheme.typography.labelLarge,
                         color = MaterialTheme.colorScheme.primary,
                     )
@@ -137,14 +138,14 @@ fun WatchSettingsUI(
                                 modifier = Modifier.padding(16.dp),
                                 horizontalAlignment = Alignment.CenterHorizontally,
                             ) {
-                                Text(
-                                    text = stringResource(R.string.watch_update_required_title),
+                                TranslatableText(
+                                    stringResId = R.string.watch_update_required_title,
                                     style = MaterialTheme.typography.titleMedium,
                                     color = MaterialTheme.colorScheme.onErrorContainer,
                                 )
                                 Spacer(modifier = Modifier.height(4.dp))
-                                Text(
-                                    text = stringResource(R.string.watch_update_required_desc),
+                                TranslatableText(
+                                    stringResId = R.string.watch_update_required_desc,
                                     style = MaterialTheme.typography.bodySmall,
                                     color = MaterialTheme.colorScheme.onErrorContainer.copy(alpha = 0.8f),
                                     textAlign = androidx.compose.ui.text.style.TextAlign.Center,
@@ -161,7 +162,7 @@ fun WatchSettingsUI(
                                             contentColor = MaterialTheme.colorScheme.onError,
                                         ),
                                 ) {
-                                    Text(text = stringResource(R.string.watch_update_action))
+                                    TranslatableText(stringResId = R.string.watch_update_action)
                                 }
                             }
                         }
@@ -179,13 +180,13 @@ fun WatchSettingsUI(
                         ),
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
-                    Text(
-                        text = stringResource(R.string.watch_no_companion_title),
+                    TranslatableText(
+                        stringResId = R.string.watch_no_companion_title,
                         style = MaterialTheme.typography.titleMedium,
                         color = MaterialTheme.colorScheme.onPrimary,
                     )
-                    Text(
-                        text = stringResource(R.string.watch_no_companion_desc),
+                    TranslatableText(
+                        stringResId = R.string.watch_no_companion_desc,
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.8f),
                         modifier = Modifier.padding(top = 4.dp, bottom = 12.dp),
@@ -208,7 +209,7 @@ fun WatchSettingsUI(
                             modifier = Modifier.size(20.dp),
                         )
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text(stringResource(R.string.action_download_from_github))
+                        TranslatableText(R.string.action_download_from_github)
                     }
                 }
             }

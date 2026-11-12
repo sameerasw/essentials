@@ -34,14 +34,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import kotlin.math.roundToInt
+import com.sameerasw.essentials.island.ui.IslandBackdropBlurSupport
 import com.sameerasw.essentials.FeatureSettingsActivity
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.translation.TranslatableText
 import kotlin.math.ceil
 import androidx.compose.ui.platform.LocalConfiguration
 import com.sameerasw.essentials.data.repository.SettingsRepository
@@ -127,8 +131,8 @@ fun IslandPlacementSettingsUI(
             cornerRadius = 24.dp,
         ) {
             if (viewModel.isFoldableCameraDevice.value) {
-                Text(
-                    text = stringResource(R.string.foldable_camera_profile_hint),
+                TranslatableText(
+                    stringResId = R.string.foldable_camera_profile_hint,
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
@@ -153,8 +157,8 @@ fun IslandPlacementSettingsUI(
                     .padding(top = 12.dp)
                     .highlight(highlightSetting == "island_camera_position"),
             ) {
-                Text(
-                    text = stringResource(R.string.island_camera_position_title),
+                TranslatableText(
+                    stringResId = R.string.island_camera_position_title,
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.padding(horizontal = 16.dp),
@@ -200,7 +204,7 @@ fun IslandPlacementSettingsUI(
                     modifier = Modifier.size(20.dp),
                 )
                 Spacer(modifier = Modifier.size(8.dp))
-                Text(text = stringResource(R.string.island_auto_align_camera))
+                TranslatableText(stringResId = R.string.island_auto_align_camera)
             }
 
             Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
@@ -465,6 +469,20 @@ fun IslandVisualsSettingsUI(
             )
 
             ConfigSliderItem(
+                title = stringResource(R.string.island_expanded_offset_y_title),
+                value = viewModel.islandExpandedOffsetY.floatValue,
+                onValueChange = {
+                    HapticUtil.performUIHaptic(view)
+                    viewModel.setIslandExpandedOffsetY(it)
+                },
+                valueRange = 0f..120f,
+                increment = 2f,
+                iconRes = R.drawable.rounded_south_24,
+                valueFormatter = { "${it.toInt()} dp" },
+                modifier = Modifier.highlight(highlightSetting == "island_expanded_offset_y"),
+            )
+
+            ConfigSliderItem(
                 title = stringResource(R.string.island_expanded_bottom_padding_title),
                 value = viewModel.islandExpandedBottomPadding.floatValue,
                 onValueChange = {
@@ -563,6 +581,64 @@ fun IslandVisualsSettingsUI(
                     viewModel.setIslandTransparency(checked)
                 },
                 modifier = Modifier.highlight(highlightSetting == "island_transparency"),
+            )
+
+            if (viewModel.isIslandTransparency.value) {
+                ConfigSliderItem(
+                    title = stringResource(R.string.island_transparency_intensity_title),
+                    value = viewModel.islandTransparencyIntensity.floatValue,
+                    onValueChange = {
+                        HapticUtil.performUIHaptic(view)
+                        viewModel.setIslandTransparencyIntensity(it)
+                    },
+                    valueRange = 0.25f..5f,
+                    increment = 0.05f,
+                    iconRes = R.drawable.rounded_blur_on_24,
+                    valueFormatter = { "%d%%".format((it * 100).roundToInt()) },
+                    allowDecimals = true,
+                    modifier = Modifier.highlight(highlightSetting == "island_transparency_intensity"),
+                )
+
+                if (IslandBackdropBlurSupport.available) {
+                    IconToggleItem(
+                        iconRes = R.drawable.rounded_blur_on_24,
+                        title = stringResource(R.string.island_backdrop_blur_title),
+                        isChecked = viewModel.isIslandBackdropBlur.value,
+                        onCheckedChange = { checked ->
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            viewModel.setIslandBackdropBlur(checked)
+                        },
+                        modifier = Modifier.highlight(highlightSetting == "island_backdrop_blur"),
+                    )
+
+                    if (viewModel.isIslandBackdropBlur.value) {
+                        ConfigSliderItem(
+                            title = stringResource(R.string.island_backdrop_blur_radius_title),
+                            value = viewModel.islandBackdropBlurRadius.floatValue,
+                            onValueChange = {
+                                HapticUtil.performUIHaptic(view)
+                                viewModel.setIslandBackdropBlurRadius(it)
+                            },
+                            valueRange = 5f..120f,
+                            increment = 5f,
+                            iconRes = R.drawable.rounded_blur_on_24,
+                            valueFormatter = { "%d dp".format(it.roundToInt()) },
+                            modifier = Modifier.highlight(highlightSetting == "island_backdrop_blur_radius"),
+                        )
+                    }
+                }
+            }
+
+            IconToggleItem(
+                iconRes = R.drawable.rounded_blur_on_24,
+                title = stringResource(R.string.island_progressive_blur_title),
+                isChecked = viewModel.isIslandProgressiveBlur.value,
+                enabled = viewModel.isIslandTransparency.value,
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    viewModel.setIslandProgressiveBlur(checked)
+                },
+                modifier = Modifier.highlight(highlightSetting == "island_progressive_blur"),
             )
 
             IconToggleItem(
@@ -812,8 +888,8 @@ fun IslandBehaviorSettingsUI(
                     .padding(top = 12.dp)
                     .highlight(highlightSetting == "island_show_when" || highlightSetting == "island_hide_when_screen_off"),
             ) {
-                Text(
-                    text = stringResource(R.string.island_show_when_title),
+                TranslatableText(
+                    stringResId = R.string.island_show_when_title,
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.padding(horizontal = 16.dp),
@@ -848,8 +924,8 @@ fun IslandBehaviorSettingsUI(
                     .padding(top = 12.dp)
                     .highlight(highlightSetting == "island_dismiss_direction"),
             ) {
-                Text(
-                    text = stringResource(R.string.island_dismiss_direction_title),
+                TranslatableText(
+                    stringResId = R.string.island_dismiss_direction_title,
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.padding(horizontal = 16.dp),
@@ -895,8 +971,8 @@ fun IslandBehaviorSettingsUI(
                     .padding(top = 12.dp)
                     .highlight(highlightSetting == "island_secondary_style"),
             ) {
-                Text(
-                    text = stringResource(R.string.island_secondary_style_title),
+                TranslatableText(
+                    stringResId = R.string.island_secondary_style_title,
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.padding(horizontal = 16.dp),
@@ -910,6 +986,36 @@ fun IslandBehaviorSettingsUI(
                     onItemSelected = { viewModel.setIslandNotifQueueStyle(it) },
                     labelProvider = { if (it == SettingsRepository.ISLAND_NOTIF_QUEUE_STYLE_OVERLAP) overlapLabel else stackLabel },
                     title = R.string.island_secondary_style_title,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+            }
+
+            val sideEnabled = viewModel.islandCameraPosition.value == SettingsRepository.ISLAND_CAMERA_POSITION_CENTER
+            val sideLeftLabel = stringResource(R.string.island_camera_position_left)
+            val sideRightLabel = stringResource(R.string.island_camera_position_right)
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.surfaceBright, MaterialTheme.shapes.extraSmall)
+                    .padding(top = 12.dp)
+                    .highlight(highlightSetting == "island_secondary_bubble_side")
+                    .alpha(if (sideEnabled) 1f else 0.38f),
+            ) {
+                TranslatableText(
+                    stringResId = R.string.island_secondary_bubble_side_title,
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                )
+                SegmentedPicker(
+                    items = listOf(
+                        SettingsRepository.ISLAND_CAMERA_POSITION_LEFT,
+                        SettingsRepository.ISLAND_CAMERA_POSITION_RIGHT,
+                    ),
+                    selectedItem = viewModel.islandSecondaryBubbleSide.value,
+                    onItemSelected = { if (sideEnabled) viewModel.setIslandSecondaryBubbleSide(it) },
+                    labelProvider = { if (it == SettingsRepository.ISLAND_CAMERA_POSITION_RIGHT) sideRightLabel else sideLeftLabel },
+                    title = R.string.island_secondary_bubble_side_title,
                     modifier = Modifier.fillMaxWidth(),
                 )
             }
@@ -1166,8 +1272,8 @@ fun IslandPreviewControls(modifier: Modifier = Modifier) {
                 .background(MaterialTheme.colorScheme.surfaceBright, MaterialTheme.shapes.extraSmall)
                 .padding(top = 12.dp),
         ) {
-            Text(
-                text = stringResource(R.string.island_preview_stage_title),
+            TranslatableText(
+                stringResId = R.string.island_preview_stage_title,
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.padding(horizontal = 16.dp),
@@ -1335,8 +1441,8 @@ fun IslandNotificationSettingsUI(
                         .padding(top = 12.dp)
                         .highlight(highlightSetting == "island_notif_peek_style"),
                 ) {
-                    Text(
-                        text = stringResource(R.string.island_notif_condensed_info_title),
+                    TranslatableText(
+                        stringResId = R.string.island_notif_condensed_info_title,
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.onSurface,
                         modifier = Modifier.padding(horizontal = 16.dp),
@@ -1612,8 +1718,8 @@ fun IslandNotificationSettingsUI(
 @Composable
 private fun IslandSettingsSection(titleRes: Int, content: @Composable ColumnScope.() -> Unit) {
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        Text(
-            text = stringResource(titleRes),
+        TranslatableText(
+            stringResId = titleRes,
             style = MaterialTheme.typography.titleSmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(start = 8.dp),

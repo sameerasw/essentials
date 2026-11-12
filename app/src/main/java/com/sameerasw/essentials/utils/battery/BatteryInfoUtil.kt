@@ -383,62 +383,80 @@ object BatteryInfoUtil {
         }
     }
 
-    fun formatStatus(status: Int): String =
+    fun formatStatus(
+        context: Context,
+        status: Int,
+    ): String =
         when (status) {
-            BatteryManager.BATTERY_STATUS_CHARGING -> "Charging"
-            BatteryManager.BATTERY_STATUS_DISCHARGING -> "Discharging"
-            BatteryManager.BATTERY_STATUS_FULL -> "Full"
-            BatteryManager.BATTERY_STATUS_NOT_CHARGING -> "Not Charging"
-            else -> "Unknown"
+            BatteryManager.BATTERY_STATUS_CHARGING -> context.getString(R.string.diy_state_charging)
+            BatteryManager.BATTERY_STATUS_DISCHARGING -> context.getString(R.string.battery_status_discharging)
+            BatteryManager.BATTERY_STATUS_FULL -> context.getString(R.string.battery_status_full)
+            BatteryManager.BATTERY_STATUS_NOT_CHARGING -> context.getString(R.string.battery_status_not_charging)
+            else -> context.getString(R.string.label_unknown)
         }
 
-    fun formatHealth(health: Int): String =
+    fun formatHealth(
+        context: Context,
+        health: Int,
+    ): String =
         when (health) {
-            BatteryManager.BATTERY_HEALTH_GOOD -> "Good"
-            BatteryManager.BATTERY_HEALTH_OVERHEAT -> "Overheat"
-            BatteryManager.BATTERY_HEALTH_DEAD -> "Dead"
-            BatteryManager.BATTERY_HEALTH_OVER_VOLTAGE -> "Over Voltage"
-            BatteryManager.BATTERY_HEALTH_UNSPECIFIED_FAILURE -> "Unspecified Failure"
-            BatteryManager.BATTERY_HEALTH_COLD -> "Cold"
-            else -> "Unknown"
+            BatteryManager.BATTERY_HEALTH_GOOD -> context.getString(R.string.battery_health_good)
+            BatteryManager.BATTERY_HEALTH_OVERHEAT -> context.getString(R.string.battery_health_overheat)
+            BatteryManager.BATTERY_HEALTH_DEAD -> context.getString(R.string.battery_health_dead)
+            BatteryManager.BATTERY_HEALTH_OVER_VOLTAGE -> context.getString(R.string.battery_health_over_voltage)
+            BatteryManager.BATTERY_HEALTH_UNSPECIFIED_FAILURE -> context.getString(R.string.battery_health_failure)
+            BatteryManager.BATTERY_HEALTH_COLD -> context.getString(R.string.battery_health_cold)
+            else -> context.getString(R.string.label_unknown)
         }
 
-    fun formatPlugged(plugged: Int): String =
+    fun formatPlugged(
+        context: Context,
+        plugged: Int,
+    ): String =
         when (plugged) {
-            BatteryManager.BATTERY_PLUGGED_AC -> "AC Charger"
-            BatteryManager.BATTERY_PLUGGED_USB -> "USB Port"
-            BatteryManager.BATTERY_PLUGGED_WIRELESS -> "Wireless"
-            BatteryManager.BATTERY_PLUGGED_DOCK -> "Dock"
-            0 -> "Unplugged"
-            else -> "Plugged"
+            BatteryManager.BATTERY_PLUGGED_AC -> context.getString(R.string.battery_plugged_ac)
+            BatteryManager.BATTERY_PLUGGED_USB -> context.getString(R.string.battery_plugged_usb)
+            BatteryManager.BATTERY_PLUGGED_WIRELESS -> context.getString(R.string.battery_plugged_wireless)
+            BatteryManager.BATTERY_PLUGGED_DOCK -> context.getString(R.string.battery_plugged_dock)
+            0 -> context.getString(R.string.battery_unplugged)
+            else -> context.getString(R.string.battery_plugged)
         }
 
-    fun formatChargingPolicy(policy: Int?): String =
+    fun formatChargingPolicy(
+        context: Context,
+        policy: Int?,
+    ): String =
         when (policy) {
-            1 -> "Not optimized"
-            2 -> "Limited capacity"
-            3 -> "Adaptive charging"
-            else -> policy?.toString() ?: "Unknown"
+            1 -> context.getString(R.string.battery_policy_not_optimized)
+            2 -> context.getString(R.string.battery_policy_limited)
+            3 -> context.getString(R.string.battery_policy_adaptive)
+            else -> policy?.toString() ?: context.getString(R.string.label_unknown)
         }
 
-    fun formatChargingStatusNew(status: Int?): String =
+    fun formatChargingStatusNew(
+        context: Context,
+        status: Int?,
+    ): String =
         when (status) {
-            1 -> "Unknown"
-            2 -> "Charging"
-            3 -> "Discharging"
-            4 -> "Not Charging"
-            5 -> "Full"
-            else -> status?.toString() ?: "Unknown"
+            1 -> context.getString(R.string.label_unknown)
+            2 -> context.getString(R.string.diy_state_charging)
+            3 -> context.getString(R.string.battery_status_discharging)
+            4 -> context.getString(R.string.battery_status_not_charging)
+            5 -> context.getString(R.string.battery_status_full)
+            else -> status?.toString() ?: context.getString(R.string.label_unknown)
         }
 
-    fun formatChargeTimeRemaining(ms: Long): String {
+    fun formatChargeTimeRemaining(
+        context: Context,
+        ms: Long,
+    ): String {
         val totalSeconds = ms / 1000
         val hours = totalSeconds / 3600
         val minutes = (totalSeconds % 3600) / 60
         return if (hours > 0) {
-            "${hours}h ${minutes}m"
+            context.getString(R.string.battery_time_hm, hours, minutes)
         } else {
-            "${minutes}m"
+            context.getString(R.string.battery_time_m, minutes)
         }
     }
 
@@ -460,23 +478,29 @@ object BatteryInfoUtil {
         return Pair(formatted, isSuspicious)
     }
 
-    fun formatPartStatus(status: Int?): String =
+    fun formatPartStatus(
+        context: Context,
+        status: Int?,
+    ): String =
         when (status) {
-            1 -> "Original"
-            2 -> "Replaced"
-            0 -> "Unsupported"
-            else -> status?.toString() ?: "Unknown"
+            1 -> context.getString(R.string.battery_part_original)
+            2 -> context.getString(R.string.battery_part_replaced)
+            0 -> context.getString(R.string.label_unsupported)
+            else -> status?.toString() ?: context.getString(R.string.label_unknown)
         }
 
-    fun formatCapacityLevel(level: Int?): String =
+    fun formatCapacityLevel(
+        context: Context,
+        level: Int?,
+    ): String =
         when (level) {
-            1 -> "Critical"
-            2 -> "Low"
-            3 -> "Normal"
-            4 -> "High"
-            5 -> "Full"
-            0 -> "Unknown"
-            -1 -> "Unsupported"
-            else -> level?.toString() ?: "Unknown"
+            1 -> context.getString(R.string.battery_level_critical)
+            2 -> context.getString(R.string.battery_level_low)
+            3 -> context.getString(R.string.battery_level_normal)
+            4 -> context.getString(R.string.battery_level_high)
+            5 -> context.getString(R.string.battery_status_full)
+            0 -> context.getString(R.string.label_unknown)
+            -1 -> context.getString(R.string.label_unsupported)
+            else -> level?.toString() ?: context.getString(R.string.label_unknown)
         }
 }

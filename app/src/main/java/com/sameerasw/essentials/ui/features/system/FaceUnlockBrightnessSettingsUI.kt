@@ -10,6 +10,7 @@
 package com.sameerasw.essentials.ui.features.system
 
 import androidx.compose.animation.AnimatedVisibility
+import com.sameerasw.essentials.translation.TranslatableText
 import kotlin.math.ln
 import kotlin.math.pow
 import kotlin.math.roundToInt
@@ -167,8 +168,8 @@ fun FaceUnlockBrightnessSettingsUI(
                             .padding(top = 12.dp)
                             .highlight(highlightSetting == "face_unlock_max_brightness"),
                 ) {
-                    Text(
-                        text = stringResource(R.string.flashlight_pulse_max_brightness),
+                    TranslatableText(
+                        stringResId = R.string.flashlight_pulse_max_brightness,
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.onSurface,
                         modifier = Modifier.padding(horizontal = 16.dp),

@@ -10,7 +10,6 @@
 package com.sameerasw.essentials.ui.features.watch
 
 import android.content.Context
-import android.text.format.DateFormat
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -35,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.services.DeviceInfoSyncManager
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
 import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
 import com.sameerasw.essentials.ui.core.cards.ConfigPickerItem
@@ -82,6 +82,9 @@ fun WatchfaceSettingsUI(
     var clockDualTone by remember {
         mutableStateOf(prefs.getBoolean("watchface_clock_dual_tone", false))
     }
+    var clock24h by remember {
+        mutableStateOf(prefs.getBoolean("watchface_clock_24h", false))
+    }
     var clockOutline by remember {
         mutableStateOf(prefs.getBoolean("watchface_clock_outline", false))
     }
@@ -91,7 +94,7 @@ fun WatchfaceSettingsUI(
 
     val clockFontOptions = listOf("FLEX", "GROWTH", "INFLATE", "ROTATION")
     val calendar = remember { Calendar.getInstance() }
-    val is24Hour = DateFormat.is24HourFormat(context)
+    val is24Hour = clock24h
     val rawHour = calendar.get(Calendar.HOUR)
     val hour = if (is24Hour) calendar.get(Calendar.HOUR_OF_DAY) else if (rawHour == 0) 12 else rawHour
     val minute = calendar.get(Calendar.MINUTE)
@@ -140,8 +143,8 @@ fun WatchfaceSettingsUI(
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         // Section 0: Clock
-        Text(
-            text = stringResource(R.string.watchface_category_clock),
+        TranslatableText(
+            stringResId = R.string.watchface_category_clock,
             style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.primary,
             modifier = Modifier.padding(start = 8.dp),
@@ -187,6 +190,17 @@ fun WatchfaceSettingsUI(
             )
 
             IconToggleItem(
+                iconRes = R.drawable.rounded_av_timer_24,
+                title = stringResource(R.string.watchface_clock_24h_title),
+                isChecked = clock24h,
+                onCheckedChange = {
+                    clock24h = it
+                    prefs.edit().putBoolean("watchface_clock_24h", it).apply()
+                    DeviceInfoSyncManager.forceSync(context)
+                },
+            )
+
+            IconToggleItem(
                 iconRes = R.drawable.rounded_palette_24,
                 title = stringResource(R.string.watchface_clock_dual_tone_title),
                 description = stringResource(R.string.watchface_clock_dual_tone_desc),
@@ -229,8 +243,8 @@ fun WatchfaceSettingsUI(
         }
 
         // Section 1: Battery & Icons
-        Text(
-            text = stringResource(R.string.watchface_category_battery),
+        TranslatableText(
+            stringResId = R.string.watchface_category_battery,
             style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.primary,
             modifier = Modifier.padding(start = 8.dp),
@@ -264,8 +278,8 @@ fun WatchfaceSettingsUI(
         }
 
         // Section 2: Complications
-        Text(
-            text = stringResource(R.string.watchface_category_complications),
+        TranslatableText(
+            stringResId = R.string.watchface_category_complications,
             style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.primary,
             modifier = Modifier.padding(start = 8.dp),

@@ -115,12 +115,12 @@ android {
         applicationId = "com.sameerasw.essentials"
         minSdk = 26
         targetSdk = 37
-        versionCode = 72
-        versionName = "21.1-beta.1"
+        versionCode = 74
+        versionName = "21.2"
 
         val whatsNewCounter = 8
         buildConfigField("int", "WHATS_NEW_COUNTER", whatsNewCounter.toString())
-        buildConfigField("int", "REQUIRED_WEAR_VERSION_CODE", "7")
+        buildConfigField("int", "REQUIRED_WEAR_VERSION_CODE", "8")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

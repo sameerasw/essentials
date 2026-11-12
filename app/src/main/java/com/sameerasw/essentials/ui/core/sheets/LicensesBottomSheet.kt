@@ -55,6 +55,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import com.mikepenz.aboutlibraries.ui.compose.produceLibraries
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.utils.ColorUtil
 import com.sameerasw.essentials.utils.HapticUtil
@@ -98,7 +99,7 @@ fun LicensesBottomSheet(onDismissRequest: () -> Unit) {
             LicenseSection(
                 title = "emojis.json",
                 iconRes = R.drawable.rounded_emoji_language_24,
-                description = "Comprehensive emoji dataset and categorization used in the built-in keyboard.",
+                description = context.getString(R.string.license_emojis_desc),
                 licenseType = "MIT License",
                 licenseColor = getLicenseColor("MIT"),
                 links = listOf(context.getString(R.string.action_view_on_github) to "https://github.com/chalda-pnuzig/emojis.json"),
@@ -106,7 +107,7 @@ fun LicensesBottomSheet(onDismissRequest: () -> Unit) {
             LicenseSection(
                 title = "Watch eSIM Helper",
                 iconRes = R.drawable.rounded_sim_card_24,
-                description = "Pixel Watch eSIM handoff and activation code parsing used for the watch eSIM installer.",
+                description = context.getString(R.string.license_watch_esim_desc),
                 licenseType = "Apache License 2.0",
                 licenseColor = getLicenseColor("Apache"),
                 links = listOf(context.getString(R.string.action_view_on_github) to "https://github.com/AllMySlop/pixel-watch-esim-writer"),
@@ -114,7 +115,7 @@ fun LicensesBottomSheet(onDismissRequest: () -> Unit) {
             LicenseSection(
                 title = "generate-kaomoji",
                 iconRes = R.drawable.rounded_heart_smile_24,
-                description = "Kaomoji dataset and unicode character combinations for keyboard kaomojis.",
+                description = context.getString(R.string.license_kaomoji_desc),
                 licenseType = "MIT License",
                 licenseColor = getLicenseColor("MIT"),
                 links = listOf(context.getString(R.string.action_view_on_github) to "https://github.com/xav-ie/generate-kaomoji"),
@@ -165,15 +166,15 @@ fun LicensesBottomSheet(onDismissRequest: () -> Unit) {
                             .padding(bottom = 8.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
-                    Text(
-                        text = stringResource(R.string.licenses_credits_title),
+                    TranslatableText(
+                        stringResId = R.string.licenses_credits_title,
                         style = MaterialTheme.typography.headlineSmall,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface,
                         modifier = Modifier.padding(bottom = 4.dp, top = 8.dp),
                     )
-                    Text(
-                        text = stringResource(R.string.licenses_credits_subtitle),
+                    TranslatableText(
+                        stringResId = R.string.licenses_credits_subtitle,
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.padding(bottom = 8.dp),

@@ -72,6 +72,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.sameerasw.essentials.translation.TranslatableText
 import kotlinx.coroutines.delay
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.WidgetStackRepository
@@ -304,15 +305,15 @@ class WidgetStackConfigureActivity : ComponentActivity() {
                         tint = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.size(24.dp),
                     )
-                    Text(
-                        text = stringResource(R.string.widget_stack_settings_title),
+                    TranslatableText(
+                        stringResId = R.string.widget_stack_settings_title,
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.SemiBold,
                     )
                 }
 
-                Text(
-                    text = stringResource(R.string.widget_stack_description),
+                TranslatableText(
+                    stringResId = R.string.widget_stack_description,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(horizontal = 16.dp),
@@ -322,7 +323,7 @@ class WidgetStackConfigureActivity : ComponentActivity() {
                     RoundedCardContainer {
                         ListItem(
                             modifier = Modifier.clip(MaterialTheme.shapes.extraSmall),
-                            headlineContent = { Text(stringResource(R.string.widget_stack_overlay_needed)) },
+                            headlineContent = { TranslatableText(R.string.widget_stack_overlay_needed) },
                             trailingContent = {
                                 Button(
                                     onClick = {
@@ -335,7 +336,7 @@ class WidgetStackConfigureActivity : ComponentActivity() {
                                         )
                                     },
                                     colors = ButtonDefaults.filledTonalButtonColors(),
-                                ) { Text(stringResource(R.string.widget_stack_grant)) }
+                                ) { TranslatableText(R.string.widget_stack_grant) }
                             },
                             colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceBright),
                         )
@@ -375,10 +376,10 @@ class WidgetStackConfigureActivity : ComponentActivity() {
                                 tint = MaterialTheme.colorScheme.primary,
                             )
                         },
-                        headlineContent = { Text(stringResource(R.string.widget_stack_add_widget)) },
+                        headlineContent = { TranslatableText(R.string.widget_stack_add_widget) },
                         supportingContent =
                             if (isFull) {
-                                { Text(stringResource(R.string.widget_stack_max_reached, WidgetStackConfig.MAX_WIDGETS)) }
+                                { TranslatableText(R.string.widget_stack_max_reached, formatArgs = listOf(WidgetStackConfig.MAX_WIDGETS)) }
                             } else {
                                 null
                             },
@@ -397,7 +398,7 @@ class WidgetStackConfigureActivity : ComponentActivity() {
                     if (config.smart && !notificationAccess) {
                         ListItem(
                             modifier = Modifier.clip(MaterialTheme.shapes.extraSmall),
-                            headlineContent = { Text(stringResource(R.string.widget_stack_smart_needs_access)) },
+                            headlineContent = { TranslatableText(R.string.widget_stack_smart_needs_access) },
                             trailingContent = {
                                 Button(
                                     onClick = {
@@ -405,7 +406,7 @@ class WidgetStackConfigureActivity : ComponentActivity() {
                                         startActivity(Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS))
                                     },
                                     colors = ButtonDefaults.filledTonalButtonColors(),
-                                ) { Text(stringResource(R.string.widget_stack_grant)) }
+                                ) { TranslatableText(R.string.widget_stack_grant) }
                             },
                             colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceBright),
                         )
@@ -413,7 +414,7 @@ class WidgetStackConfigureActivity : ComponentActivity() {
                     if (config.smart && !calendarAccess) {
                         ListItem(
                             modifier = Modifier.clip(MaterialTheme.shapes.extraSmall),
-                            headlineContent = { Text(stringResource(R.string.widget_stack_smart_needs_calendar)) },
+                            headlineContent = { TranslatableText(R.string.widget_stack_smart_needs_calendar) },
                             trailingContent = {
                                 Button(
                                     onClick = {
@@ -421,7 +422,7 @@ class WidgetStackConfigureActivity : ComponentActivity() {
                                         calendarPermissionLauncher.launch(Manifest.permission.READ_CALENDAR)
                                     },
                                     colors = ButtonDefaults.filledTonalButtonColors(),
-                                ) { Text(stringResource(R.string.widget_stack_grant)) }
+                                ) { TranslatableText(R.string.widget_stack_grant) }
                             },
                             colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceBright),
                         )
@@ -478,7 +479,7 @@ class WidgetStackConfigureActivity : ComponentActivity() {
                         },
                         supportingContent =
                             if (config.controls == WidgetStackConfig.ControlsMode.AUTO_HIDE) {
-                                { Text(stringResource(R.string.widget_stack_controls_auto_hide_desc)) }
+                                { TranslatableText(R.string.widget_stack_controls_auto_hide_desc) }
                             } else {
                                 null
                             },
@@ -493,7 +494,7 @@ class WidgetStackConfigureActivity : ComponentActivity() {
                         finish()
                     },
                     modifier = Modifier.fillMaxWidth(),
-                ) { Text(stringResource(R.string.widget_stack_done)) }
+                ) { TranslatableText(R.string.widget_stack_done) }
                 Spacer(modifier = Modifier.height(4.dp))
             }
         }
@@ -557,8 +558,8 @@ class WidgetStackConfigureActivity : ComponentActivity() {
             supportingContent = {
                 when {
                     isUnsupported ->
-                        Text(
-                            stringResource(R.string.widget_stack_unsupported_short),
+                        TranslatableText(
+                            R.string.widget_stack_unsupported_short,
                             color = MaterialTheme.colorScheme.error,
                         )
                     appName != null -> Text(appName)

@@ -8,6 +8,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.utils.HiddenDebuggingUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -47,23 +48,23 @@ fun HiddenDebuggingHelpBottomSheet(
                     .padding(bottom = 32.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            Text(
-                text = stringResource(R.string.setting_hidden_debugging_title),
+            TranslatableText(
+                stringResId = R.string.setting_hidden_debugging_title,
                 style = MaterialTheme.typography.headlineSmall,
                 color = MaterialTheme.colorScheme.onSurface,
             )
-            Text(
-                text = stringResource(R.string.setting_hidden_debugging_help_1),
+            TranslatableText(
+                stringResId = R.string.setting_hidden_debugging_help_1,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
-            Text(
-                text = stringResource(R.string.setting_hidden_debugging_help_2),
+            TranslatableText(
+                stringResId = R.string.setting_hidden_debugging_help_2,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
-            Text(
-                text = stringResource(R.string.setting_hidden_debugging_help_3),
+            TranslatableText(
+                stringResId = R.string.setting_hidden_debugging_help_3,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -72,7 +73,7 @@ fun HiddenDebuggingHelpBottomSheet(
                 onClick = onDismissRequest,
                 modifier = Modifier.fillMaxWidth(),
             ) {
-                Text(stringResource(R.string.action_got_it))
+                TranslatableText(R.string.action_got_it)
             }
         }
     }
@@ -95,13 +96,13 @@ fun HiddenDebuggingAutoDetectCard(
                 .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-        Text(
-            text = stringResource(R.string.setting_hidden_debugging_auto_title),
+        TranslatableText(
+            stringResId = R.string.setting_hidden_debugging_auto_title,
             style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.onSurface,
         )
-        Text(
-            text = stringResource(R.string.setting_hidden_debugging_auto_help),
+        TranslatableText(
+            stringResId = R.string.setting_hidden_debugging_auto_help,
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )

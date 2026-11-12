@@ -67,14 +67,14 @@ class SoundModeTileService : BaseTileService() {
     override fun getTileLabel(): String {
         val audioManager = getSystemService(AUDIO_SERVICE) as AudioManager
         return when (audioManager.ringerMode) {
-            AudioManager.RINGER_MODE_NORMAL -> "Sound"
-            AudioManager.RINGER_MODE_VIBRATE -> "Vibrate"
-            AudioManager.RINGER_MODE_SILENT -> "Silent"
-            else -> "Sound"
+            AudioManager.RINGER_MODE_NORMAL -> getString(R.string.sound_mode_sound)
+            AudioManager.RINGER_MODE_VIBRATE -> getString(R.string.sound_mode_vibrate)
+            AudioManager.RINGER_MODE_SILENT -> getString(R.string.sound_mode_silent)
+            else -> getString(R.string.sound_mode_sound)
         }
     }
 
-    override fun getTileSubtitle(): String = if (hasFeaturePermission()) "Mode" else getString(R.string.permission_missing)
+    override fun getTileSubtitle(): String = if (hasFeaturePermission()) getString(R.string.tile_mode) else getString(R.string.permission_missing)
 
     override fun hasFeaturePermission(): Boolean = SoundModeHandler(this).canChangeMode()
 

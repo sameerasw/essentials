@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials.utils
 
+import com.sameerasw.essentials.R
 import android.os.Build
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
@@ -26,8 +27,8 @@ object BiometricHelper {
 
     fun showBiometricPrompt(
         activity: FragmentActivity,
-        title: String = "Authentication Required",
-        subtitle: String = "Confirm your identity to proceed",
+        title: String = activity.getString(R.string.auth_required_title),
+        subtitle: String = activity.getString(R.string.auth_confirm_identity_proceed),
         onSuccess: () -> Unit,
         onError: (String) -> Unit = {},
     ) {

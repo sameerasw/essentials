@@ -21,7 +21,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -36,6 +35,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.diy.Action
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.core.cards.FeatureDropdownRow
 import com.sameerasw.essentials.ui.core.cards.FeatureToggleRow
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
@@ -104,8 +104,8 @@ fun SometimesEssentialsSettingsSheet(
                     .fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            Text(
-                text = stringResource(R.string.diy_action_sometimes_essentials),
+            TranslatableText(
+                stringResId = R.string.diy_action_sometimes_essentials,
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSurface,
@@ -173,7 +173,14 @@ fun SometimesEssentialsSettingsSheet(
                         },
                         selectedValue = essentialsOnDisplayMode,
                         options = listOf("Off", "On", "Docked"),
-                        labelProvider = { it },
+                        labelProvider = {
+                            when (it) {
+                                "Off" -> context.getString(R.string.off)
+                                "On" -> context.getString(R.string.on)
+                                "Docked" -> context.getString(R.string.tile_docked)
+                                else -> it
+                            }
+                        },
                         onOptionSelected = {
                             HapticUtil.performVirtualKeyHaptic(view)
                             essentialsOnDisplayMode = it
@@ -190,7 +197,14 @@ fun SometimesEssentialsSettingsSheet(
                         },
                         selectedValue = alwaysOnDisplayMode,
                         options = listOf("Off", "Dynamic", "On"),
-                        labelProvider = { it },
+                        labelProvider = {
+                            when (it) {
+                                "Off" -> context.getString(R.string.off)
+                                "On" -> context.getString(R.string.on)
+                                "Dynamic" -> context.getString(R.string.tile_dynamic)
+                                else -> it
+                            }
+                        },
                         onOptionSelected = {
                             HapticUtil.performVirtualKeyHaptic(view)
                             alwaysOnDisplayMode = it
@@ -304,8 +318,8 @@ fun SometimesEssentialsSettingsSheet(
                         ),
                     shape = RoundedCornerShape(24.dp),
                 ) {
-                    Text(
-                        text = stringResource(R.string.action_save),
+                    TranslatableText(
+                        stringResId = R.string.action_save,
                         fontWeight = FontWeight.Bold,
                     )
                 }

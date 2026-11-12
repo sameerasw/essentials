@@ -59,6 +59,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
 import com.sameerasw.essentials.utils.HapticUtil
@@ -155,8 +156,8 @@ fun PrivateDnsSettingsOverlay(onDismiss: () -> Unit) {
                         tint = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.size(24.dp),
                     )
-                    Text(
-                        text = stringResource(R.string.tile_private_dns),
+                    TranslatableText(
+                        stringResId = R.string.tile_private_dns,
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.SemiBold,
                     )
@@ -207,15 +208,15 @@ fun PrivateDnsSettingsOverlay(onDismiss: () -> Unit) {
                         modifier = Modifier.size(16.dp),
                     )
                     Spacer(modifier = Modifier.width(4.dp))
-                    Text(
-                        text = stringResource(R.string.action_save),
+                    TranslatableText(
+                        stringResId = R.string.action_save,
                         style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.primary,
                     )
                 }
             }
-            Text(
-                text = stringResource(R.string.private_dns_mode_label),
+            TranslatableText(
+                stringResId = R.string.private_dns_mode_label,
                 style = MaterialTheme.typography.labelLarge,
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.padding(horizontal = 16.dp),
@@ -301,7 +302,7 @@ fun PrivateDnsSettingsOverlay(onDismiss: () -> Unit) {
                             OutlinedTextField(
                                 value = customHostname,
                                 onValueChange = { customHostname = it },
-                                label = { Text(stringResource(R.string.private_dns_hostname_label)) },
+                                label = { TranslatableText(R.string.private_dns_hostname_label) },
                                 modifier =
                                     Modifier
                                         .fillMaxWidth()
@@ -320,8 +321,8 @@ fun PrivateDnsSettingsOverlay(onDismiss: () -> Unit) {
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
-                        Text(
-                            text = stringResource(R.string.private_dns_presets_title),
+                        TranslatableText(
+                            stringResId = R.string.private_dns_presets_title,
                             style = MaterialTheme.typography.labelLarge,
                             color = MaterialTheme.colorScheme.primary,
                         )
@@ -339,8 +340,8 @@ fun PrivateDnsSettingsOverlay(onDismiss: () -> Unit) {
                                     ),
                                 shape = RoundedCornerShape(16.dp),
                             ) {
-                                Text(
-                                    text = stringResource(R.string.dns_preset_reset_action),
+                                TranslatableText(
+                                    stringResId = R.string.dns_preset_reset_action,
                                     style = MaterialTheme.typography.labelMedium,
                                 )
                             }
@@ -363,8 +364,8 @@ fun PrivateDnsSettingsOverlay(onDismiss: () -> Unit) {
                                     modifier = Modifier.size(16.dp),
                                 )
                                 Spacer(modifier = Modifier.width(4.dp))
-                                Text(
-                                    text = stringResource(R.string.action_add),
+                                TranslatableText(
+                                    stringResId = R.string.action_add,
                                     style = MaterialTheme.typography.labelMedium,
                                 )
                             }
@@ -540,20 +541,20 @@ fun AddDnsPresetDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(stringResource(R.string.dns_preset_add_title)) },
+        title = { TranslatableText(R.string.dns_preset_add_title) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 OutlinedTextField(
                     value = name,
                     onValueChange = { name = it },
-                    label = { Text(stringResource(R.string.dns_preset_name_label)) },
+                    label = { TranslatableText(R.string.dns_preset_name_label) },
                     singleLine = true,
                     shape = RoundedCornerShape(12.dp),
                 )
                 OutlinedTextField(
                     value = hostname,
                     onValueChange = { hostname = it },
-                    label = { Text(stringResource(R.string.private_dns_hostname_label)) },
+                    label = { TranslatableText(R.string.private_dns_hostname_label) },
                     singleLine = true,
                     shape = RoundedCornerShape(12.dp),
                 )
@@ -571,12 +572,12 @@ fun AddDnsPresetDialog(
                 },
                 enabled = name.isNotBlank() && hostname.isNotBlank(),
             ) {
-                Text(stringResource(R.string.action_add))
+                TranslatableText(R.string.action_add)
             }
         },
         dismissButton = {
             OutlinedButton(onClick = onDismiss) {
-                Text(stringResource(R.string.action_cancel))
+                TranslatableText(R.string.action_cancel)
             }
         },
         containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,

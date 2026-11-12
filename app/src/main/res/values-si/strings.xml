@@ -361,7 +361,7 @@
     <string name="feat_circle_to_search_gesture_desc">Long-press the bottom area to trigger Circle to Search</string>
     <string name="feat_circle_to_search_gesture_height_title">Gesture zone height</string>
     <string name="feat_circle_to_search_gesture_height_desc">Adjust the height of the touch area at the bottom</string>
-    <string name="feat_other_customizations_title">Other customizations</string>
+    <string name="feat_other_customizations_title">වෙනත් අභිරුචිකරණයන්</string>
     <string name="feat_other_customizations_desc">Additional system tweaks and modifications</string>
     <string name="status_bar_icons_disclaimer">මෙම විකල්පයන් ක්‍රියාත්මක කිරීම OEM මත රඳා පවතින අතර සමහර ඒවා කිසිසේත්ම ක්‍රියාකාරී නොවිය හැකි බව කරුණාවෙන් සලකන්න.</string>
     <!-- Network Type Picker -->
@@ -612,7 +612,6 @@
     <string name="perm_battery_optimization_title">බැටරි ප්රශස්තකරණය</string>
     <string name="perm_battery_optimization_desc">බලය ඉතිරි කර ගැනීම සඳහා පද්ධතිය මඟින් සේවාව විනාශ නොවන බවට සහතික වන්න.</string>
     <!-- Tabs -->
-    <string name="tab_essentials">අත්යවශ්ය දේවල්</string>
     <string name="tab_freeze">කැටි කරන්න</string>
     <string name="tab_freeze_title">ශීත කළ</string>
     <string name="tab_diy">DIY</string>
@@ -1230,7 +1229,7 @@
     <string name="feat_widgets_desc">ඔබගේ මුල් තිරය මත බැලූ බැල්මට</string>
     <string name="feat_display_visuals_title">ප්රදර්ශනය කරන්න</string>
     <string name="feat_display_visuals_desc">ඔබේ අත්දැකීම් වැඩි දියුණු කිරීමට දර්ශන</string>
-    <string name="feat_watch_title">නරඹන්න</string>
+    <string name="feat_watch_title">අත් ඔලෝසුව</string>
     <string name="feat_watch_desc">WearOS සමඟ ඒකාබද්ධ කිරීම්</string>
     <string name="watch_no_companion_title">ඔරලෝසුවක් අනාවරණය නොවීය</string>
     <string name="watch_no_companion_desc">ඔබේ ඔරලෝසුවේ Essentials Wear companion යෙදුම ස්ථාපනය කර නොමැති බව පෙනේ.</string>
@@ -1299,7 +1298,7 @@
     <string name="label_apps">යෙදුම්</string>
     <string name="feat_text_animations_title">පරිමාණය සහ සජීවිකරණ</string>
     <string name="feat_text_animations_desc">පද්ධති පරිමාණය සහ සජීවිකරණ සකසන්න</string>
-    <string name="feat_screen_refresh_rate_title">Screen Refresh Rate</string>
+    <string name="feat_screen_refresh_rate_title">තිරය නැවුම් වීමේ අනුපාතය</string>
     <string name="feat_screen_refresh_rate_desc">Set a fixed or ranged screen refresh rate</string>
     <string name="settings_section_text">පෙළ</string>
     <string name="label_font_scale">අකුරු පරිමාණය</string>
@@ -1411,7 +1410,7 @@
     <string name="shut_up_auto_archive_action_freeze">Freeze now</string>
     <string name="shut_up_auto_archive_action_abort">Abort</string>
     <!-- Lock Screen Clock -->
-    <string name="feat_lock_screen_clock_title">Lock screen clock</string>
+    <string name="feat_lock_screen_clock_title">අගුළු තිරයේ ඔරලෝසුව</string>
     <string name="feat_lock_screen_clock_desc">Customize lock screen clock on Pixels</string>
     <string name="about_desc_lock_screen_clock">Change the lock screen clock style on Pixels. Select from the available clock faces provided by the System UI. Some old styles might not be available.</string>
     <string name="lock_screen_clock_bignum">Big Number</string>
@@ -1459,13 +1458,13 @@
     <string name="feat_notification_snoozing_title">දැන්වීම් කල්දැමීම </string>
     <string name="feat_networks_title">සන්නවේදනය </string>
     <string name="about_desc_duo">This doesn\'t fold\n\nAn iPhone Duo style status indicator to show your battery, network, media status and more in a compact, minimal UI ideally around your camera with various items to show and gestures to interact with.\n\nFor foldable devices, Ensure to turn off \'Auto-detect camera\' option if it\'s not reliable and manually align Duo with your inside and outside camera positions and then Essentials will remember your layout.</string>
-    <string name="label_shake_for_help">Shake for help</string>
+    <string name="label_shake_for_help">උදවු සඳහා හොලවන්න </string>
     <string name="about_desc_island">A dynamic island for your Android, around your camera cutout.\n\nIt brings live info together in one compact, expandable space: notifications with quick replies, media with album art and controls, calls, timers and stopwatches, alarms, calendar events, navigation, progress updates, hotspot and network status, connected devices, flashlight, sound mode, caffeinate, travel info and time and battery.\n\nThird party apps can pair with the island to show their own live content, and you choose which ones are allowed.\n\nInteract with simple gestures like tapping, swiping up and sliding along the island for volume, brightness and more, and assign your own tap actions.\n\nCustomize almost everything, including camera position and size with auto detect, width, placement, visuals like glow, outlines and pulse shadows, expanded size and roundness, display durations, what shows and when, hiding system heads up and status bar icons, and privacy options for locked screens.\n\nIt can also be combined with Duo for a single unified camera area.</string>
     <string name="about_desc_pocket_mode">Prevents accidental touches while your phone is in your pocket or bag.\n\nWhen the proximity sensor is covered, Pocket mode shows a blocking screen so stray touches do nothing. Press any volume key to dismiss it. You can also use the light sensor along with proximity for better accuracy, add a trigger delay, and choose to only trigger while the device is locked.\n\nExclude apps where it should not trigger. It does not work while streaming or gaming by default.\n\nAccessibility permission is required. On some devices with missing sensors, enabling it may break deep sleep and cause higher battery drain.</string>
     <string name="about_desc_flashlight">Get more control over your flashlight.\n\nAdjust the brightness, fade it in and out smoothly, and use the volume keys to change the intensity. Show the brightness as a live update in the status bar.\n\nTurn it off automatically when your phone is in a pocket, lower the brightness during long use to prevent overheating, or always turn it off, even while the display is on.\n\nBrightness control needs hardware support that some devices lack.</string>
     <string name="about_desc_face_illumination">Helps face unlock recognize you in the dark.\n\nWhen the screen wakes up in low light, Essentials lights up the screen with a soft tinted glow so the front camera can see your face. You can set the ambient light threshold that decides when it kicks in, pick the light tint, and choose whether it illuminates automatically on wake-up or only when you trigger it.\n\nIt can also trigger the unlock for you. Accessibility permission is required.</string>
     <string name="about_desc_link_actions">Choose how links open instead of being stuck with one app.\n\nWhen you open a link, Essentials lets you pick between multiple apps to handle it, with the option to open it in a bubble, copy it, share it or shorten it and create a QR code.</string>
-    <string name="about_desc_daily_wallpaper">Keep your wallpaper fresh with a daily curated wallpaper, or set a live wallpaper.\n\nPick your wallpaper, review and queue tomorrow\'s wallpaper before it is applied, and manage your live wallpaper from one place.</string>
+    <string name="about_desc_daily_wallpaper">Keep your wallpaper fresh with a daily curated wallpaper, or set a live wallpaper.\n\nPick your wallpaper, review and queue the next wallpaper before it is applied, and manage your live wallpaper from one place.</string>
     <string name="about_desc_watch">Integrations between your phone and your Wear OS watch.\n\nInstall the Essentials companion on your watch to sync notifications and calls, lock your phone from the watch, customize the watchface and complications, sync sound mode and location status, install an eSIM and turn on wireless debugging remotely.</string>
     <string name="about_desc_network_download_rate_limit">Limit the system-wide download speed.\n\nUseful to stop large downloads and updates from using all of your bandwidth. Requires advanced permissions such as Shizuku or root.</string>
     <string name="about_desc_mobile_data_always_on">Keeps mobile data active even while connected to Wi-Fi.\n\nThis lets your phone switch to mobile data instantly when the Wi-Fi connection gets weak or drops, at the cost of some extra battery use.</string>
@@ -1521,8 +1520,20 @@
     <string name="island_media_bubble_wide_title">Wider pill</string>
     <string name="island_media_bubble_fill_art_title">Fill album art</string>
     <string name="island_transparency_title">Island transparency</string>
+    <string name="island_transparency_intensity_title">Transparency intensity</string>
+    <string name="island_backdrop_blur_title">Backdrop blur</string>
+    <string name="island_backdrop_blur_radius_title">Blur amount</string>
     <string name="what_is_this">What is this?</string>
     <string name="label_feature_designed_by">Designed by</string>
     <string name="label_how_to_use">How to use</string>
     <string name="shut_up_how_to_use">1. Grant Write secure settings and Usage access from the permissions prompt. Shizuku is needed for freezing apps.\n\n2. Tap Select Apps and pick the apps that refuse to run with developer options, debugging or accessibility turned on, such as banking or payment apps.\n\n3. Tap an app to choose what gets hidden for it: Developer Options, USB Debugging, Wireless Debugging and Accessibility Services. You can also turn on Auto Freeze to freeze the app after you leave it, and Restore keyboard to switch back to your keyboard afterwards.\n\n4. Tap Create shortcut for each app and add it to your home screen. Always open the app from this shortcut, never from its normal icon, so the settings are turned off before the app starts and can check them.\n\n5. When you leave the app, Shut-Up! waits for the Restoration Delay and then shows a notification. Tap it to turn everything back on. Set Restore mode to Auto if you would rather have the settings restored on their own.\n\nTips: if wireless debugging was turned off, Shizuku may stop working, so enable Attempt Shizuku restart. Use the Keyboard option to pick the keyboard to restore, or leave it on Skip. With Auto Freeze, a notification counts down and lets you freeze now or abort.</string>
+    <string name="setting_enable_unsupported_features_title">සහාය නොදක්වන විශේෂාංග</string>
+    <string name="setting_show_legacy_features_title">පැරණි විශේෂාංග පෙන්වන්න</string>
+    <string name="feat_volume_steps_title">ශබ්ද මට්ටම් පියවර</string>
+    <string name="feat_app_volume_title">App ශබ්ද මට්ටම</string>
+    <string name="feat_pixel_searchbar_title">සෙවුම් තීරුව ප්‍රතිස්ථාපනය කරන්න</string>
+    <string name="feat_activity_launcher_title">ක්‍රියාකාරකම් දියත්කරනය</string>
+    <string name="feat_lockscreen_shortcuts_title">අගුළු තිර කෙටිමං</string>
+    <string name="cat_navigation">සංචාලනය</string>
+    <string name="feat_power_saving_title">බලශක්ති ඉතිරිකිරීම</string>
 </resources>

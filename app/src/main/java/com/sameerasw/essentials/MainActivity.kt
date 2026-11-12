@@ -9,6 +9,11 @@
 
 package com.sameerasw.essentials
 
+import androidx.compose.ui.layout.boundsInRoot
+import androidx.compose.ui.layout.onGloballyPositioned
+import com.sameerasw.essentials.translation.TranslatableText
+import com.sameerasw.essentials.ui.modifiers.AppRipple
+import com.sameerasw.essentials.ui.modifiers.liquidRipple
 import com.sameerasw.essentials.ui.navigation.LocalOpenAutomationId
 import androidx.compose.runtime.CompositionLocalProvider
 import com.sameerasw.essentials.ui.navigation.openFeatureIds
@@ -805,7 +810,10 @@ class MainActivity : AppCompatActivity() {
                                                             )
                                                         },
                                                     floatingActionButton = {
-                                                        Box {
+                                                        var fabCenter by remember { mutableStateOf(androidx.compose.ui.geometry.Offset.Zero) }
+                                                        Box(
+                                                            Modifier.onGloballyPositioned { fabCenter = it.boundsInRoot().center },
+                                                        ) {
                                                             // Menu anchor
                                                             FloatingActionButton(
                                                                 onClick = {
@@ -814,6 +822,7 @@ class MainActivity : AppCompatActivity() {
                                                                         (detailSpec?.fabAction ?: detailSpec?.onHelpClick)?.invoke()
                                                                     } else when (currentTab) {
                                                                         DIYTabs.ESSENTIALS -> {
+                                                                            AppRipple.fire(fabCenter)
                                                                             isSearchActive = true
                                                                         }
 
@@ -830,6 +839,7 @@ class MainActivity : AppCompatActivity() {
                                                                         }
 
                                                                         DIYTabs.FREEZE -> {
+                                                                            AppRipple.fire(fabCenter)
                                                                             isSearchActive = true
                                                                         }
 
@@ -934,7 +944,7 @@ class MainActivity : AppCompatActivity() {
                                                                         },
                                                                     )
                                                                     SegmentedDropdownMenuItem(
-                                                                        text = { Text(stringResource(R.string.action_sign_out)) },
+                                                                        text = { TranslatableText(R.string.action_sign_out) },
                                                                         onClick = {
                                                                             gitHubAuthViewModel.signOut(context)
                                                                             showFabProfileMenu = false
@@ -981,6 +991,16 @@ class MainActivity : AppCompatActivity() {
                                         modifier =
                                             Modifier
                                                 .fillMaxSize()
+                                                .liquidRipple(
+                                                    trigger = AppRipple.trigger,
+                                                    origin = AppRipple.origin,
+                                                    enabled = viewModel.isRippleEnabled.value,
+                                                    durationMillis = 2800,
+                                                    amplitudeDp = 34f,
+                                                    frequency = 12f,
+                                                    decay = 4.5f,
+                                                    speedDp = 1400f,
+                                                )
                                                 .progressiveBlur(
                                                     blurRadius = if (isBlurEnabled) 40f else 0f,
                                                     height = bottomBlurHeightPx,
@@ -1126,6 +1146,9 @@ class MainActivity : AppCompatActivity() {
                                                                             viewModel = viewModel,
                                                                             contentPadding = contentPadding,
                                                                             expandPermissionsInitial = navViewModel.expandSettingsPermissions,
+                                                                            onAppIconSelectedWithPosition = { _, pos -> AppRipple.fire(pos) },
+                                                                            onAvatarLongClickWithPosition = AppRipple::fire,
+                                                                            onRippleToggleEnabledWithPosition = AppRipple::fire,
                                                                             modifier = Modifier.fillMaxSize(),
                                                                         )
                                                                     }

@@ -4,6 +4,8 @@ import com.sameerasw.essentials.island.state.IslandStillness
 import com.sameerasw.essentials.island.ui.components.islandAccent
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.ui.Alignment
+import com.sameerasw.essentials.island.ui.components.IslandBitmap
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -163,12 +165,12 @@ class TimerPlugin : BaseIslandPlugin() {
                 placement = CompactPlacement.Dynamic,
                 compact = listOf(
                     CompactCell("timer.icon") {
-                        IslandIcon(icon, size = 18.dp, tint = if (entry.running) islandAccent() else Color.White.copy(alpha = 0.6f))
+                        TimerGlyph(entry, icon, 18.dp, if (entry.running) islandAccent() else Color.White.copy(alpha = 0.6f))
                     },
                     CompactCell("timer.time") { RollingText(time) },
                 ),
                 line = LineContent(
-                    icon = { IslandIcon(icon, tint = islandAccent()) },
+                    icon = { TimerGlyph(entry, icon, 24.dp, islandAccent()) },
                     start = label,
                     end = time,
                 ),
@@ -183,9 +185,13 @@ class TimerPlugin : BaseIslandPlugin() {
                                 title = if (more > 0) "$label  +$more" else label,
                                 titlePadding = side,
                                 start = {
-                                    Box(Modifier.padding(horizontal = 4.dp)) { IslandIcon(icon, size = 20.dp, tint = islandAccent()) }
+                                    Box(Modifier.padding(horizontal = 4.dp)) { TimerGlyph(entry, icon, 20.dp, islandAccent()) }
                                 },
-                                end = { entry.appName?.let { MarqueeText(it, IslandTextStyles.body, Modifier.weight(1f, fill = false)) } },
+                                end = {
+                                    entry.appName?.let {
+                                        MarqueeText(it, IslandTextStyles.body, Modifier.weight(1f), textAlign = androidx.compose.ui.text.style.TextAlign.End)
+                                    }
+                                },
                             )
                             RollingText(
                                 text = time,
@@ -199,7 +205,7 @@ class TimerPlugin : BaseIslandPlugin() {
                                     modifier = Modifier.padding(horizontal = side),
                                     container = Color.White.copy(alpha = 0.2f),
                                     items = entry.actions.take(3).map { action ->
-                                        ConnectedItem({ sendPendingIntent(context, action.intent) }) { ConnectedTextLabel(action.title) }
+                                        ConnectedItem({ action.perform(context) }) { ConnectedTextLabel(action.title) }
                                     },
                                 )
                             }
@@ -211,6 +217,12 @@ class TimerPlugin : BaseIslandPlugin() {
                 sourcePackage = entry.packageName,
             ),
         )
+    }
+
+    @androidx.compose.runtime.Composable
+    private fun TimerGlyph(entry: ChronometerEntry, fallback: Int, size: androidx.compose.ui.unit.Dp, tint: Color) {
+        if (entry.glyph != null) IslandBitmap(entry.glyph, size, tint = tint)
+        else IslandIcon(fallback, size = size, tint = tint)
     }
 
     private fun format(millis: Long): String {

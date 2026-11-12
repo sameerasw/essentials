@@ -26,7 +26,6 @@ import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -42,6 +41,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.SettingsActivity
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.components.buttons.ListExpandToggleButton
 import com.sameerasw.essentials.ui.core.cards.PermissionCard
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
@@ -99,8 +99,8 @@ fun PermissionsBottomSheet(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
-                Text(
-                    text = stringResource(R.string.settings_section_permissions),
+                TranslatableText(
+                    stringResId = R.string.settings_section_permissions,
                     style = MaterialTheme.typography.titleLarge,
                 )
 
@@ -115,8 +115,8 @@ fun PermissionsBottomSheet(
                         context.startActivity(intent)
                     },
                     label = {
-                        Text(
-                            text = stringResource(R.string.action_view_all),
+                        TranslatableText(
+                            stringResId = R.string.action_view_all,
                             style = MaterialTheme.typography.labelMedium,
                         )
                     },

@@ -54,6 +54,7 @@ import androidx.compose.ui.zIndex
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenu
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
 import com.sameerasw.essentials.utils.ColorUtil
@@ -439,7 +440,7 @@ fun FeatureCard(
                 if (onHelpClick != null) {
                     SegmentedDropdownMenuItem(
                         text = {
-                            Text(stringResource(R.string.action_what_is_this))
+                            TranslatableText(R.string.action_what_is_this)
                         },
                         onClick = {
                             showMenu = false

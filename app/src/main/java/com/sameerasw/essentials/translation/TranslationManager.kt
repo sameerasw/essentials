@@ -26,6 +26,10 @@ object TranslationManager {
     val activeTargetKey = mutableStateOf<String?>(null)
     val activeTargetText = mutableStateOf<String?>(null)
 
+    private val nonTranslatableKeys = setOf("app_name")
+
+    fun isTranslatableKey(key: String?): Boolean = key != null && key !in nonTranslatableKeys
+
     fun addEdit(
         key: String,
         locale: String,
@@ -61,6 +65,11 @@ object TranslationManager {
     ): String = liveOverrides[Pair(key, locale)] ?: fallback
 
     fun resolveKey(
+        context: Context,
+        resOrText: Any?,
+    ): String? = findKey(context, resOrText)?.takeIf { isTranslatableKey(it) }
+
+    private fun findKey(
         context: Context,
         resOrText: Any?,
     ): String? {

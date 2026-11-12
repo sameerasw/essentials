@@ -32,7 +32,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -50,6 +49,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 
 data class InstructionStep(
@@ -221,7 +221,7 @@ fun ExpandableGuideSection(section: InstructionSection) {
                     }
                 }
 
-                Text(
+                TranslatableText(
                     text = section.title,
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold,
@@ -253,7 +253,7 @@ fun ExpandableGuideSection(section: InstructionSection) {
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     if (section.description != null) {
-                        Text(
+                        TranslatableText(
                             text = section.description,
                             style = MaterialTheme.typography.bodyLarge,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -296,7 +296,7 @@ fun ExpandableGuideSection(section: InstructionSection) {
                                         modifier = Modifier.size(18.dp),
                                     )
                                     Spacer(modifier = Modifier.width(8.dp))
-                                    Text(label)
+                                    TranslatableText(text = label)
                                 }
                             }
                         }
@@ -318,7 +318,7 @@ private fun InstructionStepItem(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-        Text(
+        TranslatableText(
             text = instruction,
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onSurfaceVariant,

@@ -59,6 +59,7 @@ import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.model.Feature
 import com.sameerasw.essentials.domain.registry.FeatureRegistry
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenu
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
 import com.sameerasw.essentials.utils.ColorUtil
@@ -278,7 +279,7 @@ private fun FavoriteTile(
             onDismissRequest = { showMenu = false },
         ) {
             SegmentedDropdownMenuItem(
-                text = { Text(stringResource(R.string.action_reorder)) },
+                text = { TranslatableText(R.string.action_reorder) },
                 onClick = {
                     showMenu = false
                     onReorderClick()
@@ -292,7 +293,7 @@ private fun FavoriteTile(
             )
 
             SegmentedDropdownMenuItem(
-                text = { Text(stringResource(R.string.action_unpin)) },
+                text = { TranslatableText(R.string.action_unpin) },
                 onClick = {
                     showMenu = false
                     onFeatureLongClick(feature)

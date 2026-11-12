@@ -63,6 +63,7 @@ import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.model.AppSelection
 import com.sameerasw.essentials.domain.model.NotificationApp
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.core.pickers.ColorSwatchPicker
 import com.sameerasw.essentials.utils.AppColorUtil
 import com.sameerasw.essentials.utils.AppUtil
@@ -174,7 +175,7 @@ fun AppColorSelectionSheet(
                 value = searchQuery,
                 onValueChange = { searchQuery = it },
                 modifier = Modifier.fillMaxWidth(),
-                placeholder = { Text(stringResource(R.string.label_search)) },
+                placeholder = { TranslatableText(R.string.label_search) },
                 leadingIcon = {
                     Icon(
                         painter = painterResource(id = R.drawable.rounded_search_24),
@@ -204,8 +205,8 @@ fun AppColorSelectionSheet(
                         modifier = Modifier.size(24.dp),
                         tint = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
-                    Text(
-                        text = stringResource(R.string.toggle_show_system_apps),
+                    TranslatableText(
+                        stringResId = R.string.toggle_show_system_apps,
                         style = MaterialTheme.typography.bodyLarge,
                         modifier = Modifier.weight(1f),
                         color = MaterialTheme.colorScheme.onSurface,

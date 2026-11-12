@@ -1035,8 +1035,8 @@ class AmbientDreamService : DreamService() {
     }
 
     private fun updateMetadata(directBitmap: android.graphics.Bitmap? = null) {
-        titleView?.text = trackTitle ?: "Unknown Track"
-        artistView?.text = artistName ?: "Unknown Artist"
+        titleView?.text = trackTitle ?: getString(R.string.music_unknown_track)
+        artistView?.text = artistName ?: getString(R.string.music_unknown_artist)
         likeStatusView?.setImageResource(if (isAlreadyLiked) R.drawable.round_favorite_24 else R.drawable.rounded_favorite_24)
 
         // Update Dynamic Shape with Morphing

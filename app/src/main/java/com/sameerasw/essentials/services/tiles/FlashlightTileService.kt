@@ -83,9 +83,9 @@ class FlashlightTileService : BaseTileService() {
         }
     }
 
-    override fun getTileLabel(): String = "Flashlight"
+    override fun getTileLabel(): String = getString(R.string.tile_flashlight)
 
-    override fun getTileSubtitle(): String = if (isTileActive) "On" else "Off"
+    override fun getTileSubtitle(): String = getString(if (isTileActive) R.string.on else R.string.off)
 
     override fun hasFeaturePermission(): Boolean = true
 

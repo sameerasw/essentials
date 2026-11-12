@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.island.remote.ProviderInfo
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.core.sheets.EssentialsBottomSheet
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.island.sdk.IslandIdentity
@@ -84,8 +85,9 @@ fun IslandProviderPairingSheet(
                 }
                 providerIcon?.let { AppBadge(it) }
             }
-            Text(
-                text = stringResource(R.string.island_provider_pair_title, provider.label),
+            TranslatableText(
+                stringResId = R.string.island_provider_pair_title,
+                formatArgs = listOf(provider.label),
                 style = MaterialTheme.typography.headlineSmall,
                 color = MaterialTheme.colorScheme.onSurface,
                 textAlign = TextAlign.Center,
@@ -119,8 +121,8 @@ fun IslandProviderPairingSheet(
                         tint = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.size(16.dp),
                     )
-                    Text(
-                        text = stringResource(R.string.island_provider_detail_key),
+                    TranslatableText(
+                        stringResId = R.string.island_provider_detail_key,
                         style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
@@ -142,7 +144,7 @@ fun IslandProviderPairingSheet(
                         onDismissRequest()
                     },
                     modifier = Modifier.weight(1f).height(52.dp),
-                ) { Text(stringResource(R.string.island_provider_deny)) }
+                ) { TranslatableText(R.string.island_provider_deny) }
                 Button(
                     onClick = {
                         HapticUtil.performVirtualKeyHaptic(view)
@@ -150,7 +152,7 @@ fun IslandProviderPairingSheet(
                     },
                     enabled = !busy,
                     modifier = Modifier.weight(1f).height(52.dp),
-                ) { Text(stringResource(R.string.island_provider_allow)) }
+                ) { TranslatableText(R.string.island_provider_allow) }
             }
         }
     }

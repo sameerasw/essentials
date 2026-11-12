@@ -23,6 +23,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import coil.compose.AsyncImage
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.viewmodels.WatermarkUiState
 
 @Composable
@@ -36,8 +37,8 @@ fun WatermarkPreview(
     ) {
         when (uiState) {
             is WatermarkUiState.Idle -> {
-                Text(
-                    text = stringResource(R.string.watermark_pick_image),
+                TranslatableText(
+                    stringResId = R.string.watermark_pick_image,
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -69,7 +70,7 @@ fun WatermarkPreview(
                     if (targetModel != visibleModel) {
                         AsyncImage(
                             model = targetModel,
-                            contentDescription = "Preview",
+                            contentDescription = stringResource(R.string.action_preview),
                             modifier = Modifier.fillMaxSize(),
                             contentScale = ContentScale.Fit,
                             onSuccess = {

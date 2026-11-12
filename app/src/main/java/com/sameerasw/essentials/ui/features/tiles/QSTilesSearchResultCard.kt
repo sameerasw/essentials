@@ -54,6 +54,7 @@ import com.sameerasw.essentials.FeatureSettingsActivity
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.model.Feature
 import com.sameerasw.essentials.domain.registry.QSTileInfo
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.sheets.FeatureHelpBottomSheet
 import com.sameerasw.essentials.ui.core.sheets.PermissionsBottomSheet
@@ -149,8 +150,8 @@ fun QSTilesSearchResultCard(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Text(
-                text = stringResource(R.string.feat_qs_tiles_title),
+            TranslatableText(
+                stringResId = R.string.feat_qs_tiles_title,
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -165,8 +166,8 @@ fun QSTilesSearchResultCard(
                     context.startActivity(intent)
                 },
                 label = {
-                    Text(
-                        text = stringResource(R.string.action_view_all),
+                    TranslatableText(
+                        stringResId = R.string.action_view_all,
                         style = MaterialTheme.typography.labelMedium,
                     )
                 },
@@ -356,8 +357,8 @@ fun QSTilesSearchResultCard(
                                                 color = MaterialTheme.colorScheme.onSurface,
                                                 maxLines = 1,
                                             )
-                                            Text(
-                                                text = stringResource(R.string.feat_qs_tiles_title),
+                                            TranslatableText(
+                                                stringResId = R.string.feat_qs_tiles_title,
                                                 style = MaterialTheme.typography.bodyMedium,
                                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                                                 maxLines = 1,

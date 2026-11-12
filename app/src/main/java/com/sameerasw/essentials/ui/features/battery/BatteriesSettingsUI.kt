@@ -43,6 +43,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.utils.HapticUtil
@@ -190,8 +191,8 @@ fun BatteriesSettingsUI(
         }
 
         run {
-            Text(
-                text = stringResource(R.string.bt_device_icons_title),
+            TranslatableText(
+                stringResId = R.string.bt_device_icons_title,
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(start = 16.dp, bottom = 0.dp),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -200,8 +201,8 @@ fun BatteriesSettingsUI(
         }
 
         // Max Devices Slider
-        Text(
-            text = stringResource(R.string.limit_max_devices),
+        TranslatableText(
+            stringResId = R.string.limit_max_devices,
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(start = 16.dp, bottom = 0.dp),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -221,8 +222,8 @@ fun BatteriesSettingsUI(
                         containerColor = MaterialTheme.colorScheme.surfaceBright,
                     ),
                 content = {
-                    Text(
-                        text = stringResource(R.string.limit_max_devices_summary),
+                    TranslatableText(
+                        stringResId = R.string.limit_max_devices_summary,
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )

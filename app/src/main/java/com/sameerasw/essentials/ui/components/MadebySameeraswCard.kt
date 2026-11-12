@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials.ui.components
 
+import androidx.compose.ui.res.stringResource
 import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -43,6 +44,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.theme.GoogleSansFlexRounded
 
 /**
@@ -105,7 +107,7 @@ fun MadebySameeraswCard(modifier: Modifier = Modifier) {
                 ) {
                     Image(
                         painter = painterResource(id = R.drawable.avatar),
-                        contentDescription = "Subreddit Avatar",
+                        contentDescription = stringResource(R.string.content_desc_subreddit_avatar),
                         modifier =
                             Modifier
                                 .fillMaxSize()
@@ -138,8 +140,8 @@ fun MadebySameeraswCard(modifier: Modifier = Modifier) {
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                Text(
-                    text = "A place to discuss about Essentials and other apps by me. Join the community and contribute to the projects, get help and learn a thing or two. ( ´ \u25BD ` )\uff89",
+                TranslatableText(
+                    stringResId = R.string.subreddit_description,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Center,

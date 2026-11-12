@@ -10,6 +10,7 @@
 package com.sameerasw.essentials.ui.activities
 
 import androidx.compose.ui.platform.LocalContext
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.navigation.findFragmentActivity
 import com.sameerasw.essentials.ui.navigation.ProvideBottomBar
 import com.sameerasw.essentials.ui.navigation.BottomBarSpec
@@ -451,8 +452,8 @@ fun AutomationEditorScreen(
         if (showDiscardDialog) {
             AlertDialog(
                 onDismissRequest = { showDiscardDialog = false },
-                title = { Text(stringResource(R.string.diy_discard_warning_title)) },
-                text = { Text(stringResource(R.string.diy_discard_warning_desc)) },
+                title = { TranslatableText(R.string.diy_discard_warning_title) },
+                text = { TranslatableText(R.string.diy_discard_warning_desc) },
                 confirmButton = {
                     TextButton(
                         onClick = {
@@ -461,8 +462,8 @@ fun AutomationEditorScreen(
                             onBack()
                         },
                     ) {
-                        Text(
-                            text = stringResource(R.string.translation_discard),
+                        TranslatableText(
+                            stringResId = R.string.translation_discard,
                             color = MaterialTheme.colorScheme.error,
                         )
                     }
@@ -474,7 +475,7 @@ fun AutomationEditorScreen(
                             showDiscardDialog = false
                         },
                     ) {
-                        Text(stringResource(R.string.action_cancel))
+                        TranslatableText(R.string.action_cancel)
                     }
                 },
             )
@@ -710,8 +711,8 @@ fun AutomationEditorScreen(
                                         verticalArrangement = Arrangement.spacedBy(16.dp),
                                     ) {
                                         Spacer(modifier = Modifier.height(statusBarHeight + 4.dp))
-                                        Text(
-                                            text = stringResource(R.string.diy_create_app_title),
+                                        TranslatableText(
+                                            stringResId = R.string.diy_create_app_title,
                                             style = MaterialTheme.typography.titleLarge,
                                             fontWeight = FontWeight.Bold,
                                             color = MaterialTheme.colorScheme.onSurface,
@@ -729,7 +730,7 @@ fun AutomationEditorScreen(
                                             value = searchQuery,
                                             onValueChange = { searchQuery = it },
                                             modifier = Modifier.fillMaxWidth(),
-                                            placeholder = { Text(stringResource(R.string.label_search)) },
+                                            placeholder = { TranslatableText(R.string.label_search) },
                                             leadingIcon = {
                                                 Icon(
                                                     painter = painterResource(id = R.drawable.rounded_search_24),
@@ -759,8 +760,8 @@ fun AutomationEditorScreen(
                                                 modifier = Modifier.size(24.dp),
                                                 tint = MaterialTheme.colorScheme.onSurfaceVariant,
                                             )
-                                            Text(
-                                                text = stringResource(R.string.toggle_show_system_apps),
+                                            TranslatableText(
+                                                stringResId = R.string.toggle_show_system_apps,
                                                 style = MaterialTheme.typography.bodyLarge,
                                                 modifier = Modifier.weight(1f),
                                                 color = MaterialTheme.colorScheme.onSurface,
@@ -837,8 +838,8 @@ fun AutomationEditorScreen(
                                         verticalArrangement = Arrangement.spacedBy(16.dp),
                                     ) {
                                         Spacer(modifier = Modifier.height(statusBarHeight + 4.dp))
-                                        Text(
-                                            text = stringResource(R.string.diy_select_trigger),
+                                        TranslatableText(
+                                            stringResId = R.string.diy_select_trigger,
                                             style = MaterialTheme.typography.titleLarge,
                                             fontWeight = FontWeight.Bold,
                                             color = MaterialTheme.colorScheme.onSurface,
@@ -917,8 +918,8 @@ fun AutomationEditorScreen(
                                         verticalArrangement = Arrangement.spacedBy(16.dp),
                                     ) {
                                         Spacer(modifier = Modifier.height(statusBarHeight + 4.dp))
-                                        Text(
-                                            text = stringResource(R.string.diy_select_trigger),
+                                        TranslatableText(
+                                            stringResId = R.string.diy_select_trigger,
                                             style = MaterialTheme.typography.titleLarge,
                                             fontWeight = FontWeight.Bold,
                                             color = MaterialTheme.colorScheme.onSurface,
@@ -1271,8 +1272,8 @@ fun AutomationEditorScreen(
                                     verticalArrangement = Arrangement.spacedBy(16.dp),
                                 ) {
                                     Spacer(modifier = Modifier.height(statusBarHeight + 4.dp))
-                                    Text(
-                                        text = stringResource(R.string.diy_select_action),
+                                    TranslatableText(
+                                        stringResId = R.string.diy_select_action,
                                         style = MaterialTheme.typography.titleLarge,
                                         fontWeight = FontWeight.Bold,
                                         color = MaterialTheme.colorScheme.onSurface,
@@ -1581,14 +1582,14 @@ private fun AutomationTypePicker(
                     FilterChip(
                         selected = isSelected,
                         onClick = { if (!isSelected) onSelected(type) },
-                        label = { Text(stringResource(label)) },
+                        label = { TranslatableText(label) },
                     )
                 } else if (type != Automation.Type.PIXEL_SEARCHBAR) {
                     FilterChip(
                         selected = false,
                         onClick = {},
                         enabled = false,
-                        label = { Text(stringResource(label)) },
+                        label = { TranslatableText(label) },
                     )
                 }
             }

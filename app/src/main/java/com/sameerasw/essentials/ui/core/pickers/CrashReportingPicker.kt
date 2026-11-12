@@ -43,6 +43,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.translation.TranslationManager
 import com.sameerasw.essentials.translation.ui.TranslationBottomSheet
 import com.sameerasw.essentials.translation.ui.TranslationMenuItems
@@ -112,8 +113,8 @@ fun CrashReportingPicker(
                 ),
             content = {
                 Box {
-                    Text(
-                        text = stringResource(R.string.sentry_report_mode_title),
+                    TranslatableText(
+                        stringResId = R.string.sentry_report_mode_title,
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurface,
                     )

@@ -56,6 +56,7 @@ import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import coil.request.ImageRequest
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.theme.Shapes
 import com.sameerasw.essentials.utils.DeviceInfo
@@ -163,8 +164,8 @@ fun DeviceHeroCard(
                                 modifier = Modifier.size(24.dp),
                             )
                             Spacer(modifier = Modifier.width(12.dp))
-                            Text(
-                                text = stringResource(R.string.app_medrop),
+                            TranslatableText(
+                                stringResId = R.string.app_medrop,
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.SemiBold,
                             )
@@ -223,29 +224,36 @@ fun DeviceHeroCard(
             horizontalArrangement = Arrangement.Center,
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(
-                    text = "Android ${deviceInfo.androidVersion} (${
-                        DeviceUtils.getOSName(
-                            deviceInfo.sdkInt,
-                            deviceInfo.osCodename,
-                        )
-                    })",
+                TranslatableText(
+                    stringResId = R.string.device_android_version,
+                    formatArgs =
+                        listOf(
+                            deviceInfo.androidVersion,
+                            DeviceUtils.getOSName(
+                                deviceInfo.sdkInt,
+                                deviceInfo.osCodename,
+                            ),
+                        ),
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.primary,
                 )
-                Text(
-                    text = "API ${deviceInfo.sdkInt} • Patch: ${
-                        DeviceUtils.formatSecurityPatch(
-                            deviceInfo.securityPatch,
-                        )
-                    }",
+                TranslatableText(
+                    stringResId = R.string.device_api_patch,
+                    formatArgs =
+                        listOf(
+                            deviceInfo.sdkInt.toString(),
+                            DeviceUtils.formatSecurityPatch(
+                                deviceInfo.securityPatch,
+                            ),
+                        ),
                     style = MaterialTheme.typography.labelMedium,
                     fontWeight = FontWeight.Medium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
-                Text(
-                    text = "Build: ${deviceInfo.display}",
+                TranslatableText(
+                    stringResId = R.string.device_build,
+                    formatArgs = listOf(deviceInfo.display),
                     style = MaterialTheme.typography.labelSmall,
                     fontWeight = FontWeight.Normal,
                     color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f),
@@ -295,8 +303,8 @@ fun DeviceHeroCard(
                             modifier = Modifier.size(24.dp),
                         )
                         Column(horizontalAlignment = Alignment.Start) {
-                            Text(
-                                text = stringResource(R.string.label_device_storage),
+                            TranslatableText(
+                                stringResId = R.string.label_device_storage,
                                 style = MaterialTheme.typography.labelSmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
@@ -321,8 +329,8 @@ fun DeviceHeroCard(
                             modifier = Modifier.size(24.dp),
                         )
                         Column(horizontalAlignment = Alignment.Start) {
-                            Text(
-                                text = stringResource(R.string.label_device_ram),
+                            TranslatableText(
+                                stringResId = R.string.label_device_ram,
                                 style = MaterialTheme.typography.labelSmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
@@ -459,8 +467,8 @@ private fun FlashbangDialog(
     androidx.compose.material3.AlertDialog(
         onDismissRequest = onDismiss,
         title = {
-            Text(
-                text = stringResource(id = R.string.label_device_check),
+            TranslatableText(
+                stringResId = R.string.label_device_check,
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
             )
@@ -471,8 +479,8 @@ private fun FlashbangDialog(
                 verticalArrangement = Arrangement.spacedBy(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                Text(
-                    text = stringResource(id = R.string.msg_flashbang),
+                TranslatableText(
+                    stringResId = R.string.msg_flashbang,
                     style = MaterialTheme.typography.bodyLarge,
                     textAlign = androidx.compose.ui.text.style.TextAlign.Center,
                 )
@@ -500,7 +508,7 @@ private fun FlashbangDialog(
                     onContinue()
                 },
             ) {
-                Text(text = stringResource(id = R.string.action_continue))
+                TranslatableText(stringResId = R.string.action_continue)
             }
         },
         dismissButton = {
@@ -510,7 +518,7 @@ private fun FlashbangDialog(
                     onDismiss()
                 },
             ) {
-                Text(text = stringResource(id = R.string.action_abort))
+                TranslatableText(stringResId = R.string.action_abort)
             }
         },
     )

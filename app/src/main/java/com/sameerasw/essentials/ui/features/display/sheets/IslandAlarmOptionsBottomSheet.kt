@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalView
@@ -23,6 +22,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.SettingsRepository
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
 import com.sameerasw.essentials.ui.core.cards.ConfigPickerItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
@@ -51,8 +51,8 @@ fun IslandAlarmOptionsBottomSheet(
                     .padding(bottom = 24.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            Text(
-                text = stringResource(R.string.island_alarm_options_title),
+            TranslatableText(
+                stringResId = R.string.island_alarm_options_title,
                 style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.padding(start = 8.dp, bottom = 4.dp),
@@ -70,7 +70,7 @@ fun IslandAlarmOptionsBottomSheet(
                 ) {
                     ALARM_WINDOW_OPTIONS.forEach { hours ->
                         SegmentedDropdownMenuItem(
-                            text = { Text(stringResource(R.string.island_alarm_window_hours, hours)) },
+                            text = { TranslatableText(R.string.island_alarm_window_hours, formatArgs = listOf(hours)) },
                             onClick = {
                                 HapticUtil.performVirtualKeyHaptic(view)
                                 viewModel.setIslandAlarmWindowHours(hours)

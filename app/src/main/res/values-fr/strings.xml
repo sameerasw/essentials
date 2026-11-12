@@ -612,7 +612,6 @@
     <string name="perm_battery_optimization_title">Optimisation de la batterie</string>
     <string name="perm_battery_optimization_desc">Assure que le service ne soit pas fermé par le système pour économise de l\'énergie.</string>
     <!-- Tabs -->
-    <string name="tab_essentials">Essentials</string>
     <string name="tab_freeze">Gel d\'applis</string>
     <string name="tab_freeze_title">Gel d\'applis</string>
     <string name="tab_diy">DIY</string>
@@ -1394,7 +1393,7 @@ Réinitialiser permet d\'effacer les valeurs personnalisées et le système gér
     <string name="about_desc_live_wallpaper">Set your favorite video as your home screen wallpaper. Choose between triggering the animation upon unlocking or simply whenever the screen turns on for a dynamic experience.</string>
     <!-- Shut-Up! Feature -->
     <string name="feat_shut_up_title">Tais toi !</string>
-    <string name="feat_shut_up_desc">Je sais ce que je fait</string>
+    <string name="feat_shut_up_desc">Je sais ce que je fais</string>
     <string name="shut_up_description">Shut-Up! bypasses app restrictions and checks for developer options, accessibility and debugging by dynamically hiding them when you launch sensitive apps. \n\nUse the custom shortcuts to ensure settings are hidden before the app launches.</string>
     <string name="shut_up_select_apps_title">Sélectionner les applications</string>
     <string name="shut_up_select_apps_desc">Sélectionner les apps auxquelles appliquer Tais-toi !</string>
@@ -1547,6 +1546,7 @@ Réinitialiser permet d\'effacer les valeurs personnalisées et le système gér
     <string name="watch_watchface_desc">Customiser le cadran</string>
     <string name="watchface_clock_font_size">Taille de la police</string>
     <string name="watchface_clock_dual_tone_desc">Heures en blanc, minutes colorées</string>
+    <string name="watchface_clock_24h_title">24-hour clock</string>
     <string name="watchface_clock_dual_tone_title">Bicolore</string>
     <string name="watchface_hide_battery_title">Cacher la batterie </string>
     <string name="watchface_hide_battery_desc">Cacher l\'arc de la batterie et son indicateur </string>
@@ -1686,7 +1686,7 @@ Note que en activant ça peut casser les widgets At a Glance du launcher (Comme 
     <string name="label_battery_section_specs">Spécifications</string>
     <string name="label_auto_reset_battery_stats_title">Réinitialisation automatique</string>
     <string name="label_auto_reset_battery_stats_desc">Réinitialise automatiquement les statistiques de la batterie quand l\'appareil est débranché au dessus de % c de charge.</string>
-    <string name="flashlight_pulse_disable_on_dnd_title">Ne pas activer lorsqu\'en mode Ne pas déranger.</string>
+    <string name="flashlight_pulse_disable_on_dnd_title">Ne pas déclencher en mode Ne pas déranger.</string>
     <string name="hilight_notifications_desc">Allumer la LED avec un effet différent pour chaque application</string>
     <string name="hilight_only_screen_off_title">Activer seulement lorsque l\'écran est éteint.</string>
     <string name="hilight_cooldown_title">Délai </string>
@@ -1739,7 +1739,7 @@ Les effets de la LED HiLight peuvent être aussi utilisés comme une action dans
     <string name="about_desc_flashlight">Get more control over your flashlight.\n\nAdjust the brightness, fade it in and out smoothly, and use the volume keys to change the intensity. Show the brightness as a live update in the status bar.\n\nTurn it off automatically when your phone is in a pocket, lower the brightness during long use to prevent overheating, or always turn it off, even while the display is on.\n\nBrightness control needs hardware support that some devices lack.</string>
     <string name="about_desc_face_illumination">Helps face unlock recognize you in the dark.\n\nWhen the screen wakes up in low light, Essentials lights up the screen with a soft tinted glow so the front camera can see your face. You can set the ambient light threshold that decides when it kicks in, pick the light tint, and choose whether it illuminates automatically on wake-up or only when you trigger it.\n\nIt can also trigger the unlock for you. Accessibility permission is required.</string>
     <string name="about_desc_link_actions">Choose how links open instead of being stuck with one app.\n\nWhen you open a link, Essentials lets you pick between multiple apps to handle it, with the option to open it in a bubble, copy it, share it or shorten it and create a QR code.</string>
-    <string name="about_desc_daily_wallpaper">Keep your wallpaper fresh with a daily curated wallpaper, or set a live wallpaper.\n\nPick your wallpaper, review and queue tomorrow\'s wallpaper before it is applied, and manage your live wallpaper from one place.</string>
+    <string name="about_desc_daily_wallpaper">Keep your wallpaper fresh with a daily curated wallpaper, or set a live wallpaper.\n\nPick your wallpaper, review and queue the next wallpaper before it is applied, and manage your live wallpaper from one place.</string>
     <string name="about_desc_watch">Integrations between your phone and your Wear OS watch.\n\nInstall the Essentials companion on your watch to sync notifications and calls, lock your phone from the watch, customize the watchface and complications, sync sound mode and location status, install an eSIM and turn on wireless debugging remotely.</string>
     <string name="about_desc_network_download_rate_limit">Limit the system-wide download speed.\n\nUseful to stop large downloads and updates from using all of your bandwidth. Requires advanced permissions such as Shizuku or root.</string>
     <string name="about_desc_mobile_data_always_on">Keeps mobile data active even while connected to Wi-Fi.\n\nThis lets your phone switch to mobile data instantly when the Wi-Fi connection gets weak or drops, at the cost of some extra battery use.</string>
@@ -1782,7 +1782,7 @@ Les effets de la LED HiLight peuvent être aussi utilisés comme une action dans
     <string name="island_keep_on_landscape_title">Garder en mode portrait</string>
     <string name="island_animation_speed_title">Vitesse des animations</string>
     <string name="island_themed_text_title">Couleur de texte personnalisée</string>
-    <string name="island_media_use_art_color_title">Advertise album art color</string>
+    <string name="island_media_use_art_color_title">Use album art color</string>
     <string name="island_media_player_style_title">Player style</string>
     <string name="island_hide_media_in_owner_app_title">Hide media player inside the app</string>
     <string name="island_show_on_update_title">Periodically show on updates</string>
@@ -1811,8 +1811,15 @@ Les effets de la LED HiLight peuvent être aussi utilisés comme une action dans
     <string name="island_media_bubble_wide_title">Wider pill</string>
     <string name="island_media_bubble_fill_art_title">Fill album art</string>
     <string name="island_transparency_title">Island transparency</string>
+    <string name="island_transparency_intensity_title">Transparency intensity</string>
+    <string name="island_backdrop_blur_title">Backdrop blur</string>
+    <string name="island_backdrop_blur_radius_title">Blur amount</string>
     <string name="what_is_this">What is this?</string>
     <string name="label_feature_designed_by">Designed by</string>
     <string name="label_how_to_use">How to use</string>
     <string name="shut_up_how_to_use">1. Grant Write secure settings and Usage access from the permissions prompt. Shizuku is needed for freezing apps.\n\n2. Tap Select Apps and pick the apps that refuse to run with developer options, debugging or accessibility turned on, such as banking or payment apps.\n\n3. Tap an app to choose what gets hidden for it: Developer Options, USB Debugging, Wireless Debugging and Accessibility Services. You can also turn on Auto Freeze to freeze the app after you leave it, and Restore keyboard to switch back to your keyboard afterwards.\n\n4. Tap Create shortcut for each app and add it to your home screen. Always open the app from this shortcut, never from its normal icon, so the settings are turned off before the app starts and can check them.\n\n5. When you leave the app, Shut-Up! waits for the Restoration Delay and then shows a notification. Tap it to turn everything back on. Set Restore mode to Auto if you would rather have the settings restored on their own.\n\nTips: if wireless debugging was turned off, Shizuku may stop working, so enable Attempt Shizuku restart. Use the Keyboard option to pick the keyboard to restore, or leave it on Skip. With Auto Freeze, a notification counts down and lets you freeze now or abort.</string>
+    <string name="batteries_notification_title">Notification de batterie</string>
+    <string name="hilight_cooldown_desc">Attendre ce délai avant de s\'allumer à nouveau pour la même appli</string>
+    <string name="hilight_repeats_title">Répéter</string>
+    <string name="duo_action_horizontal_slide_brightness">Luminosité</string>
 </resources>

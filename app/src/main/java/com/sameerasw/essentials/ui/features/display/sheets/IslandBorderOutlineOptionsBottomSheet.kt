@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalView
@@ -14,6 +13,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.SettingsRepository
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
@@ -43,8 +43,8 @@ fun IslandBorderOutlineOptionsBottomSheet(
                 .padding(bottom = 24.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            Text(
-                text = stringResource(R.string.island_border_outline_title),
+            TranslatableText(
+                stringResId = R.string.island_border_outline_title,
                 style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.padding(start = 8.dp, bottom = 4.dp),
@@ -58,10 +58,10 @@ fun IslandBorderOutlineOptionsBottomSheet(
                         HapticUtil.performUIHaptic(view)
                         viewModel.setIslandBorderOutlineThickness(it)
                     },
-                    valueRange = 1f..5f,
-                    increment = 1f,
+                    valueRange = 0.5f..5f,
+                    increment = 0.5f,
                     iconRes = R.drawable.rounded_line_weight_24,
-                    valueFormatter = { "${it.toInt()} dp" },
+                    valueFormatter = { if (it % 1f == 0f) "${it.toInt()} dp" else "$it dp" },
                 )
 
                 IconToggleItem(

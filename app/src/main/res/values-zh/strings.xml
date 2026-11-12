@@ -609,7 +609,6 @@
     <string name="perm_battery_optimization_title">电池优化</string>
     <string name="perm_battery_optimization_desc">确保服务不会被系统为了省电而终止。</string>
     <!-- Tabs -->
-    <string name="tab_essentials">Essentials</string>
     <string name="tab_freeze">冻结</string>
     <string name="tab_freeze_title">已冻结</string>
     <string name="tab_diy">DIY</string>
@@ -1633,7 +1632,7 @@
     <string name="duo_show_battery_percentage_title">电量显示</string>
     <string name="cat_networks">数据信号强度显示</string>
     <string name="duo_show_time_title">時間</string>
-    <string name="duo_rotate_album_art_title">旋轉專輯封面</string>
+    <string name="duo_rotate_album_art_title">旋转专辑封面</string>
     <string name="duo_show_flashlight_title">手电筒</string>
     <string name="duo_material_you_title">使用 Material You 色彩</string>
     <string name="island_hide_on_shade_title">下拉状态栏时隐藏图标</string>
@@ -1755,7 +1754,7 @@
     <string name="about_desc_flashlight">Get more control over your flashlight.\n\nAdjust the brightness, fade it in and out smoothly, and use the volume keys to change the intensity. Show the brightness as a live update in the status bar.\n\nTurn it off automatically when your phone is in a pocket, lower the brightness during long use to prevent overheating, or always turn it off, even while the display is on.\n\nBrightness control needs hardware support that some devices lack.</string>
     <string name="about_desc_face_illumination">Helps face unlock recognize you in the dark.\n\nWhen the screen wakes up in low light, Essentials lights up the screen with a soft tinted glow so the front camera can see your face. You can set the ambient light threshold that decides when it kicks in, pick the light tint, and choose whether it illuminates automatically on wake-up or only when you trigger it.\n\nIt can also trigger the unlock for you. Accessibility permission is required.</string>
     <string name="about_desc_link_actions">Choose how links open instead of being stuck with one app.\n\nWhen you open a link, Essentials lets you pick between multiple apps to handle it, with the option to open it in a bubble, copy it, share it or shorten it and create a QR code.</string>
-    <string name="about_desc_daily_wallpaper">Keep your wallpaper fresh with a daily curated wallpaper, or set a live wallpaper.\n\nPick your wallpaper, review and queue tomorrow\'s wallpaper before it is applied, and manage your live wallpaper from one place.</string>
+    <string name="about_desc_daily_wallpaper">Keep your wallpaper fresh with a daily curated wallpaper, or set a live wallpaper.\n\nPick your wallpaper, review and queue the next wallpaper before it is applied, and manage your live wallpaper from one place.</string>
     <string name="about_desc_watch">Integrations between your phone and your Wear OS watch.\n\nInstall the Essentials companion on your watch to sync notifications and calls, lock your phone from the watch, customize the watchface and complications, sync sound mode and location status, install an eSIM and turn on wireless debugging remotely.</string>
     <string name="about_desc_network_download_rate_limit">Limit the system-wide download speed.\n\nUseful to stop large downloads and updates from using all of your bandwidth. Requires advanced permissions such as Shizuku or root.</string>
     <string name="about_desc_mobile_data_always_on">Keeps mobile data active even while connected to Wi-Fi.\n\nThis lets your phone switch to mobile data instantly when the Wi-Fi connection gets weak or drops, at the cost of some extra battery use.</string>
@@ -1792,8 +1791,8 @@
     <string name="island_bond_edge_title">置顶并已刘海屏显示</string>
     <string name="island_call_options_title">電話</string>
     <string name="tile_lockdown_mode">鎖定</string>
-    <string name="feat_screenshots_title">螢幕截圖清理</string>
-    <string name="feat_screenshots_desc">將分享過和舊的截圖清掉</string>
+    <string name="feat_screenshots_title">截图清理</string>
+    <string name="feat_screenshots_desc">将分享后或者是旧的截图清理</string>
     <string name="island_notif_filter_apps_title">筛选应用</string>
     <string name="island_notif_skip_silent_title">跳过静音通知</string>
     <string name="island_notif_follow_dnd_title">跟随勿扰模式</string>
@@ -1811,8 +1810,15 @@
     <string name="island_media_bubble_wide_title">Wider pill</string>
     <string name="island_media_bubble_fill_art_title">Fill album art</string>
     <string name="island_transparency_title">Island transparency</string>
+    <string name="island_transparency_intensity_title">Transparency intensity</string>
+    <string name="island_backdrop_blur_title">Backdrop blur</string>
+    <string name="island_backdrop_blur_radius_title">Blur amount</string>
     <string name="what_is_this">What is this?</string>
     <string name="label_feature_designed_by">Designed by</string>
     <string name="label_how_to_use">How to use</string>
     <string name="shut_up_how_to_use">1. Grant Write secure settings and Usage access from the permissions prompt. Shizuku is needed for freezing apps.\n\n2. Tap Select Apps and pick the apps that refuse to run with developer options, debugging or accessibility turned on, such as banking or payment apps.\n\n3. Tap an app to choose what gets hidden for it: Developer Options, USB Debugging, Wireless Debugging and Accessibility Services. You can also turn on Auto Freeze to freeze the app after you leave it, and Restore keyboard to switch back to your keyboard afterwards.\n\n4. Tap Create shortcut for each app and add it to your home screen. Always open the app from this shortcut, never from its normal icon, so the settings are turned off before the app starts and can check them.\n\n5. When you leave the app, Shut-Up! waits for the Restoration Delay and then shows a notification. Tap it to turn everything back on. Set Restore mode to Auto if you would rather have the settings restored on their own.\n\nTips: if wireless debugging was turned off, Shizuku may stop working, so enable Attempt Shizuku restart. Use the Keyboard option to pick the keyboard to restore, or leave it on Skip. With Auto Freeze, a notification counts down and lets you freeze now or abort.</string>
+    <string name="screenshot_auto_clean_title">自动清理截图</string>
+    <string name="screenshot_auto_clean_note">每新的截图都会以静音通知的形式保留它，有星标的截图将会保留</string>
+    <string name="screenshots_cleaned_count_title">截图清理</string>
+    <string name="screenshots_storage_saved_title">截图保留</string>
 </resources>

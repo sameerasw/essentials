@@ -28,12 +28,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -42,6 +44,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonGroupDefaults
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
@@ -54,6 +57,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -66,9 +70,19 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.translation.TranslatableText
+import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenu
+import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
+import com.sameerasw.essentials.data.repository.BugReportRepository
+import com.sameerasw.essentials.data.repository.SettingsRepository
+import com.sameerasw.essentials.domain.model.github.BugReportAutoFill
+import com.sameerasw.essentials.domain.model.github.BugReportFieldOptions
+import com.sameerasw.essentials.domain.model.github.BugReportFormIds
+import com.sameerasw.essentials.domain.model.github.BugReportIssueFormatter
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.theme.Shapes
 import com.sameerasw.essentials.utils.HapticUtil
@@ -76,6 +90,7 @@ import com.sameerasw.essentials.utils.LogManager
 import com.sameerasw.essentials.viewmodels.MainViewModel
 import io.sentry.Sentry
 import io.sentry.protocol.Feedback
+import kotlinx.coroutines.launch
 import org.json.JSONObject
 import java.io.File
 import java.text.SimpleDateFormat
@@ -87,6 +102,7 @@ import java.util.Locale
 fun BugReportBottomSheet(
     viewModel: MainViewModel,
     onDismissRequest: () -> Unit,
+    sourceFeature: String? = null,
 ) {
     val context = LocalContext.current
     val view = LocalView.current
@@ -94,6 +110,13 @@ fun BugReportBottomSheet(
     var deviceInfoString by remember { mutableStateOf("") }
     var feedbackMessage by remember { mutableStateOf("") }
     var contactEmail by remember { mutableStateOf("") }
+
+    val bugReportRepository = remember { BugReportRepository() }
+    val gitHubToken = remember { SettingsRepository(context).getGitHubToken() }
+    val coroutineScope = rememberCoroutineScope()
+    var fieldOptions by remember { mutableStateOf(BugReportFieldOptions.DEFAULT) }
+    var issueFields by remember { mutableStateOf(BugReportAutoFill.initial(context, BugReportFieldOptions.DEFAULT)) }
+    var isCreatingIssue by remember { mutableStateOf(false) }
 
     var isDeviceInfoExpanded by remember { mutableStateOf(false) }
     var isCrashReportsExpanded by remember { mutableStateOf(false) }
@@ -127,11 +150,100 @@ fun BugReportBottomSheet(
         }
     }
 
+    LaunchedEffect(Unit) {
+        val fetched = bugReportRepository.fetchFieldOptions(gitHubToken)
+        fieldOptions = fetched
+        issueFields = issueFields.reconcileWith(fetched)
+    }
+
+    val readSelectedCrashLog: () -> String? = {
+        selectedCrashReport?.let { file ->
+            try {
+                file.readText().trim()
+            } catch (e: Exception) {
+                "Failed to read crash log: ${e.message}"
+            }
+        }
+    }
+
+    val openPrefilledIssueForm: () -> Unit = {
+        val additional =
+            BugReportIssueFormatter
+                .additionalContext(deviceInfoString, selectedCrashReport?.name, readSelectedCrashLog())
+                .let { if (it.length > MAX_PREFILL_CONTEXT_LENGTH) it.take(MAX_PREFILL_CONTEXT_LENGTH) + "\n…" else it }
+        val params =
+            buildList {
+                add("template" to "bug_report.yml")
+                if (feedbackMessage.isNotBlank()) {
+                    add("title" to BugReportIssueFormatter.title(feedbackMessage, sourceFeature))
+                    add(BugReportFormIds.DESCRIPTION to BugReportIssueFormatter.describe(feedbackMessage, sourceFeature))
+                }
+                issueFields.severity?.let { add(BugReportFormIds.SEVERITY to it) }
+                issueFields.androidVersion?.let { add(BugReportFormIds.ANDROID_VERSION to it) }
+                issueFields.oem?.let { add(BugReportFormIds.OEM to it) }
+                issueFields.area?.let { add(BugReportFormIds.AREA to it) }
+                add(BugReportFormIds.DEVICE to issueFields.device.trim())
+                add(BugReportFormIds.APP_VERSION to issueFields.appVersion.trim())
+                add(BugReportFormIds.ADDITIONAL to additional)
+            }
+        val uri =
+            Uri
+                .parse("https://github.com/sameerasw/essentials/issues/new")
+                .buildUpon()
+                .apply { params.forEach { (key, value) -> appendQueryParameter(key, value) } }
+                .build()
+        context.startActivity(Intent(Intent.ACTION_VIEW, uri))
+    }
+
+    val reportOnGitHub: () -> Unit = report@{
+        val token = gitHubToken
+        if (token == null) {
+            openPrefilledIssueForm()
+            return@report
+        }
+        if (feedbackMessage.isBlank() || issueFields.severity == null) {
+            Toast
+                .makeText(context, R.string.bug_report_github_missing_fields, Toast.LENGTH_SHORT)
+                .show()
+            return@report
+        }
+        isCreatingIssue = true
+        coroutineScope.launch {
+            val issueUrl =
+                bugReportRepository.createIssue(
+                    token = token,
+                    title = BugReportIssueFormatter.title(feedbackMessage, sourceFeature),
+                    body =
+                        BugReportIssueFormatter.body(
+                            description = BugReportIssueFormatter.describe(feedbackMessage, sourceFeature),
+                            fields = issueFields,
+                            additionalContext =
+                                BugReportIssueFormatter.additionalContext(
+                                    deviceInfoString,
+                                    selectedCrashReport?.name,
+                                    readSelectedCrashLog(),
+                                ),
+                        ),
+                    fieldValues = issueFields.asIssueFieldValues(),
+                    fieldIds = fieldOptions.fieldIds,
+                )
+            isCreatingIssue = false
+            if (issueUrl != null) {
+                Toast.makeText(context, R.string.bug_report_github_created, Toast.LENGTH_SHORT).show()
+                context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(issueUrl)))
+                onDismissRequest()
+            } else {
+                Toast.makeText(context, R.string.bug_report_github_failed, Toast.LENGTH_SHORT).show()
+                openPrefilledIssueForm()
+            }
+        }
+    }
+
     val buildFullReportText: () -> String = {
         buildString {
             if (feedbackMessage.isNotBlank()) {
                 append("User Feedback:\n")
-                append(feedbackMessage.trim())
+                append(BugReportIssueFormatter.describe(feedbackMessage, sourceFeature))
                 append("\n\n")
             }
             if (contactEmail.isNotBlank()) {
@@ -179,22 +291,43 @@ fun BugReportBottomSheet(
 
     EssentialsBottomSheet(
         onDismissRequest = onDismissRequest,
+        edgeToEdge = true,
     ) {
         Column(
             modifier =
                 Modifier
                     .fillMaxWidth()
-                    .imePadding()
                     .padding(horizontal = 16.dp)
-                    .padding(bottom = 36.dp)
                     .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Text(
-                text = stringResource(R.string.bug_report_title),
-                style = MaterialTheme.typography.headlineMedium,
-            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterHorizontally),
+            ) {
+                TranslatableText(
+                    stringResId = R.string.bug_report_title,
+                    style = MaterialTheme.typography.headlineMedium,
+                )
+
+                if (sourceFeature != null) {
+                    TranslatableText(
+                        stringResId = R.string.bug_report_source_feature,
+                        formatArgs = listOf(sourceFeature),
+                        style = MaterialTheme.typography.labelLarge,
+                        color = MaterialTheme.colorScheme.primary,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier =
+                            Modifier
+                                .weight(1f, fill = false)
+                                .clip(CircleShape)
+                                .background(MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.4f))
+                                .padding(horizontal = 12.dp, vertical = 6.dp),
+                    )
+                }
+            }
 
             // Segmented Input Fields Container (Describe issue + Contact email)
             RoundedCardContainer(spacing = 2.dp) {
@@ -210,7 +343,7 @@ fun BugReportBottomSheet(
                     OutlinedTextField(
                         value = feedbackMessage,
                         onValueChange = { feedbackMessage = it },
-                        label = { Text(stringResource(R.string.bug_report_feedback_placeholder)) },
+                        label = { TranslatableText(R.string.bug_report_feedback_placeholder) },
                         modifier = Modifier.fillMaxWidth(),
                         shape = MaterialTheme.shapes.large,
                         minLines = 3,
@@ -229,11 +362,71 @@ fun BugReportBottomSheet(
                     OutlinedTextField(
                         value = contactEmail,
                         onValueChange = { contactEmail = it },
-                        label = { Text(stringResource(R.string.bug_report_contact_email_label)) },
+                        label = { TranslatableText(R.string.bug_report_contact_email_label) },
                         modifier = Modifier.fillMaxWidth(),
                         shape = MaterialTheme.shapes.large,
                         singleLine = true,
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+                    )
+                }
+            }
+
+            RoundedCardContainer(spacing = 2.dp) {
+                Column(
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .background(
+                                color = MaterialTheme.colorScheme.surfaceBright,
+                                shape = Shapes.extraSmall,
+                            ).padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                ) {
+                    TranslatableText(
+                        stringResId = R.string.bug_report_issue_details,
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.SemiBold,
+                        color = MaterialTheme.colorScheme.onSurface,
+                    )
+                    BugReportDropdownField(
+                        label = stringResource(R.string.bug_report_field_severity),
+                        value = issueFields.severity,
+                        options = fieldOptions.severities,
+                        onSelected = { issueFields = issueFields.copy(severity = it) },
+                    )
+                    BugReportDropdownField(
+                        label = stringResource(R.string.bug_report_field_area),
+                        value = issueFields.area,
+                        options = fieldOptions.areas,
+                        onSelected = { issueFields = issueFields.copy(area = it.takeUnless { it == issueFields.area }) },
+                    )
+                    BugReportDropdownField(
+                        label = stringResource(R.string.bug_report_field_android_version),
+                        value = issueFields.androidVersion,
+                        options = fieldOptions.androidVersions,
+                        onSelected = { issueFields = issueFields.copy(androidVersion = it) },
+                    )
+                    BugReportDropdownField(
+                        label = stringResource(R.string.bug_report_field_oem),
+                        value = issueFields.oem,
+                        options = fieldOptions.oems,
+                        onSelected = { issueFields = issueFields.copy(oem = it) },
+                    )
+                    OutlinedTextField(
+                        value = issueFields.device,
+                        onValueChange = { issueFields = issueFields.copy(device = it) },
+                        label = { TranslatableText(R.string.bug_report_field_device) },
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = MaterialTheme.shapes.large,
+                        singleLine = true,
+                    )
+                    OutlinedTextField(
+                        value = issueFields.appVersion,
+                        onValueChange = { issueFields = issueFields.copy(appVersion = it) },
+                        label = { TranslatableText(R.string.bug_report_field_app_version) },
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = MaterialTheme.shapes.large,
+                        singleLine = true,
                     )
                 }
             }
@@ -268,8 +461,8 @@ fun BugReportBottomSheet(
                             tint = MaterialTheme.colorScheme.primary,
                             modifier = Modifier.size(24.dp),
                         )
-                        Text(
-                            text = stringResource(R.string.bug_report_device_info),
+                        TranslatableText(
+                            stringResId = R.string.bug_report_device_info,
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.SemiBold,
                             color = MaterialTheme.colorScheme.onSurface,
@@ -343,8 +536,8 @@ fun BugReportBottomSheet(
                             tint = MaterialTheme.colorScheme.primary,
                             modifier = Modifier.size(24.dp),
                         )
-                        Text(
-                            text = stringResource(R.string.crash_logs_title),
+                        TranslatableText(
+                            stringResId = R.string.crash_logs_title,
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.SemiBold,
                             color = MaterialTheme.colorScheme.onSurface,
@@ -396,8 +589,8 @@ fun BugReportBottomSheet(
                                         ).padding(16.dp),
                                 contentAlignment = Alignment.Center,
                             ) {
-                                Text(
-                                    text = stringResource(R.string.toast_no_crash_logs),
+                                TranslatableText(
+                                    stringResId = R.string.toast_no_crash_logs,
                                     style = MaterialTheme.typography.bodyMedium,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 )
@@ -489,8 +682,8 @@ fun BugReportBottomSheet(
                                     modifier = Modifier.size(20.dp),
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
-                                Text(
-                                    text = stringResource(R.string.btn_clear_all_crash_logs),
+                                TranslatableText(
+                                    stringResId = R.string.btn_clear_all_crash_logs,
                                     style = MaterialTheme.typography.labelLarge,
                                 )
                             }
@@ -508,7 +701,12 @@ fun BugReportBottomSheet(
                     onClick = {
                         HapticUtil.performUIHaptic(view)
                         val feedbackText = buildString {
-                            append(feedbackMessage)
+                            append(BugReportIssueFormatter.describe(feedbackMessage, sourceFeature))
+                            append("\n\n")
+                            issueFields.asIssueFieldValues().forEach { (name, value) ->
+                                append("$name: $value\n")
+                            }
+                            if (issueFields.device.isNotBlank()) append("Device: ${issueFields.device.trim()}\n")
                             if (selectedCrashReport != null) {
                                 append("\n\n--- Attached Crash Log (${selectedCrashReport?.name}) ---\n")
                                 try {
@@ -537,11 +735,11 @@ fun BugReportBottomSheet(
                         modifier = Modifier.size(24.dp),
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text(stringResource(R.string.action_send_feedback))
+                    TranslatableText(R.string.action_send_feedback)
                 }
 
-                Text(
-                    text = stringResource(R.string.label_alternatively),
+                TranslatableText(
+                    stringResId = R.string.label_alternatively,
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.outline,
                     modifier = Modifier.padding(top = 4.dp),
@@ -554,32 +752,9 @@ fun BugReportBottomSheet(
                     Button(
                         onClick = {
                             HapticUtil.performUIHaptic(view)
-                            val body = buildString {
-                                if (feedbackMessage.isNotBlank()) {
-                                    append("Feedback:\n$feedbackMessage\n\n")
-                                }
-                                if (contactEmail.isNotBlank()) {
-                                    append("Contact: $contactEmail\n\n")
-                                }
-                                append("Device Info:\n$deviceInfoString\n\n")
-                                if (selectedCrashReport != null) {
-                                    append("Crash Log (${selectedCrashReport?.name}):\n")
-                                    try {
-                                        append(selectedCrashReport?.readText()?.trim())
-                                    } catch (e: Exception) {
-                                        append("Failed to read crash log: ${e.message}")
-                                    }
-                                    append("\n\n")
-                                }
-                            }
-                            val encodedBody = Uri.encode(body)
-                            val intent =
-                                Intent(
-                                    Intent.ACTION_VIEW,
-                                    Uri.parse("https://github.com/sameerasw/essentials/issues/new?body=$encodedBody"),
-                                )
-                            context.startActivity(intent)
+                            reportOnGitHub()
                         },
+                        enabled = !isCreatingIssue,
                         modifier =
                             Modifier
                                 .weight(1f)
@@ -591,11 +766,18 @@ fun BugReportBottomSheet(
                                 contentColor = MaterialTheme.colorScheme.onSurface,
                             ),
                     ) {
-                        Icon(
-                            painter = painterResource(R.drawable.brand_github),
-                            contentDescription = stringResource(R.string.action_report_github),
-                            modifier = Modifier.size(22.dp),
-                        )
+                        if (isCreatingIssue) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(20.dp),
+                                strokeWidth = 2.dp,
+                            )
+                        } else {
+                            Icon(
+                                painter = painterResource(R.drawable.brand_github),
+                                contentDescription = stringResource(R.string.action_report_github),
+                                modifier = Modifier.size(22.dp),
+                            )
+                        }
                     }
 
                     Button(
@@ -608,7 +790,7 @@ fun BugReportBottomSheet(
                                     append(contactLine)
                                 }
                                 if (feedbackMessage.isNotBlank()) {
-                                    append("Feedback:\n$feedbackMessage\n\n")
+                                    append("Feedback:\n${BugReportIssueFormatter.describe(feedbackMessage, sourceFeature)}\n\n")
                                 }
                                 append("Device Info:\n$deviceInfoString\n\n")
                                 if (selectedCrashReport != null) {
@@ -693,7 +875,7 @@ fun BugReportBottomSheet(
                                 Toast
                                     .makeText(
                                         context,
-                                        e.localizedMessage ?: "Failed to share report",
+                                        e.localizedMessage ?: context.getString(R.string.bug_report_share_failed),
                                         Toast.LENGTH_SHORT,
                                     ).show()
                             }
@@ -744,7 +926,79 @@ fun BugReportBottomSheet(
             }
 
             Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.windowInsetsBottomHeight(WindowInsets.navigationBars))
         }
     }
 }
 
+private const val MAX_PREFILL_CONTEXT_LENGTH = 6000
+
+@Composable
+private fun BugReportDropdownField(
+    label: String,
+    value: String?,
+    options: List<String>,
+    onSelected: (String) -> Unit,
+) {
+    val view = LocalView.current
+    var expanded by remember { mutableStateOf(false) }
+    val chevronRotation by animateFloatAsState(
+        targetValue = if (expanded) 180f else 0f,
+        label = "BugReportDropdownChevron",
+    )
+
+    Box(modifier = Modifier.fillMaxWidth()) {
+        OutlinedTextField(
+            value = value.orEmpty(),
+            onValueChange = {},
+            readOnly = true,
+            singleLine = true,
+            label = { Text(label) },
+            trailingIcon = {
+                Icon(
+                    painter = painterResource(R.drawable.rounded_keyboard_arrow_down_24),
+                    contentDescription = null,
+                    modifier = Modifier.rotate(chevronRotation),
+                )
+            },
+            shape = MaterialTheme.shapes.large,
+            modifier = Modifier.fillMaxWidth(),
+        )
+        // The read-only field swallows taps, so an overlay opens the menu instead.
+        Box(
+            modifier =
+                Modifier
+                    .matchParentSize()
+                    .clip(MaterialTheme.shapes.large)
+                    .clickable {
+                        HapticUtil.performUIHaptic(view)
+                        expanded = true
+                    },
+        )
+        SegmentedDropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false },
+        ) {
+            options.forEach { option ->
+                SegmentedDropdownMenuItem(
+                    text = { Text(option) },
+                    onClick = {
+                        onSelected(option)
+                        expanded = false
+                    },
+                    trailingIcon =
+                        if (option == value) {
+                            {
+                                Icon(
+                                    painter = painterResource(R.drawable.rounded_check_24),
+                                    contentDescription = null,
+                                )
+                            }
+                        } else {
+                            null
+                        },
+                )
+            }
+        }
+    }
+}

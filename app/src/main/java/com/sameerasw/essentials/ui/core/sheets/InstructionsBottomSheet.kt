@@ -26,18 +26,17 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.components.HelpAndGuidesContent
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -60,8 +59,8 @@ fun InstructionsBottomSheet(onDismissRequest: () -> Unit) {
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             item {
-                Text(
-                    text = stringResource(R.string.help_guides_title),
+                TranslatableText(
+                    stringResId = R.string.help_guides_title,
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface,
@@ -75,8 +74,8 @@ fun InstructionsBottomSheet(onDismissRequest: () -> Unit) {
 
             item {
                 Spacer(modifier = Modifier.height(16.dp))
-                Text(
-                    text = stringResource(R.string.need_more_support_reach_out),
+                TranslatableText(
+                    stringResId = R.string.need_more_support_reach_out,
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.padding(bottom = 4.dp),
@@ -107,7 +106,7 @@ fun InstructionsBottomSheet(onDismissRequest: () -> Unit) {
                             modifier = Modifier.size(18.dp),
                         )
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text(stringResource(R.string.action_view_on_github))
+                        TranslatableText(R.string.action_view_on_github)
                     }
 
                     OutlinedButton(
@@ -141,7 +140,7 @@ fun InstructionsBottomSheet(onDismissRequest: () -> Unit) {
                             modifier = Modifier.size(18.dp),
                         )
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text(stringResource(R.string.email_label))
+                        TranslatableText(R.string.email_label)
                     }
 
                     OutlinedButton(
@@ -158,7 +157,7 @@ fun InstructionsBottomSheet(onDismissRequest: () -> Unit) {
                             modifier = Modifier.size(18.dp),
                         )
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text(stringResource(R.string.support_group_label))
+                        TranslatableText(R.string.support_group_label)
                     }
                 }
             }

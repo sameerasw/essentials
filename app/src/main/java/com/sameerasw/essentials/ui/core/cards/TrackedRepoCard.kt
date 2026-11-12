@@ -53,6 +53,7 @@ import androidx.core.graphics.drawable.toBitmap
 import coil.compose.AsyncImage
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.model.TrackedRepo
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenu
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
 import com.sameerasw.essentials.utils.HapticUtil
@@ -208,12 +209,9 @@ fun TrackedRepoCard(
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                     if (isInstalled) {
-                        Text(
-                            text =
-                                stringResource(
-                                    R.string.format_updated_relative,
-                                    TimeUtil.formatRelativeDate(repo.publishedAt, context),
-                                ),
+                        TranslatableText(
+                            stringResId = R.string.format_updated_relative,
+                            formatArgs = listOf(TimeUtil.formatRelativeDate(repo.publishedAt, context)),
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
                             modifier = Modifier.padding(top = 2.dp),
@@ -272,7 +270,7 @@ fun TrackedRepoCard(
             onDismissRequest = { showMenu = false },
         ) {
             SegmentedDropdownMenuItem(
-                text = { Text(stringResource(R.string.action_edit)) },
+                text = { TranslatableText(R.string.action_edit) },
                 onClick = {
                     showMenu = false
                     onClick()
@@ -285,7 +283,7 @@ fun TrackedRepoCard(
                 },
             )
             SegmentedDropdownMenuItem(
-                text = { Text(stringResource(R.string.action_delete)) },
+                text = { TranslatableText(R.string.action_delete) },
                 onClick = {
                     showMenu = false
                     onDeleteClick()

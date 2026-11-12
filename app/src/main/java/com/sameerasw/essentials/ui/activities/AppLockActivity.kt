@@ -9,6 +9,8 @@
 
 package com.sameerasw.essentials
 
+import androidx.compose.ui.res.stringResource
+import com.sameerasw.essentials.R
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
@@ -29,7 +31,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,6 +42,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import coil.compose.AsyncImage
 import com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
 import java.util.concurrent.Executor
 
@@ -105,8 +107,8 @@ class AppLockActivity : AppCompatActivity() {
         promptInfo =
             BiometricPrompt.PromptInfo
                 .Builder()
-                .setTitle("App Lock")
-                .setSubtitle("Unlock to access $appLabel")
+                .setTitle(getString(R.string.feat_app_lock_title))
+                .setSubtitle(getString(R.string.app_lock_unlock_to_access, appLabel))
                 .setAllowedAuthenticators(com.sameerasw.essentials.utils.BiometricHelper.allowedAuthenticators)
                 .setConfirmationRequired(false)
                 .build()
@@ -134,7 +136,7 @@ class AppLockActivity : AppCompatActivity() {
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.rounded_shield_lock_24),
-                        contentDescription = "Lock Icon",
+                        contentDescription = stringResource(R.string.content_desc_lock_icon),
                         tint = MaterialTheme.colorScheme.primary,
                         modifier =
                             Modifier
@@ -144,7 +146,7 @@ class AppLockActivity : AppCompatActivity() {
 
                     AsyncImage(
                         model = R.mipmap.ic_launcher_round,
-                        contentDescription = "Essentials App Icon",
+                        contentDescription = stringResource(R.string.content_desc_essentials_icon),
                         modifier =
                             Modifier
                                 .size(32.dp)
@@ -157,16 +159,16 @@ class AppLockActivity : AppCompatActivity() {
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                Text(
-                    text = "App is locked",
+                TranslatableText(
+                    stringResId = R.string.app_lock_locked_title,
                     style = MaterialTheme.typography.headlineSmall,
                     color = MaterialTheme.colorScheme.onBackground,
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                Text(
-                    text = "Please authenticate to unlock or\ngive the phone to the owner\n( -_-)",
+                TranslatableText(
+                    stringResId = R.string.app_lock_locked_desc,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onBackground,
                     textAlign = TextAlign.Center,

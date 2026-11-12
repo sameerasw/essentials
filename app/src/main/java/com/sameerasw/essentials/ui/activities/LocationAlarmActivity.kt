@@ -44,7 +44,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -52,7 +51,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -60,6 +58,7 @@ import androidx.core.view.WindowCompat
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.LocationReachedRepository
 import com.sameerasw.essentials.services.LocationReachedService
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.utils.HapticUtil
 
 class LocationAlarmActivity : ComponentActivity() {
@@ -277,8 +276,8 @@ fun LocationAlarmScreen(onFinish: () -> Unit) {
 
             Spacer(modifier = Modifier.height(48.dp))
 
-            Text(
-                text = stringResource(R.string.location_reached_alarm_title),
+            TranslatableText(
+                stringResId = R.string.location_reached_alarm_title,
                 style =
                     MaterialTheme.typography.headlineLarge.copy(
                         fontWeight = FontWeight.Black,
@@ -287,8 +286,8 @@ fun LocationAlarmScreen(onFinish: () -> Unit) {
                 color = MaterialTheme.colorScheme.onSurface,
             )
 
-            Text(
-                text = stringResource(R.string.location_reached_alarm_subtitle),
+            TranslatableText(
+                stringResId = R.string.location_reached_alarm_subtitle,
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurface,
             )
@@ -311,8 +310,8 @@ fun LocationAlarmScreen(onFinish: () -> Unit) {
                     contentDescription = null,
                 )
                 Spacer(modifier = Modifier.width(12.dp))
-                Text(
-                    text = stringResource(R.string.location_reached_dismiss),
+                TranslatableText(
+                    stringResId = R.string.location_reached_dismiss,
                     style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
                 )
             }

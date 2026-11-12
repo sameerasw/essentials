@@ -43,6 +43,7 @@ import com.sameerasw.essentials.island.gestures.CompactGestures
 import com.sameerasw.essentials.island.state.IslandUiState
 import com.sameerasw.essentials.island.model.IslandPlugin
 import com.sameerasw.essentials.island.model.IslandPriorityEntries
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.utils.StatusBarManager
 import com.sameerasw.essentials.island.model.IslandPluginContext
 import com.sameerasw.essentials.island.model.IslandStage
@@ -94,9 +95,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.island.model.CompactCell
 import com.sameerasw.essentials.island.model.CompactPlacement
@@ -248,7 +247,10 @@ class IslandCoordinator(
     }
 
     private val powerSaveReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) = pokeStillness()
+        override fun onReceive(context: Context?, intent: Intent?) {
+            pokeStillness()
+            applyConfig()
+        }
     }
 
     private val screenReceiver = object : BroadcastReceiver() {
@@ -348,6 +350,7 @@ class IslandCoordinator(
     private fun onOutsideTouch() {
         if (!running || !settings.isIslandDismissOnOutsideEnabled()) return
         if (textInputActive) return
+        if (settings.getIslandPreviewStage() == SettingsRepository.ISLAND_PREVIEW_STAGE_EXPANDED) return
         if (controller.state.value.stage != IslandStage.Expanded) return
         if (SystemClock.uptimeMillis() - autoExpandedAt < OUTSIDE_DISMISS_GRACE_MS) return
         mainHandler.post { controller.collapse() }
@@ -673,8 +676,8 @@ class IslandCoordinator(
                     .padding(horizontal = 20.dp)
                     .padding(top = scope.spec.expandedTopPadding + scope.spec.compactHeight, bottom = scope.spec.expandedBottomPadding),
             ) {
-                Text(stringResource(R.string.island_preview_sample_title), style = MaterialTheme.typography.titleMedium)
-                Text(stringResource(R.string.island_preview_sample_text), style = MaterialTheme.typography.bodyMedium)
+                TranslatableText(R.string.island_preview_sample_title, style = MaterialTheme.typography.titleMedium)
+                TranslatableText(R.string.island_preview_sample_text, style = MaterialTheme.typography.bodyMedium)
             }
         },
         compactVisible = false,
@@ -765,6 +768,8 @@ class IslandCoordinator(
     }
 
     private fun applyConfig() {
+        val powerSaving = service.getSystemService(PowerManager::class.java)?.isPowerSaveMode == true
+        val transparent = !powerSaving && settings.isIslandTransparencyEnabled()
         val geo = CameraGeometryResolver.resolve(service, wm, settings)
         geometry = geo
         val density = service.resources.displayMetrics.density
@@ -792,6 +797,7 @@ class IslandCoordinator(
             expandedCorner = settings.getIslandExpandedRoundness().dp,
             expandedPadding = settings.getIslandExpandedPadding().dp,
             expandedTopPadding = settings.getIslandExpandedTopPadding().dp,
+            expandedOffsetY = settings.getIslandExpandedOffsetY().coerceIn(0f, 120f).dp,
             expandedBottomPadding = settings.getIslandExpandedBottomPadding().dp,
             expandedScale = scale,
             fontScale = settings.getIslandFontScale().coerceIn(0.8f, 1.3f),
@@ -802,10 +808,14 @@ class IslandCoordinator(
             bondEdge = !geo.hasCamera && settings.isIslandBondEdgeEnabled(),
             balanceCompact = settings.isIslandBalanceCompactEnabled(),
             dismissDown = settings.getIslandDismissDirection() == SettingsRepository.ISLAND_DISMISS_DOWN,
-            neuralExpressive = settings.isIslandTransparencyEnabled() && settings.isIslandNeuralExpressiveEnabled(),
+            neuralExpressive = transparent && settings.isIslandNeuralExpressiveEnabled(),
             neuralExpressiveAlways = settings.isIslandNeuralExpressiveAlwaysEnabled(),
             glowIntensity = if (settings.isIslandShowGlowEnabled()) settings.getIslandGlowIntensity().coerceIn(0f, 2f) else 0f,
-            transparency = settings.isIslandTransparencyEnabled(),
+            transparency = transparent,
+            backdropBlur = transparent && settings.isIslandBackdropBlurEnabled(),
+            backdropBlurRadius = settings.getIslandBackdropBlurRadius().coerceIn(5f, 120f).dp,
+            transparencyIntensity = settings.getIslandTransparencyIntensity().coerceIn(0.25f, 5f),
+            progressiveBlur = transparent && !powerSaving && settings.isIslandProgressiveBlurEnabled(),
             maxExpandedHeight = if (isLandscape) ((geo.screenHeight - geo.surfaceTop) / density - 12f).dp else Dp.Unspecified,
             outlineColor = if (settings.isIslandBorderOutlineEnabled()) {
                 runCatching { Color(AndroidColor.parseColor(settings.getIslandBorderOutlineColor())) }
@@ -814,7 +824,7 @@ class IslandCoordinator(
                 null
             },
             outlineDynamic = settings.isIslandBorderOutlineDynamicEnabled(),
-            outlineThickness = settings.getIslandBorderOutlineThickness().coerceIn(1f, 5f).dp,
+            outlineThickness = settings.getIslandBorderOutlineThickness().coerceIn(0.5f, 5f).dp,
             outlineHiddenWhenExpanded = settings.isIslandBorderOutlineHiddenWhenExpanded(),
             pulseShadow = settings.isIslandPulseShadowEnabled(),
             pulseBlur = settings.getIslandPulseShadowBlur().coerceIn(0f, 48f).dp,
@@ -827,6 +837,7 @@ class IslandCoordinator(
                 else -> QueueStyle.Stack
             },
             queueInline = settings.isIslandNotifQueueInlineEnabled(),
+            bubbleOnRight = settings.getIslandSecondaryBubbleSide() == SettingsRepository.ISLAND_CAMERA_POSITION_RIGHT,
             iconColorCustom = if (iconCustomMode && !iconMaterialYou) {
                 runCatching {
                     Color(AndroidColor.parseColor(settings.getString(SettingsRepository.KEY_ISLAND_ICON_COLOR_CUSTOM, null) ?: "#FFFFFF"))
@@ -850,6 +861,7 @@ class IslandCoordinator(
         controller.secondaryBubbleEnabled = settings.isIslandSecondaryBubbleEnabled()
         controller.secondaryBubbleMax = settings.getIslandNotifHubIcons()
         controller.secondaryBubbleOverlap = settings.getIslandNotifQueueStyle() == SettingsRepository.ISLAND_NOTIF_QUEUE_STYLE_OVERLAP
+        controller.bubbleOnRight = settings.getIslandSecondaryBubbleSide() == SettingsRepository.ISLAND_CAMERA_POSITION_RIGHT
         controller.relayout()
         controller.expandedTimeoutMs = settings.getIslandExpandedTimeoutMs()
         applyPreviewRing()
@@ -959,8 +971,9 @@ class IslandCoordinator(
         val (leftRoom, rightRoom) = sideRooms()
         val left = if (leftRoom == Int.MAX_VALUE) leftRoom else leftRoom - slack
         val right = if (rightRoom == Int.MAX_VALUE) rightRoom else rightRoom - slack
-        val needLeft = need(before, leftExtra)
-        val needRight = need(after, 0)
+        val extraRight = geo.anchor == CameraAnchor.Center && controller.bubbleOnRight
+        val needLeft = need(before, if (extraRight) 0 else leftExtra)
+        val needRight = need(after, if (extraRight) leftExtra else 0)
         if (needLeft > left || needRight > right) return null
         val mirrored = geo.anchor == CameraAnchor.Center && leftExtra == 0
         if (mirrored && maxOf(needLeft, needRight) > minOf(left, right)) return null
@@ -1063,6 +1076,7 @@ class IslandCoordinator(
         val CONFIG_KEYS = setOf(
             SettingsRepository.KEY_ISLAND_NOTIF_THEMED_BUBBLE,
             SettingsRepository.KEY_ISLAND_NOTIF_QUEUE_STYLE,
+            SettingsRepository.KEY_ISLAND_SECONDARY_BUBBLE_SIDE,
             SettingsRepository.KEY_ISLAND_NOTIF_QUEUE_INLINE,
             SettingsRepository.KEY_ISLAND_USE_AUTO_DETECT,
             SettingsRepository.KEY_ISLAND_CAMERA_OFFSET_X,
@@ -1090,6 +1104,7 @@ class IslandCoordinator(
             SettingsRepository.KEY_ISLAND_EXPANDED_ROUNDNESS,
             SettingsRepository.KEY_ISLAND_EXPANDED_PADDING,
             SettingsRepository.KEY_ISLAND_EXPANDED_TOP_PADDING,
+            SettingsRepository.KEY_ISLAND_EXPANDED_OFFSET_Y,
             SettingsRepository.KEY_ISLAND_EXPANDED_BOTTOM_PADDING,
             SettingsRepository.KEY_ISLAND_EXPANDED_TIMEOUT_MS,
             SettingsRepository.KEY_ISLAND_LINE_STAGE_ENABLED,
@@ -1107,11 +1122,16 @@ class IslandCoordinator(
             SettingsRepository.KEY_ISLAND_NEURAL_EXPRESSIVE,
             SettingsRepository.KEY_ISLAND_NEURAL_EXPRESSIVE_ALWAYS,
             SettingsRepository.KEY_ISLAND_TRANSPARENCY,
+            SettingsRepository.KEY_ISLAND_TRANSPARENCY_INTENSITY,
+            SettingsRepository.KEY_ISLAND_BACKDROP_BLUR,
+            SettingsRepository.KEY_ISLAND_BACKDROP_BLUR_RADIUS,
+            SettingsRepository.KEY_ISLAND_PROGRESSIVE_BLUR,
             SettingsRepository.KEY_ISLAND_SHOW_GLOW,
             SettingsRepository.KEY_ISLAND_GLOW_INTENSITY,
             SettingsRepository.KEY_ISLAND_SECONDARY_BUBBLE,
             SettingsRepository.KEY_ISLAND_NOTIF_HUB_ICONS,
             SettingsRepository.KEY_ISLAND_NOTIF_QUEUE_STYLE,
+            SettingsRepository.KEY_ISLAND_SECONDARY_BUBBLE_SIDE,
             SettingsRepository.KEY_ISLAND_MAX_ITEMS,
             SettingsRepository.KEY_ISLAND_STATUSBAR_AWARE_WIDTH,
             SettingsRepository.KEY_ISLAND_STATUSBAR_IGNORE_NOTIFICATIONS,

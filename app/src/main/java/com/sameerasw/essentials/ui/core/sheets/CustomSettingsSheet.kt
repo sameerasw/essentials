@@ -71,6 +71,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.diy.Action
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.utils.ColorUtil
 import com.sameerasw.essentials.utils.HapticUtil
@@ -133,8 +134,8 @@ fun CustomSettingsSheet(
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             // Title Header
-            Text(
-                text = stringResource(R.string.diy_action_custom_settings),
+            TranslatableText(
+                stringResId = R.string.diy_action_custom_settings,
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSurface,
@@ -194,8 +195,8 @@ fun CustomSettingsSheet(
                                     modifier = Modifier.size(24.dp),
                                 )
                             }
-                            Text(
-                                text = stringResource(R.string.diy_custom_settings_how_it_works),
+                            TranslatableText(
+                                stringResId = R.string.diy_custom_settings_how_it_works,
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.SemiBold,
                                 color = MaterialTheme.colorScheme.onSurface,
@@ -225,8 +226,8 @@ fun CustomSettingsSheet(
                                 verticalArrangement = Arrangement.spacedBy(12.dp),
                                 modifier = Modifier.fillMaxWidth(),
                             ) {
-                                Text(
-                                    text = stringResource(R.string.diy_custom_settings_how_to),
+                                TranslatableText(
+                                    stringResId = R.string.diy_custom_settings_how_to,
                                     style = MaterialTheme.typography.bodyMedium,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 )
@@ -248,14 +249,14 @@ fun CustomSettingsSheet(
                                         modifier = Modifier.size(18.dp),
                                     )
                                     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                                        Text(
-                                            text = stringResource(R.string.diy_custom_settings_warning_title),
+                                        TranslatableText(
+                                            stringResId = R.string.diy_custom_settings_warning_title,
                                             style = MaterialTheme.typography.labelMedium,
                                             fontWeight = FontWeight.Bold,
                                             color = MaterialTheme.colorScheme.error,
                                         )
-                                        Text(
-                                            text = stringResource(R.string.diy_custom_settings_warning_desc),
+                                        TranslatableText(
+                                            stringResId = R.string.diy_custom_settings_warning_desc,
                                             style = MaterialTheme.typography.bodySmall,
                                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                                         )
@@ -295,8 +296,8 @@ fun CustomSettingsSheet(
                             modifier = Modifier.size(22.dp),
                         )
                         Spacer(modifier = Modifier.size(8.dp))
-                        Text(
-                            text = stringResource(R.string.diy_custom_settings_start_recording),
+                        TranslatableText(
+                            stringResId = R.string.diy_custom_settings_start_recording,
                             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                         )
                     }
@@ -373,8 +374,8 @@ fun CustomSettingsSheet(
                                 modifier = Modifier.size(22.dp),
                             )
                             Spacer(modifier = Modifier.width(8.dp))
-                            Text(
-                                text = stringResource(R.string.diy_custom_settings_stop_recording),
+                            TranslatableText(
+                                stringResId = R.string.diy_custom_settings_stop_recording,
                                 style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                                 maxLines = 1,
                             )
@@ -425,8 +426,8 @@ fun CustomSettingsSheet(
                         shape = RoundedCornerShape(24.dp),
                         modifier = Modifier.fillMaxWidth(),
                     ) {
-                        Text(
-                            text = stringResource(R.string.diy_custom_settings_no_entries),
+                        TranslatableText(
+                            stringResId = R.string.diy_custom_settings_no_entries,
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.padding(16.dp),
@@ -494,7 +495,7 @@ fun CustomSettingsSheet(
                         modifier = Modifier.size(20.dp),
                     )
                     Spacer(modifier = Modifier.size(8.dp))
-                    Text(stringResource(R.string.action_cancel))
+                    TranslatableText(R.string.action_cancel)
                 }
 
                 Button(
@@ -511,7 +512,7 @@ fun CustomSettingsSheet(
                         modifier = Modifier.size(20.dp),
                     )
                     Spacer(modifier = Modifier.size(8.dp))
-                    Text(stringResource(R.string.action_save))
+                    TranslatableText(R.string.action_save)
                 }
             }
         }
@@ -604,7 +605,7 @@ private fun CustomSettingEntryRow(
         OutlinedTextField(
             value = entry.value,
             onValueChange = onValueChange,
-            label = { Text(stringResource(R.string.diy_custom_settings_value_label)) },
+            label = { TranslatableText(R.string.diy_custom_settings_value_label) },
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
             shape = RoundedCornerShape(12.dp),

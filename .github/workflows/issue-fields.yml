@@ -1,0 +1,62 @@
+name: Issue Fields
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  issues: write
+
+jobs:
+  set-fields:
+    if: >-
+      contains(github.event.issue.labels.*.name, 'bug') ||
+      contains(github.event.issue.body, '<!-- essentials-app-bug-report -->')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            const fields = {
+              'App Version': 49738389,
+              'Android Version': 49738534,
+              'Device (OEM)': 49738619,
+              'Severity': 49738830,
+            };
+
+            const body = context.payload.issue.body || '';
+            const issue = context.payload.issue;
+
+            // Issues filed from the app via the API lose labels/type when the reporter
+            // can't triage, so restore what the bug report form would have set.
+            if (body.includes('<!-- essentials-app-bug-report -->')) {
+              if (!issue.labels.some((l) => l.name === 'bug')) {
+                await github.rest.issues.addLabels({ ...context.repo, issue_number: issue.number, labels: ['bug'] });
+              }
+              if (issue.type?.name !== 'Bug') {
+                await github.request('PATCH /repos/{owner}/{repo}/issues/{issue_number}', {
+                  ...context.repo,
+                  issue_number: issue.number,
+                  type: 'Bug',
+                });
+              }
+              if (!issue.assignees?.length) {
+                await github.rest.issues.addAssignees({ ...context.repo, issue_number: issue.number, assignees: ['sameerasw'] });
+              }
+            }
+            const answers = {};
+            for (const section of body.split(/^### /m).slice(1)) {
+              const [heading, ...rest] = section.split('\n');
+              answers[heading.trim()] = rest.join('\n').trim();
+            }
+
+            const values = Object.entries(fields)
+              .map(([name, id]) => ({ field_id: id, value: answers[name] }))
+              .filter(({ value }) => value && value !== '_No response_');
+            if (!values.length) return;
+
+            await github.request('POST /repos/{owner}/{repo}/issues/{issue_number}/issue-field-values', {
+              ...context.repo,
+              issue_number: context.issue.number,
+              issue_field_values: values,
+            });

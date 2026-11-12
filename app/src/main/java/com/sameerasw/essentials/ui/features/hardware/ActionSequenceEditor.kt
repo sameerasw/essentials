@@ -45,6 +45,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.diy.Action
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.core.pickers.SegmentedPicker
 import com.sameerasw.essentials.domain.diy.ActionRegistry
 import com.sameerasw.essentials.domain.model.AppSelection
@@ -310,8 +311,8 @@ fun ActionSequenceEditor(
         }
 
         if (actions.size > 1) {
-            Text(
-                text = stringResource(R.string.button_remap_sequence_hint),
+            TranslatableText(
+                stringResId = R.string.button_remap_sequence_hint,
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(start = 16.dp, end = 16.dp),
@@ -360,8 +361,8 @@ fun ActionSequenceEditor(
                         .padding(bottom = 32.dp, start = 16.dp, end = 16.dp, top = 8.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                Text(
-                    text = stringResource(R.string.flashlight_options_title),
+                TranslatableText(
+                    stringResId = R.string.flashlight_options_title,
                     style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 8.dp),
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -398,7 +399,7 @@ fun ActionSequenceEditor(
                             .padding(top = 8.dp),
                     shape = MaterialTheme.shapes.extraLarge,
                 ) {
-                    Text(stringResource(R.string.action_done))
+                    TranslatableText(R.string.action_done)
                 }
             }
         }
@@ -799,8 +800,8 @@ private fun RemapAddActionItem(
             modifier = Modifier.size(24.dp),
             tint = MaterialTheme.colorScheme.primary,
         )
-        Text(
-            text = stringResource(R.string.button_remap_add_action),
+        TranslatableText(
+            stringResId = R.string.button_remap_add_action,
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.primary,
         )
@@ -830,8 +831,8 @@ private fun RemapAddActionSheet(
                     .padding(start = 16.dp, end = 16.dp, bottom = 32.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            Text(
-                text = stringResource(R.string.button_remap_add_action),
+            TranslatableText(
+                stringResId = R.string.button_remap_add_action,
                 style = MaterialTheme.typography.titleLarge,
                 modifier = Modifier.padding(start = 16.dp),
             )
@@ -867,8 +868,8 @@ private fun RemapAddActionSheet(
                                 modifier = Modifier.size(24.dp),
                                 tint = MaterialTheme.colorScheme.primary,
                             )
-                            Text(
-                                text = stringResource(action.title),
+                            TranslatableText(
+                                stringResId = action.title,
                                 style = MaterialTheme.typography.bodyLarge,
                                 modifier = Modifier.weight(1f),
                             )

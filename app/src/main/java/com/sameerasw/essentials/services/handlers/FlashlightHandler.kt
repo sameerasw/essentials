@@ -137,6 +137,11 @@ class FlashlightHandler(
             }
         }
 
+    fun canAdjustIntensity(): Boolean =
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+            !com.sameerasw.essentials.utils.DeviceUtils.isMediatekDevice() &&
+            !com.sameerasw.essentials.utils.DeviceUtils.isTorchAccessRestricted()
+
     fun register() {
         if (com.sameerasw.essentials.utils.DeviceUtils
                 .isTorchAccessRestricted()
@@ -233,10 +238,10 @@ class FlashlightHandler(
             val channel =
                 NotificationChannel(
                     CHANNEL_ID_FLASHLIGHT,
-                    "Flashlight Controls",
+                    service.getString(R.string.flashlight_channel_name),
                     NotificationManager.IMPORTANCE_HIGH,
                 ).apply {
-                    description = "Controls for active flashlight"
+                    description = service.getString(R.string.flashlight_channel_desc)
                     setShowBadge(false)
                     setSound(null, null)
                     enableVibration(false)
@@ -284,8 +289,8 @@ class FlashlightHandler(
                     Notification
                         .Builder(service, CHANNEL_ID_FLASHLIGHT)
                         .setSmallIcon(R.drawable.rounded_flashlight_on_24)
-                        .setContentTitle("Flashlight active")
-                        .setContentText("Brightness: $percentage%")
+                        .setContentTitle(service.getString(R.string.flashlight_active_title))
+                        .setContentText(service.getString(R.string.flashlight_brightness, percentage))
                         .setOngoing(true)
                         .setOnlyAlertOnce(true)
                         .setCategory(Notification.CATEGORY_SERVICE)
@@ -376,14 +381,14 @@ class FlashlightHandler(
             NotificationCompat
                 .Builder(service, CHANNEL_ID_FLASHLIGHT)
                 .setSmallIcon(R.drawable.rounded_flashlight_on_24)
-                .setContentTitle("Flashlight active")
-                .setContentText("Brightness: $percentage%")
+                .setContentTitle(service.getString(R.string.flashlight_active_title))
+                .setContentText(service.getString(R.string.flashlight_brightness, percentage))
                 .setOngoing(true)
                 .setOnlyAlertOnce(true)
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setCategory(NotificationCompat.CATEGORY_SERVICE)
                 .addAction(R.drawable.rounded_keyboard_arrow_down_24, "-", decreaseIntent)
-                .addAction(R.drawable.rounded_power_settings_new_24, "Off", offIntent)
+                .addAction(R.drawable.rounded_power_settings_new_24, service.getString(R.string.off), offIntent)
                 .addAction(R.drawable.rounded_keyboard_arrow_up_24, "+", increaseIntent)
                 .addExtras(
                     android.os.Bundle().apply {
@@ -545,8 +550,8 @@ class FlashlightHandler(
     }
 
     fun adjustFlashlightIntensity(increase: Boolean) {
+        if (!canAdjustIntensity()) return
         val cameraId = getCameraId() ?: return
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) return
 
         try {
             val maxLevel = FlashlightUtil.getMaxLevel(service, cameraId)
@@ -633,7 +638,7 @@ class FlashlightHandler(
                 FlashlightUtil.getMaxLevel(service, finalCameraId)
                 val defaultLevel = FlashlightUtil.getDefaultLevel(service, finalCameraId)
 
-                if (isFadeEnabled && FlashlightUtil.isIntensitySupported(service, finalCameraId)) {
+                if (isFadeEnabled && canAdjustIntensity() && FlashlightUtil.isIntensitySupported(service, finalCameraId)) {
                     val targetState = !isTorchOn
                     if (targetState) {
                         currentIntensityLevel = overrideIntensity ?: if (prefs.getBoolean(
@@ -693,6 +698,10 @@ class FlashlightHandler(
                             updateFlashlightNotification(currentIntensityLevel)
                         } else {
                             cancelFlashlightNotification()
+                        }
+                        if (com.sameerasw.essentials.utils.DeviceUtils.isTorchAccessRestricted()) {
+                            isTorchOn = !isTorchOn
+                            isInternalToggle = false
                         }
                     } else {
                         isInternalToggle = false
