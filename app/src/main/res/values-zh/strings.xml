@@ -1832,4 +1832,5 @@
     <string name="screenshot_auto_clean_note">每新的截图都会以静音通知的形式保留它，有星标的截图将会保留</string>
     <string name="screenshots_cleaned_count_title">截图清理</string>
     <string name="screenshots_storage_saved_title">截图保留</string>
+    <string name="island_notif_lock_hidden_title">Hidden</string>
 </resources>

@@ -2136,4 +2136,5 @@
     <string name="island_pulse_shadow_offset_y_title">Вертикальное смещение </string>
     <string name="island_animation_speed_title">Скорость анимации </string>
     <string name="app_icon_gta">6</string>
+    <string name="island_notif_lock_hidden_title">Hidden</string>
 </resources>

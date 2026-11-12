@@ -3581,6 +3581,7 @@
     <string name="island_notif_section_heads_up">Heads up</string>
     <string name="island_notif_section_in_island">In the island</string>
     <string name="island_notif_section_lock_screen">Lock screen</string>
+    <string name="island_notif_lock_hidden_title">Hidden</string>
     <string name="island_otp_section">OTP codes</string>
     <string name="island_otp_enabled_title">Detect OTP codes</string>
     <string name="island_otp_enabled_desc">Show one-time codes from notifications with a copy button</string>

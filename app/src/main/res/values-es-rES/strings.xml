@@ -1786,4 +1786,5 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla s
     <string name="island_section_landscape">Landscape</string>
     <string name="island_section_experimental">Experimental</string>
     <string name="island_padding_around_title">Padding around</string>
+    <string name="island_notif_lock_hidden_title">Hidden</string>
 </resources>
