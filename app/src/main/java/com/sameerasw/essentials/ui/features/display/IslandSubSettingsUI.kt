@@ -563,7 +563,6 @@ fun IslandVisualsSettingsUI(
     val context = LocalContext.current
     val view = LocalView.current
     var showBorderOutlineSheet by remember { mutableStateOf(false) }
-    var showPreferStillInfo by remember { mutableStateOf(false) }
     var showBackdropBlurInfo by remember { mutableStateOf(false) }
     var windowBlurEnabled by remember { mutableStateOf(IslandBackdropBlurSupport.windowBlurEnabled(context)) }
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -577,12 +576,14 @@ fun IslandVisualsSettingsUI(
     val backdropBlurStatus = IslandBackdropBlurSupport.status(context, windowBlurEnabled)
     val backdropBlurAvailable = backdropBlurStatus == IslandBackdropBlurSupport.Status.Available
 
-    if (showPreferStillInfo) {
-        PreferStillIslandInfoBottomSheet(onDismissRequest = { showPreferStillInfo = false })
-    }
-
     if (showBackdropBlurInfo) {
         BackdropBlurUnavailableBottomSheet(status = backdropBlurStatus, onDismissRequest = { showBackdropBlurInfo = false })
+    }
+
+    var showPreferStillInfo by remember { mutableStateOf(false) }
+
+    if (showPreferStillInfo) {
+        PreferStillIslandInfoBottomSheet(onDismissRequest = { showPreferStillInfo = false })
     }
 
     Column(
@@ -918,24 +919,32 @@ fun IslandVisualsSettingsUI(
 
         }
 
-        RoundedCardContainer(
-            spacing = 2.dp,
-            cornerRadius = 24.dp,
-        ) {
-            val stillSettings = remember { SettingsRepository(context) }
-            var preferStill by remember { mutableStateOf(stillSettings.isIslandPreferStillEnabled()) }
-            IconToggleItem(
-                iconRes = R.drawable.rounded_motion_photos_paused_24,
-                title = stringResource(R.string.island_prefer_still_title),
-                isChecked = preferStill,
-                onCheckedChange = { checked ->
-                    HapticUtil.performVirtualKeyHaptic(view)
-                    preferStill = checked
-                    stillSettings.setIslandPreferStillEnabled(checked)
-                },
-                onInfoClick = { showPreferStillInfo = true },
-                modifier = Modifier.highlight(highlightSetting == "island_prefer_still"),
+        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            TranslatableText(
+                stringResId = R.string.island_section_experimental,
+                style = MaterialTheme.typography.titleSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(start = 8.dp),
             )
+            RoundedCardContainer(
+                spacing = 2.dp,
+                cornerRadius = 24.dp,
+            ) {
+                val stillSettings = remember { SettingsRepository(context) }
+                var preferStill by remember { mutableStateOf(stillSettings.isIslandPreferStillEnabled()) }
+                IconToggleItem(
+                    iconRes = R.drawable.rounded_motion_photos_paused_24,
+                    title = stringResource(R.string.island_prefer_still_title),
+                    isChecked = preferStill,
+                    onCheckedChange = { checked ->
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        preferStill = checked
+                        stillSettings.setIslandPreferStillEnabled(checked)
+                    },
+                    onInfoClick = { showPreferStillInfo = true },
+                    modifier = Modifier.highlight(highlightSetting == "island_prefer_still"),
+                )
+            }
         }
     }
 
