@@ -624,7 +624,11 @@ fun IslandSettingsUI(
                         )
                     }
                     RoundedCardContainer(spacing = 2.dp, cornerRadius = 24.dp) {
-                        if (viewModel.isIslandLineStageEnabled.value) {
+                        AnimatedVisibility(
+                            visible = viewModel.isIslandLineStageEnabled.value,
+                            enter = expandVertically() + fadeIn(),
+                            exit = shrinkVertically() + fadeOut(),
+                        ) {
                             IconToggleItem(
                                 iconRes = R.drawable.rounded_music_note_24,
                                 title = stringResource(R.string.island_media_peek_song_change_title),
@@ -691,28 +695,38 @@ fun IslandSettingsUI(
                                 },
                                 modifier = Modifier.highlight(highlightSetting == "island_media_bubble"),
                             )
-                            if (viewModel.isIslandMediaBubble.value) {
-                                IconToggleItem(
-                                    iconRes = R.drawable.rounded_pill_24,
-                                    title = stringResource(R.string.island_media_bubble_wide_title),
-                                    isChecked = viewModel.isIslandMediaBubbleWide.value,
-                                    onCheckedChange = { checked ->
-                                        HapticUtil.performVirtualKeyHaptic(view)
-                                        viewModel.setIslandMediaBubbleWide(checked)
-                                    },
-                                    modifier = Modifier.highlight(highlightSetting == "island_media_bubble_wide"),
-                                )
-                                if (viewModel.isIslandMediaBubbleWide.value) {
+                            AnimatedVisibility(
+                                visible = viewModel.isIslandMediaBubble.value,
+                                enter = expandVertically() + fadeIn(),
+                                exit = shrinkVertically() + fadeOut(),
+                            ) {
+                                Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
                                     IconToggleItem(
-                                        iconRes = R.drawable.rounded_image_24,
-                                        title = stringResource(R.string.island_media_bubble_fill_art_title),
-                                        isChecked = viewModel.isIslandMediaBubbleFillArt.value,
+                                        iconRes = R.drawable.rounded_pill_24,
+                                        title = stringResource(R.string.island_media_bubble_wide_title),
+                                        isChecked = viewModel.isIslandMediaBubbleWide.value,
                                         onCheckedChange = { checked ->
                                             HapticUtil.performVirtualKeyHaptic(view)
-                                            viewModel.setIslandMediaBubbleFillArt(checked)
+                                            viewModel.setIslandMediaBubbleWide(checked)
                                         },
-                                        modifier = Modifier.highlight(highlightSetting == "island_media_bubble_fill_art"),
+                                        modifier = Modifier.highlight(highlightSetting == "island_media_bubble_wide"),
                                     )
+                                    AnimatedVisibility(
+                                        visible = viewModel.isIslandMediaBubbleWide.value,
+                                        enter = expandVertically() + fadeIn(),
+                                        exit = shrinkVertically() + fadeOut(),
+                                    ) {
+                                        IconToggleItem(
+                                            iconRes = R.drawable.rounded_image_24,
+                                            title = stringResource(R.string.island_media_bubble_fill_art_title),
+                                            isChecked = viewModel.isIslandMediaBubbleFillArt.value,
+                                            onCheckedChange = { checked ->
+                                                HapticUtil.performVirtualKeyHaptic(view)
+                                                viewModel.setIslandMediaBubbleFillArt(checked)
+                                            },
+                                            modifier = Modifier.highlight(highlightSetting == "island_media_bubble_fill_art"),
+                                        )
+                                    }
                                 }
                             }
                         }

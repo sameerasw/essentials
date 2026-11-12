@@ -1817,7 +1817,7 @@ Cần có quyền quản trị thiết bị nếu sử dụng chế độ khóa.
     <string name="island_timeout_title">Thời gian hiển thị</string>
     <string name="island_expanded_timeout_title">Thời gian chờ mở rộng</string>
     <string name="island_expanded_timeout_desc">Thời gian trước khi island trở lại trạng thái co lại (0 nghĩa là vô hạn)</string>
-    <string name="island_show_glow_title">Hiển thị ánh sáng nhấn mạnh</string>
+    <string name="island_show_glow_title">Expanded accent glow</string>
     <string name="island_glow_intensity_title">Glow intensity</string>
     <string name="island_prefer_still_title">Prefer still island</string>
     <string name="island_prefer_still_info">Stops the island\'s animations after a few seconds without interaction, so the display can drop to a low refresh rate and save battery. Media visualizers, second by second counters and other looping animations pause until you interact with the island again.</string>
