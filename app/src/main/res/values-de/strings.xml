@@ -1942,8 +1942,6 @@ Eingeschränkt – Niedrigste Priorität (Android 12+); etwa einmal täglich geb
     <string name="island_notif_follow_dnd_title">Nicht stören beachten</string>
     <string name="island_notif_follow_dnd_desc">Benachrichtigungen ausblenden, die durch Nicht stören stummgeschaltet werden</string>
     <string name="island_notif_keep_progress_desc">Downloads und andere laufende Fortschritte anzeigen</string>
-    <string name="island_notif_queue_inline_title">Warteschlange innerhalb der Insel</string>
-    <string name="island_notif_queue_inline_desc">Warteschlange innerhalb der Insel anzeigen</string>
     <string name="island_otp_enabled_title">OTP-Codes erkennen</string>
     <string name="perm_sensitive_notifications_title">Sensible Benachrichtigungen lesen</string>
     <string name="perm_sensitive_notifications_instructions">Erteilen Sie die Berechtigung mit Shizuku oder als Root oder führen Sie den Befehl über ADB aus.</string>

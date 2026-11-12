@@ -47,7 +47,7 @@ class NotificationsPlugin : BaseIslandPlugin() {
     override val settingKeys = setOf(
         SettingsRepository.KEY_ISLAND_CATCH_UP_ENABLED,
         SettingsRepository.KEY_ISLAND_NOTIF_PEEK_STYLE,
-        SettingsRepository.KEY_ISLAND_NOTIF_QUEUE_INLINE,
+        SettingsRepository.KEY_ISLAND_SECONDARY_BUBBLE,
         SettingsRepository.KEY_ISLAND_LINE_STAGE_ENABLED,
         SettingsRepository.KEY_ISLAND_SHOW_GLOW,
         SettingsRepository.KEY_ISLAND_NOTIF_THEMED_BUBBLE,
@@ -668,7 +668,7 @@ class NotificationsPlugin : BaseIslandPlugin() {
         val minimal = minimal()
         val waitingRow = alerts.filter { a -> waitingAlerts.any { it === a } }.asReversed()
         val waiting = if (minimal) waitingRow.map { stackIconFor(it, current = false) } else emptyList()
-        val inlineQueue = minimal && waiting.isNotEmpty() && settings.isIslandNotifQueueInlineEnabled()
+        val inlineQueue = minimal && waiting.isNotEmpty() && !settings.isIslandSecondaryBubbleEnabled()
         val bubble = when {
             minimal && waiting.isNotEmpty() && !inlineQueue -> SideBubble(
                 priority = SideBubblePriority.NOTIFICATION,

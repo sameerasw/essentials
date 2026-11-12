@@ -3558,12 +3558,9 @@
     <string name="island_notif_skip_silent_title">Skip silent notifications</string>
     <string name="island_notif_filter_apps_title">Filter apps</string>
     <string name="island_notif_condensed_info_title">Peek style</string>
-    <string name="island_notif_condensed_info_desc">App icon and title only. Tap to expand for the content and actions</string>
     <string name="island_notif_peek_style_compact">Compact</string>
     <string name="island_notif_peek_style_full">Wide</string>
-    <string name="island_notif_peek_style_full_desc">Title and message</string>
     <string name="island_notif_peek_style_expanded">Expanded</string>
-    <string name="island_notif_peek_style_expanded_desc">Opens expanded with the content and actions</string>
     <string name="island_notif_peek_style_search_desc">Full or compact peeks</string>
     <string name="island_notif_show_title">Show notifications</string>
     <string name="island_notif_hub_desc">Replace statusbar notification icons with island</string>
@@ -3606,8 +3603,6 @@
     <string name="island_notif_follow_dnd_desc">Hide notifications that Do Not Disturb silences</string>
     <string name="island_notif_keep_progress_desc">Show downloads and other ongoing progress</string>
     <string name="island_notif_queue_desc">Stagger notification previews</string>
-    <string name="island_notif_queue_inline_title">Queue inside the island</string>
-    <string name="island_notif_queue_inline_desc">Show the queue inside the island</string>
     <string name="island_media_peek_song_change_title">Peek song change</string>
     <string name="island_media_keep_when_paused_title">Keep in catchup when paused</string>
     <string name="island_media_show_previous_title">Show previous track button</string>

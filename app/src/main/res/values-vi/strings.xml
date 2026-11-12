@@ -2147,8 +2147,6 @@ Tính năng này chỉ được dùng cho trình khởi chạy và không phải
     <string name="island_notif_filter_apps_title">Lọc ứng dụng</string>
     <string name="island_notif_filter_apps_desc">Chỉ hiển thị thông báo từ các ứng dụng bạn chọn</string>
     <string name="island_notif_queue_desc">Hiển thị các bản xem trước thông báo so le</string>
-    <string name="island_notif_queue_inline_title">Hàng đợi bên trong island</string>
-    <string name="island_notif_queue_inline_desc">Hiển thị hàng chờ bên trong island</string>
     <string name="island_otp_enabled_title">Phát hiện mã OTP</string>
     <string name="island_otp_tap_to_copy_title">Nhấn để sao chép</string>
     <string name="island_otp_dismiss_after_copy_title">Ẩn thông báo sau khi sao chép</string>

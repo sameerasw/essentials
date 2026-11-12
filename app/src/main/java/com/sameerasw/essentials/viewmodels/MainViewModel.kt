@@ -308,7 +308,6 @@ class MainViewModel : ViewModel() {
     val isIslandNotifKeepProgress = mutableStateOf(true)
     val isIslandNotifQueue = mutableStateOf(true)
     val islandSecondaryBubbleSide = mutableStateOf(SettingsRepository.ISLAND_CAMERA_POSITION_LEFT)
-    val isIslandNotifQueueInline = mutableStateOf(false)
     val isIslandNotifSkipSilent = mutableStateOf(true)
     val isIslandNotifFollowDnd = mutableStateOf(true)
     val isIslandNotifFilterApps = mutableStateOf(false)
@@ -1010,9 +1009,6 @@ class MainViewModel : ViewModel() {
 
                     SettingsRepository.KEY_ISLAND_SECONDARY_BUBBLE_SIDE ->
                         islandSecondaryBubbleSide.value = settingsRepository.getIslandSecondaryBubbleSide()
-
-                    SettingsRepository.KEY_ISLAND_NOTIF_QUEUE_INLINE ->
-                        isIslandNotifQueueInline.value = settingsRepository.isIslandNotifQueueInlineEnabled()
 
                     SettingsRepository.KEY_ISLAND_NOTIF_SKIP_SILENT ->
                         isIslandNotifSkipSilent.value = settingsRepository.isIslandNotifSkipSilentEnabled()
@@ -2636,7 +2632,6 @@ class MainViewModel : ViewModel() {
         isIslandNotifKeepProgress.value = settingsRepository.isIslandNotifKeepProgressEnabled()
         isIslandNotifQueue.value = settingsRepository.isIslandNotifQueueEnabled()
         islandSecondaryBubbleSide.value = settingsRepository.getIslandSecondaryBubbleSide()
-        isIslandNotifQueueInline.value = settingsRepository.isIslandNotifQueueInlineEnabled()
         isIslandNotifSkipSilent.value = settingsRepository.isIslandNotifSkipSilentEnabled()
         isIslandNotifFollowDnd.value = settingsRepository.isIslandNotifFollowDndEnabled()
         isIslandNotifFilterApps.value = settingsRepository.isIslandNotifFilterAppsEnabled()
@@ -6306,10 +6301,6 @@ class MainViewModel : ViewModel() {
         islandCatchUpTimeoutMs.longValue = settingsRepository.getIslandCatchUpStoredMs()
     }
 
-    fun setIslandNotifQueueInline(enabled: Boolean) {
-        isIslandNotifQueueInline.value = enabled
-        settingsRepository.setIslandNotifQueueInlineEnabled(enabled)
-    }
 
     fun setIslandSecondaryBubbleSide(side: String) {
         islandSecondaryBubbleSide.value = side
