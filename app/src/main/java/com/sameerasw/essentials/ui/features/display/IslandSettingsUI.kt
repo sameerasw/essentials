@@ -523,7 +523,6 @@ fun IslandSettingsUI(
                 }
             }
             renderEntry("calls", null)
-            renderEntry("time", null)
             ReorderableColumn(
                 list = if (reorderMode) workingOrder else savedOrder,
                 onSettle = { from, to -> workingOrder = workingOrder.toMutableList().apply { add(to, removeAt(from)) } },

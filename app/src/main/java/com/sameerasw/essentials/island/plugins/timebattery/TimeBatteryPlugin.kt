@@ -265,6 +265,7 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
         val timeItem = IslandItem(
             key = "time",
             priority = IslandPriority.TIME,
+            priorityGroup = "time",
             placement = CompactPlacement.Pinned,
             needsCompanyAtCenter = settings.isIslandBatteryIconConditional(),
             chip = settings.getBoolean(SettingsRepository.KEY_ISLAND_TIME_CHIP, false),
