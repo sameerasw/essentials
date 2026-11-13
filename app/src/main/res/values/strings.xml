@@ -405,6 +405,37 @@
     <string name="flashlight_overheat_title">Overheating prevention</string>
     <string name="flashlight_overheat_desc">Lower brightness on longer period of use</string>
     <string name="content_desc_settings">Settings</string>
+    <string name="feat_text_snippets_title">Text Snippets</string>
+    <string name="feat_text_snippets_desc">Expand customizable shortcuts with prefix trigger</string>
+    <string name="about_desc_text_snippets">Create customizable shortcuts that expand into full phrases, links, or templates when you type a trigger prefix (like ;, :, or @@) or press space.</string>
+    <string name="title_manage_snippets">Manage Snippets</string>
+    <string name="desc_snippets_summary">Prefix: \"%1$s\" • %2$d active snippets</string>
+    <string name="snippets_trigger_prefix">Trigger Prefix</string>
+    <string name="snippets_prefix_space_expansion">Expansion on Space</string>
+    <string name="snippets_prefix_symbol_desc">Prefix symbol: \"%1$s\"</string>
+    <string name="snippets_saved_title">Saved Snippets (%1$d)</string>
+    <string name="snippets_empty_title">No snippets yet</string>
+    <string name="snippets_empty_subtitle">Tap + below to create your first shortcut</string>
+    <string name="snippets_set_prefix_dialog_title">Trigger Prefix</string>
+    <string name="snippets_set_prefix_dialog_desc">Select a symbol that activates snippet expansion. Selecting Space expands the keyword when pressing space.</string>
+    <string name="snippets_prefix_label">Prefix Symbol</string>
+    <string name="snippets_prefix_semicolon">Semicolon (;)</string>
+    <string name="snippets_prefix_colon">Colon (:)</string>
+    <string name="snippets_prefix_at">Double At (@@)</string>
+    <string name="snippets_prefix_space">Space (␣)</string>
+    <string name="snippets_dialog_new_title">New Snippet</string>
+    <string name="snippets_dialog_edit_title">Edit Snippet</string>
+    <string name="snippets_shortcut_trigger_label">Shortcut Trigger</string>
+    <string name="snippets_keyword_label">Keyword</string>
+    <string name="snippets_keyword_placeholder">e.g., brb, addr, shrug</string>
+    <string name="snippets_title_label">Label (Optional)</string>
+    <string name="snippets_title_placeholder">e.g., Be Right Back</string>
+    <string name="snippets_content_label">Expanded Text</string>
+    <string name="snippets_content_placeholder">Enter replacement text or multi-line snippet</string>
+    <string name="snippets_action_change">Change</string>
+    <string name="snippets_error_whitespace">Keyword cannot contain spaces</string>
+    <string name="snippets_error_prefix">Do not include prefix in keyword</string>
+    <string name="snippets_error_duplicate">Keyword already in use</string>
 
     <!-- Caffeinate / Permissions -->
     <string name="permission_show_notification_title">Show Notification</string>

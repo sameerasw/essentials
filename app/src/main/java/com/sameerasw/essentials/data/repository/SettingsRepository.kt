@@ -36,7 +36,10 @@ import com.sameerasw.essentials.domain.model.NotificationLightingSweepPosition
 import com.sameerasw.essentials.domain.model.PowerChoice
 import com.sameerasw.essentials.domain.model.RemapSlot
 import com.sameerasw.essentials.domain.model.ScaleAnimationsProfile
+import com.sameerasw.essentials.domain.model.Snippet
 import com.sameerasw.essentials.domain.model.SystemShortcutsState
+import com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService
+import java.util.UUID
 import com.sameerasw.essentials.domain.model.TrackedRepo
 import com.sameerasw.essentials.domain.model.github.GitHubUser
 import com.sameerasw.essentials.utils.RootUtils
@@ -197,6 +200,12 @@ class SettingsRepository(
 
     companion object {
         const val PREFS_NAME = "essentials_prefs"
+
+        @Volatile
+        private var cachedSnippets: List<Snippet>? = null
+
+        @Volatile
+        private var cachedPrefix: String? = null
 
         // Keys
         const val KEY_DEBUGGING_TILE_TAP_ACTION = "debugging_tile_tap_action"
@@ -403,6 +412,9 @@ class SettingsRepository(
         const val KEY_KEYBOARD_CLIPBOARD_ENABLED = "keyboard_clipboard_enabled"
         const val KEY_KEYBOARD_LONG_PRESS_SYMBOLS = "keyboard_long_press_symbols"
         const val KEY_KEYBOARD_ACCENTED_CHARACTERS = "keyboard_accented_characters"
+        const val KEY_KEYBOARD_TEXT_SNIPPETS_ENABLED = "keyboard_text_snippets_enabled"
+        const val KEY_KEYBOARD_SNIPPET_PREFIX = "keyboard_snippet_prefix"
+        const val KEY_KEYBOARD_SNIPPETS_DATA = "keyboard_snippets_data"
 
         // Essentials-AirSync Bridge
         const val KEY_AIRSYNC_CONNECTION_ENABLED = "airsync_connection_enabled"
@@ -4883,4 +4895,46 @@ class SettingsRepository(
         } ?: emptyMap()
 
     fun setAppVolumeLevels(levels: Map<String, Float>) = putString(KEY_APP_VOLUME_LEVELS, gson.toJson(levels))
+
+    fun isTextSnippetsEnabled(): Boolean = getBoolean(KEY_KEYBOARD_TEXT_SNIPPETS_ENABLED, false)
+    fun setTextSnippetsEnabled(enabled: Boolean) {
+        putBoolean(KEY_KEYBOARD_TEXT_SNIPPETS_ENABLED, enabled)
+        ScreenOffAccessibilityService.updateSnippetTextListening(enabled)
+    }
+
+    fun getSnippetPrefix(): String {
+        cachedPrefix?.let { return it }
+        val prefix = getString(KEY_KEYBOARD_SNIPPET_PREFIX, ";") ?: ";"
+        cachedPrefix = prefix
+        return prefix
+    }
+
+    fun setSnippetPrefix(prefix: String) {
+        cachedPrefix = prefix
+        putString(KEY_KEYBOARD_SNIPPET_PREFIX, prefix)
+    }
+
+    fun getTextSnippets(): List<Snippet> {
+        cachedSnippets?.let { return it }
+        val json = getString(KEY_KEYBOARD_SNIPPETS_DATA, null) ?: return defaultSnippets().also { cachedSnippets = it }
+        val list =
+            try {
+                val type = object : TypeToken<List<Snippet>>() {}.type
+                gson.fromJson<List<Snippet>>(json, type) ?: defaultSnippets()
+            } catch (_: Exception) {
+                defaultSnippets()
+            }
+        cachedSnippets = list
+        return list
+    }
+
+    fun saveTextSnippets(snippets: List<Snippet>) {
+        cachedSnippets = snippets
+        putString(KEY_KEYBOARD_SNIPPETS_DATA, gson.toJson(snippets))
+    }
+
+    fun defaultSnippets(): List<Snippet> =
+        listOf(
+            Snippet(id = UUID.randomUUID().toString(), keyword = "shrug", title = "Shrug", content = "¯\\_(ツ)_/¯"),
+        )
 }

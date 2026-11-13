@@ -71,6 +71,16 @@ class EssentialsInputMethodService :
     // Undo Manager
     private val undoRedoManager = UndoRedoManager()
 
+    // Settings & Snippet Expansion Engine
+    private val settingsRepository by lazy { SettingsRepository(this) }
+    private val snippetEngine by lazy {
+        SnippetExpansionEngine(
+            getSnippets = { settingsRepository.getTextSnippets() },
+            getPrefix = { settingsRepository.getSnippetPrefix() },
+            isEnabled = { settingsRepository.isTextSnippetsEnabled() },
+        )
+    }
+
     // Suggestion Lookup Job
     private var lookupJob: Job? = null
 
@@ -470,8 +480,21 @@ class EssentialsInputMethodService :
                         onType = { text ->
                             undoRedoManager.recordInsert(text)
                             currentInputConnection?.commitText(text, 1)
-                            if (isUserDictionaryEnabled && text.length == 1 && !text[0].isLetterOrDigit()) {
-                                val ic = currentInputConnection
+
+                            val ic = currentInputConnection
+                            var expanded = false
+                            if (ic != null) {
+                                val textBefore = ic.getTextBeforeCursor(100, 0)?.toString() ?: ""
+                                expanded =
+                                    snippetEngine.checkAndExpand(textBefore) { deleteCount, replacement ->
+                                        undoRedoManager.recordDelete(textBefore.takeLast(deleteCount))
+                                        ic.deleteSurroundingText(deleteCount, 0)
+                                        undoRedoManager.recordInsert(replacement)
+                                        ic.commitText(replacement, 1)
+                                    }
+                            }
+
+                            if (!expanded && isUserDictionaryEnabled && text.length == 1 && !text[0].isLetterOrDigit()) {
                                 if (ic != null) {
                                     val textBefore = ic.getTextBeforeCursor(50, 0)?.toString()
                                     if (!textBefore.isNullOrEmpty()) {
@@ -618,6 +641,7 @@ class EssentialsInputMethodService :
         restarting: Boolean,
     ) {
         super.onStartInputView(info, restarting)
+        isInputActive = true
         // Ensure lifecycle is in RESUMED state when view becomes visible
         if (lifecycleRegistry.currentState != Lifecycle.State.RESUMED) {
             lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_RESUME)
@@ -628,12 +652,14 @@ class EssentialsInputMethodService :
 
     override fun onFinishInputView(finishingInput: Boolean) {
         super.onFinishInputView(finishingInput)
+        isInputActive = false
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_PAUSE)
         kbdResetTrigger.value++
     }
 
     override fun onDestroy() {
         super.onDestroy()
+        isInputActive = false
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_STOP)
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_DESTROY)
         if (::clipboardManager.isInitialized) {
@@ -757,5 +783,11 @@ class EssentialsInputMethodService :
         if (current.remove(text)) {
             _clipboardHistory.value = current
         }
+    }
+
+    companion object {
+        @Volatile
+        var isInputActive: Boolean = false
+            internal set
     }
 }
