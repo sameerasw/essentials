@@ -429,7 +429,7 @@
     <string name="feat_app_lock_desc">Защитите приложения с помощью биометрии</string>
     <string name="app_lock_auto_lock_delay_title">Задержка автоматической блокировки</string>
     <string name="app_lock_auto_lock_delay_desc">После выхода из приложения</string>
-    <string name="app_lock_auto_lock_delay_none">Не установлено</string>
+    <string name="app_lock_auto_lock_delay_none">Ничего</string>
     <string name="app_lock_auto_lock_delay_1min">1 minute</string>
     <string name="app_lock_auto_lock_delay_5min">5 minutes</string>
     <string name="app_lock_auto_lock_delay_10min">10 minutes</string>
@@ -449,7 +449,7 @@
     <string name="remote_lock_mode_screen_off">Выключение экрана</string>
     <string name="remote_lock_mode_lock">Блокировка</string>
     <string name="remote_lock_mode_admin_note">Using device admin lock will disable biometrics</string>
-    <string name="watch_connected_status">Connected</string>
+    <string name="watch_connected_status">Подключено</string>
     <string name="watch_unknown_name">Unknown Watch</string>
     <string name="watermark_style_overlay">Наложение</string>
     <string name="watermark_style_frame">Рамка</string>
@@ -1236,10 +1236,10 @@
     <string name="watch_no_companion_title">Часы не обнаружены</string>
     <string name="watch_no_companion_desc">Похоже, на ваших часах не установлено сопутствующее приложение Essentials Wear.</string>
     <string name="watch_install_companion_action">Установить дополнение</string>
-    <string name="action_download_from_github">Download from GitHub</string>
-    <string name="watch_help_title">Install on Watch</string>
-    <string name="watch_help_description">To use Watch features, you need to install the Essentials companion app on your Wear OS watch. Click the button below to open the Play Store directly on your watch.</string>
-    <string name="watch_help_open_play_store">Open on Watch</string>
+    <string name="action_download_from_github">Скачать с GitHub </string>
+    <string name="watch_help_title">Установите на часах</string>
+    <string name="watch_help_description">Чтобы использовать функции Watch, вам необходимо установить приложение Essentials на часы Wear OS. Нажмите кнопку ниже, чтобы открыть Play Store прямо на ваших часах. </string>
+    <string name="watch_help_open_play_store">Откройте на часах </string>
     <string name="cat_interaction">Взаимодействие</string>
     <string name="cat_interface">Интерфейс</string>
     <string name="cat_display">Отображать</string>
@@ -1709,7 +1709,7 @@
     <string name="watchface_glance_complications_desc">Выберите, что показывать</string>
     <string name="watchface_show_glow_title">Показывать свечение</string>
     <string name="watchface_show_glow_desc">Динамический градиент акцентного цвета сверху при приближении событий и поездок</string>
-    <string name="watchface_clock_24h_title">24-hour clock</string>
+    <string name="watchface_clock_24h_title">24-часовые часы </string>
     <string name="watchface_clock_dual_tone_title">Двойной тон</string>
     <string name="watchface_clock_dual_tone_desc">Часы белым, минуты акцентным цветом</string>
     <string name="pocket_mode_use_light_desc">Используйте уровень освещенности в дополнение к близости для повышения точности</string>
@@ -1893,7 +1893,7 @@
 Индикатор состояния стиля iPhone Duo, чтобы показать вашу батарею, сеть, медиа-статус и многое другое в компактном минимальном пользовательском интерфейсе вокруг вашей камеры с различными предметами для показа и жестами для взаимодействия.
 
 Для складных устройств убедитесь, что вы выключите опцию «Авто-обнаружение камеры», если она не надёжна, и вручную выровняйте Duo с вашим внутренним и внешним положением камеры, а затем Essentials запомнит ваш макет. </string>
-    <string name="label_shake_for_help">Shake for help</string>
+    <string name="label_shake_for_help">Встряхните для помощи</string>
     <string name="about_desc_island">Динамичный остров для вашего Android, вокруг выреза камеры.
 
 Он объединяет живую информацию в одном компактном расширяемом пространстве: уведомления с быстрыми ответами, медиа с оформлением альбома и элементами управления, звонки, таймеры и секундомеры, будильники, события календаря, навигацию, обновления прогресса, состояние горячей точки и сети, подключённые устройства, фонарик, звуковой режим, кофеинат, информацию о путешествиях и время и аккумулятор.
@@ -1921,7 +1921,9 @@
     <string name="about_desc_sync_location_reached">Sends your Are we there yet status to your watch.\n\nThe status is shown in the device tile so you can see how close you are to your destination right from your wrist.</string>
     <string name="about_desc_lock_from_watch">Lock your phone remotely from your watch.\n\nHandy if you left your phone somewhere and want to secure it right away.</string>
     <string name="about_desc_watch_controls">Customize the controls shown on your watch.\n\nChoose which actions are available so the watch shows only what you need.</string>
-    <string name="about_desc_watchface">Customize the Essentials watchface on your Wear OS watch.\n\nChange its look and settings from your phone.</string>
+    <string name="about_desc_watchface">Настройте циферблат Essentials на своих часах Wear OS.
+
+Измените его внешний вид и настройки со своего телефона. </string>
     <string name="about_desc_complications">Customize the complication widgets shown on your watchface.\n\nChoose which info appears and where, such as flashlight status or other glance items.</string>
     <string name="about_desc_notification_sync">Sync notifications between your phone and your watch.\n\nThis is only used for the launcher and is not a full notification mirror.</string>
     <string name="about_desc_call_sync">Sync call status between your phone and your watch.\n\nThis is only used for the launcher and is not a full call handler.</string>
@@ -2123,7 +2125,7 @@
     <string name="island_transparency_intensity_title">Интенсивность прозрачности </string>
     <string name="island_backdrop_blur_title">Размытие сзади</string>
     <string name="island_backdrop_blur_radius_title">Blur amount</string>
-    <string name="what_is_this">What is this?</string>
+    <string name="what_is_this">Что это? </string>
     <string name="label_feature_designed_by">Designed by</string>
     <string name="label_how_to_use">How to use</string>
     <string name="shut_up_how_to_use">1. Grant Write secure settings and Usage access from the permissions prompt. Shizuku is needed for freezing apps.\n\n2. Tap Select Apps and pick the apps that refuse to run with developer options, debugging or accessibility turned on, such as banking or payment apps.\n\n3. Tap an app to choose what gets hidden for it: Developer Options, USB Debugging, Wireless Debugging and Accessibility Services. You can also turn on Auto Freeze to freeze the app after you leave it, and Restore keyboard to switch back to your keyboard afterwards.\n\n4. Tap Create shortcut for each app and add it to your home screen. Always open the app from this shortcut, never from its normal icon, so the settings are turned off before the app starts and can check them.\n\n5. When you leave the app, Shut-Up! waits for the Restoration Delay and then shows a notification. Tap it to turn everything back on. Set Restore mode to Auto if you would rather have the settings restored on their own.\n\nTips: if wireless debugging was turned off, Shizuku may stop working, so enable Attempt Shizuku restart. Use the Keyboard option to pick the keyboard to restore, or leave it on Skip. With Auto Freeze, a notification counts down and lets you freeze now or abort.</string>
@@ -2132,4 +2134,159 @@
     <string name="app_icon_gta">6</string>
     <string name="duo_section_what_to_show">Что показать </string>
     <string name="island_progressive_blur_title">Прогрессивная анимация размытия </string>
+    <string name="instruction_section_freezetags_title">Замораживание приложений и умное замораживание </string>
+    <string name="instruction_section_diy_title">DIY Автоматизация</string>
+    <string name="instruction_section_backup_title">Резервное копирование и восстановление </string>
+    <string name="instruction_section_backup_desc">Защитите и перенесите свою пользовательскую настройку на устройства.
+
+• Экспортная конфиг: создайте резервную копию JSON ваших автоматизаций DIY, тегов приложений, конфигураций плитки и пользовательских предпочтений.
+• Импорт Config: легко восстанавливайте сохранённый файл установки без перенастройки отдельных настроек. </string>
+    <string name="instruction_section_diy_desc">Создавайте мощные пользовательские процедуры, адаптированные к вашему ежедневному использованию.
+
+• Триггерная автоматизация: управляемые событиями правила, которые запускают определённые действия после того, как происходит событие (например, когда зарядное устройство отключено, запускают тактическую вибрацию).
+• Автоматизация состояния: управляемые условиями правила, которые запускают действия входа при вхождении в состояние (например. Зарядка или временное окно) и действия выхода при выходе из него.
+• Автоматизация приложений: автоматически применяет профили или теги замораживания / размораживания при запуске или выходе из определённых приложений. </string>
+    <string name="instruction_section_freezetags_desc">Организуйте и пакетную заморозку фоновых приложений с помощью пользовательских тегов приложений.
+
+• Пользовательские теги: создайте пользовательские теги с пользовательскими цветами (например. Социальные игры, игры, работа).
+• Правила цели: назначайте защиту \"Никогда не замораживайте\" критическим приложениям, чтобы они оставались активными.
+• Интеграция автоматизации: запускайте действия по замораживанию или размораживанию по всему тегу автоматически на основе триггеров устройств, временных окон или запуска приложений. </string>
+    <string name="instruction_section_genai_title">ИИ на устройстве GenAI (Gemini Nano) </string>
+    <string name="instruction_section_genai_desc">Работает локально от Google Gemini Nano через системный сервис Android AICore. Выполняет базовые модели на устройстве для улучшения конфиденциальности пользователей без отправки данных на удалённые серверы.
+
+• Требования и AICore: использует API ML Kit GenAI Prompt на поддерживаемых устройствах (таких как Pixel 9/10 серия, Galaxy S25/S26 и т.д.) под управлением Android AICore.
+• Ограничение переднего плана приложения: вывод API GenAI разрешён только тогда, когда приложение находится на верхнем переднем плане.
+• Квота и исполнение: при условии соблюдения квот батареи AICore на приложение и квот вывода. Функции работают полностью в автономном режиме после завершения загрузки модели AICore.
+• Автоматизация контекста: карты подсказывают запросы на триггеры, состояния, теги приложений и глубокие настройки локально на устройстве. </string>
+    <string name="instruction_section_safe_volume_desc">Для защиты слуха правила ЕС предписывают всплывающее предупреждение, когда объем превышает 85 дБ. Поскольку это всплывающее окно срабатывает один раз после каждой загрузки или после 20 совокупных часов аудиовыхода, оно может нарушить воспроизведение мультимедиа. Включение этого навсегда обходит ограничение, написав в настройку audio_safe_volume_state Global. </string>
+    <string name="instruction_section_safe_volume_title">Зачем отключать предупреждения о безопасной громкости? </string>
+    <string name="instruction_section_notification_snoozing_title">Как использовать Notification Snoozing? </string>
+    <string name="instruction_section_notification_snoozing_desc">После включения проведите вниз или слегка натяните уведомление, чтобы открыть значок повтора (часов) / или долго нажмите или нажмите кнопку повтора, если она уже видна. Нажмите его, чтобы перенести. Доступную продолжительность и время повтора по умолчанию можно настроить в меню настроек. Пишет для безопасных настроек и глобальных свойств настроек. </string>
+    <string name="instruction_section_battery_saver_title">Как работают настройки питания и батареи? </string>
+    <string name="instruction_section_battery_saver_desc">Эти настройки напрямую перекрывают внутренние константы политики Android Battery Saver (в частности, свойство глобальной таблицы настроек: battery_saver_constants).
+
+Когда Android активирует режим экономии батареи, он читает эти клавиши, чтобы определить, какие системные функции следует ограничить (например, снижение яркости экрана, отключение AOD, ограничение доступа к местоположению GPS или перевод приложений в спящий режим).
+
+Если вы измените эти значения, ваша пользовательская политика экономии батареи вступит в силу в следующий раз, когда будет включён Battery Saver. Вы можете сбросить до дефолта в любое время, используя кнопку в нижней части экрана. Для написания этих конфигураций системы требуется разрешение WRITE_SECURE_SETTINGS. </string>
+    <string name="privileged_mode_auto">Автоматически</string>
+    <string name="privileged_mode_root">Рут</string>
+    <string name="privileged_mode_porter">Портер </string>
+    <string name="shizuku_auth_token_label">Токен Shizuku</string>
+    <string name="shizuku_auth_token_help">В сидзуку, в разделе «Контролирование Сидзуку с приложениями автоматизации», откройте «Просмотр интенсивно», скопируйте и вставьте токен авторства из раздела «Дополнительные услуги».
+
+Это позволяет Essentials автоматизировать и перезапускать Сидзуку по требованию в таких функциях, как Shut-Up </string>
+    <string name="shizuku_auth_token_title">Токен Shizuku</string>
+    <string name="external_control_token_title">Токен внешнего контроля </string>
+    <string name="btn_import_config">Импортировать Конфиг </string>
+    <string name="btn_export_config">Экспортировать Конфиг </string>
+    <string name="settings_translations_section">Переводы</string>
+    <string name="translation_logged_in_as">Вход в систему как %1$s</string>
+    <string name="subreddit_description">Место для обсуждения основных и других приложений мной. Присоединяйтесь к сообществу и вносите свой вклад в проекты, получите помощь и кое-чему научитесь. ( ´ ▽ ` )ﾉ</string>
+    <string name="label_top_contributors">Лучшие контрибьюторы</string>
+    <string name="label_notify_new_updates">Уведомлять о новых обновлениях </string>
+    <string name="settings_section_customizations">Кастомизация</string>
+    <string name="settings_section_permissions">Разрешения </string>
+    <string name="settings_section_more">Ещё </string>
+    <string name="diy_no_automations">Автоматизаций пока нет </string>
+    <string name="diy_type_accessibility_shortcut">Ярлык Специальных возможностей</string>
+    <string name="diy_type_action_shortcut">Ярлык действия</string>
+    <string name="diy_type_trigger">Триггер </string>
+    <string name="diy_type_state">Состояние</string>
+    <string name="diy_type_app">Приложение </string>
+    <string name="button_remap_add_action">Добавить действие </string>
+    <string name="diy_action_wifi_on">Включить WIFI</string>
+    <string name="diy_category_connectivity">Связь и сеть </string>
+    <string name="diy_action_wifi_off">Выключить Wi-Fi </string>
+    <string name="diy_action_wifi_toggle">Переключить WIFI</string>
+    <string name="diy_action_cellular_on">Включите сотовую связь</string>
+    <string name="diy_action_cellular_off">Выключить сотовую связь</string>
+    <string name="diy_action_cellular_toggle">Переключить сотовую связь </string>
+    <string name="diy_action_hotspot_on">Включить Точку доступа</string>
+    <string name="diy_action_hotspot_off">Выключить Точку доступа</string>
+    <string name="diy_action_hotspot_toggle">Переключить точку доступа</string>
+    <string name="diy_category_display">Дисплей и экран </string>
+    <string name="diy_action_auto_brightness_on">Включите авто яркость </string>
+    <string name="diy_action_auto_brightness_off">Выключить авто яркость</string>
+    <string name="diy_action_auto_brightness_toggle">Переключение автояркости</string>
+    <string name="diy_action_caffeinate_on">Включить режим \"Кофеина\"</string>
+    <string name="diy_action_caffeinate_off">Выключить режим \"Кофеина\"</string>
+    <string name="diy_action_screen_off">Отключение экрана </string>
+    <string name="diy_action_open_app">Открыть приложение </string>
+    <string name="diy_action_open_activity">Открыть активность</string>
+    <string name="diy_action_ai_assistant">ИИ Ассистент</string>
+    <string name="diy_action_freeze_apps">Заморозить приложения </string>
+    <string name="diy_action_unfreeze_apps">Разморозить приложения </string>
+    <string name="diy_action_freeze_tag">Замораживание по тегам </string>
+    <string name="diy_action_split_screen">Включить разделенный экран</string>
+    <string name="diy_set_keyboard_title">Поставить клавиатуру</string>
+    <string name="diy_action_open_camera">Открыть камеру </string>
+    <string name="diy_action_open_video_camera">Открыть видеокамеру </string>
+    <string name="diy_action_open_qr_scanner">Откройте сканер QR-кода </string>
+    <string name="diy_action_set_charging_mode">Установите режим зарядки </string>
+    <string name="diy_action_custom_settings">Пользовательские настройки </string>
+    <string name="diy_action_wait">Подождать</string>
+    <string name="diy_action_send_notification">Отправить уведомление </string>
+    <string name="pixel_search_tab_all">Все </string>
+    <string name="pixel_search_tab_apps">Приложения </string>
+    <string name="pixel_search_tab_contacts">Контакты </string>
+    <string name="pixel_search_tab_settings">Настройки </string>
+    <string name="pixel_search_tab_web">Веб </string>
+    <string name="diy_action_circle_to_search">Обвести и найти</string>
+    <string name="diy_action_back_gesture_off">Отключите жест назад </string>
+    <string name="diy_action_back_gesture_on">Включите жест назад </string>
+    <string name="diy_action_take_screenshot">Сделайте скриншот </string>
+    <string name="diy_category_sound_media">Звук и медиа </string>
+    <string name="diy_action_cycle_sound_modes">Режимы звука цикла </string>
+    <string name="diy_action_toggle_mute">Включить беззвучный </string>
+    <string name="diy_action_toggle_dnd">Переключение не беспокоить </string>
+    <string name="diy_action_set_mode">Установить режим </string>
+    <string name="diy_action_toggle_vibrate">Переключение вибрации </string>
+    <string name="diy_action_toggle_media_volume">Переключение громкости Медиа</string>
+    <string name="diy_action_set_volume">Установить уровень громкости</string>
+    <string name="diy_action_media_play_pause">Медиа Проигрывание/Пауза </string>
+    <string name="diy_action_media_next">Медиа следующее</string>
+    <string name="diy_action_media_previous">Медиа прошлое</string>
+    <string name="diy_action_like_current_song">Лайк текущей песне</string>
+    <string name="diy_action_open_now_playing_app">Откройте играющее приложение сейчас </string>
+    <string name="diy_category_essentials">Твики Essentials</string>
+    <string name="diy_action_sometimes_essentials">Иногда Essential</string>
+    <string name="diy_action_notification_lighting">Триггерное освещение уведомлений </string>
+    <string name="diy_action_overlay_control">Наложения </string>
+    <string name="essential_search_label">Поиск Essentials</string>
+    <string name="button_remap_sequence_hint">Действия проходят в порядке сверху вниз. Перетащите, чтобы переупорядочить. </string>
+    <string name="diy_category_battery_power">Аккумулятор и мощность </string>
+    <string name="diy_category_system_screen">Система и экран </string>
+    <string name="freeze_tags_empty">Теги ещё не созданы </string>
+    <string name="freeze_tags_section_title">Теги </string>
+    <string name="freeze_tag_name_hint">Название тега </string>
+    <string name="freeze_tag_color_picker_label">Выберите цвет </string>
+    <string name="freeze_tag_icon_picker_label">Выберите иконку</string>
+    <string name="feature_reset_info_title">Сбросьте эту функцию </string>
+    <string name="feature_reset_info_desc">Сбросьте все настройки Essentials для этой функции по умолчанию. Системные настройки и разрешения не меняются. </string>
+    <string name="device_api_patch">API %1$s • Патч: %2$s</string>
+    <string name="device_build">Билд: %1$s</string>
+    <string name="label_battery_state_of_health">Состояние здоровья </string>
+    <string name="charge_opt_long_press_desc">Выберите, между какими режимами зарядки переключаться при нажатии на плитку \"Быстрые настройки\". </string>
+    <string name="charge_opt_long_press_title">Переключение опций </string>
+    <string name="label_reset_battery_stats_title">Сброс статистики батареи </string>
+    <string name="label_reset_battery_stats_desc">Сброс статистики батареи системы (dumpsys batterystat - сброс). Это очищает историческое использование батареи и данные о расходе приложений, поэтому он начинает отслеживать свежий текущий заряд. </string>
+    <string name="action_reset_battery_stats">Сброс статистики </string>
+    <string name="setting_privileged_mode_title">Привилегированный доступ </string>
+    <string name="settings_permissions_all">Все разрешения </string>
+    <string name="bug_report_issue_details">Подробности проблемы</string>
+    <string name="about_desc_networks">Настройте ограничения скорости загрузки в сеть, постоянно держите мобильные данные активными даже при подключении к Wi-Fi и включите настройки сертификации беспроводного дисплея. </string>
+    <string name="watch_update_required_desc">Для ваших часов доступна новая версия Essentials Wear. Обновление для обеспечения полной совместимости. </string>
+    <string name="watch_update_required_title">Обновить Essentials Wear на часах</string>
+    <string name="cat_sync">Синхронизация </string>
+    <string name="watch_adb_permissions_title">Смотрите разрешения ADB</string>
+    <string name="watchface_promo_step3_desc">Откройте Play Store прямо на своих часах для установки </string>
+    <string name="watchface_category_clock">Часы </string>
+    <string name="watchface_category_battery">Батарея и иконки </string>
+    <string name="watchface_category_complications">Осложнения </string>
+    <string name="island_providers_title">Приложения острова </string>
+    <string name="duo_section_position">Положение и размеры </string>
+    <string name="duo_section_style">Стиль</string>
+    <string name="duo_section_behavior">Поведение </string>
+    <string name="duo_section_actions">Действия </string>
+    <string name="about_desc_status_glance">Взгляд на состояние показывает приоритетный окружающий чип рядом с отверстием для передней камеры. Он динамически отображает активный фонарик, предстоящие события календаря, воспроизводящиеся в настоящее время медиа и текущее время. </string>
 </resources>
