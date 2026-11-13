@@ -12,7 +12,10 @@ import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
@@ -64,7 +67,9 @@ import androidx.compose.ui.platform.LocalFontFamilyResolver
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.offset
 import com.sameerasw.essentials.island.state.IslandStillness
 import com.sameerasw.essentials.island.ui.IslandFontFamily
 import com.sameerasw.essentials.island.ui.IslandMotion
@@ -337,7 +342,7 @@ fun BatteryGlyph(
                     if (!showLevel) return@drawBehind
                     paint.typeface = typeface
                     paint.color = labelColor.toArgb()
-                    paint.textSize = size.height * (if (label.length > 2) 0.82f else 0.94f)
+                    paint.textSize = size.height * (if (label.length > 2) 0.74f else 0.84f)
                     paint.letterSpacing = -0.04f
                     paint.getTextBounds(label, 0, label.length, bounds)
                     val textWidth = paint.measureText(label)
@@ -360,21 +365,26 @@ fun BatteryGlyph(
         if (symbol != 0) {
             Canvas(
                 Modifier
-                    .then(if (symbol == 3) Modifier else Modifier.graphicsLayer(compositingStrategy = CompositingStrategy.Offscreen))
                     .layout { measurable, constraints ->
-                        val placeable = measurable.measure(constraints)
                         val overlap = 7.dp.roundToPx()
+                        val placeable = measurable.measure(constraints.offset(horizontal = overlap))
                         layout((placeable.width - overlap).coerceAtLeast(0), placeable.height) { placeable.place(-overlap, 0) }
                     }
-                    .then(if (symbol == 3) Modifier.size(9.dp, 11.dp) else Modifier.size(11.dp, 13.dp)),
+                    .then(if (symbol == 2) Modifier.size(11.dp, 13.dp) else Modifier.size(9.dp, 11.dp)),
             ) {
                 val stroke = 1.8.dp.toPx()
                 val gap = 0.8.dp.toPx()
+                val outline = stroke * 0.7f
+                val cutout = { path: Path ->
+                    drawPath(path, Color.Black, style = Stroke(gap * 3 + outline, join = StrokeJoin.Round), blendMode = BlendMode.Clear)
+                    drawPath(path, Color.Black, blendMode = BlendMode.Clear)
+                    drawPath(path, Color.White, style = Stroke(outline, join = StrokeJoin.Round))
+                }
                 if (symbol == 2) {
                     val arm = size.width * 0.42f
                     val c = center
                     for ((width, paintColor, mode) in listOf(
-                        Triple(stroke + gap * 2, Color.Black, BlendMode.Clear),
+                        Triple(stroke + gap * 3, Color.Black, BlendMode.Clear),
                         Triple(stroke, Color.White, BlendMode.SrcOver),
                     )) {
                         drawLine(paintColor, Offset(c.x - arm, c.y), Offset(c.x + arm, c.y), width, StrokeCap.Round, blendMode = mode)
@@ -392,10 +402,7 @@ fun BatteryGlyph(
                         lineTo(w * 0.06f, h * 0.2f)
                         close()
                     }
-                    val outline = stroke * 0.7f
-                    drawPath(shield, Color.Black, style = Stroke(gap * 3 + outline, join = StrokeJoin.Round), blendMode = BlendMode.Clear)
-                    drawPath(shield, Color.Black, blendMode = BlendMode.Clear)
-                    drawPath(shield, Color.White, style = Stroke(outline, join = StrokeJoin.Round))
+                    cutout(shield)
                     clipRect(right = w * 0.5f) { drawPath(shield, Color.White) }
                 } else {
                     val w = size.width
@@ -409,11 +416,23 @@ fun BatteryGlyph(
                         lineTo(w * 0.54f, h * 0.40f)
                         close()
                     }
-                    drawPath(bolt, Color.Black, style = Stroke(gap * 2, join = StrokeJoin.Round), blendMode = BlendMode.Clear)
-                    drawPath(bolt, Color.White, style = Stroke(stroke * 0.3f, join = StrokeJoin.Round))
+                    cutout(bolt)
                     drawPath(bolt, Color.White)
                 }
             }
         }
+    }
+}
+
+@Preview(backgroundColor = 0xFF000000, showBackground = true)
+@Composable
+private fun BatteryGlyphPreview() {
+    Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+        BatteryGlyph(87, Color(0xFF3DDC84))
+        BatteryGlyph(87, Color(0xFF3DDC84), charging = true)
+        BatteryGlyph(45, Color(0xFFFFC107), powerSave = true)
+        BatteryGlyph(80, Color(0xFF3DDC84), limited = true)
+        BatteryGlyph(100, Color(0xFF3DDC84), charging = true)
+        BatteryGlyph(15, Color(0xFFFF5252), showLevel = false, charging = true)
     }
 }
