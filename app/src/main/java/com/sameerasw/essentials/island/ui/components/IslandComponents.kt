@@ -269,7 +269,22 @@ fun EqualizerBars(
 }
 
 @Composable
-fun BatteryRing(level: Int, color: Color, modifier: Modifier = Modifier, showLevel: Boolean = false, size: Dp = if (showLevel) 24.dp else 18.dp) {
+fun BatteryRing(
+    level: Int,
+    color: Color,
+    modifier: Modifier = Modifier,
+    showLevel: Boolean = false,
+    size: Dp = if (showLevel) 24.dp else 18.dp,
+    charging: Boolean = false,
+    powerSave: Boolean = false,
+    limited: Boolean = false,
+) {
+    val symbol = when {
+        limited -> 3
+        charging -> 1
+        powerSave -> 2
+        else -> 0
+    }
     val sweep by animateFloatAsState(360f * level.coerceIn(0, 100) / 100f, IslandMotion.float(), label = "batterySweep")
     val ringColor by animateColorAsState(color, label = "batteryColor")
     var ringPx by remember { mutableStateOf(0) }
@@ -285,7 +300,21 @@ fun BatteryRing(level: Int, color: Color, modifier: Modifier = Modifier, showLev
                 drawArc(ringColor, -90f, sweep, false, topLeft, arcSize, style = Stroke(stroke, cap = StrokeCap.Round))
             }
         }
-        if (showLevel && ringPx > 0) {
+        if (symbol != 0) {
+            Canvas(Modifier.fillMaxSize(0.46f)) {
+                when (symbol) {
+                    1 -> drawPath(batteryBoltPath(this.size.width, this.size.height), ringColor)
+                    3 -> drawPath(batteryShieldPath(this.size.width, this.size.height), ringColor)
+                    else -> {
+                        val arm = this.size.width * 0.42f
+                        val c = center
+                        val w = this.size.width * 0.2f
+                        drawLine(ringColor, Offset(c.x - arm, c.y), Offset(c.x + arm, c.y), w, StrokeCap.Round)
+                        drawLine(ringColor, Offset(c.x, c.y - arm), Offset(c.x, c.y + arm), w, StrokeCap.Round)
+                    }
+                }
+            }
+        } else if (showLevel && ringPx > 0) {
             val label = level.coerceIn(0, 100).toString()
             val innerPx = ringPx * (1f - 2f * 0.12f) * 0.8f
             val fontPx = minOf(innerPx / (label.length * 0.62f), innerPx * 0.75f)
@@ -393,35 +422,39 @@ fun BatteryGlyph(
                 } else if (symbol == 3) {
                     val w = size.width
                     val h = size.height
-                    val shield = Path().apply {
-                        moveTo(w * 0.5f, h * 0.04f)
-                        lineTo(w * 0.94f, h * 0.2f)
-                        lineTo(w * 0.94f, h * 0.5f)
-                        cubicTo(w * 0.94f, h * 0.76f, w * 0.74f, h * 0.92f, w * 0.5f, h * 0.98f)
-                        cubicTo(w * 0.26f, h * 0.92f, w * 0.06f, h * 0.76f, w * 0.06f, h * 0.5f)
-                        lineTo(w * 0.06f, h * 0.2f)
-                        close()
-                    }
+                    val shield = batteryShieldPath(w, h)
                     cutout(shield)
                     clipRect(right = w * 0.5f) { drawPath(shield, Color.White) }
                 } else {
                     val w = size.width
                     val h = size.height
-                    val bolt = Path().apply {
-                        moveTo(w * 0.62f, 0f)
-                        lineTo(w * 0.08f, h * 0.58f)
-                        lineTo(w * 0.46f, h * 0.58f)
-                        lineTo(w * 0.36f, h)
-                        lineTo(w * 0.92f, h * 0.40f)
-                        lineTo(w * 0.54f, h * 0.40f)
-                        close()
-                    }
+                    val bolt = batteryBoltPath(w, h)
                     cutout(bolt)
                     drawPath(bolt, Color.White)
                 }
             }
         }
     }
+}
+
+private fun batteryShieldPath(w: Float, h: Float) = Path().apply {
+    moveTo(w * 0.5f, h * 0.04f)
+    lineTo(w * 0.94f, h * 0.2f)
+    lineTo(w * 0.94f, h * 0.5f)
+    cubicTo(w * 0.94f, h * 0.76f, w * 0.74f, h * 0.92f, w * 0.5f, h * 0.98f)
+    cubicTo(w * 0.26f, h * 0.92f, w * 0.06f, h * 0.76f, w * 0.06f, h * 0.5f)
+    lineTo(w * 0.06f, h * 0.2f)
+    close()
+}
+
+private fun batteryBoltPath(w: Float, h: Float) = Path().apply {
+    moveTo(w * 0.62f, 0f)
+    lineTo(w * 0.08f, h * 0.58f)
+    lineTo(w * 0.46f, h * 0.58f)
+    lineTo(w * 0.36f, h)
+    lineTo(w * 0.92f, h * 0.40f)
+    lineTo(w * 0.54f, h * 0.40f)
+    close()
 }
 
 @Preview(backgroundColor = 0xFF000000, showBackground = true)

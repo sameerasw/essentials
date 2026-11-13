@@ -299,7 +299,7 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
                 CompactCell("battery") {
                     when {
                         iconStyle -> BatteryGlyph(batteryLevel, displayColor ?: islandAccent(), showLevel = showLevel, charging = isCharging, powerSave = isSaving, limited = isLimited)
-                        else -> BatteryRing(batteryLevel, displayColor ?: islandAccent(), showLevel = showLevel)
+                        else -> BatteryRing(batteryLevel, displayColor ?: islandAccent(), showLevel = showLevel, charging = isCharging, powerSave = isSaving, limited = isLimited)
                     }
                 },
             ),
@@ -309,7 +309,7 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
                     icon = {
                         when {
                             iconStyle -> BatteryGlyph(batteryLevel, displayColor ?: islandAccent(), showLevel = false, charging = isCharging, powerSave = isSaving, limited = isLimited)
-                            else -> BatteryRing(batteryLevel, displayColor ?: islandAccent(), showLevel = false)
+                            else -> BatteryRing(batteryLevel, displayColor ?: islandAccent(), showLevel = false, charging = isCharging, powerSave = isSaving, limited = isLimited)
                         }
                     },
                     start = "$batteryLevel%",
