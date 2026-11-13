@@ -1955,17 +1955,17 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="island_themed_text_title">Color de texto tematizado </string>
     <string name="debug_ui_margin_overlay_title">Superposicion del margen de la interfaz</string>
     <string name="island_statusbar_ignore_notifications_title">Ignorar notificaciones</string>
-    <string name="island_statusbar_aware_width_info">This may not work on all devices. It works best on Pixels and devices with a status bar close to AOSP.</string>
-    <string name="island_statusbar_aware_width_info_tip">Even on those devices, try reducing the number of visible status bar icons to give the island more space.</string>
+    <string name="island_statusbar_aware_width_info">Esto puede no funcionar en todos los dispositivos. Funciona mejor en Pixels y dispositivos con una barra de estado cercana a AOSP.</string>
+    <string name="island_statusbar_aware_width_info_tip">Incluso en esos dispositivos, prueba a reducir el número de iconos visibles en la barra de estado para dar más espacio a la isla.</string>
     <string name="island_dismiss_direction_title">Dismiss swipe</string>
     <string name="island_dismiss_direction_horizontal">Horizontal</string>
     <string name="island_dismiss_direction_down">Down</string>
     <string name="island_media_bubble_title">Show as a bubble</string>
     <string name="island_media_bubble_wide_title">Wider pill</string>
     <string name="island_media_bubble_fill_art_title">Fill album art</string>
-    <string name="island_transparency_title">Island transparency</string>
-    <string name="island_transparency_intensity_title">Transparency intensity</string>
-    <string name="island_backdrop_blur_title">Backdrop blur</string>
+    <string name="island_transparency_title">Transparencia de la isla</string>
+    <string name="island_transparency_intensity_title">Intensidad de transparencia</string>
+    <string name="island_backdrop_blur_title">Desenfoque de fondo</string>
     <string name="island_backdrop_blur_unavailable_os">Backdrop blur needs Android 12 or newer. This device runs an older version, so the system can\'t blur what is behind the island.</string>
     <string name="island_backdrop_blur_unavailable_disabled">Your system currently has window blur turned off. This usually happens when Battery Saver is on, when \"Disable window blurs\" is enabled in Developer options, or when the device doesn\'t support it. This option unlocks automatically once window blur is back on.</string>
     <string name="island_backdrop_blur_unavailable_api">This device\'s system doesn\'t expose the blur feature the island needs for backdrop blur, so it can\'t be enabled here.</string>
@@ -2013,4 +2013,9 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="hilight_only_screen_off_title">Solo si la pantalla esta apagada</string>
     <string name="diy_wait_duration">Duracion</string>
     <string name="island_notif_lock_hidden_title">Hidden</string>
+    <string name="island_progressive_blur_title">Animación de desenfoque progresivo</string>
+    <string name="settings_section_permissions">Permisos</string>
+    <string name="settings_permissions_all">Todos los permisos</string>
+    <string name="setting_privileged_mode_title">Acceso privilegiado</string>
+    <string name="shizuku_auth_token_label">Token de autenticación de Shizuku</string>
 </resources>
