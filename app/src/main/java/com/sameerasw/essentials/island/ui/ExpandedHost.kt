@@ -9,6 +9,7 @@ import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.pointer.positionChange
@@ -58,6 +59,9 @@ fun ExpandedHost(
         propagateMinConstraints = true,
     ) {
         val scrollState = rememberScrollState()
+        LaunchedEffect(IslandLiveResize.active) {
+            if (!IslandLiveResize.active) scrollState.scrollTo(0)
+        }
         Box(
             if (capped) Modifier.edgeAwareScroll(scrollState) else Modifier,
             propagateMinConstraints = true,
@@ -78,6 +82,7 @@ internal fun Modifier.edgeAwareScroll(state: ScrollState): Modifier =
                 if (change.isConsumed || !change.pressed) break
                 val delta = change.positionChange()
                 total += delta
+                if (IslandLiveResize.active) break
                 if (!decided && total.getDistance() > viewConfiguration.touchSlop) {
                     decided = true
                     handle = abs(total.y) > abs(total.x) &&
