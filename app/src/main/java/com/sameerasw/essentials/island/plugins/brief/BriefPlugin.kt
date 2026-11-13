@@ -16,7 +16,11 @@ import com.sameerasw.essentials.island.remote.LocalRemotePaused
 import com.sameerasw.essentials.island.remote.RemoteExpanded
 import com.sameerasw.essentials.island.ui.SurfaceBackdrop
 import android.Manifest
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.IntentFilter
+import android.os.PowerManager
+import androidx.compose.runtime.DisposableEffect
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.ContentUris
@@ -121,6 +125,7 @@ import com.sameerasw.essentials.island.plugins.BaseIslandPlugin
 import com.sameerasw.essentials.island.ui.IslandTextStyles
 import com.sameerasw.essentials.island.ui.islandTextColor
 import com.sameerasw.essentials.island.ui.components.BatteryGlyph
+import com.sameerasw.essentials.island.plugins.timebattery.BatteryStatus
 import com.sameerasw.essentials.island.plugins.timebattery.batteryIdleColor
 import com.sameerasw.essentials.island.plugins.timebattery.batteryStateColor
 import com.sameerasw.essentials.island.plugins.timebattery.readBatteryStatus
@@ -443,7 +448,18 @@ private fun BriefOverview(
             now = System.currentTimeMillis()
         }
     }
-    val battery = remember(now) { readBatteryStatus(context) }
+    var batteryState by remember { mutableStateOf<BatteryStatus?>(null) }
+    DisposableEffect(context) {
+        val receiver = object : BroadcastReceiver() {
+            override fun onReceive(c: Context, intent: Intent) {
+                batteryState = readBatteryStatus(context, if (intent.action == Intent.ACTION_BATTERY_CHANGED) intent else null)
+            }
+        }
+        val filter = IntentFilter(Intent.ACTION_BATTERY_CHANGED).apply { addAction(PowerManager.ACTION_POWER_SAVE_MODE_CHANGED) }
+        val sticky = context.registerReceiver(receiver, filter)
+        batteryState = readBatteryStatus(context, sticky)
+        onDispose { context.unregisterReceiver(receiver) }
+    }
     val alarm = remember(now, alarmHours) { alarmHours?.let { NextAlarm.within(context, it) } }
     val devices by produceState(BriefDevicesCache.devices, now) {
         val fresh = withContext(Dispatchers.IO) { readDevices(context) }
@@ -458,6 +474,7 @@ private fun BriefOverview(
         }
     }
 
+    val battery = batteryState
     val timeSettings = remember { SettingsRepository(context) }
     val time = IslandTimeFormat.format(context, timeSettings, now)
     val batteryColor = battery?.let { batteryStateColor(timeSettings, it) ?: batteryIdleColor(timeSettings) } ?: accent
@@ -489,7 +506,7 @@ private fun BriefOverview(
                         if (iconStyle) {
                             BatteryGlyph(battery.level, batteryColor, showLevel = true, charging = battery.charging, powerSave = battery.powerSave, limited = battery.limited)
                         } else {
-                            BatteryRing(battery.level, batteryColor, showLevel = true)
+                            BatteryRing(battery.level, batteryColor, showLevel = true, charging = battery.charging, powerSave = battery.powerSave, limited = battery.limited)
                         }
                     }
                 },
