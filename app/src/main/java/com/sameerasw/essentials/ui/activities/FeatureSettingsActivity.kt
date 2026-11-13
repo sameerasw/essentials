@@ -69,6 +69,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sameerasw.essentials.domain.HapticFeedbackType
+import com.sameerasw.essentials.domain.model.Snippet
 import com.sameerasw.essentials.domain.registry.FeatureRegistry
 import com.sameerasw.essentials.ui.components.EssentialsFloatingToolbar
 import com.sameerasw.essentials.ui.components.animations.LottieFeatureAnimation
@@ -271,6 +272,8 @@ fun FeatureSettingsScreen(
             var standbyAppsSelectedPackages by remember { mutableStateOf(setOf<String>()) }
             var activityLauncherQuery by remember { mutableStateOf("") }
             var isStandbyMoveSheetVisible by remember { mutableStateOf(false) }
+            var isAddSnippetSheetVisible by remember { mutableStateOf(false) }
+            var editingSnippet by remember { mutableStateOf<Snippet?>(null) }
 
             val isAccessibilityEnabled by viewModel.isAccessibilityEnabled
             val isWriteSecureSettingsEnabled by viewModel.isWriteSecureSettingsEnabled
@@ -1244,6 +1247,10 @@ fun FeatureSettingsScreen(
                                 SnippetsSettingsUI(
                                     viewModel = viewModel,
                                     modifier = Modifier.padding(top = 16.dp),
+                                    isAddSheetVisible = isAddSnippetSheetVisible,
+                                    onAddSheetVisibleChange = { isAddSnippetSheetVisible = it },
+                                    editingSnippet = editingSnippet,
+                                    onEditingSnippetChange = { editingSnippet = it },
                                 )
                             }
 
@@ -1567,8 +1574,8 @@ fun FeatureSettingsScreen(
                                     }
                                     featureId == "Text Snippets" -> {
                                         {
-                                            viewModel.editingSnippet.value = null
-                                            viewModel.isAddSnippetSheetVisible.value = true
+                                            editingSnippet = null
+                                            isAddSnippetSheetVisible = true
                                         }
                                     }
                                     else -> null

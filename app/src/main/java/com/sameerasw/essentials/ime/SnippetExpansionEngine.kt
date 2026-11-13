@@ -16,14 +16,6 @@ class SnippetExpansionEngine(
     private val getPrefix: () -> String,
     private val isEnabled: () -> Boolean,
 ) {
-    /**
-     * Checks if the text before cursor matches any active snippet trigger.
-     * When matched, calls onExpand with the number of characters to delete and the replacement string.
-     *
-     * @param textBeforeCursor Text preceding the cursor.
-     * @param onExpand Callback returning deleteCount and replacement content.
-     * @return True if a snippet was matched and expanded, false otherwise.
-     */
     fun checkAndExpand(
         textBeforeCursor: String,
         onExpand: (deleteCount: Int, replacement: String) -> Unit,
@@ -33,24 +25,41 @@ class SnippetExpansionEngine(
         val snippets = getSnippets()
         if (snippets.isEmpty()) return false
 
-        val sortedSnippets = snippets.sortedByDescending { it.keyword.length }
+        val sorted = snippets.sortedByDescending { it.keyword.length }
 
-        for (snippet in sortedSnippets) {
+        for (snippet in sorted) {
             if (snippet.keyword.isEmpty()) continue
 
             if (prefix.isNotEmpty()) {
                 val trigger = "$prefix${snippet.keyword}"
-                if (textBeforeCursor.endsWith(trigger)) {
-                    onExpand(trigger.length, snippet.content)
+                val hasDelimiter = textBeforeCursor.endsWith(" ") || textBeforeCursor.endsWith("\t")
+                val candidate = if (hasDelimiter) textBeforeCursor.dropLast(1) else textBeforeCursor
+
+                if (candidate.endsWith(trigger, ignoreCase = true)) {
+                    val triggerStart = candidate.length - trigger.length
+                    val isBoundary = triggerStart == 0 || candidate[triggerStart - 1].isWhitespace()
+                    if (!isBoundary) continue
+
+                    if (!hasDelimiter) {
+                        val hasLongerSibling = sorted.any {
+                            it.keyword.length > snippet.keyword.length &&
+                                it.keyword.startsWith(snippet.keyword, ignoreCase = true)
+                        }
+                        if (hasLongerSibling) continue
+                    }
+
+                    val matchLen = if (hasDelimiter) trigger.length + 1 else trigger.length
+                    val replacement = if (hasDelimiter) snippet.content + " " else snippet.content
+                    onExpand(matchLen, replacement)
                     return true
                 }
             } else {
                 val lastChar = textBeforeCursor.last()
                 if (lastChar.isWhitespace()) {
                     val trimmed = textBeforeCursor.dropLast(1)
-                    if (trimmed.endsWith(snippet.keyword)) {
-                        val beforeKeywordIndex = trimmed.length - snippet.keyword.length - 1
-                        val isBoundary = beforeKeywordIndex < 0 || !trimmed[beforeKeywordIndex].isLetterOrDigit()
+                    if (trimmed.endsWith(snippet.keyword, ignoreCase = true)) {
+                        val beforeIndex = trimmed.length - snippet.keyword.length - 1
+                        val isBoundary = beforeIndex < 0 || trimmed[beforeIndex].isWhitespace()
                         if (isBoundary) {
                             onExpand(snippet.keyword.length + 1, snippet.content + lastChar)
                             return true
