@@ -41,6 +41,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
@@ -314,7 +315,7 @@ private fun ProgressPill(progress: Float, indeterminate: Boolean, icon: ImageBit
 }
 
 @Composable
-internal fun ProgressRing(progress: Float, indeterminate: Boolean, icon: ImageBitmap?, color: Color, size: Dp = 24.dp, tinted: Boolean = false) {
+internal fun ProgressRing(progress: Float, indeterminate: Boolean, icon: ImageBitmap?, color: Color, size: Dp = 24.dp, tinted: Boolean = false, iconRotation: Float = 0f) {
     val sweep by animateFloatAsState(360f * progress.coerceIn(0f, 1f), IslandMotion.float(), label = "progressSweep")
     val rotation = rememberLoopValue(indeterminate && !islandStill(), 360f, 1200)
     Box(
@@ -341,7 +342,7 @@ internal fun ProgressRing(progress: Float, indeterminate: Boolean, icon: ImageBi
                 contentDescription = null,
                 contentScale = if (tinted) ContentScale.Fit else ContentScale.Crop,
                 colorFilter = if (tinted) ColorFilter.tint(color) else null,
-                modifier = Modifier.fillMaxSize(if (tinted) 0.8f else 0.62f).aspectRatio(1f).clip(CircleShape),
+                modifier = Modifier.fillMaxSize(if (tinted) 0.8f else 0.62f).aspectRatio(1f).graphicsLayer { rotationZ = iconRotation }.clip(CircleShape),
             )
         }
     }

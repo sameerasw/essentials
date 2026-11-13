@@ -151,7 +151,7 @@ private fun SlideFeedback.iconRes(): Int = when (this) {
 }
 
 @Composable
-fun MediaArtCue(artwork: Bitmap?, accent: Color, size: Dp) {
+fun MediaArtCue(artwork: Bitmap?, accent: Color, size: Dp, spin: Float = 0f) {
     val liked by IslandMediaCue.liked.collectAsState()
     val pop by animateFloatAsState(
         targetValue = if (liked) 1f else 0f,
@@ -168,6 +168,7 @@ fun MediaArtCue(artwork: Bitmap?, accent: Color, size: Dp) {
             Box(
                 Modifier.graphicsLayer {
                     alpha = 1f - pop
+                    rotationZ = spin
                     val s = 1f - 0.25f * pop
                     scaleX = s
                     scaleY = s
