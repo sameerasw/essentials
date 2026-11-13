@@ -43,6 +43,14 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import com.sameerasw.essentials.ui.core.cards.LocalIconToggleStatus
+import com.sameerasw.essentials.island.state.IslandPresence
+import com.sameerasw.essentials.island.state.IslandItemsState
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.border
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -256,7 +264,7 @@ fun IslandSettingsUI(
             spacing = 2.dp,
             cornerRadius = 24.dp,
         ) {
-            val renderEntry: @Composable (String, (@Composable () -> Unit)?) -> Unit = { entryId, handle ->
+            val renderEntryBody: @Composable (String, (@Composable () -> Unit)?) -> Unit = { entryId, handle ->
                 when (entryId) {
                     "calls" -> IconToggleItem(
                         dragHandle = handle,
@@ -521,6 +529,14 @@ fun IslandSettingsUI(
                         }
                     }
                 }
+            }
+            val presenceMap by IslandItemsState.presence.collectAsState()
+            val renderEntry: @Composable (String, (@Composable () -> Unit)?) -> Unit = { entryId, handle ->
+                val groups = if (entryId == "calls") setOf("call") else IslandPriorityEntries.entries(providerEntries).firstOrNull { it.id == entryId }?.pluginIds.orEmpty()
+                val presence = groups.mapNotNull { presenceMap[it] }.let { found ->
+                    found.firstOrNull { it == IslandPresence.Shown } ?: found.firstOrNull()
+                }
+                CompositionLocalProvider(LocalIconToggleStatus provides { IslandPresenceDot(presence) }) { renderEntryBody(entryId, handle) }
             }
             renderEntry("calls", null)
             ReorderableColumn(
@@ -821,5 +837,17 @@ fun IslandSettingsUI(
             onDismissRequest = { showCalendarOptionsSheet = false },
             allowIconEdit = true,
         )
+    }
+}
+
+@Composable
+private fun IslandPresenceDot(presence: IslandPresence?) {
+    val color = MaterialTheme.colorScheme.primary
+    Box(Modifier.size(10.dp), contentAlignment = Alignment.Center) {
+        when (presence) {
+            IslandPresence.Shown -> Box(Modifier.size(8.dp).background(color, CircleShape))
+            IslandPresence.Hidden -> Box(Modifier.size(8.dp).border(1.5.dp, color, CircleShape))
+            null -> Unit
+        }
     }
 }
