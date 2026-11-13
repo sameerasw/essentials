@@ -296,10 +296,17 @@ fun SettingsContent(
             uri?.let {
                 try {
                     context.contentResolver.openOutputStream(it)?.use { outputStream ->
-                        viewModel.exportConfigs(context, outputStream)
+                        val tileLayoutIncluded = viewModel.exportConfigs(context, outputStream)
                         Toast
-                            .makeText(context, context.getString(R.string.settings_config_exported), Toast.LENGTH_SHORT)
-                            .show()
+                            .makeText(
+                                context,
+                                if (tileLayoutIncluded) {
+                                    context.getString(R.string.settings_config_exported)
+                                } else {
+                                    context.getString(R.string.qs_tiles_export_no_layout)
+                                },
+                                if (tileLayoutIncluded) Toast.LENGTH_SHORT else Toast.LENGTH_LONG,
+                            ).show()
                     }
                 } catch (e: Exception) {
                     Toast.makeText(context, context.getString(R.string.settings_config_export_failed), Toast.LENGTH_SHORT).show()

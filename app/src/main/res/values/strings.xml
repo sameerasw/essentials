@@ -3538,6 +3538,21 @@
     <string name="screenshot_action_undo">Undo</string>
     <string name="screenshot_cleanup_result_channel_name">Screenshot cleanup results</string>
     <string name="screenshot_cleanup_channel_name">Screenshot cleanup</string>
+    <string name="qs_tiles_export_no_layout">Config exported, but without Quick Settings tile positions. Grant Shizuku and export again to keep them</string>
+    <string name="qs_tiles_restore_no_positions">Tiles added at the end. Grant Shizuku to move them back to their old positions</string>
+    <string name="qs_tiles_restore_title">Restore tiles from backup</string>
+    <string name="qs_tiles_restore_desc">These tiles were in Quick Settings when the backup was made but are missing now: %1$s</string>
+    <string name="qs_tiles_restore_action">Restore</string>
+    <string name="qs_tiles_restore_dismiss">Dismiss</string>
+    <string name="qs_tiles_restore_needs_android_13">Re-adding tiles needs Android 13 or Shizuku</string>
+    <plurals name="qs_tiles_restored_toast">
+        <item quantity="one">Restored %d Quick Settings tile</item>
+        <item quantity="other">Restored %d Quick Settings tiles</item>
+    </plurals>
+    <plurals name="qs_tiles_restore_pending_toast">
+        <item quantity="one">%d Quick Settings tile can be restored from the Quick Settings tiles screen</item>
+        <item quantity="other">%d Quick Settings tiles can be restored from the Quick Settings tiles screen</item>
+    </plurals>
     <plurals name="screenshot_days">
         <item quantity="one">%d day</item>
         <item quantity="other">%d days</item>
