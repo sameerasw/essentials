@@ -17,8 +17,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.graphics.Color as AndroidColor
-import android.os.BatteryManager
 import android.provider.AlarmClock
 import android.os.PowerManager
 import android.text.format.DateFormat
@@ -35,7 +33,6 @@ import com.sameerasw.essentials.island.model.IslandPriority
 import com.sameerasw.essentials.island.model.LineContent
 import com.sameerasw.essentials.island.model.PluginRequest
 import com.sameerasw.essentials.island.plugins.BaseIslandPlugin
-import com.sameerasw.essentials.island.plugins.soften
 import com.sameerasw.essentials.island.ui.components.BatteryGlyph
 import com.sameerasw.essentials.island.ui.components.BatteryRing
 import com.sameerasw.essentials.island.ui.components.IslandIcon
@@ -203,16 +200,11 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
     }
 
     private fun readBattery(intent: Intent?) {
-        val batteryIntent = intent ?: context.registerReceiver(null, IntentFilter(Intent.ACTION_BATTERY_CHANGED)) ?: return
-        val raw = batteryIntent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1)
-        val scale = batteryIntent.getIntExtra(BatteryManager.EXTRA_SCALE, 100)
-        if (raw < 0 || scale <= 0) return
-        val status = batteryIntent.getIntExtra(BatteryManager.EXTRA_STATUS, -1)
-        level = (raw * 100f / scale).toInt()
-        val plugged = status == BatteryManager.BATTERY_STATUS_CHARGING || status == BatteryManager.BATTERY_STATUS_FULL
-        shielded = com.sameerasw.essentials.utils.battery.ChargeLimitUtil.isShielded(context, level, plugged)
-        charging = plugged && !shielded
-        powerSave = (context.getSystemService(Context.POWER_SERVICE) as? PowerManager)?.isPowerSaveMode ?: false
+        val status = readBatteryStatus(context, intent) ?: return
+        level = status.level
+        shielded = status.limited
+        charging = status.charging
+        powerSave = status.powerSave
     }
 
     private fun severity(): Int = when {
@@ -307,7 +299,7 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
                 CompactCell("battery") {
                     when {
                         iconStyle -> BatteryGlyph(batteryLevel, displayColor ?: islandAccent(), showLevel = showLevel, charging = isCharging, powerSave = isSaving, limited = isLimited)
-                        else -> BatteryRing(batteryLevel, displayColor ?: islandAccent(), showLevel = showLevel)
+                        else -> BatteryRing(batteryLevel, displayColor ?: islandAccent(), showLevel = showLevel, charging = isCharging, powerSave = isSaving, limited = isLimited)
                     }
                 },
             ),
@@ -316,8 +308,8 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
                 LineContent(
                     icon = {
                         when {
-                            iconStyle -> BatteryGlyph(batteryLevel, displayColor ?: islandAccent(), showLevel = false)
-                            else -> BatteryRing(batteryLevel, displayColor ?: islandAccent(), showLevel = false)
+                            iconStyle -> BatteryGlyph(batteryLevel, displayColor ?: islandAccent(), showLevel = false, charging = isCharging, powerSave = isSaving, limited = isLimited)
+                            else -> BatteryRing(batteryLevel, displayColor ?: islandAccent(), showLevel = false, charging = isCharging, powerSave = isSaving, limited = isLimited)
                         }
                     },
                     start = "$batteryLevel%",
@@ -345,39 +337,11 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
         }
     }
 
-    private fun idleColor(): Color? {
-        if (!settings.isIslandBatteryIdleColorEnabled()) return null
-        val raw = try {
-            AndroidColor.parseColor(settings.getIslandBatteryIdleColor())
-        } catch (_: Exception) {
-            AndroidColor.WHITE
-        }
-        return Color(soften(raw))
-    }
+    private fun idleColor(): Color? = batteryIdleColor(settings)
 
-    private fun stateColor(): Color? {
-        fun parse(hex: String, fallback: Int) = try {
-            AndroidColor.parseColor(hex)
-        } catch (_: Exception) {
-            fallback
-        }
-        val charge = settings.getDuoBatteryChargingColor()
-        val raw = when {
-            charging && settings.isDuoBatteryChargingColorEnabled() ->
-                if (charge.equals("auto", ignoreCase = true)) AUTO_CHARGING else parse(charge, AUTO_CHARGING)
-            powerSave && settings.isDuoBatteryPowerSaveColorEnabled() ->
-                parse(settings.getDuoBatteryPowerSaveColor(), AndroidColor.rgb(255, 152, 0))
-            level in 0..settings.getDuoBatteryCriticalLevel() && settings.isDuoBatteryCriticalColorEnabled() ->
-                parse(settings.getDuoBatteryCriticalColor(), AndroidColor.rgb(244, 67, 54))
-            level in 0..settings.getDuoBatteryLowLevel() && settings.isDuoBatteryLowColorEnabled() ->
-                parse(settings.getDuoBatteryLowColor(), AndroidColor.rgb(255, 235, 59))
-            else -> return null
-        }
-        return Color(soften(raw))
-    }
+    private fun stateColor(): Color? = batteryStateColor(settings, BatteryStatus(level, charging, shielded, powerSave))
 
     private companion object {
         const val BATTERY_KEY = "battery"
-        val AUTO_CHARGING = AndroidColor.rgb(0, 230, 118)
     }
 }
