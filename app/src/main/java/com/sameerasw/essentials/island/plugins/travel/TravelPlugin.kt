@@ -140,7 +140,7 @@ class TravelPlugin : BaseIslandPlugin() {
             Column(Modifier.fillMaxWidth().padding(spec.expandedOutset)) {
                 Spacer(Modifier.height(spec.expandedTopPadding))
                 scope.CameraRow(
-                    horizontalPadding = spec.cameraGap + spec.expandedCorner * 0.35f,
+                    horizontalPadding = spec.contentGap + spec.expandedCorner * 0.35f,
                     title = trip.name,
                     start = {
                         IslandIcon(trip.iconRes, size = 20.dp, tint = accent)

@@ -6,12 +6,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
-enum class QueueStyle { Stack, Overlap }
-
 @Immutable
 data class IslandLayoutSpec(
     val cameraDiameter: Dp = 28.dp,
     val cameraGap: Dp = 6.dp,
+    val contentGap: Dp = 6.dp,
     val verticalGap: Dp = 6.dp,
     val surfaceTop: Dp = 8.dp,
     val lineWidth: Dp = 360.dp,
@@ -49,7 +48,6 @@ data class IslandLayoutSpec(
     val pulseOffsetY: Dp = 1.dp,
     val pulseOpacity: Float = 0.35f,
     val pulseDurationMs: Int = 1450,
-    val queueStyle: QueueStyle = QueueStyle.Stack,
     val queueInline: Boolean = false,
     val bubbleOnRight: Boolean = false,
     val iconColorCustom: Color? = null,
@@ -60,8 +58,9 @@ data class IslandLayoutSpec(
 ) {
     val compactHeight: Dp get() = cameraDiameter + verticalGap * 2
     val cameraSlotWidth: Dp get() = (cameraDiameter + cameraGap * 2) * cameraPresence
-    val cellSize: Dp get() = cameraDiameter
-    val cellSpacing: Dp get() = cameraGap
+    val cellSize: Dp get() = (cameraDiameter + (verticalGap - contentGap) * 2).coerceAtLeast(cameraDiameter * 0.5f)
+    val cellSpacing: Dp get() = contentGap
+    val edgeInset: Dp get() = compactHeight * OPTICAL_INSET_RATIO * (contentGap / 6.dp)
 
     val growDirection: Int get() = when (cameraAnchor) {
         CameraAnchor.Start -> 1

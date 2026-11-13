@@ -1,71 +1,82 @@
 package com.sameerasw.essentials.island.ui.components
 
-import com.sameerasw.essentials.island.ui.motionTween
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.Animatable
-import androidx.compose.runtime.collectAsState
-import com.sameerasw.essentials.island.state.IslandStillness
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.ui.graphics.lerp
-import androidx.compose.ui.graphics.ColorMatrix
-import androidx.compose.ui.graphics.BlendMode
-import androidx.compose.ui.graphics.ColorFilter
-import com.sameerasw.essentials.utils.AppIconUtil
-import com.sameerasw.essentials.island.ui.squareFit
-import androidx.compose.foundation.layout.sizeIn
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxSize
 import android.graphics.Bitmap
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.runtime.compositionLocalOf
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.layout.onSizeChanged
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.ColorMatrix
+import androidx.compose.ui.graphics.CompositingStrategy
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
-import com.sameerasw.essentials.island.ui.IslandTextStyles
-import androidx.compose.ui.unit.sp
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.graphics.luminance
-import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.graphics.drawscope.clipRect
-import androidx.compose.ui.draw.drawWithContent
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.material3.Text
-import androidx.compose.foundation.layout.Row
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.lerp
+import androidx.compose.ui.graphics.luminance
+import androidx.compose.ui.graphics.nativeCanvas
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.layout
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalFontFamilyResolver
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.offset
+import com.sameerasw.essentials.island.state.IslandStillness
+import com.sameerasw.essentials.island.ui.IslandFontFamily
 import com.sameerasw.essentials.island.ui.IslandMotion
-import androidx.compose.foundation.background
+import com.sameerasw.essentials.island.ui.IslandTextStyles
+import com.sameerasw.essentials.island.ui.motionTween
+import com.sameerasw.essentials.island.ui.squareFit
+import com.sameerasw.essentials.utils.AppIconUtil
 import kotlinx.coroutines.delay
 import kotlin.random.Random
 
@@ -258,7 +269,22 @@ fun EqualizerBars(
 }
 
 @Composable
-fun BatteryRing(level: Int, color: Color, modifier: Modifier = Modifier, showLevel: Boolean = false, size: Dp = if (showLevel) 24.dp else 18.dp) {
+fun BatteryRing(
+    level: Int,
+    color: Color,
+    modifier: Modifier = Modifier,
+    showLevel: Boolean = false,
+    size: Dp = if (showLevel) 24.dp else 18.dp,
+    charging: Boolean = false,
+    powerSave: Boolean = false,
+    limited: Boolean = false,
+) {
+    val symbol = when {
+        limited -> 3
+        charging -> 1
+        powerSave -> 2
+        else -> 0
+    }
     val sweep by animateFloatAsState(360f * level.coerceIn(0, 100) / 100f, IslandMotion.float(), label = "batterySweep")
     val ringColor by animateColorAsState(color, label = "batteryColor")
     var ringPx by remember { mutableStateOf(0) }
@@ -274,7 +300,21 @@ fun BatteryRing(level: Int, color: Color, modifier: Modifier = Modifier, showLev
                 drawArc(ringColor, -90f, sweep, false, topLeft, arcSize, style = Stroke(stroke, cap = StrokeCap.Round))
             }
         }
-        if (showLevel && ringPx > 0) {
+        if (symbol != 0) {
+            Canvas(Modifier.fillMaxSize(0.46f)) {
+                when (symbol) {
+                    1 -> drawPath(batteryBoltPath(this.size.width, this.size.height), ringColor)
+                    3 -> drawPath(batteryShieldPath(this.size.width, this.size.height), ringColor)
+                    else -> {
+                        val arm = this.size.width * 0.42f
+                        val c = center
+                        val w = this.size.width * 0.2f
+                        drawLine(ringColor, Offset(c.x - arm, c.y), Offset(c.x + arm, c.y), w, StrokeCap.Round)
+                        drawLine(ringColor, Offset(c.x, c.y - arm), Offset(c.x, c.y + arm), w, StrokeCap.Round)
+                    }
+                }
+            }
+        } else if (showLevel && ringPx > 0) {
             val label = level.coerceIn(0, 100).toString()
             val innerPx = ringPx * (1f - 2f * 0.12f) * 0.8f
             val fontPx = minOf(innerPx / (label.length * 0.62f), innerPx * 0.75f)
@@ -289,51 +329,143 @@ fun BatteryRing(level: Int, color: Color, modifier: Modifier = Modifier, showLev
     }
 }
 
+
 @Composable
-fun BatteryGlyph(level: Int, color: Color, modifier: Modifier = Modifier, showLevel: Boolean = true) {
+fun BatteryGlyph(
+    level: Int,
+    color: Color,
+    modifier: Modifier = Modifier,
+    showLevel: Boolean = true,
+    charging: Boolean = false,
+    powerSave: Boolean = false,
+    limited: Boolean = false,
+) {
     val fraction by animateFloatAsState(level.coerceIn(0, 100) / 100f, IslandMotion.float(), label = "batteryFill")
     val fillColor by animateColorAsState(color, label = "batteryGlyphColor")
-    val onFill = if (fillColor.luminance() > 0.5f) Color.Black else Color.White
-    val textStyle = IslandTextStyles.compact.copy(fontSize = 11.sp, lineHeight = 11.sp, fontWeight = FontWeight.Bold)
+    val labelColor = if (fillColor.luminance() > 0.4f) lerp(fillColor, Color.Black, 0.82f) else Color.White
     val label = level.coerceIn(0, 100).toString()
-    Row(modifier, verticalAlignment = Alignment.CenterVertically) {
+    val fontResolver = LocalFontFamilyResolver.current
+    val typeface = remember(fontResolver) {
+        fontResolver.resolve(IslandFontFamily, FontWeight.Bold).value as? android.graphics.Typeface
+    }
+    val paint = remember { android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG) }
+    val bounds = remember { android.graphics.Rect() }
+    val symbol = when {
+        limited -> 3
+        charging -> 1
+        powerSave -> 2
+        else -> 0
+    }
+    Row(
+        modifier.graphicsLayer(compositingStrategy = CompositingStrategy.Offscreen),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
         Box(
             Modifier
                 .sizeIn(maxWidth = 28.dp, maxHeight = 15.dp)
                 .aspectRatio(28f / 15f, matchHeightConstraintsFirst = true)
-                .clip(RoundedCornerShape(30))
+                .clip(RoundedCornerShape(32))
                 .drawBehind {
-                    drawRect(Color.White.copy(alpha = 0.3f))
+                    drawRect(Color.White.copy(alpha = 0.45f))
                     drawRect(fillColor, size = Size(size.width * fraction, size.height))
+                    if (!showLevel) return@drawBehind
+                    paint.typeface = typeface
+                    paint.color = labelColor.toArgb()
+                    paint.textSize = size.height * (if (label.length > 2) 0.74f else 0.84f)
+                    paint.letterSpacing = -0.04f
+                    paint.getTextBounds(label, 0, label.length, bounds)
+                    val textWidth = paint.measureText(label)
+                    drawContext.canvas.nativeCanvas.drawText(
+                        label,
+                        size.width / 2f - textWidth / 2f,
+                        size.height / 2f - bounds.exactCenterY(),
+                        paint,
+                    )
                 },
-            contentAlignment = Alignment.Center,
-        ) {
-            if (showLevel) Text(
-                label,
-                style = textStyle.copy(color = Color.White),
-                maxLines = 1,
-                modifier = Modifier.drawWithContent {
-                    val split = (size.width / 2f) + (fraction - 0.5f) * 28.dp.toPx()
-                    clipRect(left = split) { this@drawWithContent.drawContent() }
-                },
-            )
-            if (showLevel) Text(
-                label,
-                style = textStyle.copy(color = onFill),
-                maxLines = 1,
-                modifier = Modifier.drawWithContent {
-                    val split = (size.width / 2f) + (fraction - 0.5f) * 28.dp.toPx()
-                    clipRect(right = split) { this@drawWithContent.drawContent() }
-                },
-            )
-        }
+        )
         Canvas(Modifier.size(width = 2.5.dp, height = 6.dp)) {
             drawRoundRect(
-                color = if (fraction >= 0.99f) fillColor else Color.White.copy(alpha = 0.3f),
+                color = if (fraction >= 0.99f) fillColor else Color.White.copy(alpha = 0.45f),
                 topLeft = Offset(size.width * 0.2f, 0f),
                 size = Size(size.width * 0.8f, size.height),
                 cornerRadius = CornerRadius(size.width, size.width),
             )
         }
+        if (symbol != 0) {
+            Canvas(
+                Modifier
+                    .layout { measurable, constraints ->
+                        val overlap = 7.dp.roundToPx()
+                        val placeable = measurable.measure(constraints.offset(horizontal = overlap))
+                        layout((placeable.width - overlap).coerceAtLeast(0), placeable.height) { placeable.place(-overlap, 0) }
+                    }
+                    .then(if (symbol == 2) Modifier.size(11.dp, 13.dp) else Modifier.size(9.dp, 11.dp)),
+            ) {
+                val stroke = 1.8.dp.toPx()
+                val gap = 0.8.dp.toPx()
+                val outline = stroke * 0.7f
+                val cutout = { path: Path ->
+                    drawPath(path, Color.Black, style = Stroke(gap * 3 + outline, join = StrokeJoin.Round), blendMode = BlendMode.Clear)
+                    drawPath(path, Color.Black, blendMode = BlendMode.Clear)
+                    drawPath(path, Color.White, style = Stroke(outline, join = StrokeJoin.Round))
+                }
+                if (symbol == 2) {
+                    val arm = size.width * 0.42f
+                    val c = center
+                    for ((width, paintColor, mode) in listOf(
+                        Triple(stroke + gap * 3, Color.Black, BlendMode.Clear),
+                        Triple(stroke, Color.White, BlendMode.SrcOver),
+                    )) {
+                        drawLine(paintColor, Offset(c.x - arm, c.y), Offset(c.x + arm, c.y), width, StrokeCap.Round, blendMode = mode)
+                        drawLine(paintColor, Offset(c.x, c.y - arm), Offset(c.x, c.y + arm), width, StrokeCap.Round, blendMode = mode)
+                    }
+                } else if (symbol == 3) {
+                    val w = size.width
+                    val h = size.height
+                    val shield = batteryShieldPath(w, h)
+                    cutout(shield)
+                    clipRect(right = w * 0.5f) { drawPath(shield, Color.White) }
+                } else {
+                    val w = size.width
+                    val h = size.height
+                    val bolt = batteryBoltPath(w, h)
+                    cutout(bolt)
+                    drawPath(bolt, Color.White)
+                }
+            }
+        }
+    }
+}
+
+private fun batteryShieldPath(w: Float, h: Float) = Path().apply {
+    moveTo(w * 0.5f, h * 0.04f)
+    lineTo(w * 0.94f, h * 0.2f)
+    lineTo(w * 0.94f, h * 0.5f)
+    cubicTo(w * 0.94f, h * 0.76f, w * 0.74f, h * 0.92f, w * 0.5f, h * 0.98f)
+    cubicTo(w * 0.26f, h * 0.92f, w * 0.06f, h * 0.76f, w * 0.06f, h * 0.5f)
+    lineTo(w * 0.06f, h * 0.2f)
+    close()
+}
+
+private fun batteryBoltPath(w: Float, h: Float) = Path().apply {
+    moveTo(w * 0.62f, 0f)
+    lineTo(w * 0.08f, h * 0.58f)
+    lineTo(w * 0.46f, h * 0.58f)
+    lineTo(w * 0.36f, h)
+    lineTo(w * 0.92f, h * 0.40f)
+    lineTo(w * 0.54f, h * 0.40f)
+    close()
+}
+
+@Preview(backgroundColor = 0xFF000000, showBackground = true)
+@Composable
+private fun BatteryGlyphPreview() {
+    Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+        BatteryGlyph(87, Color(0xFF3DDC84))
+        BatteryGlyph(87, Color(0xFF3DDC84), charging = true)
+        BatteryGlyph(45, Color(0xFFFFC107), powerSave = true)
+        BatteryGlyph(80, Color(0xFF3DDC84), limited = true)
+        BatteryGlyph(100, Color(0xFF3DDC84), charging = true)
+        BatteryGlyph(15, Color(0xFFFF5252), showLevel = false, charging = true)
     }
 }

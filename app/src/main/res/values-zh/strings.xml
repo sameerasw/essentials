@@ -1603,7 +1603,12 @@
     <string name="island_section_placement">位置</string>
     <string name="island_section_visuals">视觉效果</string>
     <string name="island_section_behavior">行为</string>
-    <string name="island_section_duration">时长</string>
+    <string name="island_section_interactions">Interactions</string>
+    <string name="island_section_gestures">Gestures</string>
+    <string name="island_section_expanded">Expanded island</string>
+    <string name="island_section_landscape">Landscape</string>
+    <string name="island_section_experimental">Experimental</string>
+    <string name="island_section_duration">Timing</string>
     <string name="conscious_gate_select_apps_title">选择受限制的应用</string>
     <string name="conscious_gate_enable_title">启用意识限制</string>
     <string name="conscious_gate_delay_title">暂停延迟</string>
@@ -1720,6 +1725,7 @@
     <string name="island_preview_stage_title">预览</string>
     <string name="app_colors_auto">自动</string>
     <string name="island_cutout_gap_title">摄像头宽度</string>
+    <string name="island_padding_around_title">Padding around</string>
     <string name="island_keep_on_landscape_title">跟随旋转</string>
     <string name="island_timeout_title">显示时长</string>
     <string name="feat_aod_wallpaper_desc">通过使用叠加层</string>
@@ -1803,7 +1809,7 @@
     <string name="island_statusbar_ignore_notifications_title">Ignore notifications</string>
     <string name="island_statusbar_aware_width_info">This may not work on all devices. It works best on Pixels and devices with a status bar close to AOSP.</string>
     <string name="island_statusbar_aware_width_info_tip">Even on those devices, try reducing the number of visible status bar icons to give the island more space.</string>
-    <string name="island_dismiss_direction_title">Dismissals</string>
+    <string name="island_dismiss_direction_title">Dismiss swipe</string>
     <string name="island_dismiss_direction_horizontal">Horizontal</string>
     <string name="island_dismiss_direction_down">Down</string>
     <string name="island_media_bubble_title">Show as a bubble</string>
@@ -1812,6 +1818,11 @@
     <string name="island_transparency_title">Island transparency</string>
     <string name="island_transparency_intensity_title">Transparency intensity</string>
     <string name="island_backdrop_blur_title">Backdrop blur</string>
+    <string name="island_backdrop_blur_unavailable_os">Backdrop blur needs Android 12 or newer. This device runs an older version, so the system can\'t blur what is behind the island.</string>
+    <string name="island_backdrop_blur_unavailable_disabled">Your system currently has window blur turned off. This usually happens when Battery Saver is on, when \"Disable window blurs\" is enabled in Developer options, or when the device doesn\'t support it. This option unlocks automatically once window blur is back on.</string>
+    <string name="island_backdrop_blur_unavailable_api">This device\'s system doesn\'t expose the blur feature the island needs for backdrop blur, so it can\'t be enabled here.</string>
+    <string name="island_backdrop_blur_available_title">Blur is reported as supported on this device</string>
+    <string name="island_backdrop_blur_available_note">It may still not work on some devices. Battery Saver, system settings such as \"Disable window blurs\" in Developer options, and manufacturer limits can turn window blur off at any time.</string>
     <string name="island_backdrop_blur_radius_title">Blur amount</string>
     <string name="what_is_this">What is this?</string>
     <string name="label_feature_designed_by">Designed by</string>
@@ -1821,4 +1832,5 @@
     <string name="screenshot_auto_clean_note">每新的截图都会以静音通知的形式保留它，有星标的截图将会保留</string>
     <string name="screenshots_cleaned_count_title">截图清理</string>
     <string name="screenshots_storage_saved_title">截图保留</string>
+    <string name="island_notif_lock_hidden_title">Hidden</string>
 </resources>

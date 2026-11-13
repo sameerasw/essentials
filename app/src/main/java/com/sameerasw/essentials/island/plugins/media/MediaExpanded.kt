@@ -3,6 +3,11 @@ package com.sameerasw.essentials.island.plugins.media
 import com.sameerasw.essentials.island.ui.IslandSurfaceAccent
 import com.sameerasw.essentials.island.ui.components.LocalIslandIconColor
 import androidx.compose.foundation.layout.fillMaxSize
+import com.sameerasw.essentials.island.ui.components.IslandIcon
+import com.sameerasw.essentials.island.ui.components.ConnectedItem
+import com.sameerasw.essentials.island.ui.components.ConnectedButtonRow
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.graphics.luminance
 import com.sameerasw.essentials.island.ui.SurfaceBackdrop
 import com.sameerasw.essentials.island.ui.components.ArtworkBackdrop
 import com.sameerasw.essentials.island.ui.components.MarqueeText
@@ -93,6 +98,7 @@ class MediaSnapshot(
 enum class MediaPlayerStyle(val key: String) {
     Default("default"),
     ArtControls("art_controls"),
+    Tall("tall"),
     ;
 
     companion object {
@@ -158,13 +164,14 @@ fun MediaExpanded(
                 Box(
                     Modifier
                         .size(artSize)
-                        .clip(RoundedCornerShape((spec.expandedCorner - spec.expandedOutset - 12.dp).coerceAtLeast(6.dp)))
+                        .clip(RoundedCornerShape(if (style == MediaPlayerStyle.Tall) 12.dp else (spec.expandedCorner - spec.expandedOutset - 12.dp).coerceAtLeast(6.dp)))
                         .background(Color.White.copy(alpha = 0.1f))
                         .clickable {
                             IslandHaptics.button(context)
                             val like = actions.like
                             when {
                                 style == MediaPlayerStyle.ArtControls -> actions.playPause()
+                                style == MediaPlayerStyle.Tall -> scope.openApp()
                                 like != null -> like()
                                 else -> scope.openApp()
                             }
@@ -308,7 +315,109 @@ fun MediaExpanded(
                 }
             }
         }
-        Row(
+        if (style == MediaPlayerStyle.Tall) {
+            val playPauseContainer = accent
+            val playPauseInk = if (playPauseContainer.luminance() > 0.5f) Color.Black else Color.White
+            val controls: @Composable (Dp) -> Unit = { rowHeight ->
+                ConnectedButtonRow(
+                    height = rowHeight,
+                    items = listOfNotNull(
+                        actions.like?.let {
+                            ConnectedItem(it) {
+                                ButtonGlyph(
+                                    if (liked) R.drawable.round_favorite_24 else R.drawable.rounded_favorite_24,
+                                    if (liked) accent else Color.White,
+                                    24.dp,
+                                )
+                            }
+                        },
+                        actions.previous?.let {
+                            ConnectedItem(it, enabled = canSkipBack) {
+                                ButtonGlyph(R.drawable.rounded_skip_previous_24, accent.copy(alpha = if (canSkipBack) 1f else 0.38f), 24.dp)
+                            }
+                        },
+                        ConnectedItem(actions.playPause, container = playPauseContainer) {
+                            AnimatedContent(
+                                targetState = playing,
+                                transitionSpec = { fadeIn(IslandMotion.contentIn()) togetherWith fadeOut(IslandMotion.contentOut()) },
+                                label = "playPause",
+                            ) {
+                                ButtonGlyph(if (it) R.drawable.rounded_pause_24 else R.drawable.rounded_play_arrow_24, playPauseInk, 26.dp)
+                            }
+                        },
+                        ConnectedItem(actions.next, enabled = canSkipForward) {
+                            ButtonGlyph(R.drawable.rounded_skip_next_24, accent.copy(alpha = if (canSkipForward) 1f else 0.38f), 24.dp)
+                        },
+                    ),
+                    container = accent.copy(alpha = 0.16f),
+                )
+            }
+            if (spec.landscape) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(spec.expandedOutset)
+                        .padding(start = 16.dp, end = 16.dp, top = spec.expandedTopPadding + 12.dp, bottom = spec.expandedBottomPadding),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                ) {
+                    Row(
+                        modifier = Modifier.weight(1f),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    ) {
+                        art(88.dp)
+                        Column(Modifier.weight(1f)) {
+                            MarqueeText(
+                                text = title,
+                                style = IslandTextStyles.title.copy(fontSize = 16.sp),
+                                modifier = Modifier.fillMaxWidth(),
+                            )
+                            Spacer(Modifier.height(2.dp))
+                            MarqueeText(
+                                text = artist,
+                                style = IslandTextStyles.body,
+                                modifier = Modifier.fillMaxWidth(),
+                            )
+                        }
+                    }
+                    Column(Modifier.weight(1f)) {
+                        seekBar()
+                        Spacer(Modifier.height(4.dp))
+                        controls(44.dp)
+                    }
+                }
+            } else {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(spec.expandedOutset)
+                        .padding(start = 12.dp, end = 12.dp, bottom = spec.expandedBottomPadding),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    Spacer(Modifier.height(spec.cameraDiameter + 28.dp + spec.expandedTopPadding))
+                    art(124.dp)
+                    Spacer(Modifier.height(12.dp))
+                    MarqueeText(
+                        text = title,
+                        style = IslandTextStyles.title.copy(fontSize = 16.sp),
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp),
+                    )
+                    Spacer(Modifier.height(4.dp))
+                    MarqueeText(
+                        text = artist,
+                        style = IslandTextStyles.body,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp),
+                    )
+                    Spacer(Modifier.height(4.dp))
+                    seekBar()
+                    Spacer(Modifier.height(4.dp))
+                    controls(52.dp)
+                }
+            }
+        } else Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(spec.expandedOutset)

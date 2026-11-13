@@ -73,6 +73,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.ColorMatrix
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.SubcomposeLayout
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalView
@@ -80,6 +81,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
@@ -259,40 +261,54 @@ fun FreezeGridUI(
                     caption = stringResource(R.string.freeze_header_caption, frozenCount, pickedApps.size),
                 )
 
-                Row(
-                    modifier =
-                        Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp, vertical = 8.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    FreezeSplitButton(
-                        iconRes = R.drawable.rounded_mode_cool_24,
-                        text = stringResource(R.string.action_freeze),
-                        menuText = stringResource(R.string.action_freeze_all),
-                        onClick = { viewModel.freezeAllAuto(context) },
-                        onMenuClick = { viewModel.freezeAllManual(context) },
-                    )
-                    FreezeSplitButton(
-                        iconRes = R.drawable.rounded_mode_cool_off_24,
-                        text = stringResource(R.string.action_unfreeze),
-                        menuText = stringResource(R.string.action_unfreeze_all),
-                        onClick = { viewModel.unfreezeAllAuto(context) },
-                        onMenuClick = { viewModel.unfreezeAllManual(context) },
-                    )
-                    if (onSettingsClick != null) {
-                        FilledTonalIconButton(
-                            onClick = {
-                                HapticUtil.performVirtualKeyHaptic(view)
-                                onSettingsClick()
-                            },
+                SubcomposeLayout(
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 8.dp),
+                ) { constraints ->
+                    val actions: @Composable (Boolean) -> Unit = { showLabels ->
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            verticalAlignment = Alignment.CenterVertically,
                         ) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.rounded_settings_24),
-                                contentDescription = stringResource(R.string.label_settings),
+                            FreezeSplitButton(
+                                iconRes = R.drawable.rounded_mode_cool_24,
+                                text = stringResource(R.string.action_freeze),
+                                menuText = stringResource(R.string.action_freeze_all),
+                                onClick = { viewModel.freezeAllAuto(context) },
+                                onMenuClick = { viewModel.freezeAllManual(context) },
+                                showLabel = showLabels,
                             )
+                            FreezeSplitButton(
+                                iconRes = R.drawable.rounded_mode_cool_off_24,
+                                text = stringResource(R.string.action_unfreeze),
+                                menuText = stringResource(R.string.action_unfreeze_all),
+                                onClick = { viewModel.unfreezeAllAuto(context) },
+                                onMenuClick = { viewModel.unfreezeAllManual(context) },
+                                showLabel = showLabels,
+                            )
+                            if (onSettingsClick != null) {
+                                FilledTonalIconButton(
+                                    onClick = {
+                                        HapticUtil.performVirtualKeyHaptic(view)
+                                        onSettingsClick()
+                                    },
+                                ) {
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.rounded_settings_24),
+                                        contentDescription = stringResource(R.string.label_settings),
+                                    )
+                                }
+                            }
                         }
+                    }
+                    val loose = constraints.copy(minWidth = 0, maxWidth = Constraints.Infinity)
+                    val full = subcompose("full") { actions(true) }.first().measure(loose)
+                    val row = if (full.width <= constraints.maxWidth) full
+                    else subcompose("compact") { actions(false) }.first().measure(loose)
+                    val width = constraints.maxWidth
+                    layout(width, row.height) {
+                        row.place(((width - row.width) / 2).coerceAtLeast(0), 0)
                     }
                 }
 
@@ -802,6 +818,7 @@ private fun FreezeSplitButton(
     menuText: String,
     onClick: () -> Unit,
     onMenuClick: () -> Unit,
+    showLabel: Boolean = true,
 ) {
     val view = LocalView.current
     var isMenuExpanded by remember { mutableStateOf(false) }
@@ -816,11 +833,13 @@ private fun FreezeSplitButton(
             ) {
                 Icon(
                     painter = painterResource(id = iconRes),
-                    contentDescription = null,
+                    contentDescription = if (showLabel) null else text,
                     modifier = Modifier.size(18.dp),
                 )
-                Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))
-                Text(text)
+                if (showLabel) {
+                    Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))
+                    Text(text, maxLines = 1, softWrap = false)
+                }
             }
         },
         trailingButton = {

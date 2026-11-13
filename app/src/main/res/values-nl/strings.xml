@@ -1639,6 +1639,7 @@
     <string name="island_max_width_title">Maximum breedte</string>
     <string name="island_expanded_width_title">Uitgeklapte breedte</string>
     <string name="island_cutout_gap_title">Camera ruimte</string>
+    <string name="island_padding_around_title">Padding around</string>
     <string name="island_preview_ring_title">Toon uitlijnhulp</string>
     <string name="island_preview_stage_title">Voorbeeld</string>
     <string name="island_call_show_expanded">Uitgeklapt</string>
@@ -1655,7 +1656,7 @@
     <string name="island_border_outline_hide_expanded_title">Verberg bij uitklappen</string>
     <string name="island_border_outline_hide_expanded_desc">Toont de omlijning alleen bij ingeklapte of zichtbare modus</string>
     <string name="island_border_outline_dynamic_title">Dynamische kleuren</string>
-    <string name="island_show_glow_title">Toon accentkleurige gloed</string>
+    <string name="island_show_glow_title">Expanded accent glow</string>
     <string name="island_glow_intensity_title">Glow intensity</string>
     <string name="island_prefer_still_title">Prefer still island</string>
     <string name="island_prefer_still_info">Stops the island\'s animations after a few seconds without interaction, so the display can drop to a low refresh rate and save battery. Media visualizers, second by second counters and other looping animations pause until you interact with the island again.</string>
@@ -1663,7 +1664,7 @@
     <string name="island_pulse_shadow_desc">Toont een gloed achter het eiland in de appkleuren</string>
     <string name="island_pulse_shadow_spread_title">Snelheid gloed</string>
     <string name="island_pulse_shadow_duration_title">Puls duur</string>
-    <string name="island_section_duration">Duur</string>
+    <string name="island_section_duration">Timing</string>
     <string name="island_timeout_title">Duur weergave</string>
     <string name="island_expanded_timeout_title">Duur uitgeklapte staat</string>
     <string name="island_expanded_timeout_desc">De duur voordat het eiland weer inklapt (0 voor oneindig)</string>
@@ -1684,6 +1685,11 @@
     <string name="duo_action_horizontal_slide_track">Volgende/vorige nummer</string>
     <string name="duo_action_horizontal_slide_track_desc">Wanneer media afspeelt</string>
     <string name="island_section_behavior">Gedrag</string>
+    <string name="island_section_interactions">Interactions</string>
+    <string name="island_section_gestures">Gestures</string>
+    <string name="island_section_expanded">Expanded island</string>
+    <string name="island_section_landscape">Landscape</string>
+    <string name="island_section_experimental">Experimental</string>
     <string name="island_show_when_title">Toon wanneer</string>
     <string name="island_show_when_unlocked">Ontgrendeld</string>
     <string name="island_show_when_screen_on">Scherm aan</string>
@@ -1742,7 +1748,7 @@
     <string name="island_neural_expressive_always_title">Always show on expansion</string>
     <string name="island_statusbar_aware_width_info">This may not work on all devices. It works best on Pixels and devices with a status bar close to AOSP.</string>
     <string name="island_statusbar_aware_width_info_tip">Even on those devices, try reducing the number of visible status bar icons to give the island more space.</string>
-    <string name="island_dismiss_direction_title">Dismissals</string>
+    <string name="island_dismiss_direction_title">Dismiss swipe</string>
     <string name="island_dismiss_direction_horizontal">Horizontal</string>
     <string name="island_dismiss_direction_down">Down</string>
     <string name="island_media_bubble_title">Show as a bubble</string>
@@ -1751,6 +1757,11 @@
     <string name="island_transparency_title">Island transparency</string>
     <string name="island_transparency_intensity_title">Transparency intensity</string>
     <string name="island_backdrop_blur_title">Backdrop blur</string>
+    <string name="island_backdrop_blur_unavailable_os">Backdrop blur needs Android 12 or newer. This device runs an older version, so the system can\'t blur what is behind the island.</string>
+    <string name="island_backdrop_blur_unavailable_disabled">Your system currently has window blur turned off. This usually happens when Battery Saver is on, when \"Disable window blurs\" is enabled in Developer options, or when the device doesn\'t support it. This option unlocks automatically once window blur is back on.</string>
+    <string name="island_backdrop_blur_unavailable_api">This device\'s system doesn\'t expose the blur feature the island needs for backdrop blur, so it can\'t be enabled here.</string>
+    <string name="island_backdrop_blur_available_title">Blur is reported as supported on this device</string>
+    <string name="island_backdrop_blur_available_note">It may still not work on some devices. Battery Saver, system settings such as \"Disable window blurs\" in Developer options, and manufacturer limits can turn window blur off at any time.</string>
     <string name="island_backdrop_blur_radius_title">Blur amount</string>
     <string name="what_is_this">What is this?</string>
     <string name="label_feature_designed_by">Designed by</string>
@@ -1811,4 +1822,5 @@
     <string name="pixel_search_engine_desc">Standaard zoekmachine die wordt gebruikt voor het zoeken op het web</string>
     <string name="feat_widget_stack_title">Widget stapel</string>
     <string name="feat_widget_stack_desc">Stapel widgets en schakel tussen ze</string>
+    <string name="island_notif_lock_hidden_title">Hidden</string>
 </resources>

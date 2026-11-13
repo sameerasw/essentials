@@ -1729,7 +1729,7 @@
     <string name="island_catch_up_timeout_title">Время удержания </string>
     <string name="island_show_timers_title">Таймеры и секундомеры </string>
     <string name="feat_conscious_gate_title">Осознанная пауза</string>
-    <string name="island_show_glow_title">Показывать акцентное свечение</string>
+    <string name="island_show_glow_title">Expanded accent glow</string>
     <string name="island_glow_intensity_title">Glow intensity</string>
     <string name="island_prefer_still_title">Предпочитать меньше анимаций у острова</string>
     <string name="island_prefer_still_info">Stops the island\'s animations after a few seconds without interaction, so the display can drop to a low refresh rate and save battery. Media visualizers, second by second counters and other looping animations pause until you interact with the island again.</string>
@@ -1770,8 +1770,13 @@
     <string name="island_show_network_title">Сетевая активность</string>
     <string name="island_section_placement">Расположение</string>
     <string name="island_section_visuals">Оформление</string>
-    <string name="island_section_duration">Длительность</string>
+    <string name="island_section_duration">Timing</string>
     <string name="island_section_behavior">Поведение</string>
+    <string name="island_section_interactions">Interactions</string>
+    <string name="island_section_gestures">Gestures</string>
+    <string name="island_section_expanded">Expanded island</string>
+    <string name="island_section_landscape">Landscape</string>
+    <string name="island_section_experimental">Experimental</string>
     <string name="duo_hide_when_locked_title">Скрывать когда заблокировано</string>
     <string name="island_preview_ring_title">Показывать подсказку выравнивания</string>
     <string name="diy_volume_channel_alarm">Будильник</string>
@@ -1809,6 +1814,7 @@
     <string name="island_max_width_title">Максимальная ширина</string>
     <string name="island_expanded_width_title">Ширина в развёрнутом виде</string>
     <string name="island_cutout_gap_title">Отступ от камеры</string>
+    <string name="island_padding_around_title">Padding around</string>
     <string name="island_expanded_scale_title">Масштаб в развёрнутом виде</string>
     <string name="island_expanded_scale_desc">Равномерно увеличивать развёрнутый остров со всех сторон</string>
     <string name="island_expanded_roundness_title">Радиус скругления в развёрнутом виде</string>
@@ -1998,8 +2004,6 @@
     <string name="island_themed_text_title">Тематический цвет текста</string>
     <string name="island_section_icon_color">Цвет иконок</string>
     <string name="app_colors_custom">Свой</string>
-    <string name="island_notif_queue_style_stack">Стопка</string>
-    <string name="island_notif_queue_style_overlap">Внахлест</string>
     <string name="island_hide_in_fullscreen_title">Скрыть в полноэкранном режиме</string>
     <string name="lockscreen_shortcuts_enable_title">Включить быстрые действия на заблокированном экране </string>
     <string name="feat_back_gesture_desc">Ширина областей жеста «Назад» для приложений</string>
@@ -2016,7 +2020,7 @@
     <string name="battery_separate_channels_title">Отдельные каналы батареи </string>
     <string name="battery_separate_channels_desc">Отдельные LR-каналы </string>
     <string name="batteries_notification_title">Уведомление о батареях </string>
-    <string name="island_navigation_peek_after_expand_title">Линия заглядывает после расширения </string>
+    <string name="island_navigation_peek_after_expand_title">Keep showing in peek</string>
     <string name="island_navigation_expand_title">Расширьте перед поворотом </string>
     <string name="island_navigation_on_new_title">Новая инструкция </string>
     <string name="island_notif_hub_title">Центр уведомлений </string>
@@ -2028,8 +2032,6 @@
     <string name="island_notif_follow_dnd_title">Следуйте: не беспокойте </string>
     <string name="island_notif_follow_dnd_desc">Скрыть уведомления, которые не нарушают тишину </string>
     <string name="island_notif_keep_progress_desc">Показать загрузки и другой текущий прогресс </string>
-    <string name="island_notif_queue_inline_title">Очередь внутри острова </string>
-    <string name="island_notif_queue_inline_desc">Покажите очередь внутри острова </string>
     <string name="island_notif_queue_desc">Предварительные просмотры уведомлений </string>
     <string name="island_otp_enabled_title">Обнаружение кодов OTP </string>
     <string name="island_otp_tap_to_copy_title">Нажмите для копирования </string>
@@ -2083,8 +2085,6 @@
     <string name="island_battery_peek_alerts_title">Показывать оповещения о просмотре </string>
     <string name="island_battery_icon_conditional_title">Иконки только для нижеуказанных условий </string>
     <string name="duo_battery_low_color_title">Низкий заряд</string>
-    <string name="island_navigation_peek_after_expand_desc">Когда выключено остров возвращается в компактный режим</string>
-    <string name="island_secondary_style_title">Стиль вторичных предметов </string>
     <string name="island_pulse_shadow_spread_title">Распространение </string>
     <string name="island_pulse_shadow_duration_title">Продолжительность пульсации</string>
     <string name="about_desc_safe_volume">Европейские правила требуют, чтобы смартфоны предупреждали при превышении определённых уровней объёма (85 дБ). Это предупреждение должно отображаться один раз после каждой перезагрузки или после 20 часов непрерывного воспроизведения музыки. Используйте этот переключатель, чтобы отключить его навсегда. </string>
@@ -2113,7 +2113,7 @@
     <string name="button_remap_power_camera_flip_title">Перевернуть камеру при двойном нажатии</string>
     <string name="island_statusbar_aware_width_info">This may not work on all devices. It works best on Pixels and devices with a status bar close to AOSP.</string>
     <string name="island_statusbar_aware_width_info_tip">Even on those devices, try reducing the number of visible status bar icons to give the island more space.</string>
-    <string name="island_dismiss_direction_title">Отставка</string>
+    <string name="island_dismiss_direction_title">Dismiss swipe</string>
     <string name="island_dismiss_direction_horizontal">Горизонтально</string>
     <string name="island_dismiss_direction_down">Вниз</string>
     <string name="island_media_bubble_title">Show as a bubble</string>
@@ -2122,6 +2122,11 @@
     <string name="island_transparency_title">Прозрачность острова </string>
     <string name="island_transparency_intensity_title">Transparency intensity</string>
     <string name="island_backdrop_blur_title">Backdrop blur</string>
+    <string name="island_backdrop_blur_unavailable_os">Backdrop blur needs Android 12 or newer. This device runs an older version, so the system can\'t blur what is behind the island.</string>
+    <string name="island_backdrop_blur_unavailable_disabled">Your system currently has window blur turned off. This usually happens when Battery Saver is on, when \"Disable window blurs\" is enabled in Developer options, or when the device doesn\'t support it. This option unlocks automatically once window blur is back on.</string>
+    <string name="island_backdrop_blur_unavailable_api">This device\'s system doesn\'t expose the blur feature the island needs for backdrop blur, so it can\'t be enabled here.</string>
+    <string name="island_backdrop_blur_available_title">Blur is reported as supported on this device</string>
+    <string name="island_backdrop_blur_available_note">It may still not work on some devices. Battery Saver, system settings such as \"Disable window blurs\" in Developer options, and manufacturer limits can turn window blur off at any time.</string>
     <string name="island_backdrop_blur_radius_title">Blur amount</string>
     <string name="what_is_this">What is this?</string>
     <string name="label_feature_designed_by">Designed by</string>
@@ -2130,4 +2135,5 @@
     <string name="island_pulse_shadow_offset_y_title">Вертикальное смещение </string>
     <string name="island_animation_speed_title">Скорость анимации </string>
     <string name="app_icon_gta">6</string>
+    <string name="island_notif_lock_hidden_title">Hidden</string>
 </resources>

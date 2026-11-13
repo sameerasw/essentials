@@ -16,9 +16,12 @@ import com.sameerasw.essentials.island.remote.LocalRemotePaused
 import com.sameerasw.essentials.island.remote.RemoteExpanded
 import com.sameerasw.essentials.island.ui.SurfaceBackdrop
 import android.Manifest
+import android.content.BroadcastReceiver
 import android.content.Context
-import android.content.Intent
 import android.content.IntentFilter
+import android.os.PowerManager
+import androidx.compose.runtime.DisposableEffect
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.ContentUris
 import androidx.compose.foundation.Image
@@ -75,7 +78,6 @@ import com.sameerasw.essentials.island.plugins.soften
 import com.sameerasw.essentials.island.ui.IslandHaptics
 import com.sameerasw.essentials.translation.TranslatableText
 import kotlinx.coroutines.launch
-import android.os.BatteryManager
 import android.os.Build
 import com.sameerasw.essentials.utils.BluetoothBatteryUtils
 import com.sameerasw.essentials.utils.BluetoothDeviceIcons
@@ -123,6 +125,10 @@ import com.sameerasw.essentials.island.plugins.BaseIslandPlugin
 import com.sameerasw.essentials.island.ui.IslandTextStyles
 import com.sameerasw.essentials.island.ui.islandTextColor
 import com.sameerasw.essentials.island.ui.components.BatteryGlyph
+import com.sameerasw.essentials.island.plugins.timebattery.BatteryStatus
+import com.sameerasw.essentials.island.plugins.timebattery.batteryIdleColor
+import com.sameerasw.essentials.island.plugins.timebattery.batteryStateColor
+import com.sameerasw.essentials.island.plugins.timebattery.readBatteryStatus
 import com.sameerasw.essentials.island.ui.components.BatteryRing
 import com.sameerasw.essentials.island.ui.components.CameraRow
 import com.sameerasw.essentials.utils.CalendarEventUtil
@@ -442,7 +448,18 @@ private fun BriefOverview(
             now = System.currentTimeMillis()
         }
     }
-    val battery = remember(now) { readBattery(context) }
+    var batteryState by remember { mutableStateOf<BatteryStatus?>(null) }
+    DisposableEffect(context) {
+        val receiver = object : BroadcastReceiver() {
+            override fun onReceive(c: Context, intent: Intent) {
+                batteryState = readBatteryStatus(context, if (intent.action == Intent.ACTION_BATTERY_CHANGED) intent else null)
+            }
+        }
+        val filter = IntentFilter(Intent.ACTION_BATTERY_CHANGED).apply { addAction(PowerManager.ACTION_POWER_SAVE_MODE_CHANGED) }
+        val sticky = context.registerReceiver(receiver, filter)
+        batteryState = readBatteryStatus(context, sticky)
+        onDispose { context.unregisterReceiver(receiver) }
+    }
     val alarm = remember(now, alarmHours) { alarmHours?.let { NextAlarm.within(context, it) } }
     val devices by produceState(BriefDevicesCache.devices, now) {
         val fresh = withContext(Dispatchers.IO) { readDevices(context) }
@@ -457,8 +474,10 @@ private fun BriefOverview(
         }
     }
 
+    val battery = batteryState
     val timeSettings = remember { SettingsRepository(context) }
     val time = IslandTimeFormat.format(context, timeSettings, now)
+    val batteryColor = battery?.let { batteryStateColor(timeSettings, it) ?: batteryIdleColor(timeSettings) } ?: accent
     val date = SimpleDateFormat(DateFormat.getBestDateTimePattern(Locale.getDefault(), "EEEMMMd"), Locale.getDefault()).format(Date(now))
 
     val artwork = remember(media?.artwork) { media?.artwork?.asImageBitmap() }
@@ -466,7 +485,7 @@ private fun BriefOverview(
         
         Column(Modifier.fillMaxWidth().padding(spec.expandedOutset).padding(bottom = spec.expandedBottomPadding)) {
             Spacer(Modifier.height(spec.expandedTopPadding))
-            val headerPadding = spec.cameraGap + spec.expandedCorner * 0.35f
+            val headerPadding = spec.contentGap + spec.expandedCorner * 0.35f
             scope.CameraRow(
                 horizontalPadding = headerPadding,
                 start = {
@@ -483,11 +502,11 @@ private fun BriefOverview(
                             Spacer(Modifier.width(8.dp))
                         }
                     }
-                    if (battery >= 0) {
+                    if (battery != null) {
                         if (iconStyle) {
-                            BatteryGlyph(battery, accent, showLevel = true)
+                            BatteryGlyph(battery.level, batteryColor, showLevel = true, charging = battery.charging, powerSave = battery.powerSave, limited = battery.limited)
                         } else {
-                            BatteryRing(battery, accent, showLevel = true)
+                            BatteryRing(battery.level, batteryColor, showLevel = true, charging = battery.charging, powerSave = battery.powerSave, limited = battery.limited)
                         }
                     }
                 },
@@ -615,13 +634,6 @@ private fun BriefEventRow(event: UpcomingCalendarEvent, now: Long, accent: Color
             )
         }
     }
-}
-
-private fun readBattery(context: Context): Int {
-    val intent = context.registerReceiver(null, IntentFilter(Intent.ACTION_BATTERY_CHANGED)) ?: return -1
-    val level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1)
-    val scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, 100)
-    return if (level < 0 || scale <= 0) -1 else level * 100 / scale
 }
 
 @Composable

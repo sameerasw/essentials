@@ -96,6 +96,8 @@ import com.sameerasw.essentials.ui.features.display.AodWallpaperSettingsUI
 import com.sameerasw.essentials.ui.features.display.DuoSettingsUI
 import com.sameerasw.essentials.ui.features.display.ISLAND_BEHAVIOR_FEATURE_ID
 import com.sameerasw.essentials.ui.features.display.ISLAND_DURATION_FEATURE_ID
+import com.sameerasw.essentials.ui.features.display.ISLAND_INTERACTIONS_FEATURE_ID
+import com.sameerasw.essentials.ui.features.display.IslandInteractionsSettingsUI
 import com.sameerasw.essentials.ui.features.display.ISLAND_NOTIFICATIONS_FEATURE_ID
 import com.sameerasw.essentials.ui.features.display.ISLAND_PLACEMENT_FEATURE_ID
 import com.sameerasw.essentials.ui.features.display.ISLAND_SUB_PAGE_IDS
@@ -1372,6 +1374,14 @@ fun FeatureSettingsScreen(
 
                             ISLAND_BEHAVIOR_FEATURE_ID -> {
                                 IslandBehaviorSettingsUI(
+                                    viewModel = viewModel,
+                                    modifier = Modifier.padding(top = 16.dp),
+                                    highlightSetting = highlightSetting,
+                                )
+                            }
+
+                            ISLAND_INTERACTIONS_FEATURE_ID -> {
+                                IslandInteractionsSettingsUI(
                                     viewModel = viewModel,
                                     modifier = Modifier.padding(top = 16.dp),
                                     highlightSetting = highlightSetting,

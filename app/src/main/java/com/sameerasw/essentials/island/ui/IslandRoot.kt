@@ -235,6 +235,7 @@ private fun IslandRootContent(
             cameraDiameter = targetSpec.cameraDiameter * (1f - 0.3f * bond),
             verticalGap = targetSpec.verticalGap + (3.5.dp - targetSpec.verticalGap) * bond,
             cameraGap = targetSpec.cameraGap * (1f - 0.2f * bond),
+            contentGap = targetSpec.contentGap * (1f - 0.2f * bond),
         )
     }
 
@@ -264,14 +265,21 @@ private fun IslandRootContent(
     }
     val iconColor = if (justCollapsed) iconTarget else lerp(iconAnim.value, collapsedIconTarget, collapseMix)
 
-    val outlineAlphaTarget = if (spec.outlineHiddenWhenExpanded && stage == IslandStage.Expanded) 0f else 1f
+    val outlineHidden = spec.outlineHiddenWhenExpanded && stage == IslandStage.Expanded
+    val outlineAlphaTarget = if (outlineHidden) 0f else 1f
     val outlineAlphaAnim = remember { Animatable(outlineAlphaTarget) }
     LaunchedEffect(outlineAlphaTarget) {
-        if (justCollapsed) outlineAlphaAnim.snapTo(outlineAlphaTarget) else outlineAlphaAnim.animateTo(outlineAlphaTarget)
+        if (justCollapsed) {
+            outlineAlphaAnim.snapTo(outlineAlphaTarget)
+        } else {
+            outlineAlphaAnim.animateTo(outlineAlphaTarget, if (outlineHidden) IslandMotion.contentOut() else IslandMotion.contentIn())
+        }
     }
+    // While collapsing from expanded, the outline draws back in over the second half of the shrink.
+    val outlineReveal = ((collapseMix - 0.5f) / 0.5f).coerceIn(0f, 1f)
     val outlineAlpha = when {
         justCollapsed -> outlineAlphaTarget
-        stage == IslandStage.Expanded -> outlineAlphaAnim.value + (1f - outlineAlphaAnim.value) * collapseMix
+        stage == IslandStage.Expanded -> outlineAlphaAnim.value + (1f - outlineAlphaAnim.value) * outlineReveal
         else -> outlineAlphaAnim.value
     }
 
@@ -558,7 +566,7 @@ private fun IslandRootContent(
     val bubbleOnlyLayout = !hasCompactCells && spec.cameraPresence <= 0f
     val catchUpAnim = remember { Animatable(0f) }
     val liquidField = remember { LiquidField() }
-    liquidField.reach = with(density) { spec.cameraGap.toPx() } * 0.8f
+    liquidField.reach = with(density) { spec.contentGap.toPx() } * 0.8f
     val surfaceBond = remember(compactHeightPx, expandedCornerPx, bubbleOnlyLayout) {
         LiquidBond(
             id = "surface",
@@ -637,7 +645,7 @@ private fun IslandRootContent(
         } else {
             val sizePx = with(density) { spec.compactHeight.toPx() }
             val budget = with(density) { spec.lineWidth.toPx() }
-            val gap = with(density) { spec.cameraGap.toPx() }
+            val gap = with(density) { spec.contentGap.toPx() }
             val needLeft = compactNeedLeft.intValue
             // Balanced, the bubble's room grows the pill on the far side, so only the near side's content eats into the budget
             val room = if (needLeft >= 0) {
@@ -649,7 +657,7 @@ private fun IslandRootContent(
         }
     } ?: OVERLAP_MAX
     val sideBubbleWidth = lastCatchUp
-        ?.takeIf { spec.queueStyle == QueueStyle.Overlap && it.content == null && it.icons.isNotEmpty() }
+        ?.takeIf { it.content == null && it.icons.isNotEmpty() }
         ?.let {
             stackOverlapWidth(it.icons.size, spec.compactHeight, overlapSlots(it.icons, bubbleMaxIcons), it.overflow) +
                 overlapExtraWidth(it.icons, spec.compactHeight, bubbleMaxIcons, it.overflow)
@@ -669,7 +677,7 @@ private fun IslandRootContent(
     }
     fun bubbleSide(): Float = bubbleSideAnim.value
     fun balanceSign(): Float = if (spec.balanceCompact && spec.growDirection == 0) 1f - 2f * bubbleSide() else 1f
-    val bubbleGapPx = with(density) { spec.cameraGap.roundToPx() }
+    val bubbleGapPx = with(density) { spec.contentGap.roundToPx() }
     fun sideBubbleProgress(): Float =
         if (spec.growDirection == 0 && (hasCompactCells || stage == IslandStage.Hidden)) catchUpAnim.value.coerceIn(0f, 1f) else 0f
     val slackAnim = remember { Animatable(slackTarget.toFloat()) }
@@ -739,10 +747,7 @@ private fun IslandRootContent(
         if (spec.growDirection > 0) surfaceLeft(width) + width + bubbleGapPx else surfaceLeft(width) - bubbleGapPx - queueWidthLive()
     val inlineQueueIcons = queuedIcons.ifEmpty { lastQueuedIcons }
     val inlineQueue = LineLeading(
-        width = when (spec.queueStyle) {
-            QueueStyle.Stack -> spec.cellSize
-            QueueStyle.Overlap -> stackOverlapWidth(inlineQueueIcons.size, spec.cellSize)
-        },
+        width = stackOverlapWidth(inlineQueueIcons.size, spec.cellSize),
     ) {
         val tapToAdvance = Modifier.pointerInput(Unit) {
             detectTapGestures {
@@ -750,13 +755,10 @@ private fun IslandRootContent(
                 if (currentState.focused?.queue != null) actions.onAdvance() else lastQueuedIcons.firstOrNull()?.onSelect?.invoke()
             }
         }
-        when (spec.queueStyle) {
-            QueueStyle.Stack -> IslandStackBubble(inlineQueueIcons, spec.cellSize, modifier = tapToAdvance)
-            QueueStyle.Overlap -> IslandStackOverlap(inlineQueueIcons, spec.cellSize, modifier = tapToAdvance)
-        }
+        IslandStackOverlap(inlineQueueIcons, spec.cellSize, modifier = tapToAdvance)
     }
     val lineInsetActive = queueShown && stage == IslandStage.Line
-    val lineInset = if (lineInsetActive) queueWidth + spec.cameraGap else 0.dp
+    val lineInset = if (lineInsetActive) queueWidth + spec.contentGap else 0.dp
     val lineInsets = if (spec.growDirection > 0) 0.dp to lineInset else lineInset to 0.dp
     val condensedLineActive = spec.growDirection == 0 && stage == IslandStage.Line && focusedItem?.line?.condensed == true
     LaunchedEffect(lineInsetActive, spec.growDirection, condensedLineActive, queueWidthPx) {
@@ -892,6 +894,8 @@ private fun IslandRootContent(
 
     CompositionLocalProvider(
         LocalLiquidField provides liquidField,
+        LocalIslandCellSize provides spec.cellSize,
+        LocalBubbleIconFraction provides (0.72f + ((6.dp - spec.contentGap) * 2) / spec.compactHeight).coerceIn(0.5f, 1f),
         LocalIslandIconColor provides iconColor,
         LocalIslandTextColor provides if (targetSpec.themedText) pastelOf(iconColor) else null,
     ) {
@@ -957,7 +961,7 @@ private fun IslandRootContent(
                             val sideX = queueX(w) + queueWidthLive() / 2f
                             val sideY = surfaceTopPx + bubbleSizePx / 2f
                             val belowX = surfaceLeft(w) + w / 2f
-                            val belowY = surfaceTopPx + liveSurfaceHeight.intValue + pillGapPx + p.height / 2f
+                            val belowY = surfaceTopPx - edgeShift.floatValue + liveSurfaceHeight.intValue + pillGapPx + p.height / 2f
                             val k = t()
                             val cx = sideX + (belowX - sideX) * k
                             val cy = sideY + (belowY - sideY) * k
@@ -1099,11 +1103,13 @@ private fun IslandRootContent(
                             },
                     )
                 }
+                CompositionLocalProvider(
+                    LocalBubbleIconFraction provides (0.72f + ((6.dp - spec.contentGap) * 2) / spec.compactHeight).coerceIn(0.5f, 1f),
+                ) {
                 IslandSideBubble(
                     ownerKey = lastBubbleKey,
                     bubbleFor = { knownBubbles[it] },
                     size = spec.compactHeight,
-                    style = spec.queueStyle,
                     outlineColor = outlineFor(1f),
                     outlineThickness = spec.outlineThickness,
                     maxIcons = bubbleMaxIcons,
@@ -1175,6 +1181,7 @@ private fun IslandRootContent(
                             )
                         },
                 )
+                }
             }
         }
         val collapseEndTarget = when {
@@ -1255,7 +1262,8 @@ private fun IslandRootContent(
                 }
                 .then(
                     outlineFor(1f - bond)
-                        ?.let { Modifier.border(spec.outlineThickness, it, surfaceShape) }
+                        // The stroke draws in from hairline to full width as it fades in
+                        ?.let { Modifier.border(spec.outlineThickness * (0.35f + 0.65f * outlineAlpha), it, surfaceShape) }
                         ?: Modifier,
                 )
                 // Finger-driven shrink sits inside the clip/background so the pill itself follows the drag.

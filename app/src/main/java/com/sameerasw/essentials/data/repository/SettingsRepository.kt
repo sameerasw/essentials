@@ -589,6 +589,7 @@ class SettingsRepository(
         const val KEY_ISLAND_CAMERA_SIZE = "island_camera_size"
         const val KEY_ISLAND_MAX_WIDTH = "island_max_width"
         const val KEY_ISLAND_CUTOUT_GAP = "island_cutout_gap"
+        const val KEY_ISLAND_PADDING_AROUND = "island_padding_around"
         const val KEY_ISLAND_SUPPRESS_SYSTEM_HEADS_UP = "island_suppress_system_heads_up"
         const val KEY_ISLAND_DYNAMIC_HIDE_STATUS_BAR = "island_dynamic_hide_status_bar"
         const val KEY_ISLAND_COMPACT_HIDE_STATUS_BAR = "island_compact_hide_status_bar"
@@ -785,11 +786,7 @@ class SettingsRepository(
         const val KEY_ISLAND_LIVE_UPDATES_COUNT = "island_live_updates_count"
         const val KEY_ISLAND_LIVE_UPDATES_EXPANDED = "island_live_updates_expanded"
         const val KEY_ISLAND_NOTIF_QUEUE = "island_notif_queue"
-        const val KEY_ISLAND_NOTIF_QUEUE_STYLE = "island_notif_queue_style"
         const val KEY_ISLAND_SECONDARY_BUBBLE_SIDE = "island_secondary_bubble_side"
-        const val ISLAND_NOTIF_QUEUE_STYLE_STACK = "stack"
-        const val ISLAND_NOTIF_QUEUE_STYLE_OVERLAP = "overlap"
-        const val KEY_ISLAND_NOTIF_QUEUE_INLINE = "island_notif_queue_inline"
         const val KEY_ISLAND_NOTIF_SKIP_SILENT = "island_notif_skip_silent"
         const val KEY_ISLAND_NOTIF_FOLLOW_DND = "island_notif_follow_dnd"
         const val KEY_ISLAND_NOTIF_FILTER_APPS = "island_notif_filter_apps"
@@ -4160,6 +4157,8 @@ class SettingsRepository(
 
     fun getIslandCutoutGap(): Float = getDisplayFloat(KEY_ISLAND_CUTOUT_GAP, 6f)
     fun setIslandCutoutGap(value: Float) = putDisplayFloat(KEY_ISLAND_CUTOUT_GAP, value)
+    fun getIslandPaddingAround(): Float = getDisplayFloat(KEY_ISLAND_PADDING_AROUND, 6f)
+    fun setIslandPaddingAround(value: Float) = putDisplayFloat(KEY_ISLAND_PADDING_AROUND, value)
 
     fun isIslandSuppressSystemHeadsUpEnabled(): Boolean = getBoolean(KEY_ISLAND_SUPPRESS_SYSTEM_HEADS_UP, false)
     fun setIslandSuppressSystemHeadsUpEnabled(enabled: Boolean) {
@@ -4635,18 +4634,12 @@ class SettingsRepository(
     fun isIslandNotifQueueEnabled(): Boolean = isIslandNotifHubEnabled() || getBoolean(KEY_ISLAND_NOTIF_QUEUE, true)
     fun setIslandNotifQueueEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_NOTIF_QUEUE, enabled)
 
-    fun getIslandNotifQueueStyle(): String =
-        if (getString(KEY_ISLAND_NOTIF_QUEUE_STYLE, null) == ISLAND_NOTIF_QUEUE_STYLE_OVERLAP) ISLAND_NOTIF_QUEUE_STYLE_OVERLAP
-        else ISLAND_NOTIF_QUEUE_STYLE_STACK
-    fun setIslandNotifQueueStyle(style: String) = putString(KEY_ISLAND_NOTIF_QUEUE_STYLE, style)
 
     fun getIslandSecondaryBubbleSide(): String =
         if (getString(KEY_ISLAND_SECONDARY_BUBBLE_SIDE, null) == ISLAND_CAMERA_POSITION_RIGHT) ISLAND_CAMERA_POSITION_RIGHT
         else ISLAND_CAMERA_POSITION_LEFT
     fun setIslandSecondaryBubbleSide(side: String) = putString(KEY_ISLAND_SECONDARY_BUBBLE_SIDE, side)
 
-    fun isIslandNotifQueueInlineEnabled(): Boolean = getBoolean(KEY_ISLAND_NOTIF_QUEUE_INLINE, false)
-    fun setIslandNotifQueueInlineEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_NOTIF_QUEUE_INLINE, enabled)
 
     fun isFaceUnlockBrightnessEnabled(): Boolean = getBoolean(KEY_FACE_UNLOCK_BRIGHTNESS_ENABLED, false)
     fun setFaceUnlockBrightnessEnabled(enabled: Boolean) = putBoolean(KEY_FACE_UNLOCK_BRIGHTNESS_ENABLED, enabled)

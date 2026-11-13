@@ -42,7 +42,7 @@ fun NavigationExpanded(
         Column(Modifier.fillMaxWidth().padding(spec.expandedOutset)) {
             Spacer(Modifier.height(spec.expandedTopPadding))
             scope.CameraRow(
-                horizontalPadding = spec.cameraGap + spec.expandedCorner * 0.35f,
+                horizontalPadding = spec.contentGap + spec.expandedCorner * 0.35f,
                 start = { Maneuver(data, spec.cellSize.value.toInt()) },
                 end = {
                     data.distance?.let {

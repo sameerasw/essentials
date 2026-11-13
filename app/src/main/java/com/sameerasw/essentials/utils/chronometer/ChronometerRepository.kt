@@ -236,8 +236,18 @@ object ChronometerRepository {
     private val RESUME_WORDS = listOf("resume", "continue", "play")
 
     private fun hasResumeButton(root: View): Boolean {
+        val names = ArrayList<String>()
+        fun walk(v: View) {
+            if (v !== root && v.isClickable && v.visibility == View.VISIBLE && v.id != View.NO_ID) {
+                runCatching { v.resources.getResourceEntryName(v.id) }.getOrNull()?.let { names += it.lowercase() }
+            }
+            if (v is ViewGroup) for (i in 0 until v.childCount) walk(v.getChildAt(i))
+        }
+        walk(root)
         val labels = customViewActions(root).map { it.title.lowercase() }
-        return labels.any { l -> RESUME_WORDS.any { l.contains(it) } } && labels.none { it.contains("pause") }
+        val resume = names.any { n -> RESUME_WORDS.any { n.contains(it) } } || labels.any { l -> RESUME_WORDS.any { l.contains(it) } }
+        val pause = names.any { it.contains("pause") } || labels.any { it.contains("pause") }
+        return resume && !pause
     }
 
     private fun customViewActions(root: View): List<ChronometerAction> {
@@ -273,14 +283,18 @@ object ChronometerRepository {
     }
 
     
+    private val CLOCK_PATTERN = Regex("""(\p{Nd}{1,2})[:\uFF1A\u0589\u2236](\p{Nd}{2})(?:[:\uFF1A\u0589\u2236](\p{Nd}{2}))?""")
+
     private fun parseClock(extras: Bundle): Long? {
         val text = listOfNotNull(
             extras.getCharSequence(Notification.EXTRA_TEXT),
             extras.getCharSequence(Notification.EXTRA_TITLE),
         ).joinToString(" ")
-        val match = Regex("""(\d{1,2}):(\d{2})(?::(\d{2}))?""").find(text) ?: return null
+        val match = CLOCK_PATTERN.find(text) ?: return null
         val (a, b, c) = match.destructured
-        val seconds = if (c.isNotEmpty()) a.toLong() * 3600 + b.toLong() * 60 + c.toLong() else a.toLong() * 60 + b.toLong()
+        val seconds = if (c.isNotEmpty()) number(a) * 3600 + number(b) * 60 + number(c) else number(a) * 60 + number(b)
         return seconds * 1000L
     }
+
+    private fun number(digits: String): Long = digits.fold(0L) { acc, ch -> acc * 10 + Character.digit(ch, 10) }
 }
