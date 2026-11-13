@@ -2068,7 +2068,7 @@
     <string name="app_overcast">Погода</string>
     <string name="island_media_use_art_color_title">Advertise album art color</string>
     <string name="island_media_player_style_title">Player style</string>
-    <string name="debug_ui_margin_overlay_title">Debug UI margin overlay</string>
+    <string name="debug_ui_margin_overlay_title">Отладочное наложение полей пользовательского интерфейса</string>
     <string name="island_statusbar_ignore_notifications_title">Ignore notifications</string>
     <string name="app_volume_apps_section">Приложения </string>
     <string name="label_battery_charging_policy">Политика зарядки</string>
@@ -2187,7 +2187,7 @@
 Когда Android активирует режим экономии батареи, он читает эти клавиши, чтобы определить, какие системные функции следует ограничить (например, снижение яркости экрана, отключение AOD, ограничение доступа к местоположению GPS или перевод приложений в спящий режим).
 
 Если вы измените эти значения, ваша пользовательская политика экономии батареи вступит в силу в следующий раз, когда будет включён Battery Saver. Вы можете сбросить до дефолта в любое время, используя кнопку в нижней части экрана. Для написания этих конфигураций системы требуется разрешение WRITE_SECURE_SETTINGS. </string>
-    <string name="privileged_mode_auto">Автоматически</string>
+    <string name="privileged_mode_auto">Авто</string>
     <string name="privileged_mode_root">Рут</string>
     <string name="privileged_mode_porter">Портер </string>
     <string name="shizuku_auth_token_label">Токен авторизации Shizuku</string>
@@ -2200,8 +2200,8 @@
     <string name="btn_export_config">Экспортировать Конфиг </string>
     <string name="settings_translations_section">Переводы</string>
     <string name="translation_logged_in_as">Вход в систему как %1$s</string>
-    <string name="subreddit_description">Место для обсуждения основных и других приложений мной. Присоединяйтесь к сообществу и вносите свой вклад в проекты, получите помощь и кое-чему научитесь. ( ´ ▽ ` )ﾉ</string>
-    <string name="label_top_contributors">Лучшие контрибьюторы</string>
+    <string name="subreddit_description">Это место для обсуждения Essentials и других моих приложений. Присоединяйтесь к сообществу, вносите свой вклад в проекты, получайте помощь и узнавайте что-нибудь новое. ( ´ ▽ ` )ﾉ</string>
+    <string name="label_top_contributors">Лучшие авторы</string>
     <string name="label_notify_new_updates">Уведомлять о новых обновлениях </string>
     <string name="settings_section_customizations">Кастомизация</string>
     <string name="settings_section_permissions">Разрешения </string>
@@ -2290,7 +2290,7 @@
     <string name="label_reset_battery_stats_title">Сброс статистики батареи </string>
     <string name="label_reset_battery_stats_desc">Сброс статистики батареи системы (dumpsys batterystat - сброс). Это очищает историческое использование батареи и данные о расходе приложений, поэтому он начинает отслеживать свежий текущий заряд. </string>
     <string name="action_reset_battery_stats">Сброс статистики </string>
-    <string name="setting_privileged_mode_title">Привилегированный доступ </string>
+    <string name="setting_privileged_mode_title">Привилегированный доступ</string>
     <string name="settings_permissions_all">Все разрешения </string>
     <string name="bug_report_issue_details">Подробности проблемы</string>
     <string name="about_desc_networks">Настройте ограничения скорости загрузки в сеть, постоянно держите мобильные данные активными даже при подключении к Wi-Fi и включите настройки сертификации беспроводного дисплея. </string>
@@ -2335,4 +2335,11 @@
     <string name="island_brief_options_title">Краткие варианты</string>
     <string name="status_glance_section_position">Позиция</string>
     <string name="status_glance_section_what_to_show">Что показать</string>
+    <string name="action_licenses_and_credits">Лицензии</string>
+    <string name="label_developer_options">Параметры разработчика</string>
+    <string name="btn_grant_all_permissions">Предоставить все разрешения</string>
+    <string name="btn_reset_onboarding">Сбросить регистрацию</string>
+    <string name="label_haptics_title">Тактильные ощущения</string>
+    <string name="btn_reset_update_note">Сбросить примечание об обновлении</string>
+    <string name="btn_clear_search_history">Очистить историю поиска</string>
 </resources>
