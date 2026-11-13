@@ -1729,14 +1729,14 @@
     <string name="island_catch_up_timeout_title">Время удержания </string>
     <string name="island_show_timers_title">Таймеры и секундомеры </string>
     <string name="feat_conscious_gate_title">Осознанная пауза</string>
-    <string name="island_show_glow_title">Показывать акцентное свечение</string>
+    <string name="island_show_glow_title">Расширенный акцент сияния </string>
     <string name="island_glow_intensity_title">Интенсивность свечения </string>
     <string name="island_prefer_still_title">Предпочитать меньше анимаций у острова</string>
     <string name="island_prefer_still_info">Stops the island\'s animations after a few seconds without interaction, so the display can drop to a low refresh rate and save battery. Media visualizers, second by second counters and other looping animations pause until you interact with the island again.</string>
     <string name="island_line_peek_desc">Кратко покажите обновления по всему острову, затем вернитесь к компактному</string>
     <string name="island_line_peek_title">Подглядывание за линией</string>
     <string name="island_hide_in_owner_app_title">Скрыть виджет внутри приложения </string>
-    <string name="island_hide_media_in_owner_app_title">Hide media player inside the app</string>
+    <string name="island_hide_media_in_owner_app_title">Скрыть медиаплеер внутри приложения </string>
     <string name="island_tap_to_open_expanded_title">Нажмите, чтобы открыться при расширении </string>
     <string name="island_dismiss_on_outside_title">Скрывать при действиях снаружи</string>
     <string name="duo_battery_percentage_only_colored_title">Только для цветных экземпляров</string>
@@ -2111,8 +2111,8 @@
     <string name="about_desc_screenshots">Держит вашу галерею свободной от одноразовых скриншотов. Общие скриншоты можно уничтожить сразу после обмена или немного позже, и каждый новый скриншот можно автоматически удалять через несколько дней, если вы не сохраните его из уведомления или не начнёте его в \"Фото\". Отправленные скриншоты можно восстановить из файлов или фотографий в течение 30 дней. </string>
     <string name="button_remap_power">Включение</string>
     <string name="button_remap_power_camera_flip_title">Перевернуть камеру при двойном нажатии</string>
-    <string name="island_statusbar_aware_width_info">This may not work on all devices. It works best on Pixels and devices with a status bar close to AOSP.</string>
-    <string name="island_statusbar_aware_width_info_tip">Even on those devices, try reducing the number of visible status bar icons to give the island more space.</string>
+    <string name="island_statusbar_aware_width_info">Это может работать не на всех устройствах. Он лучше всего работает на пикселях и устройствах с панелью состояния, близкой к AOSP. </string>
+    <string name="island_statusbar_aware_width_info_tip">Даже на этих устройствах попробуйте уменьшить количество видимых значков баров состояния, чтобы дать острову больше места. </string>
     <string name="island_dismiss_direction_title">Отставка</string>
     <string name="island_dismiss_direction_horizontal">Горизонтально</string>
     <string name="island_dismiss_direction_down">Вниз</string>
