@@ -95,4 +95,14 @@ class CompactLayoutEngineTest {
 
     @Test fun wideNotificationBalancesAgainstMedia() =
         assertEquals("notif.icon | media.eq media.art flash.icon", weighted(listOf(catchUp, flash, media), mapOf("notif.icon" to 3f)))
+
+    @Test fun pinnedCrossesWideHubWhenUnbalanced() {
+        val a = CompactLayoutEngine.arrange(
+            listOf(time, battery),
+            leftExtra = 3,
+            fits = { before, _ -> if (before.isEmpty()) 1 else null },
+        )
+        assertEquals(setOf("time", "battery"), a.visibleItems)
+        assertEquals(emptyList<String>(), a.before)
+    }
 }

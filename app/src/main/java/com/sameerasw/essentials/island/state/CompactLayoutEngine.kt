@@ -96,17 +96,27 @@ object CompactLayoutEngine {
         base: CompactArrangement,
         fits: (List<String>, List<String>) -> Int?,
     ): CompactArrangement? {
-        val pinnedCells = selected.filter { it.pinned }.flatMap { it.cellKeys }.toSet()
+        val pinned = selected.filter { it.pinned }
         val dynamic = selected.filterNot { it.pinned }.sortedBy { it.priority }
-        if (dynamic.isEmpty() || dynamic.size > 6) return null
-        val pinnedBefore = base.before.filter { it in pinnedCells }
-        val pinnedAfter = base.after.filter { it in pinnedCells }
+        val pinnedCells = pinned.flatMap { it.cellKeys }.toSet()
+        return splitSearch(base.before.filter { it in pinnedCells }, base.after.filter { it in pinnedCells }, dynamic, base, fits)
+            ?: splitSearch(emptyList(), emptyList(), pinned + dynamic, base, fits)
+    }
+
+    private fun splitSearch(
+        fixedBefore: List<String>,
+        fixedAfter: List<String>,
+        movable: List<CompactEntry>,
+        base: CompactArrangement,
+        fits: (List<String>, List<String>) -> Int?,
+    ): CompactArrangement? {
+        if (movable.isEmpty() || movable.size > 6) return null
         var best: CompactArrangement? = null
         var bestScore = Int.MAX_VALUE
-        for (mask in 0 until (1 shl dynamic.size)) {
-            val before = pinnedBefore.toMutableList()
-            val after = pinnedAfter.toMutableList()
-            dynamic.forEachIndexed { i, entry ->
+        for (mask in 0 until (1 shl movable.size)) {
+            val before = fixedBefore.toMutableList()
+            val after = fixedAfter.toMutableList()
+            movable.forEachIndexed { i, entry ->
                 val cells = if (entry.cellKeys.size == 2) entry.cellKeys.reversed() else entry.cellKeys
                 if ((mask shr i) and 1 == 1) before += cells else after += cells
             }
