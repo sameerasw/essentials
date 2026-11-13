@@ -56,7 +56,7 @@ fun RemoteBriefCardRow(card: RemoteBriefCard, onClick: () -> Unit, modifier: Mod
         modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
-            .background(Color.White.copy(alpha = 0.1f))
+            .background(Color.Black)
             .clickable(onClick = onClick)
             .padding(horizontal = 12.dp, vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically,

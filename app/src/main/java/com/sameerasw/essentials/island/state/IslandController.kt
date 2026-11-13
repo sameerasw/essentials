@@ -423,6 +423,7 @@ class IslandController(
         val bubble = merged ?: bubbleOwner?.sideBubble
         val bubbleKey = if (merged != null) MERGED_BUBBLE_KEY else bubbleOwner?.key
         _state.value = IslandUiState(stage, items, arrangement, focusedKey, bubble, bubbleKey)
+        IslandItemsState.publish(items, arrangement.visibleItems + listOfNotNull(bubbleOwner?.key, mediaItem?.key.takeIf { mediaBubble != null }))
         if (previous != stage) onStageChanged?.invoke(stage)
     }
 
