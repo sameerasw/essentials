@@ -2060,7 +2060,7 @@
     <string name="app_overcast">Погода</string>
     <string name="island_media_use_art_color_title">Advertise album art color</string>
     <string name="island_media_player_style_title">Player style</string>
-    <string name="debug_ui_margin_overlay_title">Debug UI margin overlay</string>
+    <string name="debug_ui_margin_overlay_title">Отладочное наложение полей пользовательского интерфейса</string>
     <string name="island_statusbar_ignore_notifications_title">Ignore notifications</string>
     <string name="app_volume_apps_section">Приложения </string>
     <string name="label_battery_charging_policy">Политика зарядки</string>
@@ -2181,4 +2181,15 @@
     <string name="shizuku_auth_token_label">Токен авторизации Shizuku</string>
     <string name="settings_section_more">Более</string>
     <string name="settings_translations_section">Переводы</string>
+    <string name="subreddit_description">Это место для обсуждения Essentials и других моих приложений. Присоединяйтесь к сообществу, вносите свой вклад в проекты, получайте помощь и узнавайте что-нибудь новое. ( ´ ▽ ` )ﾉ</string>
+    <string name="label_top_contributors">Лучшие авторы</string>
+    <string name="action_licenses_and_credits">Лицензии</string>
+    <string name="label_developer_options">Параметры разработчика</string>
+    <string name="btn_grant_all_permissions">Предоставить все разрешения</string>
+    <string name="btn_reset_onboarding">Сбросить регистрацию</string>
+    <string name="setting_privileged_mode_title">Привилегированный доступ</string>
+    <string name="privileged_mode_auto">Авто</string>
+    <string name="label_haptics_title">Тактильные ощущения</string>
+    <string name="btn_reset_update_note">Сбросить примечание об обновлении</string>
+    <string name="btn_clear_search_history">Очистить историю поиска</string>
 </resources>
