@@ -422,18 +422,20 @@
     <string name="snippets_prefix_semicolon">Semicolon (;)</string>
     <string name="snippets_prefix_colon">Colon (:)</string>
     <string name="snippets_prefix_at">Double At (@@)</string>
-    <string name="snippets_prefix_slash">Double Slash (//)</string>
     <string name="snippets_prefix_space">Space (␣)</string>
     <string name="snippets_dialog_new_title">New Snippet</string>
     <string name="snippets_dialog_edit_title">Edit Snippet</string>
     <string name="snippets_shortcut_trigger_label">Shortcut Trigger</string>
     <string name="snippets_keyword_label">Keyword</string>
-    <string name="snippets_keyword_placeholder">e.g., brb, addr, email</string>
+    <string name="snippets_keyword_placeholder">e.g., brb, addr, shrug</string>
     <string name="snippets_title_label">Label (Optional)</string>
     <string name="snippets_title_placeholder">e.g., Be Right Back</string>
     <string name="snippets_content_label">Expanded Text</string>
     <string name="snippets_content_placeholder">Enter replacement text or multi-line snippet</string>
     <string name="snippets_action_change">Change</string>
+    <string name="snippets_error_whitespace">Keyword cannot contain spaces</string>
+    <string name="snippets_error_prefix">Do not include prefix in keyword</string>
+    <string name="snippets_error_duplicate">Keyword already in use</string>
 
     <!-- Caffeinate / Permissions -->
     <string name="permission_show_notification_title">Show Notification</string>

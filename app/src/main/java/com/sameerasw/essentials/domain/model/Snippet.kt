@@ -9,8 +9,10 @@
 
 package com.sameerasw.essentials.domain.model
 
+import java.util.UUID
+
 data class Snippet(
-    val id: Long = System.currentTimeMillis(),
+    val id: String = UUID.randomUUID().toString(),
     val keyword: String,
     val title: String = "",
     val content: String,

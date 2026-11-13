@@ -39,12 +39,16 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.sameerasw.essentials.FeatureSettingsActivity
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
+import com.sameerasw.essentials.ui.core.cards.SelectionCardItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
+import com.sameerasw.essentials.ui.core.sheets.PermissionsBottomSheet
 import com.sameerasw.essentials.ui.modifiers.highlight
+import com.sameerasw.essentials.utils.PermissionUIHelper
 import com.sameerasw.essentials.viewmodels.MainViewModel
 import kotlinx.coroutines.delay
 
@@ -355,14 +359,14 @@ fun KeyboardSettingsUI(
                     if (checked && !isAccessibilityEnabled) {
                         showPermissionSheet = true
                     } else {
-                        viewModel.setTextSnippetsEnabled(checked, context)
+                        viewModel.setTextSnippetsEnabled(checked)
                     }
                 },
                 modifier = Modifier.highlight(highlightSetting == "keyboard_text_snippets"),
             )
 
             if (viewModel.isTextSnippetsEnabled.value) {
-                com.sameerasw.essentials.ui.core.cards.SelectionCardItem(
+                SelectionCardItem(
                     title = stringResource(R.string.title_manage_snippets),
                     description =
                         stringResource(
@@ -373,7 +377,7 @@ fun KeyboardSettingsUI(
                     iconRes = R.drawable.rounded_settings_24,
                     onClick = {
                         val intent =
-                            Intent(context, com.sameerasw.essentials.FeatureSettingsActivity::class.java).apply {
+                            Intent(context, FeatureSettingsActivity::class.java).apply {
                                 putExtra("feature", "Text Snippets")
                             }
                         context.startActivity(intent)
@@ -386,14 +390,14 @@ fun KeyboardSettingsUI(
 
         if (showPermissionSheet) {
             val permissionItems =
-                com.sameerasw.essentials.utils.PermissionUIHelper.getPermissionItems(
+                PermissionUIHelper.getPermissionItems(
                     listOf("ACCESSIBILITY"),
                     context,
                     viewModel,
                     context as? android.app.Activity,
                 )
             if (permissionItems.isNotEmpty()) {
-                com.sameerasw.essentials.ui.core.sheets.PermissionsBottomSheet(
+                PermissionsBottomSheet(
                     onDismissRequest = { showPermissionSheet = false },
                     featureTitle = stringResource(R.string.feat_text_snippets_title),
                     permissions = permissionItems,
