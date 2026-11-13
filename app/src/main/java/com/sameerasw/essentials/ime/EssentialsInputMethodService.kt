@@ -641,6 +641,7 @@ class EssentialsInputMethodService :
         restarting: Boolean,
     ) {
         super.onStartInputView(info, restarting)
+        isInputActive = true
         // Ensure lifecycle is in RESUMED state when view becomes visible
         if (lifecycleRegistry.currentState != Lifecycle.State.RESUMED) {
             lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_RESUME)
@@ -651,12 +652,14 @@ class EssentialsInputMethodService :
 
     override fun onFinishInputView(finishingInput: Boolean) {
         super.onFinishInputView(finishingInput)
+        isInputActive = false
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_PAUSE)
         kbdResetTrigger.value++
     }
 
     override fun onDestroy() {
         super.onDestroy()
+        isInputActive = false
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_STOP)
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_DESTROY)
         if (::clipboardManager.isInitialized) {
@@ -780,5 +783,11 @@ class EssentialsInputMethodService :
         if (current.remove(text)) {
             _clipboardHistory.value = current
         }
+    }
+
+    companion object {
+        @Volatile
+        var isInputActive: Boolean = false
+            internal set
     }
 }

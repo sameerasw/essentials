@@ -49,6 +49,8 @@ import com.sameerasw.essentials.services.handlers.FlashlightHandler
 import com.sameerasw.essentials.island.service.IslandCoordinator
 import com.sameerasw.essentials.services.handlers.NotificationLightingHandler
 import com.sameerasw.essentials.services.handlers.SnippetExpansionHandler
+import com.sameerasw.essentials.services.handlers.SmartPixelsHandler
+import com.sameerasw.essentials.services.handlers.StatusBarSectionsDebugHandler
 import com.sameerasw.essentials.services.handlers.OmniGestureOverlayHandler
 import com.sameerasw.essentials.services.handlers.FaceUnlockBrightnessHandler
 import com.sameerasw.essentials.services.handlers.PocketModeHandler
@@ -95,7 +97,7 @@ class ScreenOffAccessibilityService :
     private lateinit var statusBarIconHandler: StatusBarIconHandler
     private lateinit var pocketModeHandler: PocketModeHandler
     private lateinit var faceUnlockBrightnessHandler: FaceUnlockBrightnessHandler
-    private lateinit var smartPixelsHandler: com.sameerasw.essentials.services.handlers.SmartPixelsHandler
+    private lateinit var smartPixelsHandler: SmartPixelsHandler
     private lateinit var duoOverlayHandler: DuoOverlayHandler
     lateinit var islandOverlayHandler: IslandCoordinator
     private lateinit var statusGlanceHandler: StatusGlanceHandler
@@ -104,7 +106,7 @@ class ScreenOffAccessibilityService :
     private lateinit var lockscreenShortcutsHandler: LockscreenShortcutsHandler
     private lateinit var appVolumeOverlayHandler: AppVolumeOverlayHandler
     private lateinit var snippetExpansionHandler: SnippetExpansionHandler
-    private lateinit var statusBarSectionsDebugHandler: com.sameerasw.essentials.services.handlers.StatusBarSectionsDebugHandler
+    private lateinit var statusBarSectionsDebugHandler: StatusBarSectionsDebugHandler
 
     private var lightSensor: Sensor? = null
     private var lightSensorLux: Float = 100f
@@ -393,6 +395,8 @@ class ScreenOffAccessibilityService :
                 key == SettingsRepository.KEY_LOCKSCREEN_SHORTCUT_RIGHT_ACTIONS
             ) {
                 lockscreenShortcutsHandler.updateState()
+            } else if (key == SettingsRepository.KEY_KEYBOARD_TEXT_SNIPPETS_ENABLED) {
+                updateSnippetTextListening(SettingsRepository(this).isTextSnippetsEnabled())
             } else if (key == SettingsRepository.KEY_APP_VOLUME_ENABLED ||
                 key == SettingsRepository.KEY_APP_VOLUME_LEVELS
             ) {
@@ -431,9 +435,7 @@ class ScreenOffAccessibilityService :
         statusBarIconHandler = StatusBarIconHandler(this)
         pocketModeHandler = PocketModeHandler(this)
         faceUnlockBrightnessHandler = FaceUnlockBrightnessHandler(this)
-        smartPixelsHandler =
-            com.sameerasw.essentials.services.handlers
-                .SmartPixelsHandler(this)
+        smartPixelsHandler = SmartPixelsHandler(this)
         duoOverlayHandler = DuoOverlayHandler(this)
         islandOverlayHandler = IslandCoordinator(this)
         islandOverlayHandler.onVisibilityChanged = {
@@ -442,12 +444,12 @@ class ScreenOffAccessibilityService :
         }
         duoOverlayHandler.openBrief = { islandOverlayHandler.openBrief() }
         statusGlanceHandler = StatusGlanceHandler(this)
-        statusBarSectionsDebugHandler = com.sameerasw.essentials.services.handlers.StatusBarSectionsDebugHandler(this)
+        statusBarSectionsDebugHandler = StatusBarSectionsDebugHandler(this)
         lockscreenShortcutsHandler = LockscreenShortcutsHandler(this, flashlightHandler)
         appVolumeOverlayHandler = AppVolumeOverlayHandler(this)
         screenshotShareCleanupHandler = ScreenshotShareCleanupHandler(this, serviceScope)
         screenshotAutoCleanHandler = ScreenshotAutoCleanHandler(this, serviceScope)
-        snippetExpansionHandler = SnippetExpansionHandler(this, serviceScope)
+        snippetExpansionHandler = SnippetExpansionHandler(this)
 
         flashlightHandler.register()
         statusBarIconHandler.register()
@@ -624,7 +626,9 @@ class ScreenOffAccessibilityService :
         isA11yConnected = true
         serviceInfo =
             serviceInfo.apply {
-                eventTypes = eventTypes or AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED
+                if (SettingsRepository(this@ScreenOffAccessibilityService).isTextSnippetsEnabled()) {
+                    eventTypes = eventTypes or AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED
+                }
                 flags = flags or
                     AccessibilityServiceInfo.FLAG_REQUEST_FILTER_KEY_EVENTS or
                     AccessibilityServiceInfo.FLAG_RETRIEVE_INTERACTIVE_WINDOWS
@@ -673,6 +677,7 @@ class ScreenOffAccessibilityService :
     }
 
     override fun onDestroy() {
+        if (instance == this) instance = null
         Shizuku.removeBinderReceivedListener(shizukuBinderListener)
         try {
             unregisterReceiver(screenReceiver)
@@ -1252,6 +1257,22 @@ class ScreenOffAccessibilityService :
 
         fun updateSmartPixelsState() {
             instance?.smartPixelsHandler?.updateState()
+        }
+
+        fun updateSnippetTextListening(enabled: Boolean) {
+            val service = instance ?: return
+            val info = service.serviceInfo ?: return
+            val current = info.eventTypes
+            val target =
+                if (enabled) {
+                    current or AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED
+                } else {
+                    current and AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED.inv()
+                }
+            if (current != target) {
+                info.eventTypes = target
+                service.serviceInfo = info
+            }
         }
     }
 }

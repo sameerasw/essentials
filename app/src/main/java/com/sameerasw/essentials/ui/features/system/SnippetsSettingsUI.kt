@@ -4,7 +4,7 @@
  *
  * Feature Module: UI Feature - System
  * File: SnippetsSettingsUI.kt
- * Description: UI settings composable for managing text snippets and customizable prefix trigger using app core components.
+ * Description: UI screen for managing text expansion snippets and prefix settings.
  */
 
 package com.sameerasw.essentials.ui.features.system
@@ -12,6 +12,7 @@ package com.sameerasw.essentials.ui.features.system
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -25,6 +26,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
@@ -43,12 +46,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.model.Snippet
 import com.sameerasw.essentials.ui.components.StackedActionCard
-import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.cards.SelectionCardItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.sheets.EssentialsBottomSheet
@@ -56,12 +60,17 @@ import com.sameerasw.essentials.ui.core.sheets.PermissionsBottomSheet
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.utils.PermissionUIHelper
 import com.sameerasw.essentials.viewmodels.MainViewModel
+import java.util.UUID
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SnippetsSettingsUI(
     viewModel: MainViewModel,
     modifier: Modifier = Modifier,
+    isAddSheetVisible: Boolean = false,
+    onAddSheetVisibleChange: (Boolean) -> Unit = {},
+    editingSnippet: Snippet? = null,
+    onEditingSnippetChange: (Snippet?) -> Unit = {},
 ) {
     val context = LocalContext.current
     val prefix by viewModel.snippetPrefix
@@ -76,13 +85,9 @@ fun SnippetsSettingsUI(
     }
 
     Column(
-        modifier =
-            modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
+        modifier = modifier.fillMaxWidth().padding(horizontal = 16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        // Missing Accessibility Permission Warning
         if (!isAccessibilityEnabled) {
             RoundedCardContainer(spacing = 2.dp) {
                 SelectionCardItem(
@@ -94,22 +99,19 @@ fun SnippetsSettingsUI(
             }
         }
 
-        // Trigger Prefix Hero Card with Wide Action Button
         StackedActionCard(
             iconRes = R.drawable.rounded_edit_note_24,
             title = stringResource(R.string.snippets_trigger_prefix),
-            description =
-                if (prefix.isEmpty()) {
-                    stringResource(R.string.snippets_prefix_space_expansion)
-                } else {
-                    stringResource(R.string.snippets_prefix_symbol_desc, prefix)
-                },
+            description = if (prefix.isEmpty()) {
+                stringResource(R.string.snippets_prefix_space_expansion)
+            } else {
+                stringResource(R.string.snippets_prefix_symbol_desc, prefix)
+            },
             actionLabel = stringResource(R.string.snippets_action_change),
             actionIconRes = R.drawable.rounded_edit_24,
             onAction = { showPrefixSheet = true },
         )
 
-        // Snippets Section
         Text(
             text = stringResource(R.string.snippets_saved_title, snippets.size),
             style = MaterialTheme.typography.titleMedium,
@@ -119,15 +121,17 @@ fun SnippetsSettingsUI(
 
         if (snippets.isNotEmpty()) {
             RoundedCardContainer(spacing = 2.dp) {
-                snippets.forEach { snippet ->
+                snippets.forEachIndexed { index, snippet ->
                     val triggerText = if (prefix.isNotEmpty()) "$prefix${snippet.keyword}" else "${snippet.keyword} ␣"
-                    com.sameerasw.essentials.ui.core.cards.SnippetCardItem(
+                    SnippetCardItem(
                         trigger = triggerText,
                         content = snippet.content,
                         title = snippet.title,
+                        isFirst = index == 0,
+                        isLast = index == snippets.lastIndex,
                         onClick = {
-                            viewModel.editingSnippet.value = snippet
-                            viewModel.isAddSnippetSheetVisible.value = true
+                            onEditingSnippetChange(snippet)
+                            onAddSheetVisibleChange(true)
                         },
                         onDelete = { viewModel.deleteSnippet(snippet.id) },
                     )
@@ -140,21 +144,19 @@ fun SnippetsSettingsUI(
                     description = stringResource(R.string.snippets_empty_subtitle),
                     iconRes = R.drawable.rounded_add_24,
                     onClick = {
-                        viewModel.editingSnippet.value = null
-                        viewModel.isAddSnippetSheetVisible.value = true
+                        onEditingSnippetChange(null)
+                        onAddSheetVisibleChange(true)
                     },
                 )
             }
         }
     }
 
-    // Set Prefix Bottom Sheet using EssentialsBottomSheet (Options Only)
     if (showPrefixSheet) {
         val options = listOf(
             Triple(";", stringResource(R.string.snippets_prefix_semicolon), ";shrug"),
             Triple(":", stringResource(R.string.snippets_prefix_colon), ":shrug"),
-            Triple("@@", stringResource(R.string.snippets_prefix_at), "@@email"),
-            Triple("//", stringResource(R.string.snippets_prefix_slash), "//app"),
+            Triple("@@", stringResource(R.string.snippets_prefix_at), "@@shrug"),
             Triple("", stringResource(R.string.snippets_prefix_space), "shrug ␣"),
         )
 
@@ -176,12 +178,17 @@ fun SnippetsSettingsUI(
                 )
 
                 RoundedCardContainer(spacing = 2.dp) {
-                    options.forEach { (sym, label, example) ->
+                    options.forEachIndexed { index, (sym, label, example) ->
                         val isSelected = prefix == sym
+                        val shape = RoundedCornerShape(
+                            topStart = if (index == 0) 24.dp else 4.dp,
+                            topEnd = if (index == 0) 24.dp else 4.dp,
+                            bottomStart = if (index == options.lastIndex) 24.dp else 4.dp,
+                            bottomEnd = if (index == options.lastIndex) 24.dp else 4.dp,
+                        )
                         Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clip(RoundedCornerShape(8.dp))
+                            modifier = Modifier.fillMaxWidth()
+                                .clip(shape)
                                 .clickable {
                                     HapticUtil.performUIHaptic(sheetView)
                                     viewModel.setSnippetPrefix(sym)
@@ -221,14 +228,14 @@ fun SnippetsSettingsUI(
         }
     }
 
-    // Add / Edit Snippet Bottom Sheet using EssentialsBottomSheet
-    if (viewModel.isAddSnippetSheetVisible.value) {
+    if (isAddSheetVisible) {
         val closeSheet = {
-            viewModel.isAddSnippetSheetVisible.value = false
-            viewModel.editingSnippet.value = null
+            onAddSheetVisibleChange(false)
+            onEditingSnippetChange(null)
         }
         SnippetBottomSheet(
-            snippet = viewModel.editingSnippet.value,
+            snippet = editingSnippet,
+            existingSnippets = snippets,
             prefix = prefix,
             onDismiss = closeSheet,
             onSave = { updatedSnippet ->
@@ -242,7 +249,6 @@ fun SnippetsSettingsUI(
         )
     }
 
-    // Missing Permission Bottom Sheet
     if (showPermissionSheet) {
         val permissionItems = PermissionUIHelper.getPermissionItems(
             listOf("ACCESSIBILITY"),
@@ -260,10 +266,101 @@ fun SnippetsSettingsUI(
     }
 }
 
+@Composable
+private fun SnippetCardItem(
+    trigger: String,
+    content: String,
+    title: String?,
+    isFirst: Boolean,
+    isLast: Boolean,
+    onClick: () -> Unit,
+    onDelete: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val view = LocalView.current
+    val shape = RoundedCornerShape(
+        topStart = if (isFirst) 24.dp else 4.dp,
+        topEnd = if (isFirst) 24.dp else 4.dp,
+        bottomStart = if (isLast) 24.dp else 4.dp,
+        bottomEnd = if (isLast) 24.dp else 4.dp,
+    )
+
+    ListItem(
+        modifier = modifier.fillMaxWidth().clip(shape).clickable {
+            HapticUtil.performUIHaptic(view)
+            onClick()
+        },
+        headlineContent = {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Box(
+                    modifier = Modifier.weight(1f, fill = false)
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(MaterialTheme.colorScheme.secondaryContainer)
+                        .padding(horizontal = 8.dp, vertical = 2.dp),
+                ) {
+                    Text(
+                        text = trigger,
+                        style = MaterialTheme.typography.labelLarge,
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = FontFamily.Monospace,
+                        color = MaterialTheme.colorScheme.onSecondaryContainer,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                }
+
+                if (!title.isNullOrBlank()) {
+                    Spacer(Modifier.width(8.dp))
+                    Text(
+                        text = title,
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.weight(1f, fill = false),
+                    )
+                }
+            }
+        },
+        supportingContent = {
+            Text(
+                text = content,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                maxLines = 3,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.padding(top = 4.dp),
+            )
+        },
+        trailingContent = {
+            IconButton(
+                onClick = {
+                    HapticUtil.performUIHaptic(view)
+                    onDelete()
+                },
+                modifier = Modifier.size(36.dp),
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.rounded_delete_24),
+                    contentDescription = stringResource(R.string.action_delete),
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
+                    modifier = Modifier.size(20.dp),
+                )
+            }
+        },
+        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceBright),
+    )
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SnippetBottomSheet(
     snippet: Snippet?,
+    existingSnippets: List<Snippet>,
     prefix: String,
     onDismiss: () -> Unit,
     onSave: (Snippet) -> Unit,
@@ -272,6 +369,21 @@ fun SnippetBottomSheet(
     var keyword by remember { mutableStateOf(snippet?.keyword ?: "") }
     var title by remember { mutableStateOf(snippet?.title ?: "") }
     var content by remember { mutableStateOf(snippet?.content ?: "") }
+
+    val trimmedKeyword = keyword.trim()
+    val hasWhitespace = keyword.any { it.isWhitespace() }
+    val containsPrefix = prefix.isNotEmpty() && keyword.contains(prefix)
+    val isDuplicate = existingSnippets.any {
+        it.id != (snippet?.id ?: "") && it.keyword.equals(trimmedKeyword, ignoreCase = true)
+    }
+
+    val errorMessage = when {
+        hasWhitespace -> stringResource(R.string.snippets_error_whitespace)
+        containsPrefix -> stringResource(R.string.snippets_error_prefix)
+        isDuplicate -> stringResource(R.string.snippets_error_duplicate)
+        else -> null
+    }
+    val isSaveEnabled = errorMessage == null && trimmedKeyword.isNotEmpty() && content.isNotBlank()
 
     EssentialsBottomSheet(onDismissRequest = onDismiss) {
         Column(
@@ -286,9 +398,11 @@ fun SnippetBottomSheet(
 
             OutlinedTextField(
                 value = keyword,
-                onValueChange = { keyword = it.trim().filterNot { c -> c.isWhitespace() } },
+                onValueChange = { keyword = it },
                 label = { Text(stringResource(R.string.snippets_keyword_label)) },
                 placeholder = { Text(stringResource(R.string.snippets_keyword_placeholder)) },
+                isError = errorMessage != null,
+                supportingText = if (errorMessage != null) { { Text(errorMessage) } } else null,
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(16.dp),
@@ -333,11 +447,18 @@ fun SnippetBottomSheet(
                 Spacer(Modifier.width(8.dp))
                 Button(
                     onClick = {
-                        if (keyword.isNotBlank() && content.isNotBlank()) {
-                            onSave(Snippet(id = snippet?.id ?: System.currentTimeMillis(), keyword = keyword, title = title.trim(), content = content))
+                        if (isSaveEnabled) {
+                            onSave(
+                                Snippet(
+                                    id = snippet?.id ?: UUID.randomUUID().toString(),
+                                    keyword = trimmedKeyword,
+                                    title = title.trim(),
+                                    content = content,
+                                ),
+                            )
                         }
                     },
-                    enabled = keyword.isNotBlank() && content.isNotBlank(),
+                    enabled = isSaveEnabled,
                 ) {
                     Text(stringResource(R.string.action_save))
                 }

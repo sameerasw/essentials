@@ -2441,41 +2441,6 @@ object FeatureRegistry {
                 ) {}
             },
             object : Feature(
-                id = "Text Snippets",
-                title = R.string.feat_text_snippets_title,
-                iconRes = R.drawable.rounded_edit_note_24,
-                category = R.string.cat_system,
-                description = R.string.feat_text_snippets_desc,
-                aboutDescription = R.string.about_desc_text_snippets,
-                permissionKeys = listOf("ACCESSIBILITY"),
-                hasMoreSettings = true,
-                showToggle = false,
-            ) {
-                override fun isEnabled(viewModel: MainViewModel) = viewModel.isTextSnippetsEnabled.value
-
-                override fun onToggle(
-                    viewModel: MainViewModel,
-                    context: Context,
-                    enabled: Boolean,
-                ) {
-                    viewModel.setTextSnippetsEnabled(enabled, context)
-                }
-
-                override fun onClick(
-                    context: Context,
-                    viewModel: MainViewModel,
-                ) {
-                    val intent =
-                        Intent(
-                            context,
-                            com.sameerasw.essentials.FeatureSettingsActivity::class.java,
-                        ).apply {
-                            putExtra("feature", "Text Snippets")
-                        }
-                    context.startActivity(intent)
-                }
-            },
-            object : Feature(
                 id = "Batteries",
                 title = R.string.feat_batteries_title,
                 iconRes = R.drawable.rounded_battery_charging_60_24,

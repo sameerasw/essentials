@@ -18,20 +18,20 @@ import org.junit.Test
 class SnippetExpansionEngineTest {
     private val sampleSnippets =
         listOf(
-            Snippet(id = 1L, keyword = "brb", title = "Be Right Back", content = "Be right back!"),
-            Snippet(id = 2L, keyword = "addr", title = "Address", content = "123 Main Street"),
-            Snippet(id = 3L, keyword = "email", title = "Email", content = "user@test.com"),
+            Snippet(id = "1", keyword = "brb", title = "Be Right Back", content = "Be right back!"),
+            Snippet(id = "2", keyword = "addr", title = "Address", content = "123 Main Street"),
+            Snippet(id = "3", keyword = "email", title = "Email", content = "user@test.com"),
+            Snippet(id = "4", keyword = "app", title = "App", content = "Application"),
+            Snippet(id = "5", keyword = "apple", title = "Apple", content = "Fresh Apple"),
         )
 
     @Test
     fun testExpansionWithSemicolonPrefix() {
-        var prefix = ";"
-        var enabled = true
         val engine =
             SnippetExpansionEngine(
                 getSnippets = { sampleSnippets },
-                getPrefix = { prefix },
-                isEnabled = { enabled },
+                getPrefix = { ";" },
+                isEnabled = { true },
             )
 
         var deleted = 0
@@ -44,8 +44,84 @@ class SnippetExpansionEngineTest {
             }
 
         assertTrue(matched)
-        assertEquals(4, deleted) // ";brb".length == 4
+        assertEquals(4, deleted)
         assertEquals("Be right back!", replacement)
+    }
+
+    @Test
+    fun testCaseInsensitiveExpansion() {
+        val engine =
+            SnippetExpansionEngine(
+                getSnippets = { sampleSnippets },
+                getPrefix = { ";" },
+                isEnabled = { true },
+            )
+
+        var replacement = ""
+        val matched =
+            engine.checkAndExpand("Hello ;Brb") { _, text ->
+                replacement = text
+            }
+
+        assertTrue(matched)
+        assertEquals("Be right back!", replacement)
+    }
+
+    @Test
+    fun testWordBoundaryPreventsUnintendedExpansion() {
+        val engine =
+            SnippetExpansionEngine(
+                getSnippets = { sampleSnippets },
+                getPrefix = { ":" },
+                isEnabled = { true },
+            )
+
+        var called = false
+        val matchedTime =
+            engine.checkAndExpand("Time is 10:email") { _, _ ->
+                called = true
+            }
+        assertFalse(matchedTime)
+        assertFalse(called)
+
+        val matchedBoundary =
+            engine.checkAndExpand("Time is :email") { _, text ->
+                called = true
+            }
+        assertTrue(matchedBoundary)
+        assertTrue(called)
+    }
+
+    @Test
+    fun testShortKeywordDoesNotBlockLongerSiblingWithoutDelimiter() {
+        val engine =
+            SnippetExpansionEngine(
+                getSnippets = { sampleSnippets },
+                getPrefix = { ";" },
+                isEnabled = { true },
+            )
+
+        var expandedText = ""
+
+        val matchedShortWithoutDelimiter =
+            engine.checkAndExpand("Check ;app") { _, text ->
+                expandedText = text
+            }
+        assertFalse(matchedShortWithoutDelimiter)
+
+        val matchedShortWithDelimiter =
+            engine.checkAndExpand("Check ;app ") { _, text ->
+                expandedText = text
+            }
+        assertTrue(matchedShortWithDelimiter)
+        assertEquals("Application ", expandedText)
+
+        val matchedLongerImmediate =
+            engine.checkAndExpand("Check ;apple") { _, text ->
+                expandedText = text
+            }
+        assertTrue(matchedLongerImmediate)
+        assertEquals("Fresh Apple", expandedText)
     }
 
     @Test
@@ -67,7 +143,7 @@ class SnippetExpansionEngineTest {
             }
 
         assertTrue(matched)
-        assertEquals(7, deleted) // "@@email".length == 7
+        assertEquals(7, deleted)
         assertEquals("user@test.com", replacement)
     }
 
@@ -90,7 +166,7 @@ class SnippetExpansionEngineTest {
             }
 
         assertTrue(matched)
-        assertEquals(5, deleted) // "addr ".length == 5
+        assertEquals(5, deleted)
         assertEquals("123 Main Street ", replacement)
     }
 

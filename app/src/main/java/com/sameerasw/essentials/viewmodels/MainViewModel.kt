@@ -653,8 +653,6 @@ class MainViewModel : ViewModel() {
     val isTextSnippetsEnabled = mutableStateOf(false)
     val snippetPrefix = mutableStateOf(";")
     val textSnippets = mutableStateOf<List<Snippet>>(emptyList())
-    val isAddSnippetSheetVisible = mutableStateOf(false)
-    val editingSnippet = mutableStateOf<Snippet?>(null)
 
     // AirSync Bridge
     val isAirSyncConnectionEnabled = mutableStateOf(false)
@@ -10867,7 +10865,7 @@ class MainViewModel : ViewModel() {
         }
     }
 
-    fun setTextSnippetsEnabled(enabled: Boolean, context: Context) {
+    fun setTextSnippetsEnabled(enabled: Boolean) {
         isTextSnippetsEnabled.value = enabled
         settingsRepository.setTextSnippetsEnabled(enabled)
     }
@@ -10889,7 +10887,7 @@ class MainViewModel : ViewModel() {
         settingsRepository.saveTextSnippets(current)
     }
 
-    fun deleteSnippet(id: Long) {
+    fun deleteSnippet(id: String) {
         val updated = textSnippets.value.filter { it.id != id }
         textSnippets.value = updated
         settingsRepository.saveTextSnippets(updated)
