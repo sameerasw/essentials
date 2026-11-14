@@ -2158,4 +2158,7 @@ Bazı seçenekler Shizuku veya erişilebilirlik izni gerektirir ve sonuçlar cih
     <string name="bug_report_source_feature">Özellik: %1$s</string>
     <string name="watermark_border">Çerçeve</string>
     <string name="bug_report_view_existing_pr">Mevcut PR\'ı görüntüle</string>
+    <string name="diy_discard_warning_title">Değişiklikler silinsin mi?</string>
+    <string name="diy_discard_warning_desc">Kaydedilmemiş değişiklikleriniz var. Kaydetmeden çıkmak istediğinizden emin misiniz?</string>
+    <string name="translation_discard">Sil</string>
 </resources>
