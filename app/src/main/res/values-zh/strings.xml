@@ -1633,10 +1633,10 @@
     <string name="duo_enable_desc">不能折叠，但是看起来挺酷的，不是吗？</string>
     <string name="duo_auto_detect_title">自动检测摄像头</string>
     <string name="duo_auto_detect_desc">自动定位至摄像头孔前</string>
-    <string name="duo_show_battery_title">電池</string>
+    <string name="duo_show_battery_title">电池</string>
     <string name="duo_show_battery_percentage_title">电量显示</string>
-    <string name="cat_networks">数据信号强度显示</string>
-    <string name="duo_show_time_title">時間</string>
+    <string name="cat_networks">数据</string>
+    <string name="duo_show_time_title">时间</string>
     <string name="duo_rotate_album_art_title">旋转专辑封面</string>
     <string name="duo_show_flashlight_title">手电筒</string>
     <string name="duo_material_you_title">使用 Material You 色彩</string>
@@ -1678,8 +1678,8 @@
     <string name="island_neural_expressive_title">Neural Expressive expanded animations</string>
     <string name="island_neural_expressive_always_title">Always show on expansion</string>
     <string name="island_glow_intensity_title">Glow intensity</string>
-    <string name="island_prefer_still_title">Prefer still island</string>
-    <string name="island_prefer_still_info">Stops the island\'s animations after a few seconds without interaction, so the display can drop to a low refresh rate and save battery. Media visualizers, second by second counters and other looping animations pause until you interact with the island again.</string>
+    <string name="island_prefer_still_title">优先选择静态岛屿</string>
+    <string name="island_prefer_still_info">几秒钟无交互后停止岛屿动画，以便显示屏可以降低刷新率并节省电量。媒体可视化工具、秒计数器和其他循环动画将暂停，直到您再次与岛屿交互。</string>
     <string name="island_statusbar_aware_width_title">Statusbar aware width</string>
     <string name="island_show_when_title">在什么时候显示</string>
     <string name="island_show_when_unlocked">解锁时</string>
