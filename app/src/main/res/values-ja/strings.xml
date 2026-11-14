@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="label_customization">Customization</string>
+    <string name="label_customization">カスタマイズ</string>
     <string name="label_beta">ベータ</string>
-    <string name="shut_up_attempt_shizuku_restart">Attempt Shizuku restart</string>
+    <string name="shut_up_attempt_shizuku_restart">Shizukuを再起動する</string>
     <string name="shut_up_shizuku_restart_warning_title">Shizuku Restart Warning</string>
     <string name="shut_up_shizuku_restart_warning_message">Since wireless debugging was toggled, Shizuku services might not have started automatically causing freezing to not function. Consider turning on attempt shizuku restart as well</string>
     <string name="accessibility_service_description"><b>Essentials アクセシビリティサービス</b>\n\nこのサービスは、以下の高度な機能に必要です。\n\n<b>・物理ボタンの再マッピング：</b>\n画面がオフの場合でも音量ボタンの押下を検出し、懐中電灯などのアクションを実行します。\n\n<b>・アプリごとの設定：</b>\n現在アクティブなアプリを監視し、ダイナミックナイトモード、通知ライトの色、アプリロックの特定のプロファイルを適用します。\n\n<b>・画面制御：</b>\nアプリが画面をロック（ダブルタップやウィジェット経由など）し、画面の状態の変化を検出できるようにします。\n\n<b>・セキュリティ：</b>\nデバイスがロックされているときにウィンドウの内容を検出することで、不正な変更を防ぎます。\n\n<small>入力テキストや機密性の高いユーザーデータは収集または送信されません。</small></string>
@@ -72,7 +72,7 @@
     <string name="essentials_on_display_respect_notifications_desc">新しい通知を一時的に無効にする</string>
     <string name="essentials_on_display_random_shapes_title">ランダムな形</string>
     <string name="essentials_on_display_random_shapes_desc">アルバムアートにMaterial 3の形を使用する</string>
-    <string name="essentials_on_display_album_art_title">Album art</string>
+    <string name="essentials_on_display_album_art_title">アルバムアート</string>
     <string name="essentials_on_display_clock_title">Clock</string>
     <string name="essentials_on_display_force_fill_while_charging_title">充電中は常に使用する</string>
     <string name="essentials_on_display_force_fill_while_charging_desc">選択したモードに関係なく、デバイスが接続されているときに強制的にフィルモードを有効にする</string>
@@ -298,7 +298,7 @@
     <string name="icon_nfc">NFC / Felica</string>
     <string name="icon_vpn">VPN</string>
     <string name="icon_airplane_mode">機内モード</string>
-    <string name="icon_hotspot">ホットスポット</string>
+    <string name="icon_hotspot">テザリング</string>
     <string name="icon_cast">キャスト</string>
     <string name="icon_mobile_data">モバイルデータ</string>
     <string name="icon_phone_signal">通話強度</string>
@@ -631,7 +631,7 @@
     <string name="error_repo_not_found">レポジトリが見つかりませんでした</string>
     <string name="label_latest_release">最新リリース</string>
     <string name="action_view_readme">READMEを見る</string>
-    <string name="label_stars">%d Star</string>
+    <string name="label_stars">%d スター</string>
     <string name="label_installed_app">インストール済みアプリ</string>
     <string name="label_not_installed">未インストールアプリ</string>
     <string name="action_pick_app">アプリを選択</string>
@@ -722,10 +722,18 @@
 お使いのデバイスがAODへのオーバーレイをサポートしていない場合は、充電中に代替としてAndroidの設定で追加されたアンビエンススクリーンセーバーを選択できます。</string>
     <string name="about_desc_notification_lighting">通知ライトは、通知を受け取った際に美しいエッジライティング効果を追加します。\n\nアニメーションのスタイル、色、動作をカスタマイズできます。画面がオフの場合でも、または現在使用しているアプリの画面上に表示されている場合でも機能します(OEMによって異なります)。アプリ、通知の優先度、またはトリガーする動作を、指定されたコントロールから選択してください。お使いのOEMがAOD上のオーバーレイをサポートしていない場合は、下記のアンビエントディスプレイオプションをご利用ください。</string>
     <string name="about_desc_screen_off_widget">ホーム画面にアイコンや雑然としたものを追加しない、透明でサイズ変更可能なウィジェットをタップするだけで、簡単に画面をオフにできます。</string>
-    <string name="about_desc_statusbar_icons">Take full control over your status bar.\n\nHide individual icons like WiFi, Bluetooth, or cellular data, hide all system or notification icons at once, or only hide system icons while the device is locked. Smart visibility can hide mobile data automatically when WiFi is connected or in certain modes.\n\nYou can also show seconds in the clock, change its position or hide it, show the battery percentage, hide the camera and microphone chips, or hide the entire status bar. Some advanced flags need Shizuku or Root.\n\nThese are AOSP controls, so your device OS might not respect all of them.</string>
+    <string name="about_desc_statusbar_icons">ステータスバーを完全に制御できます。
+
+Wi-Fi、Bluetooth、モバイルデータなどの個々のアイコンを非表示にしたり、すべてのシステムアイコンまたは通知アイコンを一度に非表示にしたり、デバイスがロックされている間だけシステムアイコンを非表示にしたりできます。スマート表示機能を使用すると、Wi-Fiが接続されているときや特定のモードでは、モバイルデータを自動的に非表示にできます。
+
+時計に秒を表示したり、その位置を変更したり、非表示にしたり、バッテリー残量を表示したり、カメラとマイクのチップを非表示にしたり、ステータスバー全体を非表示にすることもできます。一部の高度なフラグには、ShizukuまたはRootが必要です。
+
+これらはAOSPコントロールなので、デバイスのOSがすべてをサポートするとは限りません。</string>
     <string name="about_desc_caffeinate">カフェインは画面の自動オフを防止します。\n\n画面を一定時間または無期限に点灯させ続けます。長文記事の閲覧やレシピ参照時に便利です。</string>
     <string name="about_desc_maps_power_saving">Pixel 10シリーズ限定のGoogleマップ省電力モードを使います。Android端末のロック画面に表示される、最小限の真っ黒な背景が特徴です。ナビゲーションを開始し、画面をオフにしてから再度オンにしてみてください。 </string>
-    <string name="about_desc_flashlight_pulse">Pulse the flashlight when you receive a notification.\n\nOn devices with hardware support for flashlight dimming, the pulse is smoothly animated.</string>
+    <string name="about_desc_flashlight_pulse">通知を受信すると、フラッシュライトが点滅します。
+
+フラッシュライトの調光に対応したハードウェアを搭載したデバイスでは、点滅が滑らかにアニメーション表示されます。</string>
     <string name="about_desc_snooze_notifications">デフォルトでは変更できない、煩わしいシステム通知を一時停止します。\n\n通知が届くまで待ち、通知チャンネルが一覧表示されるこの画面を開いてください。次回から一時停止するチャンネルを選択してください。\n\n一時停止した通知は、Androidの通知履歴から引き続き確認可能です。</string>
     <string name="about_desc_quick_settings_tiles">クイック設定パネルにカスタムタイルを追加できます。\n\n各タイルを長押しすると、その機能を確認できます。</string>
     <string name="about_desc_button_remap">ハードウェアボタンを再割り当てして、異なる操作やショートカットを実行できます。\n\n特定の条件下で音量ボタンを長押しした際の動作をカスタマイズできます。\n\n画面オフ時のトリガーや懐中電灯の制御など、一部の動作はOEMメーカーの実装に依存するため、すべてのデバイスで期待通りに動作しない場合があります。Shizukuの権限を使用して回避できる場合もありますが、OEMによっては正常に動作しない可能性があります。</string>
@@ -770,7 +778,11 @@
     <string name="about_desc_bubbles">通知バブルを有効または無効にできます。\n\n会話バブルのシステム全体の設定を素早く切り替えます。</string>
     <string name="about_desc_sensitive_content">ロック画面で機密性の高いコンテンツを非表示にします。\n\nデバイスがロックされているときに通知コンテンツを表示するか非表示にするかを切り替えます。</string>
     <string name="about_desc_tap_to_wake">タップして起動する機能を切り替えます。\n\nタップで画面を起動する機能を有効または無効にします。</string>
-    <string name="about_desc_aod">Control the Always On Display from one place. Turn it on or off, and quickly check the time, notifications and other info at a glance while the screen is off.\n\nYou can also force it to turn off when there are no notifications, and show your wallpaper behind the clock using an overlay.\n\nWriting secure settings permission is required to toggle it, and accessibility is needed for the force turn off option.</string>
+    <string name="about_desc_aod">常時表示ディスプレイを1か所から制御できます。オン/オフを切り替えたり、画面がオフのときに時間、通知、その他の情報を一目で素早く確認できます。
+
+通知がないときは強制的にオフにしたり、オーバーレイを使用して時計の背後に壁紙を表示することもできます。
+
+切り替えるにはセキュリティ設定への書き込み権限が必要で、強制オフオプションにはアクセシビリティが必要です。</string>
     <string name="about_desc_notification_glance">Automatically control your Always On Display based on your notifications. When a message or alert arrives from a selected app, AOD will stay on until you dismiss the notification, ensuring you never miss important info without wasting battery when no alerts are present.</string>
     <string name="about_desc_mono_audio">音声チャンネルをモノラルに統合します。\n\n片方のイヤホンを使用する場合や、アクセシビリティの目的で便利です。</string>
     <string name="about_desc_flashlight_tile">フラッシュライトのオン/オフを切り替えます。\n\n長押しすると明るさ調整のコントロールが開きます。これはハードウェア実装が必要な場合があり、一部のデバイスでは対応していない可能性があります。</string>
@@ -861,7 +873,7 @@
     <string name="label_shizuku_tuozi">Shizuku (TuoZi)</string>
     <string name="label_search_content_description">検索</string>
     <string name="label_recent_searches">Recent Searches</string>
-    <string name="label_no_recent_searches">No recent searches</string>
+    <string name="label_no_recent_searches">検索履歴はありません</string>
     <string name="label_clear_all">Clear all</string>
     <string name="perm_device_admin_explanation">ロック画面で不正なネットワーク変更が試みられた場合、デバイスをハードロックする必要があります。</string>
     <string name="biometric_subtitle_access_settings">設定にアクセスするための認証</string>
@@ -1038,7 +1050,7 @@
     <!-- Updates -->
     <string name="status_up_to_date">最新です</string>
     <string name="warning_pre_release">これはプレリリース版であり、不安定な可能性があります。</string>
-    <string name="release_notes_format">Release Notes v%1$s</string>
+    <string name="release_notes_format">リリースノート v%1$s</string>
     <string name="action_view_on_github">GitHubを見る</string>
     <string name="action_download_apk">APKをダウンロード</string>
     <!-- Haptic Types -->
@@ -1067,7 +1079,7 @@
     <string name="help_guides_title">ヘルプ&amp;ガイド</string>
     <string name="need_more_support_reach_out">さらにサポートが必要ですか？</string>
     <string name="action_collapse">崩壊</string>
-    <string name="action_expand">拡大</string>
+    <string name="action_expand">展開</string>
     <string name="support_group_label">サポートグループ</string>
     <string name="email_label">メール</string>
     <string name="send_email_chooser_title">メールを送る</string>
@@ -1089,7 +1101,15 @@
     <string name="instruction_section_lighting_title">通知ライトが機能しません</string>
     <string name="instruction_section_lighting_desc">OEMによって動作が異なります。OneUIなど、一部のOEMでは常時表示ディスプレイの上にオーバーレイを許可していないため、通知ライトが表示されません。この場合、回避策として、アンビエントディスプレイを試してください。 </string>
     <string name="instruction_section_button_title">画面がオフのときのボタンリマップが機能しません</string>
-    <string name="instruction_section_button_desc">Some OEMs limit the accessibility service reporting once the display is actually off but they may still work while the AOD is on. \nIn this case, you may able to use button remaps with AOD on but not with off. \n\nAs a workaround, you will need to use Shizuku permissions and turn on the \'Use Shizuku\' toggle in button remap settings which identifies and listen to hardware input events.\nThis is not guaranteed to work on all devices and needs testing.\n\nAnd even if it\'s on, Shizuku method only will be used when it\'s needed. Otherwise it will always fallback to Accessibility which also handles the blocking of the actual input during long press.</string>
+    <string name="instruction_section_button_desc">一部のOEMは、ディスプレイが実際にオフになるとアクセシビリティサービスのレポートを制限しますが、AODがオンの場合は動作する場合があります。
+
+この場合、AODがオンの場合はボタンのリマップを使用できますが、オフの場合は使用できません。
+
+回避策として、Shizukuの権限を使用し、ボタンのリマップ設定で「Shizukuを使用する」トグルをオンにする必要があります。これにより、ハードウェア入力イベントが識別され、リッスンされます。
+
+これはすべてのデバイスで動作することが保証されているわけではなく、テストが必要です。
+
+また、オンになっている場合でも、Shizukuメソッドは必要な場合にのみ使用されます。それ以外の場合は、常にアクセシビリティにフォールバックします。アクセシビリティは、長押し中の実際の入力のブロックも処理します。</string>
     <string name="instruction_section_flashlight_title">フラッシュライトの明るさ調整が機能しません</string>
     <string name="instruction_section_flashlight_desc">フラッシュライトの明るさ調整をハードウェアとソフトウェアでサポートしているデバイスは限られています。\n\n「Androidの最小バージョンは13 (SDK33) です。\nフラッシュライトの明るさ調整はHALバージョン3.8以降のみをサポートしているため、サポートされている中で最新のもの(例：Pixel 6/7、Samsung S23など)のみが対象です。」\npolodarb/Flashlight-Tiramisu</string>
     <string name="instruction_section_about_title">このアプリは一体何ですか？</string>
@@ -1191,7 +1211,7 @@
     <string name="label_release_notes">リリースノート</string>
     <string name="msg_no_repos_tracked">追跡しているレポジトリはありません</string>
     <string name="label_no_app_linked">未リンクアプリ</string>
-    <string name="format_updated_relative">%1$s更新済み</string>
+    <string name="format_updated_relative">%1$s 更新済み</string>
     <!-- Relative Time -->
     <string name="time_just_now">たった今</string>
     <string name="today">今日</string>
@@ -1239,7 +1259,7 @@
     <string name="action_download_from_github">GitHubからダウンロード</string>
     <string name="watch_help_title">ウォッチにインストール</string>
     <string name="watch_help_description">ウォッチの機能を利用するには、Wear OSウォッチにEssentialsコンパニオンアプリをインストールする必要があります。下のボタンをクリックすると、ウォッチでPlayストアが直接開きます。</string>
-    <string name="watch_help_open_play_store">Open on Watch</string>
+    <string name="watch_help_open_play_store">ウォッチで開く</string>
     <string name="cat_interaction">Interaction</string>
     <string name="cat_interface">Interface</string>
     <string name="cat_display">ディスプレイ</string>
@@ -1314,7 +1334,13 @@
     <string name="label_animator_duration_scale">Animator再生時間スケール</string>
     <string name="label_transition_animation_scale">トランジションアニメスケール</string>
     <string name="label_window_animation_scale">ウィンドウアニメスケール</string>
-    <string name="about_desc_text_animations">Adjust how your whole system looks and feels.\n\nChange the font scale and weight, the display scale (smallest width), and the animation speeds for windows, transitions and animators. You can also set the screen timeout and auto rotate.\n\nSwitch between Default and Glove mode profiles in one tap. Glove mode adjusts the UI scale and increases touch sensitivity so the screen responds better with gloves or screen protectors. A Quick Settings tile is available to toggle it quickly.\n\nSome settings may require advanced permissions or a device reboot for certain apps to reflect changes. Shizuku or root permission may be necessary for scale adjustments.</string>
+    <string name="about_desc_text_animations">システム全体の見た目と操作感を調整します。
+
+フォントのスケールと太さ、表示スケール（最小幅）、ウィンドウ、トランジション、アニメーターのアニメーション速度を変更できます。画面のタイムアウトと自動回転も設定できます。
+
+デフォルトと手袋モードのプロファイルをワンタップで切り替えます。手袋モードでは、UIスケールを調整し、タッチ感度を高めることで、手袋やスクリーンプロテクターを装着した状態でも画面の反応が良くなります。クイック設定タイルを使用して、すばやく切り替えることができます。
+
+一部の設定では、変更を反映させるために、特定のアプリで高度な権限またはデバイスの再起動が必要になる場合があります。スケールの調整には、Shizukuまたはroot権限が必要になる場合があります。</string>
     <string name="about_desc_screen_refresh_rate">Shizukuを使用して、画面のリフレッシュレートをカスタマイズできます。「固定」モードでは、最小リフレッシュレートと最大リフレッシュレートを同じ値に固定します。「可変」モードでは、最小値と最大値を個別に設定できます。「リセット」を選択すると、カスタマイズ設定が解除され、デバイスはシステムが管理するリフレッシュレート設定に戻ります。</string>
     <string name="refresh_rate_section_mode">モード</string>
     <string name="refresh_rate_section_values">リフレッシュレート</string>
@@ -1423,7 +1449,7 @@
     <string name="lock_screen_clock_inflate">Inflate</string>
     <string name="lock_screen_clock_metro">Metro</string>
     <string name="lock_screen_clock_numoverlap">Number Overlap</string>
-    <string name="lock_screen_clock_weather">Weather</string>
+    <string name="lock_screen_clock_weather">天気</string>
     <string name="lock_screen_clock_select_label">時計スタイルを選択</string>
     <string name="lock_screen_clock_current_label">Current</string>
     <string name="lock_screen_clock_apply_label">Apply</string>
@@ -1629,7 +1655,7 @@
     <string name="watch_watchface_title">時計盤</string>
     <string name="watch_watchface_desc">時計盤をカスタマイズ</string>
     <string name="watchface_clock_font_size">フォントサイズ</string>
-    <string name="watchface_clock_24h_title">24-hour clock</string>
+    <string name="watchface_clock_24h_title">24時間表示</string>
     <string name="watchface_clock_dual_tone_title">デュアルトーン</string>
     <string name="watchface_clock_dual_tone_desc">時間を白、分をアクセントカラーにする</string>
     <string name="watchface_clock_outline_title">アウトラインのみ</string>
@@ -1726,7 +1752,7 @@
     <string name="status_glance_max_width_title">最大幅</string>
     <string name="status_glance_font_size_title">フォントサイズ</string>
     <string name="status_glance_show_calendar_title">カレンダーの予定</string>
-    <string name="duo_show_time_title">時間</string>
+    <string name="duo_show_time_title">時刻</string>
     <string name="status_glance_action_tap_title">シングルタップ</string>
     <string name="status_glance_action_tap_media_desc">メディア再生時の再生／一時停止</string>
     <string name="status_glance_action_swipe_right_title">右にスワイプする</string>
@@ -1763,17 +1789,17 @@
     <string name="island_max_width_title">最大幅</string>
     <string name="island_expanded_width_title">拡張幅</string>
     <string name="island_cutout_gap_title">カメラの隙間</string>
-    <string name="island_padding_around_title">Padding around</string>
+    <string name="island_padding_around_title">パディング</string>
     <string name="island_expanded_roundness_title">展開時のコーナー半径</string>
     <string name="island_expanded_padding_title">展開時の横のパディング</string>
     <string name="island_expanded_top_padding_title">展開時の上部のパディング</string>
     <string name="island_timeout_title">表示時間</string>
     <string name="island_expanded_timeout_title">タイムアウトの延長</string>
     <string name="island_expanded_timeout_desc">折りたたまれたピルに戻るまでの時間（0は無限大）</string>
-    <string name="island_show_glow_title">Expanded accent glow</string>
-    <string name="island_glow_intensity_title">Glow intensity</string>
-    <string name="island_prefer_still_title">Prefer still island</string>
-    <string name="island_prefer_still_info">Stops the island\'s animations after a few seconds without interaction, so the display can drop to a low refresh rate and save battery. Media visualizers, second by second counters and other looping animations pause until you interact with the island again.</string>
+    <string name="island_show_glow_title">展開時にアクセントグロー</string>
+    <string name="island_glow_intensity_title">グロー強度</string>
+    <string name="island_prefer_still_title">静止画の Island を優先</string>
+    <string name="island_prefer_still_info">数秒間操作がないとアイランドのアニメーションが停止し、ディスプレイのリフレッシュレートを下げてバッテリーを節約します。メディアビジュアライザー、秒単位のカウンター、その他のループアニメーションは、アイランドを再度操作するまで一時停止します。</string>
     <string name="island_tap_action_title">タップ操作</string>
     <string name="island_catch_up_title">追いつく</string>
     <string name="island_catch_up_desc">最後の通知をアイランドに長時間表示する</string>
@@ -1801,14 +1827,14 @@
     <string name="feat_aod_wallpaper_timeout">背景を非表示にするまでの時間</string>
     <string name="feat_aod_wallpaper_media_apps">スキップするメディアアプリを選択</string>
     <string name="feat_aod_wallpaper_opacity">透明度</string>
-    <string name="feat_aod_wallpaper_blur">ブラー効果</string>
+    <string name="feat_aod_wallpaper_blur">ぼかし</string>
     <string name="feat_aod_wallpaper_vignette">ビネット効果</string>
     <string name="feat_aod_wallpaper_black_threshold">黒のしきい値</string>
     <string name="island_camera_position_left">右</string>
     <string name="island_camera_position_center">中央</string>
     <string name="island_camera_position_right">左</string>
     <string name="island_hide_on_shade_title">ステータスバーを展開したときに非表示にする</string>
-    <string name="duo_hide_when_locked_title">ロックしたときに非表示にする</string>
+    <string name="duo_hide_when_locked_title">ロック時は非表示</string>
     <string name="feat_aod_wallpaper_keep_on_media">メディア再生中に表示を維持</string>
     <string name="about_desc_conscious_gate">ソーシャルメディアなど、より意識的に利用したいアプリを開く前に、短いマインドフルネス画面を追加します。
 
@@ -1819,13 +1845,13 @@
     <string name="duo_combine_with_island">DuoとIslandを統合する</string>
     <string name="island_section_placement">位置</string>
     <string name="island_section_visuals">表示</string>
-    <string name="island_section_duration">Timing</string>
+    <string name="island_section_duration">タイミング</string>
     <string name="island_section_behavior">動作</string>
-    <string name="island_section_interactions">Interactions</string>
-    <string name="island_section_gestures">Gestures</string>
-    <string name="island_section_expanded">Expanded island</string>
-    <string name="island_section_landscape">Landscape</string>
-    <string name="island_section_experimental">Experimental</string>
+    <string name="island_section_interactions">インタラクション</string>
+    <string name="island_section_gestures">ジェスチャー</string>
+    <string name="island_section_expanded">展開時の Island</string>
+    <string name="island_section_landscape">横画面</string>
+    <string name="island_section_experimental">実験的機能</string>
     <string name="island_call_options_title">通話</string>
     <string name="island_section_notifications">通知</string>
     <string name="island_show_timers_title">タイマーとストップウォッチ</string>
@@ -1853,7 +1879,7 @@
     <string name="island_expanded_bottom_padding_title">展開時の下部のパディング</string>
     <string name="island_border_outline_title">輪郭線を表示</string>
     <string name="island_border_outline_desc">Islandの周りに細い輪郭線を描きます</string>
-    <string name="island_pulse_shadow_title">Pulse for new notifications</string>
+    <string name="island_pulse_shadow_title">新しい通知が届いたら周りを発色</string>
     <string name="island_pulse_shadow_desc">アプリの色でIslandの背後が短時間光ります</string>
     <string name="island_show_when_title">表示するタイミング</string>
     <string name="island_show_when_unlocked">ロック解除時</string>
@@ -1862,16 +1888,16 @@
     <string name="island_line_peek_title">ラインピーク</string>
     <string name="island_line_peek_desc">Island全体の更新情報を短時間表示し、コンパクト表示に戻ります</string>
     <string name="island_hide_in_owner_app_title">アプリ内でコンプリケーションを非表示</string>
-    <string name="island_hide_media_in_owner_app_title">Hide media player inside the app</string>
-    <string name="island_tap_to_open_expanded_title">Tap to open when expanded</string>
+    <string name="island_hide_media_in_owner_app_title">アプリ内のメディアプレイヤーを非表示</string>
+    <string name="island_tap_to_open_expanded_title">展開時にタップして開く</string>
     <string name="island_dismiss_on_outside_title">アプリ外アクティビティ時に非表示</string>
     <string name="island_notif_conceal_locked_title">通知の内容を非表示</string>
     <string name="island_notif_keep_progress_title">進捗通知は維持する</string>
-    <string name="island_live_updates_title">Live updates</string>
-    <string name="island_live_updates_count_title">Live updates count</string>
-    <string name="island_live_updates_expanded_title">Expanded live update</string>
-    <string name="island_secondary_bubbles_count_title">Secondary bubbles count</string>
-    <string name="island_secondary_bubble_side_title">Secondary bubble placement</string>
+    <string name="island_live_updates_title">ライブアップデート</string>
+    <string name="island_live_updates_count_title">ライブアップデートの数</string>
+    <string name="island_live_updates_expanded_title">ライブアップデートを展開</string>
+    <string name="island_secondary_bubbles_count_title">2つ目のバブルの数</string>
+    <string name="island_secondary_bubble_side_title">2つ目のバブルの位置</string>
     <string name="island_notif_queue_title">通知キュー</string>
     <string name="island_catch_up_timeout_title">取得遅延</string>
     <string name="island_battery_only_low_title">残量が低下しているときのみ表示</string>
@@ -1912,12 +1938,44 @@
     <string name="feat_navigation_desc">ジェスチャーバー、ナビゲーションジェスチャー、ナビゲーションバーの調整</string>
     <string name="feat_lockscreen_shortcuts_title">ロック画面ショートカット</string>
     <string name="feat_lockscreen_shortcuts_desc">ロック画面から独自のアクションを実行します</string>
-    <string name="about_desc_duo">This doesn\'t fold\n\nAn iPhone Duo style status indicator to show your battery, network, media status and more in a compact, minimal UI ideally around your camera with various items to show and gestures to interact with.\n\nFor foldable devices, Ensure to turn off \'Auto-detect camera\' option if it\'s not reliable and manually align Duo with your inside and outside camera positions and then Essentials will remember your layout.</string>
+    <string name="about_desc_duo">これは折りたたみません
+
+iPhone Duo スタイルのステータスインジケーターで、バッテリー、ネットワーク、メディアの状態などを、コンパクトで最小限のUIに表示します。理想的にはカメラの周りに配置され、さまざまなアイテムを表示したり、ジェスチャーで操作したりできます。
+
+折りたたみ式デバイスの場合、「カメラの自動検出」オプションが信頼できない場合はオフにし、Duo を内側と外側のカメラの位置に手動で合わせると、Essentials がレイアウトを記憶します。</string>
     <string name="label_shake_for_help">シェイクしてヘルプ</string>
-    <string name="about_desc_island">A dynamic island for your Android, around your camera cutout.\n\nIt brings live info together in one compact, expandable space: notifications with quick replies, media with album art and controls, calls, timers and stopwatches, alarms, calendar events, navigation, progress updates, hotspot and network status, connected devices, flashlight, sound mode, caffeinate, travel info and time and battery.\n\nThird party apps can pair with the island to show their own live content, and you choose which ones are allowed.\n\nInteract with simple gestures like tapping, swiping up and sliding along the island for volume, brightness and more, and assign your own tap actions.\n\nCustomize almost everything, including camera position and size with auto detect, width, placement, visuals like glow, outlines and pulse shadows, expanded size and roundness, display durations, what shows and when, hiding system heads up and status bar icons, and privacy options for locked screens.\n\nIt can also be combined with Duo for a single unified camera area.</string>
-    <string name="about_desc_pocket_mode">Prevents accidental touches while your phone is in your pocket or bag.\n\nWhen the proximity sensor is covered, Pocket mode shows a blocking screen so stray touches do nothing. Press any volume key to dismiss it. You can also use the light sensor along with proximity for better accuracy, add a trigger delay, and choose to only trigger while the device is locked.\n\nExclude apps where it should not trigger. It does not work while streaming or gaming by default.\n\nAccessibility permission is required. On some devices with missing sensors, enabling it may break deep sleep and cause higher battery drain.</string>
-    <string name="about_desc_flashlight">Get more control over your flashlight.\n\nAdjust the brightness, fade it in and out smoothly, and use the volume keys to change the intensity. Show the brightness as a live update in the status bar.\n\nTurn it off automatically when your phone is in a pocket, lower the brightness during long use to prevent overheating, or always turn it off, even while the display is on.\n\nBrightness control needs hardware support that some devices lack.</string>
-    <string name="about_desc_face_illumination">Helps face unlock recognize you in the dark.\n\nWhen the screen wakes up in low light, Essentials lights up the screen with a soft tinted glow so the front camera can see your face. You can set the ambient light threshold that decides when it kicks in, pick the light tint, and choose whether it illuminates automatically on wake-up or only when you trigger it.\n\nIt can also trigger the unlock for you. Accessibility permission is required.</string>
+    <string name="about_desc_island">カメラの切り欠きの周りに表示される、Android端末用のダイナミックアイランドです。
+
+通知（クイック返信機能付き）、アルバムアートとコントロール付きのメディア、通話、タイマーとストップウォッチ、アラーム、カレンダーイベント、ナビゲーション、進捗状況の更新、テザリングとネットワークステータス、接続済みデバイス、懐中電灯、サイレントモード、カフェイン、旅行情報、時刻とバッテリー残量など、ライブ情報をコンパクトで拡張可能な1つのスペースに集約します。
+
+サードパーティ製アプリはアイランドと連携して独自のライブコンテンツを表示でき、許可するアプリを選択できます。
+
+タップ、スワイプアップ、スライドなどの簡単なジェスチャーで音量、明るさなどを調整したり、独自のタップアクションを割り当てたりできます
+
+カメラの位置とサイズ（自動検出）、幅、配置、グロー、アウトライン、パルスシャドウなどのビジュアル、拡大サイズと丸み、表示時間、表示内容とタイミング、システムヘッドアップとステータスバーアイコンの非表示、ロック画面のプライバシーオプションなど、ほぼすべてをカスタマイズできます。
+
+Duoと組み合わせることで、単一の統合カメラエリアとして使用することもできます。</string>
+    <string name="about_desc_pocket_mode">スマートフォンがポケットやバッグに入っているときに、誤って触れてしまうのを防ぎます。
+
+近接センサーが覆われている場合、ポケットモードではブロック画面が表示され、誤って触れても何も起こりません。音量キーを押すと解除できます。近接センサーと光センサーを併用して精度を高めたり、トリガー遅延を追加したり、デバイスがロックされているときのみトリガーするように設定することもできます。
+
+トリガーすべきでないアプリを除外できます。デフォルトでは、ストリーミング中やゲーム中は動作しません。
+
+アクセシビリティ権限が必要です。センサーが搭載されていない一部のデバイスでは、有効にするとディープスリープが中断され、バッテリーの消耗が激しくなる場合があります。</string>
+    <string name="about_desc_flashlight">フラッシュライトをより細かく制御できます。
+
+明るさを調整したり、スムーズにフェードイン/フェードアウトしたり、音量キーで強度を変更したりできます。
+
+ステータスバーに明るさをリアルタイムで表示します。
+
+スマートフォンをポケットに入れたときに自動的にオフにしたり、長時間使用中に過熱を防ぐために明るさを下げたり、ディスプレイがオンの状態でも常にオフにしたりできます。
+
+明るさの制御には、一部のデバイスが備えていないハードウェアサポートが必要です。</string>
+    <string name="about_desc_face_illumination">暗い場所で顔認証によるロック解除を補助します。
+
+画面が暗い場所で起動すると、Essentialsは画面を柔らかな色合いで点灯させ、フロントカメラが顔を認識できるようにします。起動する周囲の明るさのしきい値を設定したり、光の色合いを選択したり、起動時に自動的に点灯させるか、トリガーしたときだけ点灯させるかを選択できます。
+
+ロック解除をトリガーすることもできます。アクセシビリティ権限が必要です。</string>
     <string name="about_desc_link_actions">Choose how links open instead of being stuck with one app.\n\nWhen you open a link, Essentials lets you pick between multiple apps to handle it, with the option to open it in a bubble, copy it, share it or shorten it and create a QR code.</string>
     <string name="about_desc_daily_wallpaper">Keep your wallpaper fresh with a daily curated wallpaper, or set a live wallpaper.\n\nPick your wallpaper, review and queue the next wallpaper before it is applied, and manage your live wallpaper from one place.</string>
     <string name="about_desc_watch">Integrations between your phone and your Wear OS watch.\n\nInstall the Essentials companion on your watch to sync notifications and calls, lock your phone from the watch, customize the watchface and complications, sync sound mode and location status, install an eSIM and turn on wireless debugging remotely.</string>
@@ -1925,28 +1983,48 @@
     <string name="about_desc_mobile_data_always_on">Keeps mobile data active even while connected to Wi-Fi.\n\nThis lets your phone switch to mobile data instantly when the Wi-Fi connection gets weak or drops, at the cost of some extra battery use.</string>
     <string name="about_desc_wireless_display_certification">Shows the hidden wireless display certification options in Android\'s developer settings.\n\nThese options expose extra Wi-Fi display (Miracast) settings for testing and troubleshooting casting.</string>
     <string name="about_desc_sim_names">Rename the carrier display name shown for your active SIM cards.\n\nUseful to tell SIMs apart or to replace a carrier name you do not like. Requires advanced permissions such as Shizuku or root.</string>
-    <string name="about_desc_watch_wireless_debugging">Turn on wireless debugging on your watch remotely from your phone.\n\nThis saves you from digging through the watch\'s developer options when you want to connect over ADB.</string>
+    <string name="about_desc_watch_wireless_debugging">スマートフォンからリモートでウォッチのワイヤレスデバッグを有効にします。
+
+これにより、ADB経由で接続したいときにウォッチの開発者向けオプションを探す手間が省けます。</string>
     <string name="about_desc_watch_esim_install">Install an eSIM on your Pixel Watch even in regions where it is not officially supported.\n\nExperimental. It relies on a hidden screen in the Pixel Watch app that may change, and installation success cannot be confirmed here.</string>
-    <string name="about_desc_sync_sound_mode">Automatically keeps your watch sound mode in sync with your phone.\n\nWhen you switch your phone between sound, vibrate and silent, your watch follows.</string>
-    <string name="about_desc_sync_location_reached">Sends your Are we there yet status to your watch.\n\nThe status is shown in the device tile so you can see how close you are to your destination right from your wrist.</string>
-    <string name="about_desc_lock_from_watch">Lock your phone remotely from your watch.\n\nHandy if you left your phone somewhere and want to secure it right away.</string>
-    <string name="about_desc_watch_controls">Customize the controls shown on your watch.\n\nChoose which actions are available so the watch shows only what you need.</string>
-    <string name="about_desc_watchface">Customize the Essentials watchface on your Wear OS watch.\n\nChange its look and settings from your phone.</string>
-    <string name="about_desc_complications">Customize the complication widgets shown on your watchface.\n\nChoose which info appears and where, such as flashlight status or other glance items.</string>
-    <string name="about_desc_notification_sync">Sync notifications between your phone and your watch.\n\nThis is only used for the launcher and is not a full notification mirror.</string>
-    <string name="about_desc_call_sync">Sync call status between your phone and your watch.\n\nThis is only used for the launcher and is not a full call handler.</string>
+    <string name="about_desc_sync_sound_mode">スマートウォッチのサイレントモードをスマートフォンと自動的に同期させます。
+
+スマートフォンのサウンド、バイブレーション、サイレントモードを切り替えると、スマートウォッチもそれに合わせて切り替わります。</string>
+    <string name="about_desc_sync_location_reached">「まだ着かないの？」ステータスを時計に送信します。
+
+ステータスはデバイスのタイルに表示されるので、手首から目的地までの距離を確認できます。</string>
+    <string name="about_desc_lock_from_watch">スマートウォッチからスマートフォンを遠隔ロックできます。
+
+スマートフォンをどこかに置き忘れて、すぐに安全に保管したい場合に便利です。</string>
+    <string name="about_desc_watch_controls">ウォッチに表示されるコントロールをカスタマイズします。
+
+必要な操作だけを表示するように、利用可能な操作を選択します。</string>
+    <string name="about_desc_watchface">Wear OS ウォッチの Essentials ウォッチフェイスをカスタマイズします。
+
+スマートフォンから外観と設定を変更します。</string>
+    <string name="about_desc_complications">ウォッチフェイスに表示されるコンプリケーションウィジェットをカスタマイズします。
+
+懐中電灯の状態やその他の一目で確認できる項目など、表示する情報とその場所を選択します。</string>
+    <string name="about_desc_notification_sync">スマートフォンとスマートウォッチ間で通知を同期します。
+
+これはランチャーでのみ使用され、完全な通知ミラーではありません。</string>
+    <string name="about_desc_call_sync">スマートフォンとスマートウォッチ間で通話ステータスを同期します。
+
+これはランチャーでのみ使用され、完全な通話ハンドラーではありません。</string>
     <string name="about_desc_mono_audio_tile">Quick Settings tile to toggle mono audio.\n\nMono audio plays the same sound in both ears, which helps when using a single earbud or if you have hearing difficulty in one ear.</string>
-    <string name="about_desc_back_gesture">Fine tune the system back gesture.\n\nAdjust the edge widths for the left and right gesture areas and set up per-app back gesture behavior. Requires secure settings permission.</string>
-    <string name="island_chips_title">Island chips</string>
-    <string name="island_calendar_compact_time_title">Compact time</string>
+    <string name="about_desc_back_gesture">システムの戻るジェスチャーを微調整します。
+
+左右のジェスチャー領域の端の幅を調整し、アプリごとの戻るジェスチャーの動作を設定します。セキュリティ設定の権限が必要です。</string>
+    <string name="island_chips_title">Island チップ</string>
+    <string name="island_calendar_compact_time_title">時間をコンパクトに表示</string>
     <string name="feat_aod_wallpaper_compat_title">互換モード</string>
-    <string name="feat_aod_wallpaper_compat_info_why">Some devices, especially on One UI, pause app animations while the always-on display is showing and skip drawing app windows. This can leave the AOD wallpaper half transparent or invisible, or stuck on screen after waking the device.</string>
-    <string name="feat_aod_wallpaper_compat_info_what">Compatibility mode turns off the fade animations of the wallpaper. The wallpaper appears at full strength right away, disappears instantly when the screen wakes, and image changes are applied without a crossfade. Turn it on only if the wallpaper looks faded, never shows, or stays after waking.</string>
-    <string name="feat_circle_to_search_gesture_hide_on_shade">Disable on statusbar expansion</string>
+    <string name="feat_aod_wallpaper_compat_info_why">一部のデバイス、特にOne UIでは、常時表示ディスプレイが表示されている間、アプリのアニメーションが一時停止し、アプリウィンドウの描画がスキップされます。これにより、AODの壁紙が半透明になったり、見えなくなったり、デバイスのスリープ解除後に画面に表示されたままになることがあります。</string>
+    <string name="feat_aod_wallpaper_compat_info_what">互換モードでは、壁紙のフェードアニメーションがオフになります。壁紙はすぐにフルスクリーンで表示され、画面がスリープ解除されるとすぐに消え、画像の変更はクロスフェードなしに適用されます。壁紙がフェードしているように見える場合、まったく表示されない場合、またはスリープ解除後も残っている場合にのみオンにしてください。</string>
+    <string name="feat_circle_to_search_gesture_hide_on_shade">ステータスバーの拡張を無効化</string>
     <string name="island_themed_app_icons_title">テーマ付きアプリのアイコンを使用</string>
     <string name="island_time_day_suffix_title">Show date suffix</string>
     <string name="island_time_tap_opens_clock_title">Tap to open clock</string>
-    <string name="diy_cts_method_title">Trigger method</string>
+    <string name="diy_cts_method_title">トリガー方法</string>
     <string name="diy_cts_method_accessibility">Accessibility</string>
     <string name="diy_cts_method_shizuku">Shizuku / Root</string>
     <string name="feat_aod_wallpaper_extended_media">再生情報を表示する</string>
@@ -1999,33 +2077,476 @@
     <string name="perm_files_media_desc">Pixel Searchの検索結果に写真、動画、音声、ドキュメントを検索して表示するには、Essentialsがファイルとメディアにアクセスするための権限が必要です。</string>
     <string name="perm_contacts_desc">Pixel Searchの検索結果に連絡先を表示するには、Essentialsが連絡先を読み取る権限を必要とします。</string>
     <string name="perm_sensitive_notifications_instructions">Shizukuまたはroot権限で付与するか、ADB経由でコマンドを実行してください。</string>
-    <string name="island_media_use_art_color_title">Advertise album art color</string>
-    <string name="island_media_player_style_title">Player style</string>
-    <string name="island_statusbar_aware_width_title">Statusbar aware width</string>
-    <string name="debug_ui_margin_overlay_title">Debug UI margin overlay</string>
-    <string name="island_statusbar_ignore_notifications_title">Ignore notifications</string>
-    <string name="island_neural_expressive_title">Neural Expressive expanded animations</string>
+    <string name="island_media_use_art_color_title">アルバムアートの色を使用</string>
+    <string name="island_media_player_style_title">プレイヤーのスタイル</string>
+    <string name="island_statusbar_aware_width_title">ステータスバー対応の幅</string>
+    <string name="debug_ui_margin_overlay_title">UIの位置をオーバーレイする</string>
+    <string name="island_statusbar_ignore_notifications_title">通知を無視</string>
+    <string name="island_neural_expressive_title">展開時は Neural Expressive アニメーション</string>
     <string name="island_neural_expressive_always_title">Always show on expansion</string>
-    <string name="island_statusbar_aware_width_info">This may not work on all devices. It works best on Pixels and devices with a status bar close to AOSP.</string>
-    <string name="island_statusbar_aware_width_info_tip">Even on those devices, try reducing the number of visible status bar icons to give the island more space.</string>
-    <string name="island_dismiss_direction_title">Dismiss swipe</string>
-    <string name="island_dismiss_direction_horizontal">Horizontal</string>
-    <string name="island_dismiss_direction_down">Down</string>
-    <string name="island_media_bubble_title">Show as a bubble</string>
-    <string name="island_media_bubble_wide_title">Wider pill</string>
-    <string name="island_media_bubble_fill_art_title">Fill album art</string>
-    <string name="island_transparency_title">Island transparency</string>
-    <string name="island_transparency_intensity_title">Transparency intensity</string>
-    <string name="island_backdrop_blur_title">Backdrop blur</string>
+    <string name="island_statusbar_aware_width_info">すべてのデバイスで動作するとは限りません。PixelやAOSPに近いステータスバーを持つデバイスで最適に動作します。</string>
+    <string name="island_statusbar_aware_width_info_tip">これらのデバイスでも、ステータスバーに表示されるアイコンの数を減らして、アイランドにスペースを確保してみてください。</string>
+    <string name="island_dismiss_direction_title">スワイプして閉じる</string>
+    <string name="island_dismiss_direction_horizontal">横</string>
+    <string name="island_dismiss_direction_down">下</string>
+    <string name="island_media_bubble_title">バブルに表示</string>
+    <string name="island_media_bubble_wide_title">大きめのピル</string>
+    <string name="island_media_bubble_fill_art_title">アルバムアートで塗りつぶす</string>
+    <string name="island_transparency_title">Island の透明度</string>
+    <string name="island_transparency_intensity_title">透明度の強度</string>
+    <string name="island_backdrop_blur_title">バックドロップぼかし</string>
     <string name="island_backdrop_blur_unavailable_os">Backdrop blur needs Android 12 or newer. This device runs an older version, so the system can\'t blur what is behind the island.</string>
-    <string name="island_backdrop_blur_unavailable_disabled">Your system currently has window blur turned off. This usually happens when Battery Saver is on, when \"Disable window blurs\" is enabled in Developer options, or when the device doesn\'t support it. This option unlocks automatically once window blur is back on.</string>
+    <string name="island_backdrop_blur_unavailable_disabled">現在、システムでウィンドウのぼかしがオフになっています。これは通常、バッテリーセーバーがオンの場合、開発者向けオプションで「ウィンドウのぼかしを無効にする」が有効になっている場合、またはデバイスがサポートしていない場合に発生します。ウィンドウのぼかしが再びオンになると、このオプションは自動的にロック解除されます。</string>
     <string name="island_backdrop_blur_unavailable_api">This device\'s system doesn\'t expose the blur feature the island needs for backdrop blur, so it can\'t be enabled here.</string>
     <string name="island_backdrop_blur_available_title">Blur is reported as supported on this device</string>
     <string name="island_backdrop_blur_available_note">It may still not work on some devices. Battery Saver, system settings such as \"Disable window blurs\" in Developer options, and manufacturer limits can turn window blur off at any time.</string>
     <string name="island_backdrop_blur_radius_title">Blur amount</string>
-    <string name="what_is_this">What is this?</string>
+    <string name="what_is_this">これは何？</string>
     <string name="label_feature_designed_by">Designed by</string>
-    <string name="label_how_to_use">How to use</string>
-    <string name="shut_up_how_to_use">1. Grant Write secure settings and Usage access from the permissions prompt. Shizuku is needed for freezing apps.\n\n2. Tap Select Apps and pick the apps that refuse to run with developer options, debugging or accessibility turned on, such as banking or payment apps.\n\n3. Tap an app to choose what gets hidden for it: Developer Options, USB Debugging, Wireless Debugging and Accessibility Services. You can also turn on Auto Freeze to freeze the app after you leave it, and Restore keyboard to switch back to your keyboard afterwards.\n\n4. Tap Create shortcut for each app and add it to your home screen. Always open the app from this shortcut, never from its normal icon, so the settings are turned off before the app starts and can check them.\n\n5. When you leave the app, Shut-Up! waits for the Restoration Delay and then shows a notification. Tap it to turn everything back on. Set Restore mode to Auto if you would rather have the settings restored on their own.\n\nTips: if wireless debugging was turned off, Shizuku may stop working, so enable Attempt Shizuku restart. Use the Keyboard option to pick the keyboard to restore, or leave it on Skip. With Auto Freeze, a notification counts down and lets you freeze now or abort.</string>
-    <string name="island_notif_lock_hidden_title">Hidden</string>
+    <string name="label_how_to_use">使い方</string>
+    <string name="shut_up_how_to_use">1. 権限プロンプトから「安全な設定の書き込み」と「使用状況」へのアクセスを許可します。アプリをフリーズするにはShizukuが必要です。
+
+2. 「アプリを選択」をタップし、開発者向けオプション、デバッグ、アクセシビリティがオンになっていると実行できないアプリ（銀行アプリや決済アプリなど）を選択します。
+
+3. アプリをタップして、非表示にする項目を選択します。開発者向けオプション、USBデバッグ、ワイヤレスデバッグ、アクセシビリティサービスです。アプリを終了した後にフリーズさせる「自動フリーズ」と、キーボードに戻す「キーボードを復元」をオンにすることもできます。
+
+4. 各アプリの「ショートカットを作成」をタップし、ホーム画面に追加します。アプリは常にこのショートカットから開き、通常のアイコンからは開かないようにしてください。そうすることで、アプリの起動前に設定がオフになり、設定を確認できます。
+
+5. アプリを終了すると、Shut-Up!は復元遅延時間まで待機し、通知を表示します。通知をタップすると、すべてがオンに戻ります。設定を自動的に復元したい場合は、「復元モード」を「自動」に設定してください
+
+ヒント：ワイヤレスデバッグがオフになっている場合、Shizukuが動作しなくなる可能性があるため、Shizukuの再起動を試みてください。キーボードオプションを使用して復元するキーボードを選択するか、スキップのままにしてください。自動フリーズでは、通知がカウントダウンし、今すぐフリーズするか中止するかを選択できます。</string>
+    <string name="island_notif_lock_hidden_title">非表示</string>
+    <string name="btn_export_config">設定をエクスポート</string>
+    <string name="btn_import_config">設定をインポート</string>
+    <string name="setting_force_flashlight_controls_title">フラッシュライト制御を強制的に有効化</string>
+    <string name="setting_force_flashlight_controls_desc">カメラアプリが破損したり、異常を起こしたりする可能性があります</string>
+    <string name="shizuku_auth_token_label">Shizuku 認証トークン</string>
+    <string name="setting_privileged_mode_title">特別アクセス</string>
+    <string name="settings_permissions_all">すべての権限</string>
+    <string name="permission_required_for">次の機能に必要です：</string>
+    <string name="action_licenses_and_credits">ライセンス</string>
+    <string name="licenses_credits_title">ライセンス＆クレジット</string>
+    <string name="licenses_credits_subtitle">Essentials はオープンソースプロジェクトで成り立っています</string>
+    <string name="label_top_contributors">上位の貢献者、ありがとう！</string>
+    <string name="label_developer_options">開発者向けオプション</string>
+    <string name="auto_backup_title">自動バックアップ頻度</string>
+    <string name="auto_backup_folder">バックアップ先のフォルダー</string>
+    <string name="btn_grant_all_permissions">すべての権限を付与</string>
+    <string name="btn_reset_onboarding">オンボーディングをリセット</string>
+    <string name="label_haptics_title">感触</string>
+    <string name="btn_reset_update_note">更新履歴をリセット</string>
+    <string name="btn_clear_search_history">検索履歴を削除</string>
+    <string name="settings_section_permissions">権限</string>
+    <string name="settings_section_customizations">カスタマイズ</string>
+    <string name="label_notify_new_updates">新しいアップデートを通知する</string>
+    <string name="bug_report_issue_details">問題の詳細</string>
+    <string name="crash_logs_title">クラッシュログ</string>
+    <string name="btn_clear_all_crash_logs">すべて削除</string>
+    <string name="settings_section_more">その他</string>
+    <string name="settings_translations_section">翻訳</string>
+    <string name="whats_new_previous_updates">以前のバージョンからの変更点</string>
+    <string name="subreddit_description">私が作成した Essentials やその他のアプリについて話し合う場所です。コミュニティに参加してプロジェクトに貢献したり、助けを得たり、何かを学びましょう。(´▽`)ﾉ</string>
+    <string name="diy_no_automations">オートメーションがありません</string>
+    <string name="diy_type_trigger">トリガー</string>
+    <string name="diy_type_state">ステータス</string>
+    <string name="diy_type_app">アプリ</string>
+    <string name="diy_type_action_shortcut">アクションショートカット</string>
+    <string name="diy_type_accessibility_shortcut">ユーザー補助ショートカット</string>
+    <string name="diy_type_pixel_searchbar">検索バー</string>
+    <string name="button_remap_add_action">アクションを追加</string>
+    <string name="diy_discard_warning_desc">保存されていない変更があります。保存せずに閉じてもいいですか？</string>
+    <string name="diy_discard_warning_title">変更を破棄しますか？</string>
+    <string name="translation_discard">破棄</string>
+    <string name="action_backup_app_list">アプリリストをバックアップ</string>
+    <string name="device_build">ビルド：%1$s</string>
+    <string name="device_api_patch">API %1$s パッチ：%2$s</string>
+    <string name="action_view_all">すべて見る</string>
+    <string name="freeze_tags_section_title">タグ</string>
+    <string name="freeze_tags_empty">タグは作られていません</string>
+    <string name="bug_report_source_feature">機能：%1$s</string>
+    <string name="feature_reset_info_title">この機能をリセット</string>
+    <string name="feature_reset_info_desc">この機能のすべての基本設定をデフォルトにリセットします。システム設定と権限は変更されません。</string>
+    <string name="hilight_hint">エフェクトは、最大30秒の選択した時間が経過すると自動的に停止します。エフェクトの再生中は、通話やGeminiなどのPixel独自のハイライトエフェクトは一時停止されます。</string>
+    <string name="hilight_cooldown_title">クールダウン</string>
+    <string name="hilight_cooldown_desc">同じアプリで再度点灯するまで、この時間待ちます</string>
+    <string name="hilight_apps_title">アプリ</string>
+    <string name="hilight_no_apps">アプリが選択されていません。アプリを追加して、通知に独自のハイライトを設定してください。</string>
+    <string name="hilight_add_app">アプリを追加</string>
+    <string name="about_desc_hilight">Pixel 11 Pro、Pro XL、Pro Foldの背面にあるHilight LEDを、通知が届くと点灯させます。追加したアプリごとにカスタムエフェクトが適用されます。Hilightエフェクトは、ボタンのリマップや自動化のアクションとしても使用できます。Shizukuが必要で、再起動のたびに再起動する必要があります。</string>
+    <string name="diy_wait_duration">遅延</string>
+    <string name="hilight_try_it">試す</string>
+    <string name="about_desc_hilight_progress">ハイライトLEDにダウンロードとライブアップデートの進行状況を表示します。進行状況が8分の1秒進むごとにLEDが1つ点灯し、完了すると8つすべてが点滅します。Shizukuが必要で、再起動のたびに再起動する必要があります。</string>
+    <string name="notification_lighting_ripple_position_section">位置</string>
+    <string name="notification_lighting_ripple_adjustment_section">リップル調整</string>
+    <string name="hilight_pattern_sparkle">スパークル</string>
+    <string name="notification_lighting_ripple_sparkle_count_title">スパークルの数</string>
+    <string name="notification_lighting_ripple_sparkle_size_title">スパークルの大きさ</string>
+    <string name="flashlight_speed_label">速度</string>
+    <string name="notification_lighting_ripple_repeat_count_title">繰り返す回数</string>
+    <string name="notification_lighting_pulse_overlap_title">点滅オーバーラップ</string>
+    <string name="notification_lighting_ripple_wave_size_title">波の大きさ</string>
+    <string name="feat_hilight_title">ハイライト</string>
+    <string name="title_snooze_durations">スヌーズ遅延</string>
+    <string name="action_reset_snooze">スヌーズ設定をリセット</string>
+    <string name="sound_mode_shizuku_info">AOSPの制限により、Androidはサイレントモードをマナーモードとして扱います。しかし、Shizukuを使用するとこれを上書きできます。利用可能な場合はShizukuを動的に使用し、利用できない場合は通常のマナーモードにフォールバックします。</string>
+    <string name="volume_steps_hint">音量キーを押すたびに、メディアの音量がこのステップ数だけ移動します。キーを押し続けると、そのキーの長押しアクションがボタン再マッピングで設定されていない限り、同じ操作が繰り返されます。長押しアクションが設定されている場合、そちらが優先されます。</string>
+    <string name="about_desc_volume_steps">音量キーを押すたびにメディア音量が何ステップ移動するかを設定します。キーを押し続けると、離すまでステップが続きます。通話、着信音、アラーム、カメラアプリでは、通常の音量動作が維持されます。
+
+ボタンのリマップで音量キーに長押しアクションが設定されている場合、キーを押し続けると音量を変更する代わりにアクションが実行され、短く押すと設定したステップサイズで音量が移動します。音量パネルが表示されている間、ボタンのリマップはデフォルトで一時停止するため、キーを押し続けると音量が変更されます。アクションを常に優先させたい場合は、ボタンのリマップで「音量ダイアログが開いている間は無効にする」をオフにしてください。</string>
+    <string name="app_volume_apps_section">アプリ</string>
+    <string name="app_volume_hint">音声を再生しているアプリはここに自動的に表示されます。アプリをタップすると音量を変更でき、削除すると通常の音量に戻ります。</string>
+    <string name="about_desc_app_volume">他のすべてのメディア音量を変更せずに、アプリのオーディオ音量だけを下げます。アプリごとにレベルを選択すると、バックグラウンド再生を含め、そのアプリがサウンドを再生するたびに適用されます。
+
+レベルは通常の音量から下げることしかできず、上げることはできません。一部のゲームや低遅延オーディオアプリはレベルを無視する場合があります。新しいレベルを適用するには Shizuku が実行されている必要があるため、再起動後に再度起動してください。</string>
+    <string name="feat_aod_wallpaper_extended_section_title">追加情報</string>
+    <string name="feat_aod_wallpaper_media_section_title">メディア</string>
+    <string name="action_got_it">OK</string>
+    <string name="icon_no_sim">SIMなし</string>
+    <string name="stb_clock_position">時計の位置</string>
+    <string name="island_hide_status_bar_info">パディングを超過してステータスバー全体を非表示にします。これにより、ロック画面からも削除され、ライブアップデートやスクリーンレコーダーを含むすべてが非表示になります。</string>
+    <string name="island_hide_status_bar_info_static">これは動的な設定ではないため、ステータスバーは自動的に表示されません。適用するには強制的に行う必要があります。</string>
+    <string name="stb_hide_entire_status_bar_title">ステータスバー全体を非表示</string>
+    <string name="duo_section_position">位置とディメンション</string>
+    <string name="duo_section_style">スタイル</string>
+    <string name="duo_section_what_to_show">表示する項目</string>
+    <string name="duo_battery_options_title">バッテリーのオプション</string>
+    <string name="duo_battery_percentage_options_title">バッテリー残量のオプション</string>
+    <string name="duo_battery_percentage_only_colored_title">カラーインスタンスのみ</string>
+    <string name="duo_battery_percentage_only_colored_desc">充電中、バッテリーセーバーモード時、またはバッテリー残量が少ない時のみパーセンテージを表示します</string>
+    <string name="duo_network_options_title">ネットワークのオプション</string>
+    <string name="duo_differentiate_wifi_title">Wi-Fiを区別する</string>
+    <string name="duo_differentiate_wifi_desc">Wi-Fi接続時に、点の代わりに明確な曲線弧を表示する</string>
+    <string name="duo_section_behavior">動作</string>
+    <string name="disable_interactions_in_full_screen_title">全画面時はインタラクションを無効化する</string>
+    <string name="duo_section_actions">アクション</string>
+    <string name="duo_action_pick_title">アクションを選択</string>
+    <string name="diy_category_connectivity">接続＆ネットワーク</string>
+    <string name="diy_category_display">表示＆画面</string>
+    <string name="diy_category_sound_media">音＆メディア</string>
+    <string name="diy_category_essentials">Essentials の機能</string>
+    <string name="island_auto_align_camera">カメラと自動で位置合わせ</string>
+    <string name="island_expanded_offset_y_title">展開時の垂直オフセット</string>
+    <string name="island_animation_speed_title">アニメーション速度</string>
+    <string name="island_balance_compact_title">視覚的にバランスの取れたコンパクトな Island</string>
+    <string name="island_progressive_blur_title">プログレッシブぼかしアニメーション</string>
+    <string name="island_section_icon_color">アイコンの色</string>
+    <string name="app_colors_custom">カスタム</string>
+    <string name="island_secondary_bubble_title">2つ目のバブル</string>
+    <string name="island_section_hiding">非表示</string>
+    <string name="island_hide_in_fullscreen_title">全画面で非表示にする</string>
+    <string name="island_section_statusbar">ステータスバー</string>
+    <string name="island_suppress_system_heads_up_title">システムの通知バナーを非表示</string>
+    <string name="island_hide_live_updates_title">Island が表示されている間は、ライブアップデートを非表示</string>
+    <string name="island_hide_icons_title">Island がある場合、ステータスバーのアイコンを非表示</string>
+    <string name="island_dynamic_hide_status_bar_title">展開時にステータスバーのアイテムを非表示</string>
+    <string name="island_gesture_visuals_hint">時間とバッテリーをオンにすると、アイランドの音量、明るさ、サウンドモードの変更が表示されます。</string>
+    <string name="island_battery_peek_alerts_title">ピークアラートを表示</string>
+    <string name="island_battery_icon_conditional_title">以下の条件の場合のみアイコンを表示</string>
+    <string name="duo_battery_low_level_title">バッテリー低下の基準</string>
+    <string name="duo_battery_critical_level_title">バッテリー残量低下</string>
+    <string name="island_notif_show_title">通知を表示</string>
+    <string name="island_notif_hub_title">通知ハブ</string>
+    <string name="island_notif_hub_desc">ステータスバーの通知アイコンを Island のアイコンに置き換える</string>
+    <string name="island_notif_section_heads_up">ヘッドアップ</string>
+    <string name="island_notif_condensed_info_title">ピークスタイル</string>
+    <string name="island_notif_peek_style_full">ワイド</string>
+    <string name="island_notif_filter_apps_title">アプリを絞り込む</string>
+    <string name="island_notif_filter_apps_desc">選択したアプリからの通知のみを表示</string>
+    <string name="island_notif_section_sources">通知の絞り込み</string>
+    <string name="island_notif_skip_silent_title">サイレント通知を無視</string>
+    <string name="island_notif_skip_silent_desc">音なしで届く通知を無視します</string>
+    <string name="island_notif_follow_dnd_title">マナーモードに従う</string>
+    <string name="island_notif_follow_dnd_desc">おやすみモードがオンになっている通知を非表示にする</string>
+    <string name="island_notif_section_in_island">Island の中</string>
+    <string name="island_notif_queue_desc">通知プレビューをずらして表示</string>
+    <string name="island_pulse_shadow_spread_title">スプレッド</string>
+    <string name="island_pulse_shadow_offset_y_title">垂直オフセット</string>
+    <string name="island_pulse_shadow_duration_title">発色遅延</string>
+    <string name="island_otp_section">OTPコード</string>
+    <string name="island_otp_enabled_title">OTPコードを検出</string>
+    <string name="island_otp_tap_to_copy_title">タップしてコピー</string>
+    <string name="island_otp_dismiss_after_copy_title">コピー後に通知を非表示</string>
+    <string name="island_otp_timeout_title">コードを表示するまで</string>
+    <string name="island_otp_bypass_filter_title">任意のアプリからコードを表示</string>
+    <string name="island_notif_section_lock_screen">ロック画面</string>
+    <string name="island_notification_options_title">通知オプション</string>
+    <string name="bug_report_field_app_version">アプリバージョン</string>
+    <string name="bug_report_field_device">デバイスモデル</string>
+    <string name="island_navigation_options_title">ナビゲーション</string>
+    <string name="island_navigation_on_new_title">新しい説明</string>
+    <string name="island_navigation_on_new_desc">次の方向が表示されたときに Island が行うこと</string>
+    <string name="island_navigation_expand_title">曲がる前に展開</string>
+    <string name="island_navigation_peek_after_expand_title">ピークの表示は維持する</string>
+    <string name="island_timer_options_title">タイマーのオプション</string>
+    <string name="island_timers_filter_apps_title">アプリを絞り込む</string>
+    <string name="island_media_show_like_title">トラックのいいねボタンを表示</string>
+    <string name="duo_media_skip_apps_title">無視するアプリを選択</string>
+    <string name="conscious_gate_appearance_title">意識ゲート画面の外観</string>
+    <string name="conscious_gate_description">ソーシャルメディアなど、より意識的に利用したいアプリを開く前に、短いマインドフルな一時停止を追加します。</string>
+    <string name="island_caffeinate_options_title">カフェインのオプション</string>
+    <string name="island_caffeinate_show_time_title">時間を表示</string>
+    <string name="status_glance_calendar_options_title">カレンダーイベントのオプション</string>
+    <string name="island_calendar_priority_title">閉じるときの優先度</string>
+    <string name="island_calendar_show_ongoing_title">進行中のイベントを表示</string>
+    <string name="status_glance_calendar_select_calendars_title">表示するカレンダー</string>
+    <string name="icon_category_general">一般</string>
+    <string name="icon_category_celebrations">祝福</string>
+    <string name="icon_category_people">人々</string>
+    <string name="icon_category_work">仕事</string>
+    <string name="icon_category_education">教育＆技術</string>
+    <string name="icon_category_health">ヘルスケア</string>
+    <string name="icon_category_sports">スポーツ</string>
+    <string name="icon_category_motorsport">モータースポーツ</string>
+    <string name="icon_category_food">食べ物＆飲み物</string>
+    <string name="icon_category_shopping">ショッピング＆お金</string>
+    <string name="icon_category_home">家＆場所</string>
+    <string name="icon_category_civic">信仰＆市民活動</string>
+    <string name="icon_category_entertainment">エンターテインメント</string>
+    <string name="icon_category_travel">旅行</string>
+    <string name="icon_category_nature">自然＆天気</string>
+    <string name="island_sound_mode_options_title">サイレントモードのオプション</string>
+    <string name="island_signal_options_title">ネットワークのオプション</string>
+    <string name="island_network_activity_title">ネットワークアクティビティを表示</string>
+    <string name="island_devices_battery_title">デバイスのバッテリー</string>
+    <string name="island_devices_manage_in_batteries">デバイスを管理</string>
+    <string name="bt_device_icons_title">順番とアイコン</string>
+    <string name="bt_order_separator">以下は非表示</string>
+    <string name="island_reorder_title">並べ替え</string>
+    <string name="island_providers_title">Island アプリ</string>
+    <string name="status_glance_section_position">位置</string>
+    <string name="status_glance_section_what_to_show">表示する項目</string>
+    <string name="status_glance_battery_options_title">バッテリーのオプション</string>
+    <string name="status_glance_battery_display_mode_title">表示モード</string>
+    <string name="status_glance_battery_icon_size_title">バッテリーアイコンの大きさ</string>
+    <string name="status_glance_battery_show_low_title">バッテリー残量が少ない時に表示</string>
+    <string name="status_glance_battery_show_charging_title">充電中に表示</string>
+    <string name="status_glance_battery_show_full_title">満タン時に表示</string>
+    <string name="status_glance_battery_show_otherwise_title">それ以外の場合に表示</string>
+    <string name="status_glance_section_gestures">ジェスチャー</string>
+    <string name="status_glance_section_appearance">外観</string>
+    <string name="about_desc_status_glance">ステータスグランスは、フロントカメラのパンチホールの横にある、優先度駆動型のアンビエントチップを表示します。アクティブなフラッシュライト、今後のカレンダーイベント、現在再生中のメディア、および現在時刻を動的に表示します。</string>
+    <string name="about_desc_smart_pixels">OLEDスクリーンで表示電力を節約するために、ユーザー補助サービスを使用して、画面全体にカスタマイズ可能な黒く塗りつぶされたピクセルの市松模様を重ねます。</string>
+    <string name="section_graphics">グラフィック</string>
+    <string name="about_desc_other_customizations">ディスプレイとシステムUIの追加調整を1か所にまとめました。
+
+ジェスチャーバーを非表示にする（ランチャーに表示したままにすることも可能）、かこって検索ジェスチャーを変更する、ナビゲーションバーを透明にする、回転候補ボタンを無効にする、システム設定の上にオーバーレイを表示する、画面合成にGPUを優先する（再起動時にリセットされます）。
+
+一部のオプションにはShizukuまたはアクセシビリティ権限が必要で、結果はデバイスとOSのバージョンによって異なる場合があります。</string>
+    <string name="pocket_mode_exclude_apps_title">アプリを除外</string>
+    <string name="pocket_mode_exclude_apps_desc">ポケットモードが起動しないようにするアプリを選択してください。デフォルトでは、ストリーミングやゲーム中はポケットモードは動作しません。</string>
+    <string name="pocket_mode_warning">警告：センサーが搭載されていない一部のデバイスでは、ポケットモードを有効にすると、ディープスリープが中断され、バッテリーの消耗が激しくなる場合があります。</string>
+    <string name="label_wallpaper_apply">壁紙を適用</string>
+    <string name="label_wallpaper_auto_update">自動更新</string>
+    <string name="wallpaper_home_screen">ホーム画面</string>
+    <string name="wallpaper_lock_screen">ロック画面</string>
+    <string name="wallpaper_current_photo_credits">この写真のクレジット</string>
+    <string name="wallpaper_view_photo">写真を見る</string>
+    <string name="wallpaper_view_collection">Sameera のコレクションを見る</string>
+    <string name="feat_wallpaper_staging_title">次の壁紙</string>
+    <string name="label_replace_with">置き換え先</string>
+    <string name="pixel_searchbar_tap_action">タップアクション</string>
+    <string name="pixel_searchbar_tap_action_enabled">カスタムタップアクション</string>
+    <string name="pixel_searchbar_tap_action_enabled_desc">ウィジェット独自のタップアクションではなく、独自のタップアクションを使用する</string>
+    <string name="pixel_search_results_title">検索結果</string>
+    <string name="pixel_search_results_apps_desc">インストール済みのアプリを検索したり起動します</string>
+    <string name="pixel_search_results_media_title">写真＆動画</string>
+    <string name="pixel_search_results_media_desc">写真、動画、GIFを検索</string>
+    <string name="pixel_search_results_files_title">ファイル＆ドキュメント</string>
+    <string name="pixel_search_results_files_desc">ドキュメント、オーディオ、ダウンロードファイルを検索</string>
+    <string name="pixel_search_results_contacts_desc">クイック通話とメッセージ操作で連絡先を検索</string>
+    <string name="pixel_search_results_settings_title">Essentials の設定</string>
+    <string name="pixel_search_results_settings_desc">機能を検索し、設定に直接ディープリンクする</string>
+    <string name="pixel_search_results_shortcuts_title">ショートカット</string>
+    <string name="pixel_search_results_shortcuts_desc">クイックアクションとランチャーショートカットを検索</string>
+    <string name="pixel_search_results_web_title">Web検索</string>
+    <string name="pixel_search_results_web_desc">Google検索かデフォルトブラウザかを選択するオプションを表示</string>
+    <string name="pixel_search_use_bubbles_title">バブルでWeb検索</string>
+    <string name="pixel_search_use_bubbles_desc">検索結果とリンクをフローティングバブルオーバーレイで開く</string>
+    <string name="screen_off_method_title">画面オフの方法</string>
+    <string name="screen_off_method_accessibility">ユーザー補助</string>
+    <string name="screen_off_method_input">入力</string>
+    <string name="widget_stack_add_to_home">ホーム画面にスタックを追加</string>
+    <string name="widget_stack_add_to_home_desc">ウィジェットを選択するには長押しします</string>
+    <string name="about_desc_widget_stack">ホーム画面の1か所に、任意のアプリの複数のウィジェットを配置できます。
+
+スタックはタイマーで次のウィジェットに切り替わります。または、下の矢印で切り替えることもできます。スマート回転がオンになっている場合、音楽を再生しているアプリなど、現在重要なウィジェットが前面に表示されます。
+
+カレンダーの予定表など、スクロールリストを表示するウィジェットはスタックに表示できません。</string>
+    <string name="widget_stack_settings_title">ウィジェットスタック</string>
+    <string name="widget_stack_description">複数のウィジェットをまとめて、切り替えられるようにします</string>
+    <string name="widget_stack_add_widget">ウィジェットを追加</string>
+    <string name="widget_stack_smart_title">今重要なものを表示</string>
+    <string name="widget_stack_done">完了</string>
+    <string name="widget_picker_title">ウィジェット</string>
+    <string name="widget_picker_search">検索</string>
+    <string name="button_remap_pause_on_volume_dialog_title">音量ダイアログ表示中は無効化</string>
+    <string name="button_remap_section_button">ボタン</string>
+    <string name="button_remap_power">電源</string>
+    <string name="about_desc_activity_launcher">アプリ内の画面 (アクティビティ) を閲覧し、直接開いてホーム画面にピン留めできます。アプリが非公開にしている画面は「Rootのみ」と表示され、開くにはroot権限が必要です。</string>
+    <string name="lockscreen_shortcuts_hint">各側で1つのアクションが実行されます。ロック画面でショートカットを長押しすると実行されます。アプリを開くアクションは、最初にロックを解除するように求められます。</string>
+    <string name="lockscreen_shortcuts_open_wallpaper_style">壁紙とスタイルを開く</string>
+    <string name="about_desc_lockscreen_shortcuts">ロック画面の右下隅にEssentialsショートカットボタンを追加します。ショートカットを長押しすると、そのアクションが実行されます。システムのロック画面ショートカットがオフになっている場合にのみ使用できます。</string>
+    <string name="feat_back_gesture_left_title">左側の幅</string>
+    <string name="feat_back_gesture_default_width_desc">端からどれだけ内側にスワイプすると戻る操作がトリガーされるか。
+システム設定の「戻る」感度と同じです。</string>
+    <string name="feat_back_gesture_right_title">右側の幅</string>
+    <string name="back_gesture_apps_section">アプリ</string>
+    <string name="back_gesture_add_app">アプリを追加</string>
+    <string name="back_gesture_add_app_desc">アプリが開いている間、異なる端の幅を使用する</string>
+    <string name="back_gesture_automation_note">「戻るジェスチャーをオフにする」自動化アクションは、「戻るジェスチャーをオンにする」が実行されるまで、これらのアプリを上書きします。</string>
+    <string name="label_share_with">共有</string>
+    <string name="shorten_copy_link">コピー</string>
+    <string name="action_preview_web">プレビュー</string>
+    <string name="qr_code_title">QRコード</string>
+    <string name="shorten_root_button">短縮化</string>
+    <string name="link_preview_show_preview">リンクのプレビューを表示</string>
+    <string name="link_preview_show_images">画像を表示</string>
+    <string name="shorten_history_empty_title">短縮したリンクはありません</string>
+    <string name="shorten_history_empty_desc">短縮したリンクは、迅速な共有とQRコードアクセス用にここに保存されます。</string>
+    <string name="shorten_expiry_label">リンクの有効期限</string>
+    <string name="shorten_custom_alias_label">カスタムエイリアス (任意)</string>
+    <string name="shorten_custom_alias_hint">例：ポートフォリオ、夏のセール</string>
+    <string name="shorten_passcode_label">パスコード保護 (任意)</string>
+    <string name="shorten_passcode_hint">例：1234 または secret</string>
+    <string name="shorten_url_title">リンクを短縮</string>
+    <string name="shorten_settings_title">短縮化の設定</string>
+    <string name="shorten_settings_custom_domain_title">カスタムドメイン</string>
+    <string name="shorten_settings_custom_domain_desc">個人用短縮サービスエッジエンドポイントを設定</string>
+    <string name="shorten_settings_auto_copy_title">リンクを自動でコピー</string>
+    <string name="shorten_settings_auto_copy_desc">生成された短縮リンクを自動的にクリップボードにコピーします</string>
+    <string name="shorten_settings_auto_strip_title">ストリップトラッキング</string>
+    <string name="shorten_settings_auto_strip_desc">マーケティング、テレメトリ、トラッキングパラメータをクリーンアップ</string>
+    <string name="shorten_settings_notification_title">アクション通知</string>
+    <string name="shorten_settings_notification_desc">通知にクイックコピーと共有ボタンを表示する</string>
+    <string name="link_edit_title">リンクを編集</string>
+    <string name="keyboard_user_dictionary_title">ユーザー辞書 (ワード学習)</string>
+    <string name="keyboard_manage_learned_words">ワード学習を管理</string>
+    <string name="user_dictionary_title">学習したワード</string>
+    <string name="user_dictionary_empty">まだワードを学習していません。</string>
+    <string name="title_battery_saver_display">画面＆明るさ</string>
+    <string name="title_battery_saver_power">電源＆パフォーマンス</string>
+    <string name="title_battery_saver_network">ネットワーク＆同期</string>
+    <string name="title_battery_saver_sound_sensors">サウンド＆センサー</string>
+    <string name="title_battery_saver_location">位置情報＆GPS</string>
+    <string name="action_reset_battery_saver">デフォルトにリセット</string>
+    <string name="qs_tiles_long_press_info">タイルを長押しすると、どんなタイルなのかを見ることができます</string>
+    <string name="qs_tiles_widget_name">お気に入りのタイル</string>
+    <string name="qs_tiles_long_press_add">タイルを長押しして追加します</string>
+    <string name="qs_tiles_widget_empty_state">お気に入りのタイルがピン留めされていません。
+長押ししてピン留めしてください！</string>
+    <string name="tile_heads_up_notifications">ヘッドアップ通知</string>
+    <string name="tile_haptics">感触</string>
+    <string name="tile_restart_systemui">システムUIを再起動</string>
+    <string name="tile_default_launcher">デフォルトのランチャー</string>
+    <string name="tile_url_shortener">URLを短縮</string>
+    <string name="tile_data_sim">データSIM</string>
+    <string name="tile_lock">ロック</string>
+    <string name="about_desc_heads_up_notifications">システムのヘッドアップ通知ポップアップを表示または非表示にします。
+
+非表示にした場合でも、通知は画面上にポップアップすることなく、静かにシェードに表示されます。</string>
+    <string name="about_desc_haptics">システムの振動とタッチフィードバックを同時に切り替えます。システム設定の変更権限が必要です。</string>
+    <string name="about_desc_default_launcher">クイック設定タイルから、システムのデフォルトのホーム画面ピッカーを開きます。</string>
+    <string name="tile_url_shortener_subtitle">クリップボードのリンクを短縮</string>
+    <string name="about_desc_duo_tile">クイック設定からDuoカメラのリングオーバーレイをオンまたはオフにします。</string>
+    <string name="about_desc_island_tile">クイック設定から Island 通知オーバーレイのオン/オフを切り替えます。</string>
+    <string name="about_desc_data_sim">モバイルデータを次のアクティブなSIMに切り替えます。電話の状態を読み取る権限とShizukuまたはrootが必要です。選択したSIMはモバイルデータも有効になっています。</string>
+    <string name="watchface_category_battery">バッテリー＆アイコン</string>
+    <string name="watchface_glance_complications_title">コンプリケーション</string>
+    <string name="watch_controls_reorder_title">ウォッチコントロールを並べ替え</string>
+    <string name="watch_controls_long_press_hint">長押しでボタンの有効/無効にします</string>
+    <string name="cat_sync">同期</string>
+    <string name="watch_wireless_debugging_info_title">接続情報を見る</string>
+    <string name="watch_wireless_debugging_refresh">情報を更新</string>
+    <string name="watch_esim_sheet_title">Pixel Watch にeSIMをインストール</string>
+    <string name="watch_esim_scan_qr">QRコードをスキャン</string>
+    <string name="watch_esim_enter_code">アクティベーションコード</string>
+    <string name="watch_esim_continue">Pixel Watch で続ける</string>
+    <string name="watch_esim_error_companion_missing">Pixel Watch アプリがインストールされていないか、開けません</string>
+    <string name="watch_esim_instructions_title">手順</string>
+    <string name="watch_esim_step_1">Pixel Watch アプリをウォッチと接続し、セットアップします。</string>
+    <string name="watch_esim_step_2">別売りのウォッチプランのQRコードをスキャンするか、アクティベーションコードを貼り付けてください。</string>
+    <string name="watch_esim_step_3">Pixel Watch で続けるをタップしてセットアップを終了します。</string>
+    <string name="watch_esim_step_4">異なるウォッチプランを使用してください。電話回線の転送コードがその回線に影響を与える場合があります。</string>
+    <string name="watch_esim_warning">実験的機能です。Pixel Watchアプリの非表示画面に依存しており、変更される可能性があります。インストールの成功はここでは確認できません。セルラー通信は、ローミング制限またはIME/VoLTEの利用可能性によって制限される場合があります。</string>
+    <string name="watch_adb_permissions_title">ウォッチのADB権限</string>
+    <string name="watchface_promo_step3_desc">ウォッチでPlayストアのページを直接開いてインストールしてください</string>
+    <string name="screen_locked_keep_qs_on_extended_unlock_title">拡張ロック解除時にクイック設定を維持</string>
+    <string name="label_restore_mode">復元モード</string>
+    <string name="face_unlock_light_tint_title">ライトティント</string>
+    <string name="screenshots_section_after_sharing">共有した後</string>
+    <string name="feat_screenshot_share_cleanup_title">共有したスクリーンショット削除</string>
+    <string name="feat_screenshot_share_cleanup_desc">共有した後、スクリーンショットをゴミ箱に移動します</string>
+    <string name="screenshot_share_cleanup_delay_title">共有してからの遅延</string>
+    <string name="screenshot_delay_immediately">すぐに</string>
+    <string name="screenshot_delay_1_hour">1 時間後</string>
+    <string name="screenshot_delay_1_day">1 日後</string>
+    <string name="screenshots_section_auto_clean">自動クリーン</string>
+    <string name="screenshot_auto_clean_title">スクリーンショットを自動クリーン</string>
+    <string name="screenshot_auto_clean_note">新しいスクリーンショットが撮れるたびに、保存するための静かな通知が表示されます。スターを付けたスクリーンショットは常に保存されます。</string>
+    <string name="screenshots_section_stats">これまでにクリーンアップしたもの</string>
+    <string name="screenshots_cleaned_count_title">クリーン済みスクリーンショット</string>
+    <string name="screenshots_storage_saved_title">ストレージに保存済み</string>
+    <string name="about_desc_screenshots">ギャラリーから使い捨てのスクリーンショットを削除します。共有したスクリーンショットは、共有直後または少し後にゴミ箱へ移動できます。また、新しいスクリーンショットは、通知から保存するか、写真アプリでスターを付けない限り、数日後に自動的にゴミ箱へ移動します。ゴミ箱へ移動したスクリーンショットは、ファイルまたは写真アプリから30日間復元できます。</string>
+    <string name="watermark_border">ボーダー</string>
+    <string name="instruction_section_battery_saver_title">電源とバッテリーの設定はどのように機能しますか？</string>
+    <string name="instruction_section_battery_saver_desc">これらの設定は、Android の内部バッテリーセーバーポリシー定数 (具体的には、グローバル設定テーブルのプロパティ: battery_saver_constants) を直接上書きします。
+
+Android がバッテリーセーバーモードを有効にすると、これらのキーを読み取って、どのシステム機能を制限するか (画面の明るさを下げる、AOD を無効にする、GPS 位置情報へのアクセスを制限する、アプリケーションをスリープ状態にするなど) を決定します。
+
+これらの値を変更すると、カスタムバッテリーセーバーポリシーは、次回バッテリーセーバーがオンになったときに有効になります。画面下部のボタンを使用して、いつでもデフォルト設定に戻すことができます。これらのシステム構成を書き込むには、WRITE_SECURE_SETTINGS 権限が必要です。</string>
+    <string name="instruction_section_notification_snoozing_title">通知スヌーズの使い方</string>
+    <string name="instruction_section_notification_snoozing_desc">有効にすると、通知を下にスワイプするか、少し引っ張ってスヌーズ（時計）アイコンを表示します。または、スヌーズボタンが既に表示されている場合は、長押しまたはタップします。タップすると、スヌーズを再スケジュールできます。利用可能な期間とデフォルトのスヌーズ時間は、設定メニュー内でカスタマイズできます。セキュリティ設定とグローバル設定プロパティに書き込みます。</string>
+    <string name="instruction_section_safe_volume_title">安全な音量警告を無効にする理由は？</string>
+    <string name="instruction_section_safe_volume_desc">聴覚を保護するため、EUの規制では、音量が85dBを超えるとポップアップ警告を表示することが義務付けられています。このポップアップは起動後、またはオーディオ出力が20時間経過すると一度表示されるため、メディア再生を妨げる可能性があります。これを有効にすると、audio_safe_volume_stateグローバル設定に書き込むことで、制限が永続的に回避されます。</string>
+    <string name="instruction_section_genai_title">オンデバイス GenAI (Gemini Nano)</string>
+    <string name="instruction_section_genai_desc">AndroidのAICoreシステムサービスを介してGoogle Gemini Nanoでローカルに動作します。リモートサーバーにデータを送信することなく、デバイス上で基盤モデルを実行することで、ユーザーのプライバシーを向上させます。
+
+要件とAICore: Android AICoreを実行している対応デバイス（Pixel 9/10シリーズ、Galaxy S25/S26など）でML Kit GenAI Prompt APIを使用します。
+
+アプリのフォアグラウンド制限: GenAI APIの推論は、アプリが最上位のフォアグラウンドにある場合にのみ許可されます。
+
+クォータと実行: アプリごとのAICoreのバッテリーおよび推論クォータの対象となります。AICoreモデルのダウンロードが完了すると、機能は完全にオフラインで実行されます。
+
+コンテキストの自動化: プロンプト要求を、デバイス上でローカルにDIYトリガー、状態、アプリタグ、および詳細設定にマッピングします。</string>
+    <string name="instruction_section_freezetags_title">フリーズアプリ＆スマートフリーズ</string>
+    <string name="instruction_section_freezetags_desc">カスタムアプリタグを使用して、バックグラウンドアプリケーションを整理して一括でフリーズします。
+
+カスタムタグ：カスタムカラー（例：ソーシャル、ゲーム、仕事）でカスタムタグを作成します。
+
+ターゲットルール：重要なアプリに「自動フリーズしない」保護を割り当てて、アクティブな状態を維持します。
+
+自動化統合：デバイスのトリガー、時間枠、またはアプリの起動に基づいて、タグ全体のフリーズまたはフリーズ解除アクションを自動的にトリガーします。</string>
+    <string name="instruction_section_diy_title">DIYオートメーション</string>
+    <string name="instruction_section_diy_desc">日常的な使用状況に合わせて、強力なカスタムルーチンを構築します。
+
+トリガーオートメーション：イベントが発生すると特定のアクションを実行するイベント駆動型ルール (例: 充電器が切断されたときに触覚振動をトリガーする)。
+
+状態オートメーション：状態に入るときにエントリーアクション (例: 充電中または時間ウィンドウ) を実行し、状態から出るときにエグジットアクションを実行する条件駆動型ルール。
+
+アプリオートメーション：指定されたアプリケーションの起動時または終了時に、プロファイルを自動的に適用したり、タグをフリーズ/アンフリーズしたりします。</string>
+    <string name="instruction_section_backup_title">バックアップ＆復元</string>
+    <string name="instruction_section_backup_desc">カスタム設定を保護し、デバイス間で転送します。
+
+設定のエクスポート：DIYオートメーション、アプリタグ、タイル設定、カスタム設定のJSONバックアップを生成します。
+
+設定のインポート：個々の設定を再構成することなく、保存した設定ファイルを簡単に復元します。</string>
+    <string name="privileged_mode_auto">自動</string>
+    <string name="setting_hidden_debugging_help_1">Android 17 QPR1 では、Google はサードパーティ製アプリの開発者向けオプションと USB デバッグオプションの状態を非表示にし、常に 0 を報告するように変更しました。</string>
+    <string name="setting_hidden_debugging_help_2">これは、ゴミ銀行や、BSセキュリティ対策を備えた他のアプリに対抗するのに役立ちます。また、Shut Up機能でもこれに対抗しています。</string>
+    <string name="setting_hidden_debugging_help_3">しかし、これはEssentialsの検出も妨げます。この場合、このオプションを有効にしてShizukuシェルを使用して状態を検出してください。これはまだ可能です。ワイヤレスデバッグは隠蔽されていないことに注意してください</string>
+    <string name="setting_hidden_debugging_auto_title">自動検出</string>
+    <string name="setting_hidden_debugging_auto_help">開発者向けオプションとUSBデバッグが有効になっていることを確認してください</string>
+    <string name="external_control_token_title">外部制御トークン</string>
+    <string name="translation_logged_in_as">%1$s でログイン中</string>
+    <string name="bug_report_view_existing_pr">既存のPull Requestsを見る</string>
+    <string name="pixel_searchbar_date_format">日付のフォーマット</string>
+    <string name="button_remap_double_press">2回押し</string>
+    <string name="button_remap_power_camera_flip_title">2回押しでカメラを反転する</string>
+    <string name="button_remap_power_camera_flip_desc">ダブルクリックでカメラが開きます。カメラアプリが開いている間は、ダブルクリックで前面カメラと背面カメラが切り替わります。「%1$s」が必要です。すべてのカメラアプリで動作するとは限りません。</string>
+    <string name="button_remap_press_and_hold">長押し</string>
+    <string name="activity_picker_search">アクティビティを検索</string>
+    <string name="activity_picker_title">アクティビティを選択</string>
+    <string name="activity_picker_root_only">Root のみ</string>
+    <string name="sim_names_carrier_label">キャリア名</string>
+    <string name="shut_up_restore_keyboard">キーボードを復元</string>
 </resources>
