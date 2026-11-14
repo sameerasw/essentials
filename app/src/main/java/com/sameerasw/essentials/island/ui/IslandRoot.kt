@@ -677,7 +677,7 @@ private fun IslandRootContent(
     }
     fun bubbleSide(): Float = bubbleSideAnim.value
     fun balanceSign(): Float = if (spec.balanceCompact && spec.growDirection == 0) 1f - 2f * bubbleSide() else 1f
-    val bubbleGapPx = with(density) { spec.contentGap.roundToPx() }
+    val bubbleGapPx = with(density) { (spec.contentGap + 4.dp).roundToPx() }
     fun sideBubbleProgress(): Float =
         if (spec.growDirection == 0 && (hasCompactCells || stage == IslandStage.Hidden)) catchUpAnim.value.coerceIn(0f, 1f) else 0f
     val slackAnim = remember { Animatable(slackTarget.toFloat()) }
@@ -939,8 +939,7 @@ private fun IslandRootContent(
                 }
             }
         }
-        LiquidBridges(liquidField)
-        val pillGapPx = with(density) { 2.dp.roundToPx() }
+        val pillGapPx = with(density) { 8.dp.roundToPx() }
         AnimatedVisibility(
             visible = queueShown,
             enter = if (stage == IslandStage.Expanded) EnterTransition.None else fadeIn(IslandMotion.contentIn()),

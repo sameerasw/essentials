@@ -56,7 +56,9 @@ fun IslandExpandedScope.rememberExpandedResize(prefKey: String): ExpandedResize 
     val limit = remember(prefKey) {
         limits.getOrPut(prefKey) { mutableFloatStateOf(settings.getFloat(prefKey, 0f)) }
     }
-    val screenCap = (LocalConfiguration.current.screenHeightDp * 0.8f).dp
+    val screenCap = (LocalConfiguration.current.screenHeightDp * 0.8f).dp.let {
+        if (spec.maxExpandedHeight != Dp.Unspecified) minOf(it, spec.maxExpandedHeight) else it
+    }
     val minHeight = spec.compactHeight + spec.expandedTopPadding + 96.dp
     val maxHeight = limit.floatValue.takeIf { it > 0f }?.dp?.coerceIn(minHeight, screenCap) ?: screenCap
     val measured = remember { IntArray(1) }

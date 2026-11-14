@@ -55,6 +55,8 @@ import com.sameerasw.essentials.translation.ui.TranslationBottomSheet
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenu
 import com.sameerasw.essentials.utils.HapticUtil
 
+val LocalIconToggleStatus = androidx.compose.runtime.compositionLocalOf<(@Composable () -> Unit)?> { null }
+
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun IconToggleItem(
@@ -327,6 +329,7 @@ fun IconToggleItem(
                                     )
                                 }
                             }
+                            LocalIconToggleStatus.current?.invoke()
                             if (onSettingsClick != null && enabled && finalIsChecked) {
                                 IconButton(
                                     onClick = {

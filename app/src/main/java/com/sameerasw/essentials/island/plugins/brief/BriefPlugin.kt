@@ -16,9 +16,12 @@ import com.sameerasw.essentials.island.remote.LocalRemotePaused
 import com.sameerasw.essentials.island.remote.RemoteExpanded
 import com.sameerasw.essentials.island.ui.SurfaceBackdrop
 import android.Manifest
+import android.content.BroadcastReceiver
 import android.content.Context
-import android.content.Intent
 import android.content.IntentFilter
+import android.os.PowerManager
+import androidx.compose.runtime.DisposableEffect
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.ContentUris
 import androidx.compose.foundation.Image
@@ -75,7 +78,6 @@ import com.sameerasw.essentials.island.plugins.soften
 import com.sameerasw.essentials.island.ui.IslandHaptics
 import com.sameerasw.essentials.translation.TranslatableText
 import kotlinx.coroutines.launch
-import android.os.BatteryManager
 import android.os.Build
 import com.sameerasw.essentials.utils.BluetoothBatteryUtils
 import com.sameerasw.essentials.utils.BluetoothDeviceIcons
@@ -123,6 +125,12 @@ import com.sameerasw.essentials.island.plugins.BaseIslandPlugin
 import com.sameerasw.essentials.island.ui.IslandTextStyles
 import com.sameerasw.essentials.island.ui.islandTextColor
 import com.sameerasw.essentials.island.ui.components.BatteryGlyph
+import com.sameerasw.essentials.island.plugins.timebattery.BatteryStatus
+import com.sameerasw.essentials.island.state.IslandItemEntry
+import com.sameerasw.essentials.island.state.IslandItemsState
+import com.sameerasw.essentials.island.plugins.timebattery.batteryIdleColor
+import com.sameerasw.essentials.island.plugins.timebattery.batteryStateColor
+import com.sameerasw.essentials.island.plugins.timebattery.readBatteryStatus
 import com.sameerasw.essentials.island.ui.components.BatteryRing
 import com.sameerasw.essentials.island.ui.components.CameraRow
 import com.sameerasw.essentials.utils.CalendarEventUtil
@@ -175,6 +183,7 @@ class BriefPlugin : BaseIslandPlugin() {
                     BriefExpanded(
                         scope, iconStyle, devicesIconStyle, alarmHours, calendarEnabled, calendarIds, showAllDay, showGlow, twoLineHeader,
                         onOpenLivePlayer = { ctx?.request?.invoke(PluginRequest.Expand(MediaPlugin.ITEM_KEY)) },
+                        onRequestExpand = { ctx?.request?.invoke(PluginRequest.Expand(it)) },
                     ) { open ->
                         pageOpen = open
                     }
@@ -202,6 +211,7 @@ private fun BriefExpanded(
     showGlow: Boolean,
     twoLineHeader: Boolean,
     onOpenLivePlayer: () -> Unit,
+    onRequestExpand: (String) -> Unit,
     onPageOpenChanged: ((() -> Unit)?) -> Unit,
 ) {
     val context = LocalContext.current
@@ -253,6 +263,10 @@ private fun BriefExpanded(
                         onEventClick = { page = BriefPage.Event(it) },
                         onPlayerClick = { if (IslandMediaState.live.value) onOpenLivePlayer() else page = BriefPage.Player },
                         onCardClick = { page = BriefPage.Remote(it) },
+                        onItemClick = { entry ->
+                            val item = entry.item
+                            if (item.expanded != null) onRequestExpand(item.key) else item.onOpen?.invoke()
+                        },
                     )
                     is BriefPage.Event -> SwipeBackPage(scope, onBack = { page = BriefPage.Overview }) {
                         BriefEventDetail(target.event, showGlow, scope)
@@ -427,13 +441,19 @@ private fun BriefOverview(
     onEventClick: (UpcomingCalendarEvent) -> Unit,
     onPlayerClick: () -> Unit,
     onCardClick: (String) -> Unit,
+    onItemClick: (IslandItemEntry) -> Unit,
 ) {
     val context = LocalContext.current
     val spec = scope.spec
+    val allItemEntries by IslandItemsState.entries.collectAsState()
     val sidePadding = spec.expandedPadding * 0.6f + spec.expandedCorner * 0.25f
     val accent = islandAccent()
     val cardsByPackage by RemoteBriefCards.cards.collectAsState()
     val remoteCards = remember(cardsByPackage) { cardsByPackage.values.flatten() }
+    val itemEntries = remember(allItemEntries, cardsByPackage) {
+        val briefPackages = cardsByPackage.filterValues { it.isNotEmpty() }.keys
+        allItemEntries.filter { entry -> briefPackages.none { entry.item.key.startsWith("$it:") } }
+    }
 
     var now by remember { mutableLongStateOf(System.currentTimeMillis()) }
     LaunchedEffect(Unit) {
@@ -442,7 +462,18 @@ private fun BriefOverview(
             now = System.currentTimeMillis()
         }
     }
-    val battery = remember(now) { readBattery(context) }
+    var batteryState by remember { mutableStateOf<BatteryStatus?>(null) }
+    DisposableEffect(context) {
+        val receiver = object : BroadcastReceiver() {
+            override fun onReceive(c: Context, intent: Intent) {
+                batteryState = readBatteryStatus(context, if (intent.action == Intent.ACTION_BATTERY_CHANGED) intent else null)
+            }
+        }
+        val filter = IntentFilter(Intent.ACTION_BATTERY_CHANGED).apply { addAction(PowerManager.ACTION_POWER_SAVE_MODE_CHANGED) }
+        val sticky = context.registerReceiver(receiver, filter)
+        batteryState = readBatteryStatus(context, sticky)
+        onDispose { context.unregisterReceiver(receiver) }
+    }
     val alarm = remember(now, alarmHours) { alarmHours?.let { NextAlarm.within(context, it) } }
     val devices by produceState(BriefDevicesCache.devices, now) {
         val fresh = withContext(Dispatchers.IO) { readDevices(context) }
@@ -457,8 +488,10 @@ private fun BriefOverview(
         }
     }
 
+    val battery = batteryState
     val timeSettings = remember { SettingsRepository(context) }
     val time = IslandTimeFormat.format(context, timeSettings, now)
+    val batteryColor = battery?.let { batteryStateColor(timeSettings, it) ?: batteryIdleColor(timeSettings) } ?: accent
     val date = SimpleDateFormat(DateFormat.getBestDateTimePattern(Locale.getDefault(), "EEEMMMd"), Locale.getDefault()).format(Date(now))
 
     val artwork = remember(media?.artwork) { media?.artwork?.asImageBitmap() }
@@ -483,11 +516,11 @@ private fun BriefOverview(
                             Spacer(Modifier.width(8.dp))
                         }
                     }
-                    if (battery >= 0) {
+                    if (battery != null) {
                         if (iconStyle) {
-                            BatteryGlyph(battery, accent, showLevel = true)
+                            BatteryGlyph(battery.level, batteryColor, showLevel = true, charging = battery.charging, powerSave = battery.powerSave, limited = battery.limited)
                         } else {
-                            BatteryRing(battery, accent, showLevel = true)
+                            BatteryRing(battery.level, batteryColor, showLevel = true, charging = battery.charging, powerSave = battery.powerSave, limited = battery.limited)
                         }
                     }
                 },
@@ -504,16 +537,31 @@ private fun BriefOverview(
             }
 
             val blockPadding = sidePadding
+            val carouselItems = itemEntries.map { entry ->
+                BriefCarouselItem(entry.item.key, { onItemClick(entry) }, entry.item.accent ?: accent) {
+                    entry.item.compact.forEach { it.content() }
+                }
+            } + devices.map { device ->
+                BriefCarouselItem(device.key, null) {
+                    IslandIcon(device.iconRes, tint = accent, size = 18.dp)
+                    Spacer(Modifier.width(6.dp))
+                    if (devicesIconStyle) {
+                        BatteryGlyph(device.level, accent, showLevel = true)
+                    } else {
+                        BatteryRing(device.level, accent, showLevel = true)
+                    }
+                }
+            }
+            val itemsBlock: @Composable () -> Unit = {
+                if (carouselItems.isNotEmpty()) {
+                    Spacer(Modifier.height(12.dp))
+                    BriefItemsCarousel(carouselItems, spec.compactHeight, Modifier.padding(horizontal = blockPadding))
+                }
+            }
             val cardsBlock: @Composable () -> Unit = {
                 remoteCards.forEach { card ->
                     Spacer(Modifier.height(12.dp))
                     RemoteBriefCardRow(card, { if (card.hasPage) onCardClick(card.key) }, Modifier.padding(horizontal = blockPadding))
-                }
-            }
-            val devicesBlock: @Composable () -> Unit = {
-                if (devices.isNotEmpty()) {
-                    Spacer(Modifier.height(12.dp))
-                    BriefDeviceRows(devices, devicesIconStyle, accent, Modifier.fillMaxWidth().padding(horizontal = blockPadding))
                 }
             }
             val calendarBlock: @Composable () -> Unit = {
@@ -541,15 +589,11 @@ private fun BriefOverview(
                     BriefPlayer(media, artwork, onPlayerClick, Modifier.padding(horizontal = blockPadding))
                 }
             }
+            itemsBlock()
             if (spec.landscape) {
                 val landscapeItems = buildList<@Composable () -> Unit> {
                     remoteCards.forEach { card ->
                         add { RemoteBriefCardRow(card, { if (card.hasPage) onCardClick(card.key) }) }
-                    }
-                    if (devices.isNotEmpty()) {
-                        add {
-                            BriefDeviceRows(devices, devicesIconStyle, accent, Modifier.fillMaxWidth())
-                        }
                     }
                     if (calendarEnabled) {
                         val list = events
@@ -571,7 +615,6 @@ private fun BriefOverview(
                 playerBlock()
             } else {
                 cardsBlock()
-                devicesBlock()
                 calendarBlock()
                 playerBlock()
             }
@@ -588,7 +631,7 @@ private fun BriefEventRow(event: UpcomingCalendarEvent, now: Long, accent: Color
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
-            .background(Color.White.copy(alpha = 0.1f))
+            .background(Color.Black)
             .clickable(onClick = onClick)
             .padding(horizontal = 12.dp, vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -615,13 +658,6 @@ private fun BriefEventRow(event: UpcomingCalendarEvent, now: Long, accent: Color
             )
         }
     }
-}
-
-private fun readBattery(context: Context): Int {
-    val intent = context.registerReceiver(null, IntentFilter(Intent.ACTION_BATTERY_CHANGED)) ?: return -1
-    val level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1)
-    val scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, 100)
-    return if (level < 0 || scale <= 0) -1 else level * 100 / scale
 }
 
 @Composable
@@ -775,49 +811,13 @@ private fun BriefAlarmChip(time: String, accent: Color) {
     Row(
         modifier = Modifier
             .clip(RoundedCornerShape(50))
-            .background(Color.White.copy(alpha = 0.1f))
+            .background(Color.Black)
             .padding(horizontal = 8.dp, vertical = 4.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         IslandIcon(R.drawable.rounded_alarm_24, tint = accent, size = 16.dp)
         Spacer(Modifier.width(4.dp))
         Text(time, style = IslandTextStyles.compact.copy(fontSize = 13.sp))
-    }
-}
-
-@Composable
-private fun BriefDeviceRows(devices: List<BriefDevice>, iconStyle: Boolean, accent: Color, modifier: Modifier = Modifier) {
-    val rows = if (devices.size > 4) devices.chunked((devices.size + 1) / 2) else listOf(devices)
-    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(6.dp)) {
-        rows.forEach { row ->
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(6.dp, Alignment.CenterHorizontally),
-            ) {
-                val single = row.size == 1
-                row.forEach { device -> BriefDeviceChip(device, iconStyle, accent, if (single) Modifier else Modifier.weight(1f)) }
-            }
-        }
-    }
-}
-
-@Composable
-private fun BriefDeviceChip(device: BriefDevice, iconStyle: Boolean, accent: Color, modifier: Modifier = Modifier) {
-    Row(
-        modifier = modifier
-            .clip(RoundedCornerShape(50))
-            .background(Color.White.copy(alpha = 0.1f))
-            .padding(horizontal = 10.dp, vertical = 8.dp),
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        IslandIcon(device.iconRes, tint = accent, size = 18.dp)
-        Spacer(Modifier.width(6.dp))
-        if (iconStyle) {
-            BatteryGlyph(device.level, accent, showLevel = true)
-        } else {
-            BatteryRing(device.level, accent, showLevel = true)
-        }
     }
 }
 
