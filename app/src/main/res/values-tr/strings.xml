@@ -14,7 +14,7 @@
     <string name="screen_off_widget_label">Boş ekran kapatma widget\'ı</string>
     <string name="app_freezing_tile_label">Uygulama Dondurma</string>
     <string name="flashlight_pulse_tile_label">El Feneri Darbesi</string>
-    <string name="check_pre_releases_label">Ön sürümleri kontrol edin</string>
+    <string name="check_pre_releases_label">Ön sürümleri kontrol et</string>
     <string name="check_pre_releases_desc">Kararsız olabilir</string>
     <string name="label_default_tab">Varsayılan sekme</string>
     <!-- App Lock -->
@@ -280,7 +280,7 @@
     <string name="search_disable_qs_locked_title">Kilitlenince QS\'i devre dışı bırak</string>
     <string name="search_disable_qs_locked_desc">Cihaz kilitliyken Hızlı Ayarlar\'ın açılmasını engelleyin</string>
     <!-- Sound Mode -->
-    <string name="sound_mode_reorder_title">Modları yeniden sıralama</string>
+    <string name="sound_mode_reorder_title">Modları yeniden sırala</string>
     <string name="sound_mode_long_press_hint">Geçiş yapmak için uzun basın</string>
     <string name="content_desc_drag_reorder">Yeniden sıralamak için sürükleyin</string>
     <string name="sound_mode_sound">Ses</string>
@@ -375,7 +375,7 @@
     <string name="search_privacy_chip_desc">Kamera veya mikrofon kullanımdayken göstergeyi göster</string>
     <string name="search_desc_toggle_visibility">Şunun için görünürlüğü değiştir: %1$s</string>
     <string name="action_pin">Favorilere Sabitle</string>
-    <string name="action_unpin">Favorilerden sabitlemeyi kaldır</string>
+    <string name="action_unpin">Favorilerden kaldır</string>
     <!-- Extraction Batch 1 -->
     <!-- Categories -->
     <string name="cat_tools">Aletler</string>
@@ -635,7 +635,7 @@
     <string name="label_installed_app">Yüklü uygulama</string>
     <string name="label_not_installed">Yüklenmedi</string>
     <string name="action_pick_app">Uygulama seç</string>
-    <string name="action_select_app">Uygulamayı seçin</string>
+    <string name="action_select_app">Uygulama seçin</string>
     <string name="action_untrack">Takibi kaldır</string>
     <string name="label_pending">Askıda</string>
     <string name="label_up_to_date">Güncel</string>
@@ -657,7 +657,7 @@
     <string name="tile_maps_power_saving">Haritalar Güç Tasarrufu</string>
     <string name="action_search">Ara</string>
     <string name="action_stop">Durmak</string>
-    <string name="label_search">Aramak</string>
+    <string name="label_search">Ara</string>
     <string name="search_frozen_apps_placeholder">Dondurulmuş uygulamaları ara</string>
     <!-- UI Components General -->
     <string name="action_back">Geri</string>
@@ -830,7 +830,7 @@ Bu özelliği etkinleştirmek için güvenli ayarlar yazma izni, zorla kapatma s
     <string name="diy_select_action">Eylem Seçin</string>
     <string name="diy_in_action_label">Eylemde</string>
     <string name="diy_out_action_label">Çıkış Eylemi</string>
-    <string name="action_cancel">İptal et</string>
+    <string name="action_cancel">İptal</string>
     <string name="action_save">Kaydet</string>
     <string name="action_edit">Düzenle</string>
     <string name="action_delete">Sil</string>
@@ -1055,13 +1055,13 @@ Bu özelliği etkinleştirmek için güvenli ayarlar yazma izni, zorla kapatma s
     <string name="status_up_to_date">Güncelsiniz</string>
     <string name="warning_pre_release">Bu, yayın öncesi bir sürümdür ve kararsız olabilir.</string>
     <string name="release_notes_format">Sürüm Notları %1$s</string>
-    <string name="action_view_on_github">GitHub\'da görüntüle</string>
+    <string name="action_view_on_github">GitHub\'ta görüntüle</string>
     <string name="action_download_apk">APK\'yi indir</string>
     <!-- Haptic Types -->
     <string name="haptic_none">Hiçbiri</string>
     <string name="haptic_subtle">Hemen göze çarpmayan</string>
     <string name="haptic_double">Çift</string>
-    <string name="haptic_click">Tıklamak</string>
+    <string name="haptic_click">Tık</string>
     <string name="haptic_tick">Tik</string>
     <!-- Flashlight Intensity Overlay -->
     <string name="action_turn_off">Kapamak</string>
@@ -1099,7 +1099,7 @@ Bu özelliği etkinleştirmek için güvenli ayarlar yazma izni, zorla kapatma s
     <string name="instruction_section_maps_title">Haritalar güç tasarrufu modu</string>
     <string name="instruction_section_maps_desc">Bu özellik, şu anda Pixel 10 serisine özel olan Google Haritalar güç tasarrufu modunu otomatik olarak tetikler. Bir topluluk üyesi, haritaların minMode etkinliğini kök ayrıcalıklarıyla başlatarak herhangi bir Android cihazda hala kullanılabilir olduğunu keşfetti. \n\nVe ardından, bir gezinme oturumu sırasında ekran kapandığında otomatik olarak tetiklenecek şekilde Tasker ile otomatik hale getirdim ve ardından sadece çalışma zamanı Shizuku izinleriyle aynı şeyi başarabildim. \n\nBu özellik, Pixel 10 serisinin AOD\'sinde gösterilmek üzere tasarlanmıştır; bu nedenle, zaman zaman ekranda yatay modu desteklemediğine dair bir mesaj belirebilir.
  Bu, uygulama tarafından önlenemez ve göz ardı edebilirsiniz.</string>
-    <string name="instruction_section_freeze_title">Dondurmak nedir?</string>
+    <string name="instruction_section_freeze_title">Dondur nedir?</string>
     <string name="instruction_section_freeze_desc">Uygulamaları duraklatın ve dikkatinizi dağıtacak şeylerden uzak durun, aynı zamanda arka planda çalışan uygulamaları önleyerek biraz güç tasarrufu yapın. Nadiren kullanılan uygulamalar için uygundur. \n\nSiz dondurmayı çözmediğiniz sürece acil bir durumda sizi bilgilendirmeyecekleri için herhangi bir iletişim hizmeti için önerilmez. \n\nSistem kararsızlığına yol açabileceğinden sistem uygulamalarını dondurmamanız önemle tavsiye edilir. Dikkatli ilerleyin, Uyarıldınız. \n\nDolu\'dan İlham Alındı ​​&lt;3</string>
     <string name="instruction_section_security_title">Uygulama kilidi ve ekran kilitli güvenlik gerçekten güvenli midir?</string>
     <string name="instruction_section_security_desc">Kesinlikle hayır. \n\nHerhangi bir 3. parti uygulama, normal cihaz etkileşimlerine %%100 müdahale edemez ve hatta uygulama kilidi bile, onlarla etkileşimi önlemek için yalnızca seçilen uygulamaların üzerinde bir kaplamadır. Geçici çözümler var ve kusursuz değil. \n\nAynı şey, herhangi bir nedenle Pixels\'teki herkes için hala erişilebilir olan ağ döşemeleriyle etkileşime girmeye çalışan birini algılayan ekran kilitli güvenlik özelliği için de geçerlidir. Yani yeterince uğraşırlarsa yine de onları değiştirebilirler ve özellikle de uçuş modu QS kutucuğu eklediyseniz, bu uygulama onunla etkileşimi engelleyemez. \n\nBu özellikler hafif kullanım için yapılan deneylerdir ve hiçbir zaman güçlü güvenlik ve gizlilik çözümleri olarak önerilmez. \n\nGüvenli alternatifler:\n - Uygulama kilidi: Pixels ve Samsung\'da Özel Alan ve Güvenli klasör\n - Mobil ağ erişimini engelleme: Hırsızlığa karşı koruma ve çevrimdışı/kapat cihazımı bul ayarlarınızın açık olduğundan emin olun. Graphene Os\'ye de bakabilirsiniz.</string>
@@ -1528,7 +1528,7 @@ Ve ayarın etkili olması için birden fazla kez uygulanması gerekebilir.</stri
     <string name="setting_swipe_tabs_desc">Ana ekranda</string>
     <string name="setting_enable_unsupported_features_title">Desteklenmeyen özellikleri etkinleştir</string>
     <string name="setting_enable_unsupported_features_desc">Varsayılan olarak gizlenmiş olan, OEM\'e özgü veya gereksiz özellikleri göster.</string>
-    <string name="settings_translated_texts">Çevrildi</string>
+    <string name="settings_translated_texts">Çevirildi</string>
     <string name="settings_translated_texts_desc">%d düzenleme beklemede — göndermek veya iptal etmek için dokunun</string>
     <string name="settings_translate_mode">Çeviri Modu</string>
     <string name="settings_translate_mode_desc">Çeviri yapmak ve topluluğa katkıda bulunmak için herhangi bir metne uzun basın</string>
@@ -1830,7 +1830,7 @@ Yığın, bir zamanlayıcıyla bir sonraki widget\'a geçer veya altındaki okla
     <string name="feat_hilight_progress_desc">LED\'ler üzerinde indirme ve canlı güncelleme ilerlemesini göster</string>
     <string name="feat_hilight_notifications_title">Bildirim efektleri</string>
     <string name="hilight_notifications_desc">Her uygulamadan bildirim geldiğinde kendine özgü efektini oynatın</string>
-    <string name="lockscreen_shortcuts_enable_title">Kilit ekranı kısayollarını etkinleştirin</string>
+    <string name="lockscreen_shortcuts_enable_title">Kilit ekranı kısayollarını etkinleştir</string>
     <string name="duo_action_swipe_down_title">Aşağı kaydırma</string>
     <string name="duo_action_horizontal_slide_title">Yatay kaydırma</string>
     <string name="face_unlock_trigger_unlock_title">Kilit açmayı tetikle</string>
@@ -2089,10 +2089,76 @@ Bazı seçenekler Shizuku veya erişilebilirlik izni gerektirir ve sonuçlar cih
     <string name="island_backdrop_blur_available_title">Blur is reported as supported on this device</string>
     <string name="island_backdrop_blur_available_note">It may still not work on some devices. Battery Saver, system settings such as \"Disable window blurs\" in Developer options, and manufacturer limits can turn window blur off at any time.</string>
     <string name="island_backdrop_blur_radius_title">Blur amount</string>
-    <string name="what_is_this">What is this?</string>
+    <string name="what_is_this">Bu nedir?</string>
     <string name="label_feature_designed_by">Designed by</string>
     <string name="label_how_to_use">How to use</string>
     <string name="shut_up_how_to_use">1. Grant Write secure settings and Usage access from the permissions prompt. Shizuku is needed for freezing apps.\n\n2. Tap Select Apps and pick the apps that refuse to run with developer options, debugging or accessibility turned on, such as banking or payment apps.\n\n3. Tap an app to choose what gets hidden for it: Developer Options, USB Debugging, Wireless Debugging and Accessibility Services. You can also turn on Auto Freeze to freeze the app after you leave it, and Restore keyboard to switch back to your keyboard afterwards.\n\n4. Tap Create shortcut for each app and add it to your home screen. Always open the app from this shortcut, never from its normal icon, so the settings are turned off before the app starts and can check them.\n\n5. When you leave the app, Shut-Up! waits for the Restoration Delay and then shows a notification. Tap it to turn everything back on. Set Restore mode to Auto if you would rather have the settings restored on their own.\n\nTips: if wireless debugging was turned off, Shizuku may stop working, so enable Attempt Shizuku restart. Use the Keyboard option to pick the keyboard to restore, or leave it on Skip. With Auto Freeze, a notification counts down and lets you freeze now or abort.</string>
     <string name="island_padding_around_title">Padding around</string>
     <string name="island_notif_lock_hidden_title">Hidden</string>
+    <string name="label_developer_options">Geliştirici Seçenekleri</string>
+    <string name="auto_backup_title">Otomatik yedekleme yapılandırmaları</string>
+    <string name="action_licenses_and_credits">Lisanslar</string>
+    <string name="label_top_contributors">En Çok Katkıda Bulunanlar, Teşekkürler!</string>
+    <string name="subreddit_description">Essentials ve benim geliştirdiğim diğer uygulamalar hakkında konuşabileceğimiz bir yer. Topluluğa katılın, projelere katkıda bulunun, yardım alın ve bir iki şey öğrenin. ( ´ ▽ ` )ﾉ</string>
+    <string name="translation_logged_in_as">%1$s olarak giriş yapıldı</string>
+    <string name="setting_privileged_mode_title">Ayrıcalıklı erişim</string>
+    <string name="settings_permissions_all">Tüm izinler</string>
+    <string name="privileged_mode_auto">Otomatik</string>
+    <string name="btn_export_config">Yapılandırmayı dışa aktar</string>
+    <string name="btn_import_config">Yapılandırmayı içe aktar</string>
+    <string name="settings_translations_section">Çeviriler</string>
+    <string name="settings_section_more">Daha fazla</string>
+    <string name="settings_section_permissions">İzinler</string>
+    <string name="settings_section_customizations">Özelleştirmeler</string>
+    <string name="label_notify_new_updates">Yeni güncellemeler için bildirim al</string>
+    <string name="diy_no_automations">Henüz otomasyon yok</string>
+    <string name="action_backup_app_list">Uygulamala listesini yedekle</string>
+    <string name="freeze_tags_section_title">Etiketler</string>
+    <string name="freeze_tags_empty">Henüz etiket oluşturulmadı</string>
+    <string name="widget_stack_add_to_home">Ana ekrana bir yığın ekle</string>
+    <string name="widget_stack_add_to_home_desc">Ardından içine yerleştirmeniz gereken widget\'ları seçin</string>
+    <string name="screen_off_method_accessibility">Erişilebilirlik</string>
+    <string name="screen_off_method_input">Girdi</string>
+    <string name="keyboard_user_dictionary_title">Kullanıcı Sözlüğü (Kelime öğrenin)</string>
+    <string name="action_view_all">Tümünü görüntüle</string>
+    <string name="label_restore_mode">Geri yükleme modu</string>
+    <string name="label_haptics_title">Dokunsal geri bildirim</string>
+    <string name="setting_hidden_debugging_auto_title">Otomatik algıla</string>
+    <string name="setting_hidden_debugging_auto_help">Geliştirici seçeneklerinin ve USB hata ayıklamasının etkinleştirildiğinden emin olun</string>
+    <string name="btn_clear_search_history">Arama geçmişini temizle</string>
+    <string name="btn_reset_update_note">Güncelleme notunu sıfırla</string>
+    <string name="btn_grant_all_permissions">Tüm izinleri ver</string>
+    <string name="btn_reset_onboarding">Yeni kullanıcı sürecini sıfırla</string>
+    <string name="haptic_mode_stronger">Daha güçlü</string>
+    <string name="wallpaper_view_photo">Fotoğrafı Görüntüle</string>
+    <string name="feat_wallpaper_staging_title">Sonraki Duvar Kağıdı</string>
+    <string name="wallpaper_view_collection">Sameera\'nın Koleksiyonuna Göz At</string>
+    <string name="wallpaper_current_photo_credits">Güncel Fotoğraf Kaynağı</string>
+    <string name="label_wallpaper_apply">Duvar Kağıdını Uygula</string>
+    <string name="label_wallpaper_auto_update">Otomatik güncelleme</string>
+    <string name="wallpaper_home_screen">Ana Ekran</string>
+    <string name="wallpaper_lock_screen">Kilit Ekranı</string>
+    <string name="qs_tiles_long_press_info">Bir kutucuğa uzun süre basarak ne işe yaradığını görebilirsiniz</string>
+    <string name="qs_tiles_widget_name">Favori Kutucuklar</string>
+    <string name="qs_tiles_long_press_add">Eklemek için kutucuklara uzun basın</string>
+    <string name="qs_tiles_widget_empty_state">Henüz favori kutucuk kaydedilmedi. Henüz hiçbir kutucuk kaydedilmedi. Bazılarını kaydetmek için basılı tutun!!</string>
+    <string name="screen_off_method_title">Ekranı Kapatma Yöntemi</string>
+    <string name="diy_category_connectivity">Bağlantı &amp; Ağ</string>
+    <string name="diy_category_display">Ekran &amp; Görüntüleme</string>
+    <string name="diy_category_sound_media">Ses &amp; Medya</string>
+    <string name="diy_category_essentials">Essentials Ayarları</string>
+    <string name="island_camera_position_right">Sağ</string>
+    <string name="island_camera_position_left">Sol</string>
+    <string name="shorten_copy_link">Kopyala</string>
+    <string name="action_preview_web">Ön izle</string>
+    <string name="qr_code_title">QR Kod</string>
+    <string name="label_share_with">Paylaş</string>
+    <string name="action_reset_battery_saver">Varsayılan ayarlara sıfırla</string>
+    <string name="crash_logs_title">Çökme kayıtları</string>
+    <string name="bug_report_source_feature">Özellik: %1$s</string>
+    <string name="watermark_border">Çerçeve</string>
+    <string name="bug_report_view_existing_pr">Mevcut PR\'ı görüntüle</string>
+    <string name="diy_discard_warning_title">Değişiklikler silinsin mi?</string>
+    <string name="diy_discard_warning_desc">Kaydedilmemiş değişiklikleriniz var. Kaydetmeden çıkmak istediğinizden emin misiniz?</string>
+    <string name="translation_discard">Sil</string>
 </resources>
