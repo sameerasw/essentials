@@ -65,7 +65,7 @@
     <string name="like_song_toast_enabled">Mostrar mensagem de brinde</string>
     <string name="like_song_aod_overlay_title">Mostrar sobreposição no AOD</string>
     <string name="feat_essentials_on_display_title">Essentials em Exibição no AOD</string>
-    <string name="feat_essentials_on_display_desc">Visualize mídias e informações no AOD</string>
+    <string name="feat_essentials_on_display_desc">Visualize mídias e informações no Always On Display</string>
     <string name="essentials_on_display_docked_mode_title">Modo acoplado (carregando)</string>
     <string name="essentials_on_display_docked_mode_desc">Mantenha a sobreposição visível indefinidamente enquanto a música estiver tocando no AOD.</string>
     <string name="essentials_on_display_respect_notifications_title">respeitar novas notificações </string>
@@ -439,7 +439,7 @@
     <string name="feat_freeze_desc">Desative aplicativos raramente usados</string>
     <string name="feat_watermark_title">Marca d\'água</string>
     <string name="feat_watermark_desc">Adicione dados EXIF ​​e logotipos às fotos</string>
-    <string name="feat_always_on_display_title">Sempre em exibição (AOD)</string>
+    <string name="feat_always_on_display_title">Sempre em exibição</string>
     <string name="feat_always_on_display_desc">Mostrar hora e informações enquanto a tela está desligada</string>
     <string name="feat_calendar_sync_title">Sincronização de calendário</string>
     <string name="feat_calendar_sync_desc">Sincronize o calendário do seu telefone com o seu relógio</string>
@@ -1212,7 +1212,7 @@
     <string name="action_refresh">Atualizar</string>
     <!-- Added Missing Group Strings -->
     <string name="feat_sound_modes_title">Bloco de modo de som</string>
-    <string name="feat_sound_modes_desc">Bloco de configurações rápidas para alternar o modo de som</string>
+    <string name="feat_sound_modes_desc">Bloco QS para alternar o modo de som</string>
     <string name="search_sound_mode_show_slider_title">Mostrar controle deslizante</string>
     <string name="search_sound_mode_show_slider_desc">Mostrar controle deslizante de volume no bloco</string>
     <string name="search_sound_mode_behavior_title">Comportamento do Ciclo</string>
@@ -1220,14 +1220,14 @@
     <string name="feat_sound_haptics_title">Som e sensação tátil</string>
     <string name="feat_sound_haptics_desc">Volume e recursos táteis</string>
     <string name="feat_security_privacy_title">Segurança e privacidade</string>
-    <string name="feat_security_privacy_desc">Proteja  seu dispositivo</string>
+    <string name="feat_security_privacy_desc">Proteja e proteja seu dispositivo</string>
     <string name="feat_notifications_alerts_title">Notificações e Alertas</string>
     <string name="feat_notifications_alerts_desc">Nunca perca suas prioridades</string>
     <string name="feat_input_actions_title">Entrada e ações</string>
     <string name="feat_input_actions_desc">Controle seu dispositivo com facilidade</string>
     <string name="feat_widgets_title">Widgets</string>
-    <string name="feat_widgets_desc">Visíveis na tela inicial</string>
-    <string name="feat_display_visuals_title">Tela</string>
+    <string name="feat_widgets_desc">De relance na tela inicial</string>
+    <string name="feat_display_visuals_title">Mostrar</string>
     <string name="feat_display_visuals_desc">Recursos visuais para aprimorar sua experiência</string>
     <string name="feat_watch_title">Relógio</string>
     <string name="feat_watch_desc">Integrações com WearOS</string>
@@ -1451,8 +1451,8 @@
     <string name="whats_new_specs_desc">Inaccurate GSMArena-powered specifications have been removed to keep device insights clean, fast, and completely reliable.</string>
     <string name="whats_new_apps_title">App Updates Migrated</string>
     <string name="whats_new_apps_desc">The Apps tab is now fully integrated into the Your Android feature, making it easier to manage all your app updates in one cohesive hub.</string>
-    <string name="feat_daily_wallpaper_title">Papel de parede</string>
-    <string name="feat_daily_wallpaper_desc">Papéis de parede cuidadosamente selecionados diariamente</string>
+    <string name="feat_daily_wallpaper_title">Papéis de parede</string>
+    <string name="feat_daily_wallpaper_desc">Papéis de parede selecionados diariamente</string>
     <string name="feat_watch_controls_title">Personalizar</string>
     <string name="feat_watch_controls_desc">Personalize os controles do app WearOS</string>
     <string name="feat_watch_wireless_debugging_title">Depuração sem fio</string>
@@ -1466,7 +1466,7 @@
     <string name="feat_pixel_searchbar_title">Barra de pesquisa do Pixel</string>
     <string name="feat_pixel_searchbar_desc">Defina o Essentials como o provedor de pesquisa padrão para a barra de pesquisa da tela inicial no Pixel Launcher.</string>
     <string name="feat_power_battery_title">Energia e bateria</string>
-    <string name="feat_power_battery_desc">Configure o modo de economia de energia</string>
+    <string name="feat_power_battery_desc">Configure as políticas de economia de energia</string>
     <string name="feat_flashlight_title">Lanterna</string>
     <string name="feat_flashlight_desc">Brightness, fading and safety controls</string>
     <string name="feat_notification_snoozing_title">Adiar notificações</string>
@@ -1535,8 +1535,8 @@
     <string name="duo_action_horizontal_slide_track_desc">Ativo somente enquanto a mídia estiver sendo reproduzida.</string>
     <string name="cat_navigation">navegação</string>
     <string name="island_timeout_title">duração na tela</string>
-    <string name="island_show_glow_title">Expanded accent glow</string>
-    <string name="island_glow_intensity_title">Glow intensity</string>
+    <string name="island_show_glow_title">Brilho de acento expandido</string>
+    <string name="island_glow_intensity_title">intensidade do brilho</string>
     <string name="island_glow_size_title">Glow size</string>
     <string name="island_glow_rim_title">Rim light</string>
     <string name="island_expanded_dark_theme_warning">Expanded dark theme is on. If the island text or colors look wrong, filter Essentials out of it in Display settings.</string>
@@ -1579,7 +1579,7 @@
     <string name="duo_action_swipe_down_title">deslizar para baixl</string>
     <string name="island_notif_queue_title">Fila de notificações</string>
     <string name="island_notif_keep_progress_title">manter processo de notificações</string>
-    <string name="island_live_updates_title">Live updates</string>
+    <string name="island_live_updates_title">atualizações em tempo real</string>
     <string name="island_live_updates_count_title">Live updates count</string>
     <string name="island_live_updates_expanded_title">Expanded live update</string>
     <string name="island_secondary_bubbles_count_title">Secondary bubbles count</string>
@@ -1635,9 +1635,9 @@
     <string name="label_battery_avg_remaining">Tempo médio restante</string>
     <string name="island_section_placement">posicionamento </string>
     <string name="island_section_visuals">Visual</string>
-    <string name="island_section_duration">Timing</string>
+    <string name="island_section_duration">tempo </string>
     <string name="island_section_behavior">Comportamento</string>
-    <string name="island_section_interactions">Interactions</string>
+    <string name="island_section_interactions">Interações</string>
     <string name="island_section_gestures">Gestures</string>
     <string name="island_section_expanded">Expanded island</string>
     <string name="island_section_landscape">Landscape</string>
@@ -1809,9 +1809,9 @@ adicionar algum app</string>
     <string name="about_desc_call_sync">Sync call status between your phone and your watch.\n\nThis is only used for the launcher and is not a full call handler.</string>
     <string name="about_desc_mono_audio_tile">Quick Settings tile to toggle mono audio.\n\nMono audio plays the same sound in both ears, which helps when using a single earbud or if you have hearing difficulty in one ear.</string>
     <string name="about_desc_back_gesture">Fine tune the system back gesture.\n\nAdjust the edge widths for the left and right gesture areas and set up per-app back gesture behavior. Requires secure settings permission.</string>
-    <string name="island_chips_title">Island chips</string>
+    <string name="island_chips_title">Chips da ilha</string>
     <string name="island_calendar_compact_time_title">Compact time</string>
-    <string name="feat_aod_wallpaper_compat_title">Compatibility mode</string>
+    <string name="feat_aod_wallpaper_compat_title">modo compartivel</string>
     <string name="feat_aod_wallpaper_compat_info_why">Some devices, especially on One UI, pause app animations while the always-on display is showing and skip drawing app windows. This can leave the AOD wallpaper half transparent or invisible, or stuck on screen after waking the device.</string>
     <string name="feat_aod_wallpaper_compat_info_what">Compatibility mode turns off the fade animations of the wallpaper. The wallpaper appears at full strength right away, disappears instantly when the screen wakes, and image changes are applied without a crossfade. Turn it on only if the wallpaper looks faded, never shows, or stays after waking.</string>
     <string name="feat_circle_to_search_gesture_hide_on_shade">Disable on statusbar expansion</string>
@@ -1828,9 +1828,9 @@ adicionar algum app</string>
     <string name="island_keep_on_landscape_title">manter no modo paisagem</string>
     <string name="island_secondary_bubble_title">bolha segundaria</string>
     <string name="island_balance_compact_title">visual balanceado para um ilha compacto</string>
-    <string name="island_neural_expressive_title">Neural Expressive expanded animations</string>
+    <string name="island_neural_expressive_title">Animações expandidas Neurais Expressivas</string>
     <string name="island_neural_expressive_always_title">Always show on expansion</string>
-    <string name="island_statusbar_aware_width_title">Statusbar aware width</string>
+    <string name="island_statusbar_aware_width_title">Largura ciente da barra de status</string>
     <string name="duo_auto_detect_title">detectar automaticamente a câmera </string>
     <string name="duo_auto_detect_desc">localizar automaticamente o corte da câmera frontal</string>
     <string name="duo_match_island_colors_title">Match island colors</string>
@@ -1844,7 +1844,7 @@ adicionar algum app</string>
     <string name="island_hide_status_bar_title">esconder barra de status</string>
     <string name="island_media_use_art_color_title">Use album art color</string>
     <string name="island_media_player_style_title">Player style</string>
-    <string name="debug_ui_margin_overlay_title">Debug UI margin overlay</string>
+    <string name="debug_ui_margin_overlay_title">Depurar sobreposição de margem de interface do usuário</string>
     <string name="island_statusbar_ignore_notifications_title">Ignore notifications</string>
     <string name="island_statusbar_aware_width_info">This may not work on all devices. It works best on Pixels and devices with a status bar close to AOSP.</string>
     <string name="island_statusbar_aware_width_info_tip">Even on those devices, try reducing the number of visible status bar icons to give the island more space.</string>
@@ -1854,11 +1854,13 @@ adicionar algum app</string>
     <string name="island_media_bubble_title">Show as a bubble</string>
     <string name="island_media_bubble_wide_title">Wider pill</string>
     <string name="island_media_bubble_fill_art_title">Fill album art</string>
-    <string name="island_transparency_title">Island transparency</string>
-    <string name="island_transparency_intensity_title">Transparency intensity</string>
+    <string name="island_transparency_title">
+ilha transparente </string>
+    <string name="island_transparency_intensity_title">
+intensidade da transparência </string>
     <string name="island_backdrop_blur_title">Backdrop blur</string>
     <string name="island_backdrop_blur_unavailable_os">Backdrop blur needs Android 12 or newer. This device runs an older version, so the system can\'t blur what is behind the island.</string>
-    <string name="island_backdrop_blur_unavailable_disabled">Your system currently has window blur turned off. This usually happens when Battery Saver is on, when \"Disable window blurs\" is enabled in Developer options, or when the device doesn\'t support it. This option unlocks automatically once window blur is back on.</string>
+    <string name="island_backdrop_blur_unavailable_disabled">Seu sistema atualmente tem o desfoque da janela desligado. Isso geralmente acontece quando o Battery Saver está ativado, quando \"Desativar os desfos da janela\" está ativado nas opções do desenvolvedor ou quando o dispositivo não suporta. Esta opção é desbloqueada automaticamente uma vez que o desfoque da janela está de volta.</string>
     <string name="island_backdrop_blur_unavailable_api">This device\'s system doesn\'t expose the blur feature the island needs for backdrop blur, so it can\'t be enabled here.</string>
     <string name="island_backdrop_blur_available_title">Blur is reported as supported on this device</string>
     <string name="island_backdrop_blur_available_note">It may still not work on some devices. Battery Saver, system settings such as \"Disable window blurs\" in Developer options, and manufacturer limits can turn window blur off at any time.</string>
@@ -1870,4 +1872,10 @@ adicionar algum app</string>
     <string name="widget_stack_interval_seconds">Notifique-nos sobre novas atualizações. </string>
     <string name="island_notif_lock_hidden_title">Hidden</string>
     <string name="text_snippets_how_to_use">1. Turn on Text Snippets and grant the Accessibility permission so shortcuts can expand in any app.\n\n2. Pick a Trigger Prefix: ; : @@ or a space.\n\n3. Tap the + button to add a snippet. Enter a keyword without spaces and the text it should expand into.\n\n4. Type the prefix followed by the keyword, for example ;brb, to expand it. With the space prefix, type the keyword and press space.\n\nTips: keywords only expand at the start of a word, so URLs and times are left alone. Password fields are always ignored. Some apps do not allow text replacement and will not expand snippets.</string>
+    <string name="duo_show_battery_percentage_title">porcentagem da bateria</string>
+    <string name="island_progressive_blur_title">Animação de desfoque progressivo</string>
+    <string name="feat_aod_wallpaper_use_album_art">use a arte do album</string>
+    <string name="feat_aod_wallpaper_share_lock">Compartilhar com papel de parede de tela de bloqueio</string>
+    <string name="label_notify_new_updates">Notifique para novas atualizações</string>
+    <string name="settings_section_customizations">customizações </string>
 </resources>
