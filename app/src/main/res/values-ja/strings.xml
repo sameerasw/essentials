@@ -2,7 +2,7 @@
 <resources>
     <string name="label_customization">カスタマイズ</string>
     <string name="label_beta">ベータ</string>
-    <string name="shut_up_attempt_shizuku_restart">Attempt Shizuku restart</string>
+    <string name="shut_up_attempt_shizuku_restart">Shizukuを再起動する</string>
     <string name="shut_up_shizuku_restart_warning_title">Shizuku Restart Warning</string>
     <string name="shut_up_shizuku_restart_warning_message">Since wireless debugging was toggled, Shizuku services might not have started automatically causing freezing to not function. Consider turning on attempt shizuku restart as well</string>
     <string name="accessibility_service_description"><b>Essentials アクセシビリティサービス</b>\n\nこのサービスは、以下の高度な機能に必要です。\n\n<b>・物理ボタンの再マッピング：</b>\n画面がオフの場合でも音量ボタンの押下を検出し、懐中電灯などのアクションを実行します。\n\n<b>・アプリごとの設定：</b>\n現在アクティブなアプリを監視し、ダイナミックナイトモード、通知ライトの色、アプリロックの特定のプロファイルを適用します。\n\n<b>・画面制御：</b>\nアプリが画面をロック（ダブルタップやウィジェット経由など）し、画面の状態の変化を検出できるようにします。\n\n<b>・セキュリティ：</b>\nデバイスがロックされているときにウィンドウの内容を検出することで、不正な変更を防ぎます。\n\n<small>入力テキストや機密性の高いユーザーデータは収集または送信されません。</small></string>
@@ -1211,7 +1211,7 @@ Wi-Fi、Bluetooth、モバイルデータなどの個々のアイコンを非表
     <string name="label_release_notes">リリースノート</string>
     <string name="msg_no_repos_tracked">追跡しているレポジトリはありません</string>
     <string name="label_no_app_linked">未リンクアプリ</string>
-    <string name="format_updated_relative">%1$s更新済み</string>
+    <string name="format_updated_relative">%1$s 更新済み</string>
     <!-- Relative Time -->
     <string name="time_just_now">たった今</string>
     <string name="today">今日</string>
@@ -2538,4 +2538,15 @@ Android がバッテリーセーバーモードを有効にすると、これら
     <string name="setting_hidden_debugging_auto_help">開発者向けオプションとUSBデバッグが有効になっていることを確認してください</string>
     <string name="external_control_token_title">外部制御トークン</string>
     <string name="translation_logged_in_as">%1$s でログイン中</string>
+    <string name="bug_report_view_existing_pr">既存のPull Requestsを見る</string>
+    <string name="pixel_searchbar_date_format">日付のフォーマット</string>
+    <string name="button_remap_double_press">2回押し</string>
+    <string name="button_remap_power_camera_flip_title">2回押しでカメラを反転する</string>
+    <string name="button_remap_power_camera_flip_desc">ダブルクリックでカメラが開きます。カメラアプリが開いている間は、ダブルクリックで前面カメラと背面カメラが切り替わります。「%1$s」が必要です。すべてのカメラアプリで動作するとは限りません。</string>
+    <string name="button_remap_press_and_hold">長押し</string>
+    <string name="activity_picker_search">アクティビティを検索</string>
+    <string name="activity_picker_title">アクティビティを選択</string>
+    <string name="activity_picker_root_only">Root のみ</string>
+    <string name="sim_names_carrier_label">キャリア名</string>
+    <string name="shut_up_restore_keyboard">キーボードを復元</string>
 </resources>
