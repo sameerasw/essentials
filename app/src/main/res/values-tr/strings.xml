@@ -2119,7 +2119,7 @@ Bazı seçenekler Shizuku veya erişilebilirlik izni gerektirir ve sonuçlar cih
     <string name="settings_section_more">Dahası</string>
     <string name="settings_section_permissions">İzinler</string>
     <string name="settings_section_customizations">Özelleştirmeler</string>
-    <string name="label_notify_new_updates">Yeni güncellemeler için bildirim al</string>
+    <string name="label_notify_new_updates">Güncellemeleri bildir</string>
     <string name="diy_no_automations">Henüz otomasyon yok</string>
     <string name="action_backup_app_list">Uygulamala listesini yedekle</string>
     <string name="freeze_tags_section_title">Etiketler</string>
