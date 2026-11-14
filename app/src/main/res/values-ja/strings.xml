@@ -2558,4 +2558,10 @@ Android がバッテリーセーバーモードを有効にすると、これら
     <string name="activity_picker_root_only">Root のみ</string>
     <string name="sim_names_carrier_label">キャリア名</string>
     <string name="shut_up_restore_keyboard">キーボードを復元</string>
+    <string name="label_charging_mode_title">充電モード</string>
+    <string name="charge_opt_long_press_title">オプションを選択</string>
+    <string name="charge_opt_long_press_desc">クイック設定タイルをタップしたときに切り替える充電モードを選択します。</string>
+    <string name="label_reset_battery_stats_title">バッテリー統計をリセット</string>
+    <string name="action_reset_battery_stats">統計をリセット</string>
+    <string name="label_reset_battery_stats_desc">システムのバッテリー統計をリセットします (dumpsys batterystats --reset)。これにより、過去のバッテリー使用状況とアプリの消費データがクリアされ、現在の充電状態から新たに追跡が開始されます。</string>
 </resources>
