@@ -375,7 +375,7 @@
     <string name="search_privacy_chip_desc">Kamera veya mikrofon kullanımdayken göstergeyi göster</string>
     <string name="search_desc_toggle_visibility">Şunun için görünürlüğü değiştir: %1$s</string>
     <string name="action_pin">Favorilere Sabitle</string>
-    <string name="action_unpin">Favorilerden sabitlemeyi kaldır</string>
+    <string name="action_unpin">Favorilerden kaldır</string>
     <!-- Extraction Batch 1 -->
     <!-- Categories -->
     <string name="cat_tools">Aletler</string>
