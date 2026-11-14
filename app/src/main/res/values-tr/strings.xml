@@ -1528,7 +1528,7 @@ Ve ayarın etkili olması için birden fazla kez uygulanması gerekebilir.</stri
     <string name="setting_swipe_tabs_desc">Ana ekranda</string>
     <string name="setting_enable_unsupported_features_title">Desteklenmeyen özellikleri etkinleştir</string>
     <string name="setting_enable_unsupported_features_desc">Varsayılan olarak gizlenmiş olan, OEM\'e özgü veya gereksiz özellikleri göster.</string>
-    <string name="settings_translated_texts">Çevrildi</string>
+    <string name="settings_translated_texts">Çevirildi</string>
     <string name="settings_translated_texts_desc">%d düzenleme beklemede — göndermek veya iptal etmek için dokunun</string>
     <string name="settings_translate_mode">Çeviri Modu</string>
     <string name="settings_translate_mode_desc">Çeviri yapmak ve topluluğa katkıda bulunmak için herhangi bir metne uzun basın</string>
@@ -2157,4 +2157,5 @@ Bazı seçenekler Shizuku veya erişilebilirlik izni gerektirir ve sonuçlar cih
     <string name="crash_logs_title">Çökme kayıtları</string>
     <string name="bug_report_source_feature">Özellik: %1$s</string>
     <string name="watermark_border">Çerçeve</string>
+    <string name="bug_report_view_existing_pr">Mevcut PR\'ı görüntüle</string>
 </resources>
