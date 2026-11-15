@@ -2097,7 +2097,7 @@ Bazı seçenekler Shizuku veya erişilebilirlik izni gerektirir ve sonuçlar cih
     <string name="island_backdrop_blur_available_title">Blur is reported as supported on this device</string>
     <string name="island_backdrop_blur_available_note">It may still not work on some devices. Battery Saver, system settings such as \"Disable window blurs\" in Developer options, and manufacturer limits can turn window blur off at any time.</string>
     <string name="island_backdrop_blur_radius_title">Blur amount</string>
-    <string name="what_is_this">What is this?</string>
+    <string name="what_is_this">Bu nedir?</string>
     <string name="label_feature_designed_by">Designed by</string>
     <string name="label_how_to_use">How to use</string>
     <string name="shut_up_how_to_use">1. Grant Write secure settings and Usage access from the permissions prompt. Shizuku is needed for freezing apps.\n\n2. Tap Select Apps and pick the apps that refuse to run with developer options, debugging or accessibility turned on, such as banking or payment apps.\n\n3. Tap an app to choose what gets hidden for it: Developer Options, USB Debugging, Wireless Debugging and Accessibility Services. You can also turn on Auto Freeze to freeze the app after you leave it, and Restore keyboard to switch back to your keyboard afterwards.\n\n4. Tap Create shortcut for each app and add it to your home screen. Always open the app from this shortcut, never from its normal icon, so the settings are turned off before the app starts and can check them.\n\n5. When you leave the app, Shut-Up! waits for the Restoration Delay and then shows a notification. Tap it to turn everything back on. Set Restore mode to Auto if you would rather have the settings restored on their own.\n\nTips: if wireless debugging was turned off, Shizuku may stop working, so enable Attempt Shizuku restart. Use the Keyboard option to pick the keyboard to restore, or leave it on Skip. With Auto Freeze, a notification counts down and lets you freeze now or abort.</string>
@@ -2124,10 +2124,10 @@ Bazı seçenekler Shizuku veya erişilebilirlik izni gerektirir ve sonuçlar cih
     <string name="action_backup_app_list">Uygulamala listesini yedekle</string>
     <string name="freeze_tags_section_title">Etiketler</string>
     <string name="freeze_tags_empty">Henüz etiket oluşturulmadı</string>
-    <string name="widget_stack_add_to_home">Ana ekrana bir yığın ekle</string>
-    <string name="widget_stack_add_to_home_desc">Ardından içine yerleştirmeniz gereken widget\'ları seçin</string>
+    <string name="widget_stack_add_to_home">Ana ekrana bir widget ekleyin</string>
+    <string name="widget_stack_add_to_home_desc">Ardından içine yerleştirmeniz gereken widgetları seçin</string>
     <string name="screen_off_method_accessibility">Erişilebilirlik</string>
-    <string name="screen_off_method_input">Girdi</string>
+    <string name="screen_off_method_input">Giriş</string>
     <string name="keyboard_user_dictionary_title">Kullanıcı Sözlüğü (Kelime öğrenin)</string>
     <string name="action_view_all">Tümünü görüntüle</string>
     <string name="label_restore_mode">Geri yükleme modu</string>
@@ -2178,4 +2178,12 @@ Veya aşağıdaki düğmeyi kullanarak Shizuku üzerinden kolayca verebilirsiniz
 Bu izin için sadece şunlara ihtiyaç duyulmaktadır: </string>
     <string name="external_control_token_title">Harici kontrol belirteci</string>
     <string name="shizuku_auth_token_label">Shizuku kimlik jetonu</string>
+    <string name="feature_reset_info_title">Bu özelliği sıfırla</string>
+    <string name="feature_reset_info_desc">Bu özellik için Essentials ayarlarının tümünü varsayılan değerlerine sıfırlar. Sistem ayarları ve izinler değiştirilmez.</string>
+    <string name="cat_sync">Senkronizasyon</string>
+    <string name="duo_section_what_to_show">Ne gösterilecek</string>
+    <string name="island_providers_title">Ada uygulamaları</string>
+    <string name="duo_section_actions">Eylemler</string>
+    <string name="island_gesture_visuals_hint">Ada üzerindeki ses seviyesi, parlaklık ve ses modu değişikliklerini görmek için Zaman ve pil özelliğini açın.</string>
+    <string name="island_secondary_bubble_title">İkincil kabarcık</string>
 </resources>
