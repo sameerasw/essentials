@@ -1610,6 +1610,7 @@
     <string name="duo_show_media_title">Воспроизведение медиа</string>
     <string name="duo_show_progress_title">Индикация прогресса </string>
     <string name="duo_show_flashlight_title">Фонарик</string>
+    <string name="duo_match_island_colors_title">Match island colors</string>
     <string name="duo_material_you_title">Использовать цвета  Material You</string>
     <string name="duo_action_tap_title">Касание </string>
     <string name="feat_status_glance_title">Динамичный Статус</string>

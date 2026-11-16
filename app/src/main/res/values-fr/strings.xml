@@ -1593,6 +1593,7 @@ Réinitialiser permet d\'effacer les valeurs personnalisées et le système gér
     <string name="feat_aod_wallpaper_media_apps">Ignorer des applications de média</string>
     <string name="duo_show_progress_title">Notification de chargement</string>
     <string name="duo_show_flashlight_title">Lampe torche</string>
+    <string name="duo_match_island_colors_title">Match island colors</string>
     <string name="duo_material_you_title">Utiliser les couleurs Material You</string>
     <string name="duo_hide_when_screen_off_title">Cacher quand l\'écran est éteint</string>
     <string name="duo_hide_when_screen_off_only_idle_title">Seulement cacher quand l\'AOD est éteint</string>

@@ -1504,6 +1504,7 @@
     <string name="duo_auto_detect_title">Авто визначити камеру</string>
     <string name="duo_camera_size_title">Розмір камери</string>
     <string name="duo_ring_radius_title">Радіус кільця</string>
+    <string name="duo_match_island_colors_title">Match island colors</string>
     <string name="duo_material_you_title">Використовувати кольора Material You</string>
     <string name="feat_allow_overlays_in_settings_title">Дозволити накладання в налаштуваннях </string>
     <string name="about_desc_duo">This doesn\'t fold\n\nAn iPhone Duo style status indicator to show your battery, network, media status and more in a compact, minimal UI ideally around your camera with various items to show and gestures to interact with.\n\nFor foldable devices, Ensure to turn off \'Auto-detect camera\' option if it\'s not reliable and manually align Duo with your inside and outside camera positions and then Essentials will remember your layout.</string>

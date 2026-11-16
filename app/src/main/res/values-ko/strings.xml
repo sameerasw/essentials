@@ -1603,6 +1603,7 @@
     <string name="duo_rotate_album_art_title">앨밤 아트 자동 선택</string>
     <string name="duo_show_progress_title">진행 알림</string>
     <string name="duo_show_flashlight_title">손전등</string>
+    <string name="duo_match_island_colors_title">Match island colors</string>
     <string name="duo_material_you_title">Material You 색 사용</string>
     <string name="island_hide_on_shade_title">빠른 설정 확장 시 숨기기</string>
     <string name="duo_hide_when_locked_title">짐김 시 숨기기</string>

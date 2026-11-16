@@ -2144,6 +2144,7 @@
     <string name="island_glow_intensity_title">Glow intensity</string>
     <string name="island_glow_size_title">Glow size</string>
     <string name="island_glow_rim_title">Rim light</string>
+    <string name="duo_match_island_colors_title">Match island colors</string>
     <string name="island_expanded_dark_theme_warning">Expanded dark theme is on. If the island text or colors look wrong, filter Essentials out of it in Display settings.</string>
     <string name="island_expanded_dark_theme_action">Open display settings</string>
     <string name="settings_reset_all_hold">Hold to reset all data</string>

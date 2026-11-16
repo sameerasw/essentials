@@ -187,6 +187,10 @@ fun IslandRoot(
     fun iconFor(accent: Color?): Color =
         readableOnDark(if (targetSpec.iconDynamic) accent ?: iconBase else targetSpec.iconColorCustom ?: iconBase)
     val compactAccent = state.arrangement.visibleItems.firstNotNullOfOrNull { key -> state.items[key]?.accent }
+    if (IslandColorBridge.enabled) {
+        val bridgedColor = iconFor(state.items[state.focusedKey]?.accent ?: compactAccent)
+        LaunchedEffect(bridgedColor) { IslandColorBridge.publish(bridgedColor.toArgb()) }
+    }
     IslandRootContent(
         state, targetSpec, actions, onTargetBoundsChanged, registerCollapseAnimator, showCameraRing, cameraGeometry,
         iconTarget = iconFor(state.items[state.focusedKey]?.accent ?: compactAccent),

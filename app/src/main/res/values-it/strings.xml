@@ -1538,6 +1538,7 @@
     <string name="duo_show_media_title">Riproduzione media</string>
     <string name="duo_rotate_album_art_title">Ruota copertina album</string>
     <string name="duo_show_flashlight_title">Torcia</string>
+    <string name="duo_match_island_colors_title">Match island colors</string>
     <string name="duo_material_you_title">Usa colori Material You</string>
     <string name="island_hide_on_shade_title">Nascondi quando la barra di stato é espansa</string>
     <string name="keep_in_full_screen_title">Mantieni in modalità schermo intero</string>

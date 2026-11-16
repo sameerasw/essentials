@@ -354,8 +354,18 @@ class DuoOverlayHandler(
 
     fun setIslandVisible(visible: Boolean) {
         isIslandVisible = visible
-        mainHandler.post { overlayView?.isYieldingToIsland = shouldYieldToIsland() }
+        mainHandler.post {
+            overlayView?.isYieldingToIsland = shouldYieldToIsland()
+            overlayView?.islandColor = matchedIslandColor()
+        }
     }
+
+    private fun matchedIslandColor(): Int? =
+        if (isIslandVisible && settingsRepository.isDuoMatchIslandColorsEnabled()) {
+            com.sameerasw.essentials.island.ui.IslandColorBridge.color
+        } else {
+            null
+        }
 
     private fun shouldYieldToIsland(): Boolean = isIslandVisible && settingsRepository.isDuoIslandCombined()
 
@@ -884,6 +894,9 @@ class DuoOverlayHandler(
 
             if (overlayView == null) {
                 overlayView = DuoOverlayView(service)
+                com.sameerasw.essentials.island.ui.IslandColorBridge.listener = { color ->
+                    mainHandler.post { overlayView?.islandColor = matchedIslandColor() }
+                }
             }
 
             overlayView?.apply {
@@ -904,6 +917,10 @@ class DuoOverlayHandler(
                 this.hideWhenScreenOff = if (areUnsupportedFeaturesEnabled) settingsRepository.isDuoHideWhenScreenOffEnabled() else true
                 this.hideWhenScreenOffOnlyIdle = if (areUnsupportedFeaturesEnabled) settingsRepository.isDuoHideWhenScreenOffOnlyIdleEnabled() else false
                 this.useMaterialYouColors = settingsRepository.isDuoUseMaterialYouEnabled()
+                val matchIsland = settingsRepository.isDuoMatchIslandColorsEnabled()
+                com.sameerasw.essentials.island.ui.IslandColorBridge.enabled = matchIsland
+                this.matchIslandColors = matchIsland
+                this.islandColor = matchedIslandColor()
                 try {
                     this.customColor = Color.parseColor(settingsRepository.getDuoCustomColor())
                 } catch (_: Exception) {}
@@ -1395,6 +1412,8 @@ class DuoOverlayHandler(
     }
 
     fun destroy() {
+        com.sameerasw.essentials.island.ui.IslandColorBridge.listener = null
+        com.sameerasw.essentials.island.ui.IslandColorBridge.enabled = false
         removeOverlay(animate = false)
         overlayView = null
         touchAnchorView = null

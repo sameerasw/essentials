@@ -1620,6 +1620,7 @@
     <string name="duo_rotate_album_art_title">Draai albumomslag</string>
     <string name="duo_show_progress_title">Voortgangsmeldingen</string>
     <string name="duo_show_flashlight_title">Zaklamp</string>
+    <string name="duo_match_island_colors_title">Match island colors</string>
     <string name="duo_material_you_title">Gebruik Material You kleuren</string>
     <string name="island_hide_on_shade_title">Verberg wanneer de statusbalk is uitgeklapt</string>
     <string name="duo_action_tap_title">Klik</string>

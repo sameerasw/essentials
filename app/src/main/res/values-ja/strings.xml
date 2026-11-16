@@ -1707,6 +1707,7 @@
     <string name="duo_show_media_title">メディアの再生</string>
     <string name="duo_show_progress_title">進捗通知</string>
     <string name="duo_show_flashlight_title">フラッシュライト</string>
+    <string name="duo_match_island_colors_title">Match island colors</string>
     <string name="duo_material_you_title">Material You の色を使用する</string>
     <string name="duo_action_tap_title">タップ</string>
     <string name="duo_action_double_tap_title">ダブルタップ</string>

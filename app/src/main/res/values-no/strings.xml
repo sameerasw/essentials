@@ -1557,6 +1557,7 @@
     <string name="duo_rotate_album_art_title">Rotér albumomslag</string>
     <string name="duo_show_progress_title">Fremdriftsvarsler</string>
     <string name="duo_show_flashlight_title">Lommelykt</string>
+    <string name="duo_match_island_colors_title">Match island colors</string>
     <string name="duo_material_you_title">Bruk Material You-farger</string>
     <string name="island_hide_on_shade_title">Skjul når statuslinjen er utvidet</string>
     <string name="keep_in_full_screen_title">Behold i fullskjerm</string>
