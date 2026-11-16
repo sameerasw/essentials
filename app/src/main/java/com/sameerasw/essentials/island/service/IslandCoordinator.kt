@@ -303,6 +303,21 @@ class IslandCoordinator(
         mainHandler.post { controller.expand(BriefPlugin.ITEM_KEY) }
     }
 
+    fun openBriefIfEnabled() {
+        if (settings.isIslandBriefEnabled()) openBrief()
+    }
+
+    fun openHub() {
+        mainHandler.post {
+            val state = controller.state.value
+            val hub = state.items[NotificationsPlugin.ITEM_KEY]?.takeIf { it.expanded != null }
+            when {
+                hub != null -> controller.expand(hub.key)
+                settings.isIslandBriefEnabled() -> controller.expand(BriefPlugin.ITEM_KEY)
+            }
+        }
+    }
+
     fun updateState() {
         mainHandler.post {
             val shouldRun = settings.isIslandEnabled() && !isWindowSuppressed

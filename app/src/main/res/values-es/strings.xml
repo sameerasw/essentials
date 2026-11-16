@@ -2049,4 +2049,6 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="btn_reset_update_note">Reiniciar nota de actualización</string>
     <string name="btn_clear_search_history">Borrar historial de búsqueda</string>
     <string name="label_notify_new_updates">Notificar de actualizaciones</string>
+    <string name="island_action_open_label">Open Island</string>
+    <string name="island_action_open_brief_label">Open Brief</string>
 </resources>
