@@ -402,8 +402,7 @@ class IslandController(
             leftExtra = hubCells,
             balance = balanceCompact,
             cellWidth = compactCellWidth,
-            leftExtraWidth = (if (balanceCompact) hub?.cells?.coerceAtLeast(1) ?: 0 else hubCells)
-                .let { if (it > 0) compactBubbleWidth(it) else 0f },
+            leftExtraWidth = hub?.cells?.coerceAtLeast(1)?.let(compactBubbleWidth) ?: 0f,
             previous = _state.value.arrangement.flipped(),
             fits = compactFits?.let { fits ->
                 val extra = hubCells
