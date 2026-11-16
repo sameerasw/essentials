@@ -594,6 +594,8 @@ fun IslandVisualsSettingsUI(
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
+        ExpandedDarkThemeNotice()
+
         IslandPreviewControls()
 
         RoundedCardContainer(
