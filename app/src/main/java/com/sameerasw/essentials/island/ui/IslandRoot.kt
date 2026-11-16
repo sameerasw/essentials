@@ -1016,6 +1016,7 @@ private fun IslandRootContent(
                     accent = focusedItem?.queueAccent,
                     reversed = bubbleRight,
                     onClearAll = focusedItem?.onClearAll,
+                    onSnoozeAll = focusedItem?.onSnoozeAll,
                     onInteraction = actions::onInteraction,
                     modifier = Modifier
                         .queueSlot(0.5f, 1f, slides = true) { k -> ((k - 0.3f) / 0.7f).coerceIn(0f, 1f) }

@@ -150,6 +150,7 @@ class IslandItem(
     val dismissible: Boolean = false,
     val onDismiss: (() -> Unit)? = null,
     val onClearAll: (() -> Unit)? = null,
+    val onSnoozeAll: ((Int) -> Unit)? = null,
     val onOpen: (() -> Unit)? = null,
     val interactions: InteractionOverrides = InteractionOverrides.Default,
     val queue: QueueInfo? = null,
