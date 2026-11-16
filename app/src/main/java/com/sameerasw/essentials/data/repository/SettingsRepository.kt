@@ -560,6 +560,7 @@ class SettingsRepository(
         const val KEY_DUO_HIDE_WHEN_SCREEN_OFF_ONLY_IDLE = "duo_hide_when_screen_off_only_idle"
         const val KEY_DUO_HIDE_WHEN_LOCKED = "duo_hide_when_locked"
         const val KEY_DUO_USE_MATERIAL_YOU = "duo_use_material_you"
+        const val KEY_DUO_MATCH_ISLAND_COLORS = "duo_match_island_colors"
         const val KEY_DUO_CUSTOM_COLOR = "duo_custom_color"
         const val KEY_DUO_TAP_ACTION = "duo_tap_action"
         const val KEY_DUO_DOUBLE_TAP_ACTION = "duo_double_tap_action"
@@ -605,6 +606,12 @@ class SettingsRepository(
         const val KEY_ISLAND_TIMEOUT_MS = "island_timeout_ms"
         const val KEY_ISLAND_SHOW_GLOW = "island_show_glow"
         const val KEY_ISLAND_GLOW_INTENSITY = "island_glow_intensity"
+        const val KEY_ISLAND_GLOW_SIZE = "island_glow_size"
+        const val KEY_ISLAND_GLOW_RIM = "island_glow_rim"
+        const val KEY_ISLAND_GLOW_DYNAMIC = "island_glow_dynamic"
+        const val KEY_ISLAND_GLOW_COLOR = "island_glow_color"
+        const val KEY_ISLAND_EXPANDED_DARK_NOTICE_DISMISSED = "island_expanded_dark_notice_dismissed"
+        const val ISLAND_GLOW_DEFAULT_COLOR = "#FFFFFF"
         const val KEY_ISLAND_PREFER_STILL = "island_prefer_still"
         const val KEY_ISLAND_NOTIF_THEMED_BUBBLE = "island_notif_themed_bubble"
         const val KEY_ISLAND_EXPANDED_WIDTH = "island_expanded_width"
@@ -4096,6 +4103,8 @@ class SettingsRepository(
 
     fun isDuoUseMaterialYouEnabled(): Boolean = getBoolean(KEY_DUO_USE_MATERIAL_YOU, true)
     fun setDuoUseMaterialYouEnabled(enabled: Boolean) = putBoolean(KEY_DUO_USE_MATERIAL_YOU, enabled)
+    fun isDuoMatchIslandColorsEnabled(): Boolean = getBoolean(KEY_DUO_MATCH_ISLAND_COLORS, false)
+    fun setDuoMatchIslandColorsEnabled(enabled: Boolean) = putBoolean(KEY_DUO_MATCH_ISLAND_COLORS, enabled)
 
     fun getDuoCustomColor(): String = getString(KEY_DUO_CUSTOM_COLOR, "#FFFFFF") ?: "#FFFFFF"
     fun setDuoCustomColor(colorHex: String) = putString(KEY_DUO_CUSTOM_COLOR, colorHex)
@@ -4208,6 +4217,17 @@ class SettingsRepository(
     fun setIslandShowGlowEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_SHOW_GLOW, enabled)
     fun getIslandGlowIntensity(): Float = getFloat(KEY_ISLAND_GLOW_INTENSITY, 1f)
     fun setIslandGlowIntensity(value: Float) = putFloat(KEY_ISLAND_GLOW_INTENSITY, value)
+    fun getIslandGlowSize(): Float = getFloat(KEY_ISLAND_GLOW_SIZE, 1f)
+    fun setIslandGlowSize(value: Float) = putFloat(KEY_ISLAND_GLOW_SIZE, value)
+    fun isIslandGlowRimEnabled(): Boolean = getBoolean(KEY_ISLAND_GLOW_RIM, true)
+    fun setIslandGlowRimEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_GLOW_RIM, enabled)
+    fun isIslandGlowDynamicEnabled(): Boolean = getBoolean(KEY_ISLAND_GLOW_DYNAMIC, true)
+    fun setIslandGlowDynamicEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_GLOW_DYNAMIC, enabled)
+    fun getIslandGlowColor(): String =
+        getString(KEY_ISLAND_GLOW_COLOR, ISLAND_GLOW_DEFAULT_COLOR) ?: ISLAND_GLOW_DEFAULT_COLOR
+    fun setIslandGlowColor(colorHex: String) = putString(KEY_ISLAND_GLOW_COLOR, colorHex)
+    fun isIslandExpandedDarkNoticeDismissed(): Boolean = getBoolean(KEY_ISLAND_EXPANDED_DARK_NOTICE_DISMISSED, false)
+    fun setIslandExpandedDarkNoticeDismissed(dismissed: Boolean) = putBoolean(KEY_ISLAND_EXPANDED_DARK_NOTICE_DISMISSED, dismissed)
     fun isIslandPreferStillEnabled(): Boolean = getBoolean(KEY_ISLAND_PREFER_STILL, false)
     fun setIslandPreferStillEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_PREFER_STILL, enabled)
 

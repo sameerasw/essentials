@@ -187,6 +187,10 @@ fun IslandRoot(
     fun iconFor(accent: Color?): Color =
         readableOnDark(if (targetSpec.iconDynamic) accent ?: iconBase else targetSpec.iconColorCustom ?: iconBase)
     val compactAccent = state.arrangement.visibleItems.firstNotNullOfOrNull { key -> state.items[key]?.accent }
+    if (IslandColorBridge.enabled) {
+        val bridgedColor = iconFor(state.items[state.focusedKey]?.accent ?: compactAccent)
+        LaunchedEffect(bridgedColor) { IslandColorBridge.publish(bridgedColor.toArgb()) }
+    }
     IslandRootContent(
         state, targetSpec, actions, onTargetBoundsChanged, registerCollapseAnimator, showCameraRing, cameraGeometry,
         iconTarget = iconFor(state.items[state.focusedKey]?.accent ?: compactAccent),
@@ -677,7 +681,7 @@ private fun IslandRootContent(
     }
     fun bubbleSide(): Float = bubbleSideAnim.value
     fun balanceSign(): Float = if (spec.balanceCompact && spec.growDirection == 0) 1f - 2f * bubbleSide() else 1f
-    val bubbleGapPx = with(density) { spec.contentGap.roundToPx() }
+    val bubbleGapPx = with(density) { (spec.contentGap + 4.dp).roundToPx() }
     fun sideBubbleProgress(): Float =
         if (spec.growDirection == 0 && (hasCompactCells || stage == IslandStage.Hidden)) catchUpAnim.value.coerceIn(0f, 1f) else 0f
     val slackAnim = remember { Animatable(slackTarget.toFloat()) }
@@ -912,7 +916,7 @@ private fun IslandRootContent(
         activeOwner?.let { owner ->
             val ownerItem = state.items[owner] ?: lastItems[owner]
             val glow by animateColorAsState(
-                reportedAccents[owner] ?: ownerItem?.accent ?: islandAccent(),
+                spec.glowColor ?: reportedAccents[owner] ?: ownerItem?.accent ?: islandAccent(),
                 label = "islandSurfaceGlow",
             )
             val geometry = { visualFrame().let { MediaVisualGeometry(it.bounds, it.cornerRadius) } }
@@ -926,7 +930,7 @@ private fun IslandRootContent(
                 if (spec.backdropBlur) {
                     IslandBackdropBlur({ visualFrame() }, with(density) { spec.backdropBlurRadius.toPx() }, Modifier.matchParentSize())
                 }
-                MediaSurface(glow, spec.expandedCorner, { visualFrame().pulse }, geometry, camera, Modifier.matchParentSize(), transparent = spec.transparency, transparencyIntensity = spec.transparencyIntensity, progressiveBlur = spec.progressiveBlur, glowIntensity = spec.glowIntensity)
+                MediaSurface(glow, spec.expandedCorner, { visualFrame().pulse }, geometry, camera, Modifier.matchParentSize(), transparent = spec.transparency, transparencyIntensity = spec.transparencyIntensity, progressiveBlur = spec.progressiveBlur, glowIntensity = spec.glowIntensity, glowSize = spec.glowSize, glowRim = spec.glowRim)
                 if (spec.neuralExpressive && (spec.neuralExpressiveAlways || ownerItem?.expandedParticles == true)) {
                     GeminiParticlePill(
                         modifier = Modifier.matchParentSize(),
@@ -939,8 +943,7 @@ private fun IslandRootContent(
                 }
             }
         }
-        LiquidBridges(liquidField)
-        val pillGapPx = with(density) { 2.dp.roundToPx() }
+        val pillGapPx = with(density) { 8.dp.roundToPx() }
         AnimatedVisibility(
             visible = queueShown,
             enter = if (stage == IslandStage.Expanded) EnterTransition.None else fadeIn(IslandMotion.contentIn()),
@@ -1016,6 +1019,8 @@ private fun IslandRootContent(
                     bond = pillBond,
                     accent = focusedItem?.queueAccent,
                     reversed = bubbleRight,
+                    onClearAll = focusedItem?.onClearAll,
+                    onSnoozeAll = focusedItem?.onSnoozeAll,
                     onInteraction = actions::onInteraction,
                     modifier = Modifier
                         .queueSlot(0.5f, 1f, slides = true) { k -> ((k - 0.3f) / 0.7f).coerceIn(0f, 1f) }

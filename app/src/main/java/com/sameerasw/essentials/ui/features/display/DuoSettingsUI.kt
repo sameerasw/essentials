@@ -495,6 +495,16 @@ fun DuoSettingsUI(
             cornerRadius = 24.dp,
         ) {
             IconToggleItem(
+                iconRes = R.drawable.rounded_colorize_24,
+                title = stringResource(R.string.duo_match_island_colors_title),
+                isChecked = viewModel.isDuoMatchIslandColors.value,
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    viewModel.setDuoMatchIslandColors(checked)
+                },
+                modifier = Modifier.highlight(highlightSetting == "duo_match_island_colors"),
+            )
+            IconToggleItem(
                 iconRes = R.drawable.rounded_palette_24,
                 title = stringResource(R.string.duo_material_you_title),
                 isChecked = viewModel.isDuoUseMaterialYou.value,

@@ -1,0 +1,42 @@
+package com.sameerasw.essentials.ui.core.sheets
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import com.sameerasw.essentials.R
+import com.sameerasw.essentials.translation.TranslatableText
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ResetAllInfoBottomSheet(onDismissRequest: () -> Unit) {
+    EssentialsBottomSheet(onDismissRequest = onDismissRequest) {
+        Column(
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .verticalScroll(rememberScrollState())
+                    .padding(horizontal = 24.dp)
+                    .padding(bottom = 32.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+        ) {
+            TranslatableText(
+                stringResId = R.string.settings_reset_all_info_title,
+                style = MaterialTheme.typography.headlineSmall,
+                color = MaterialTheme.colorScheme.onSurface,
+            )
+            TranslatableText(
+                stringResId = R.string.settings_reset_all_info_desc,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
+    }
+}

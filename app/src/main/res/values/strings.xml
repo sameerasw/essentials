@@ -3125,6 +3125,7 @@
     <string name="duo_show_progress_title">Progress notifications</string>
     <string name="duo_show_flashlight_title">Flashlight</string>
     <string name="duo_section_behavior">Behavior</string>
+    <string name="duo_match_island_colors_title">Match island colors</string>
     <string name="duo_material_you_title">Use Material You colors</string>
     <string name="duo_hide_when_screen_off_title">Hide when screen off</string>
     <string name="duo_hide_when_screen_off_only_idle_title">Only hide on AOD while idle</string>
@@ -3320,6 +3321,10 @@
     <string name="island_preview_sample">Dynamic notifications preview</string>
     <string name="island_show_glow_title">Expanded accent glow</string>
     <string name="island_glow_intensity_title">Glow intensity</string>
+    <string name="island_glow_size_title">Glow size</string>
+    <string name="island_glow_rim_title">Rim light</string>
+    <string name="island_expanded_dark_theme_warning">Expanded dark theme is on. If the island text or colors look wrong, filter Essentials out of it in Display settings.</string>
+    <string name="island_expanded_dark_theme_action">Open display settings</string>
     <string name="island_prefer_still_title">Prefer still island</string>
     <string name="island_prefer_still_info">Stops the island\'s animations after a few seconds without interaction, so the display can drop to a low refresh rate and save battery. Media visualizers, second by second counters and other looping animations pause until you interact with the island again.</string>
     <string name="island_border_outline_dynamic_title">Dynamic colors</string>
@@ -3705,6 +3710,9 @@
     <string name="about_desc_mono_audio_tile">Quick Settings tile to toggle mono audio.\n\nMono audio plays the same sound in both ears, which helps when using a single earbud or if you have hearing difficulty in one ear.</string>
     <string name="about_desc_back_gesture">Fine tune the system back gesture.\n\nAdjust the edge widths for the left and right gesture areas and set up per-app back gesture behavior. Requires secure settings permission.</string>
     <string name="feature_reset_hold">Hold to reset</string>
+    <string name="settings_reset_all_hold">Hold to reset all data</string>
+    <string name="settings_reset_all_info_title">Reset Essentials data</string>
+    <string name="settings_reset_all_info_desc">Resets all Essentials settings and data to a fresh start. System settings, permissions and anything Essentials changed on your device, such as secure settings, are not reverted.</string>
     <string name="feature_reset_done">Settings reset</string>
     <string name="feature_reset_info_title">Reset this feature</string>
     <string name="feature_reset_info_desc">Resets every Essentials setting for this feature to its default. System settings and permissions are not changed.</string>

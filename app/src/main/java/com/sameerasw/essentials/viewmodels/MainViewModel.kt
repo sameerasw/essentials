@@ -213,6 +213,7 @@ class MainViewModel : ViewModel() {
     val isDuoHideWhenScreenOffOnlyIdle = mutableStateOf(false)
     val isDuoHideWhenLocked = mutableStateOf(false)
     val isDuoUseMaterialYou = mutableStateOf(true)
+    val isDuoMatchIslandColors = mutableStateOf(false)
     val duoCustomColor = mutableStateOf("#FFFFFF")
     val duoTapAction = mutableStateOf<Action?>(null)
     val duoDoubleTapAction = mutableStateOf<Action?>(null)
@@ -326,6 +327,10 @@ class MainViewModel : ViewModel() {
     val islandOtpTimeoutMs = mutableLongStateOf(60_000L)
     val isIslandShowGlow = mutableStateOf(true)
     val islandGlowIntensity = mutableFloatStateOf(1f)
+    val islandGlowSize = mutableFloatStateOf(1f)
+    val isIslandGlowRim = mutableStateOf(true)
+    val isIslandGlowDynamic = mutableStateOf(true)
+    val islandGlowColor = mutableStateOf(SettingsRepository.ISLAND_GLOW_DEFAULT_COLOR)
     val isIslandNotifThemedBubble = mutableStateOf(false)
     val isIslandBorderOutline = mutableStateOf(false)
     val islandBorderOutlineColor = mutableStateOf(SettingsRepository.ISLAND_BORDER_OUTLINE_DEFAULT_COLOR)
@@ -915,6 +920,9 @@ class MainViewModel : ViewModel() {
 
                     SettingsRepository.KEY_DUO_USE_MATERIAL_YOU ->
                         isDuoUseMaterialYou.value = settingsRepository.isDuoUseMaterialYouEnabled()
+
+                    SettingsRepository.KEY_DUO_MATCH_ISLAND_COLORS ->
+                        isDuoMatchIslandColors.value = settingsRepository.isDuoMatchIslandColorsEnabled()
 
                     SettingsRepository.KEY_DUO_CUSTOM_COLOR ->
                         duoCustomColor.value = settingsRepository.getDuoCustomColor()
@@ -2527,6 +2535,7 @@ class MainViewModel : ViewModel() {
         isDuoHideWhenScreenOffOnlyIdle.value = settingsRepository.isDuoHideWhenScreenOffOnlyIdleEnabled()
         isDuoHideWhenLocked.value = settingsRepository.isDuoHideWhenLockedEnabled()
         isDuoUseMaterialYou.value = settingsRepository.isDuoUseMaterialYouEnabled()
+        isDuoMatchIslandColors.value = settingsRepository.isDuoMatchIslandColorsEnabled()
         duoCustomColor.value = settingsRepository.getDuoCustomColor()
         duoTapAction.value = settingsRepository.getDuoTapAction()
         duoDoubleTapAction.value = settingsRepository.getDuoDoubleTapAction()
@@ -2650,6 +2659,10 @@ class MainViewModel : ViewModel() {
         islandOtpTimeoutMs.longValue = settingsRepository.getIslandOtpTimeoutMs()
         isIslandShowGlow.value = settingsRepository.isIslandShowGlowEnabled()
         islandGlowIntensity.floatValue = settingsRepository.getIslandGlowIntensity()
+        islandGlowSize.floatValue = settingsRepository.getIslandGlowSize()
+        isIslandGlowRim.value = settingsRepository.isIslandGlowRimEnabled()
+        isIslandGlowDynamic.value = settingsRepository.isIslandGlowDynamicEnabled()
+        islandGlowColor.value = settingsRepository.getIslandGlowColor()
         isIslandNotifThemedBubble.value = settingsRepository.isIslandNotifThemedBubbleEnabled()
         isIslandBorderOutline.value = settingsRepository.isIslandBorderOutlineEnabled()
         islandBorderOutlineColor.value = settingsRepository.getIslandBorderOutlineColor()
@@ -6387,6 +6400,26 @@ class MainViewModel : ViewModel() {
         settingsRepository.setIslandGlowIntensity(value)
     }
 
+    fun setIslandGlowSize(value: Float) {
+        islandGlowSize.floatValue = value
+        settingsRepository.setIslandGlowSize(value)
+    }
+
+    fun setIslandGlowRim(enabled: Boolean) {
+        isIslandGlowRim.value = enabled
+        settingsRepository.setIslandGlowRimEnabled(enabled)
+    }
+
+    fun setIslandGlowDynamic(enabled: Boolean) {
+        isIslandGlowDynamic.value = enabled
+        settingsRepository.setIslandGlowDynamicEnabled(enabled)
+    }
+
+    fun setIslandGlowColor(colorHex: String) {
+        islandGlowColor.value = colorHex
+        settingsRepository.setIslandGlowColor(colorHex)
+    }
+
     fun setIslandNotifThemedBubble(enabled: Boolean) {
         isIslandNotifThemedBubble.value = enabled
         settingsRepository.setIslandNotifThemedBubbleEnabled(enabled)
@@ -6582,6 +6615,11 @@ class MainViewModel : ViewModel() {
     fun setDuoHideWhenLocked(enabled: Boolean) {
         isDuoHideWhenLocked.value = enabled
         settingsRepository.setDuoHideWhenLockedEnabled(enabled)
+    }
+
+    fun setDuoMatchIslandColors(enabled: Boolean) {
+        isDuoMatchIslandColors.value = enabled
+        settingsRepository.setDuoMatchIslandColorsEnabled(enabled)
     }
 
     fun setDuoUseMaterialYou(enabled: Boolean) {
