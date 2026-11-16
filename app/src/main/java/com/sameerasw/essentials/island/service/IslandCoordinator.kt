@@ -284,6 +284,9 @@ class IslandCoordinator(
             syncStatusBar()
             reportVisibility(stage != IslandStage.Hidden)
         }
+        controller.onStateChanged = { state ->
+            reportCameraOccupied(state.stage != IslandStage.Hidden && !(state.stage == IslandStage.Compact && state.arrangement.visibleItems.isEmpty()))
+        }
         settings.setIslandPreviewRingEnabled(false)
         settings.setIslandPreviewStage(SettingsRepository.ISLAND_PREVIEW_STAGE_AUTO)
         updateState()
@@ -292,6 +295,15 @@ class IslandCoordinator(
     // Fires with true while the island has anything on screen
     var onVisibilityChanged: ((Boolean) -> Unit)? = null
     private var lastVisible = false
+
+    var onCameraOccupiedChanged: ((Boolean) -> Unit)? = null
+    private var lastCameraOccupied = false
+
+    private fun reportCameraOccupied(occupied: Boolean) {
+        if (occupied == lastCameraOccupied) return
+        lastCameraOccupied = occupied
+        onCameraOccupiedChanged?.invoke(occupied)
+    }
 
     private fun reportVisibility(visible: Boolean) {
         if (visible == lastVisible) return
@@ -775,6 +787,7 @@ class IslandCoordinator(
         CompactSideLimits.set(Int.MAX_VALUE, Int.MAX_VALUE)
         windowHost.detach()
         reportVisibility(false)
+        reportCameraOccupied(false)
         IslandStatusBarHider.restore(service)
         if (settings.isIslandSuppressSystemHeadsUpEnabled()) settings.applyHeadsUpSuppression(false)
     }

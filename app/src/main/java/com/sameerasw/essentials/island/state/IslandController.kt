@@ -62,6 +62,7 @@ class IslandController(
     var expandedTimeoutMs: Long = 0L
     var holdFocus: Boolean = false
     var onStageChanged: ((IslandStage) -> Unit)? = null
+    var onStateChanged: ((IslandUiState) -> Unit)? = null
     var onAutoExpand: (() -> Unit)? = null
 
     var collapseAnimator: ((commit: () -> Unit) -> Unit)? = null
@@ -423,6 +424,7 @@ class IslandController(
         IslandItemsState.publish(items, shownKeys)
         IslandItemsState.publishPresence(itemsBySource, shownKeys)
         if (previous != stage) onStageChanged?.invoke(stage)
+        onStateChanged?.invoke(_state.value)
     }
 
     private fun mergedBubble(items: Map<String, IslandItem>, owner: IslandItem?, media: SideBubble?): SideBubble? {
