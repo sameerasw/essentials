@@ -4,6 +4,9 @@ import android.content.Context
 import android.graphics.PixelFormat
 import android.graphics.Rect
 import android.os.Build
+import android.os.Handler
+import android.os.Looper
+import android.os.SystemClock
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.Gravity
@@ -23,10 +26,54 @@ object SharedOverlayWindow {
     private var context: Context? = null
     private var root: FrameLayout? = null
     private var owner: OverlayLifecycleOwner? = null
+    private var windowContext: Context? = null
     private var params: WindowManager.LayoutParams? = null
     private var focusable = false
     private var windowRect: Rect? = null
     private val entries = LinkedHashMap<Layer, Entry>()
+    private val handler = Handler(Looper.getMainLooper())
+    private var rootAddedAt = 0L
+    private var verifyAttempts = 0
+
+    fun revalidate() {
+        val host = root ?: return
+        if (host.isAttachedToWindow) return
+        val ctx = windowContext ?: return
+        val manager = wm ?: return
+        rebuild(ctx, manager)
+    }
+
+    private fun rootAlive(): Boolean {
+        val host = root ?: return false
+        return host.isAttachedToWindow || SystemClock.uptimeMillis() - rootAddedAt < ADD_GRACE_MS
+    }
+
+    private fun rebuild(context: Context, wm: WindowManager): Boolean {
+        val saved = entries.toList()
+        dropWindow()
+        if (!createWindow(context, wm)) return false
+        val host = root ?: return false
+        saved.forEach { (layer, entry) ->
+            entries[layer] = entry
+            val index = if (layer == Layer.Island) 0 else host.childCount
+            host.addView(entry.view, index, childParams(entry))
+        }
+        return true
+    }
+
+    private fun scheduleVerify(frame: FrameLayout) {
+        handler.postDelayed({
+            if (root !== frame) return@postDelayed
+            if (frame.isAttachedToWindow) {
+                verifyAttempts = 0
+                return@postDelayed
+            }
+            if (verifyAttempts++ >= MAX_VERIFY_ATTEMPTS) return@postDelayed
+            val ctx = windowContext ?: return@postDelayed
+            val manager = wm ?: return@postDelayed
+            rebuild(ctx, manager)
+        }, VERIFY_DELAY_MS)
+    }
 
     fun attach(context: Context, wm: WindowManager, layer: Layer, view: View, rect: Rect? = null): Boolean {
         this.context = context
@@ -41,7 +88,10 @@ object SharedOverlayWindow {
         return true
     }
 
-    fun detach(layer: Layer) {
+    fun detach(layer: Layer, view: View? = null) {
+        val current = entries[layer]
+        if (current == null) return
+        if (view != null && current.view !== view) return
         val entry = entries.remove(layer) ?: return
         val host = root
         if (host != null) {
@@ -112,7 +162,19 @@ object SharedOverlayWindow {
     }
 
     private fun ensureWindow(context: Context, wm: WindowManager): Boolean {
-        if (root != null) return true
+        if (root != null) {
+            if (windowContext !== context) {
+                dropWindow()
+            } else if (rootAlive()) {
+                return true
+            } else {
+                return rebuild(context, wm)
+            }
+        }
+        return createWindow(context, wm)
+    }
+
+    private fun createWindow(context: Context, wm: WindowManager): Boolean {
         val lifecycle = OverlayLifecycleOwner().also { it.onCreate() }
         val frame = FrameLayout(context).apply {
             setViewTreeLifecycleOwner(lifecycle)
@@ -139,6 +201,10 @@ object SharedOverlayWindow {
             root = frame
             owner = lifecycle
             params = lp
+            windowContext = context
+            if (this.wm !== wm) this.wm = wm
+            rootAddedAt = SystemClock.uptimeMillis()
+            scheduleVerify(frame)
             true
         } catch (e: Exception) {
             Log.e(TAG, "Failed to add shared overlay window", e)
@@ -173,11 +239,16 @@ object SharedOverlayWindow {
         val host = root
         if (host != null) {
             try {
+                host.removeAllViews()
+            } catch (_: Exception) {
+            }
+            try {
                 wm?.removeViewImmediate(host)
             } catch (_: Exception) {
             }
         }
         owner?.onDestroy()
+        windowContext = null
         root = null
         owner = null
         params = null
@@ -187,4 +258,7 @@ object SharedOverlayWindow {
     }
 
     private const val TAG = "SharedOverlayWindow"
+    private const val ADD_GRACE_MS = 600L
+    private const val VERIFY_DELAY_MS = 800L
+    private const val MAX_VERIFY_ATTEMPTS = 12
 }

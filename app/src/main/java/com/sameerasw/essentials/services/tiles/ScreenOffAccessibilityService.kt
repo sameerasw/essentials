@@ -626,6 +626,7 @@ class ScreenOffAccessibilityService :
                     AccessibilityServiceInfo.FLAG_RETRIEVE_INTERACTIVE_WINDOWS
             }
         updateOmniOverlay()
+        com.sameerasw.essentials.island.service.SharedOverlayWindow.revalidate()
         duoOverlayHandler.restart()
         statusGlanceHandler.restart()
         islandOverlayHandler.restart()

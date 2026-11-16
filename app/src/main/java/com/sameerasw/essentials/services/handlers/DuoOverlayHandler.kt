@@ -1385,7 +1385,7 @@ class DuoOverlayHandler(
                 isOverlayAdded = false
                 val remove = {
                     if (!isOverlayAdded) {
-                        SharedOverlayWindow.detach(SharedOverlayWindow.Layer.Duo)
+                        SharedOverlayWindow.detach(SharedOverlayWindow.Layer.Duo, fading)
                     }
                 }
                 if (animate) fading.playExit(remove) else remove()
