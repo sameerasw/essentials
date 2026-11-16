@@ -104,6 +104,7 @@ import com.sameerasw.essentials.island.ui.islandTextColor
 import com.sameerasw.essentials.island.ui.components.CameraRow
 import com.sameerasw.essentials.island.ui.components.ConnectedTextLabel
 import com.sameerasw.essentials.island.ui.components.IslandBitmap
+import com.sameerasw.essentials.island.ui.components.forContent
 
 @Composable
 fun NotificationExpanded(
@@ -163,7 +164,7 @@ fun NotificationExpanded(
                     Spacer(Modifier.height(4.dp))
                     Text(
                         text = message,
-                        style = IslandTextStyles.body.copy(color = islandTextColor(), fontSize = 15.sp, lineHeight = 20.sp),
+                        style = IslandTextStyles.body.copy(color = islandTextColor(), fontSize = 15.sp, lineHeight = 20.sp).forContent(message),
                         maxLines = 20,
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.fillMaxWidth().padding(horizontal = sidePadding),

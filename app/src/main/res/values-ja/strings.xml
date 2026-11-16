@@ -2286,6 +2286,7 @@ Duoと組み合わせることで、単一の統合カメラエリアとして�
     <string name="island_navigation_on_new_desc">次の方向が表示されたときに Island が行うこと</string>
     <string name="island_navigation_expand_title">曲がる前に展開</string>
     <string name="island_navigation_peek_after_expand_title">ピークの表示は維持する</string>
+    <string name="island_navigation_hide_while_driving_title">Hide while driving</string>
     <string name="island_timer_options_title">タイマーのオプション</string>
     <string name="island_timers_filter_apps_title">アプリを絞り込む</string>
     <string name="island_media_show_like_title">トラックのいいねボタンを表示</string>
@@ -2564,4 +2565,10 @@ Android がバッテリーセーバーモードを有効にすると、これら
     <string name="label_reset_battery_stats_title">バッテリー統計をリセット</string>
     <string name="action_reset_battery_stats">統計をリセット</string>
     <string name="label_reset_battery_stats_desc">システムのバッテリー統計をリセットします (dumpsys batterystats --reset)。これにより、過去のバッテリー使用状況とアプリの消費データがクリアされ、現在の充電状態から新たに追跡が開始されます。</string>
+    <string name="island_action_open_label">Open Island</string>
+    <string name="island_action_open_brief_label">Open Brief</string>
+    <string name="tile_accessibility">Accessibility</string>
+    <string name="tile_accessibility_on">Services on</string>
+    <string name="tile_accessibility_off">Services off</string>
+    <string name="about_desc_accessibility_tile">Turn off all accessibility services with one tap and bring them back with another.\n\nUseful for apps that refuse to work while accessibility services are enabled.</string>
 </resources>

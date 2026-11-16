@@ -127,6 +127,16 @@ fun IslandNavigationOptionsBottomSheet(
                         },
                     )
                 }
+
+                IconToggleItem(
+                    iconRes = R.drawable.rounded_directions_car_24,
+                    title = stringResource(R.string.island_navigation_hide_while_driving_title),
+                    isChecked = viewModel.isIslandNavigationHideWhileDriving.value,
+                    onCheckedChange = {
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        viewModel.setIslandNavigationHideWhileDriving(it)
+                    },
+                )
             }
         }
     }

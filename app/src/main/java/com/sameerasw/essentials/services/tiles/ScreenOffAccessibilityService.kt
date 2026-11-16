@@ -439,9 +439,9 @@ class ScreenOffAccessibilityService :
         duoOverlayHandler = DuoOverlayHandler(this)
         islandOverlayHandler = IslandCoordinator(this)
         islandOverlayHandler.onVisibilityChanged = {
-            duoOverlayHandler.setIslandVisible(it)
             LiveUpdateSnoozer.onIslandVisibility(this, it)
         }
+        islandOverlayHandler.onCameraOccupiedChanged = { duoOverlayHandler.setIslandVisible(it) }
         duoOverlayHandler.openBrief = { islandOverlayHandler.openBrief() }
         statusGlanceHandler = StatusGlanceHandler(this)
         statusBarSectionsDebugHandler = com.sameerasw.essentials.services.handlers.StatusBarSectionsDebugHandler(this)

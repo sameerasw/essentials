@@ -419,6 +419,51 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
         <activity
+            android:name=".ui.activities.IslandActionActivity"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:icon="@drawable/rounded_rocket_launch_24"
+            android:label="@string/island_action_open_label"
+            android:noHistory="true"
+            android:taskAffinity=""
+            android:theme="@style/Theme.Essentials.Translucent">
+            <intent-filter>
+                <action android:name="com.sameerasw.essentials.action.OPEN_ISLAND" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.sameerasw.essentials.action.OPEN_BRIEF" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity-alias
+            android:name=".IslandActionLauncher"
+            android:enabled="true"
+            android:exported="true"
+            android:icon="@drawable/rounded_rocket_launch_24"
+            android:label="@string/island_action_open_label"
+            android:targetActivity=".ui.activities.IslandActionActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name=".IslandBriefLauncher"
+            android:enabled="true"
+            android:exported="true"
+            android:icon="@drawable/rounded_rocket_launch_24"
+            android:label="@string/island_action_open_brief_label"
+            android:targetActivity=".ui.activities.IslandActionActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <activity
             android:name=".ui.activities.PixelSearchbarTapActivity"
             android:excludeFromRecents="true"
             android:exported="true"
@@ -1041,6 +1086,20 @@
             <meta-data
                 android:name="android.service.quicksettings.TILE_CATEGORY"
                 android:value="android.service.quicksettings.CATEGORY_ACCESSIBILITY" />
+        </service>
+
+        <service
+            android:name=".services.tiles.AccessibilityTileService"
+            android:exported="true"
+            android:icon="@drawable/rounded_accessibility_new_24"
+            android:label="@string/tile_accessibility"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.service.quicksettings.TILE_CATEGORY"
+                android:value="android.service.quicksettings.CATEGORY_PRIVACY" />
         </service>
 
         <service
