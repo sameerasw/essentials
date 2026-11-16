@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials.ui.features.system
 
+import android.app.Activity
 import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -349,7 +350,6 @@ fun KeyboardSettingsUI(
             }
         }
 
-        // Text Snippets Container
         RoundedCardContainer(spacing = 2.dp) {
             IconToggleItem(
                 iconRes = R.drawable.rounded_edit_note_24,
@@ -394,7 +394,7 @@ fun KeyboardSettingsUI(
                     listOf("ACCESSIBILITY"),
                     context,
                     viewModel,
-                    context as? android.app.Activity,
+                    context as? Activity,
                 )
             if (permissionItems.isNotEmpty()) {
                 PermissionsBottomSheet(

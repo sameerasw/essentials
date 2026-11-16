@@ -71,7 +71,6 @@ class EssentialsInputMethodService :
     // Undo Manager
     private val undoRedoManager = UndoRedoManager()
 
-    // Settings & Snippet Expansion Engine
     private val settingsRepository by lazy { SettingsRepository(this) }
     private val snippetEngine by lazy {
         SnippetExpansionEngine(

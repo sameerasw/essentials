@@ -38,13 +38,12 @@ import com.sameerasw.essentials.domain.model.RemapSlot
 import com.sameerasw.essentials.domain.model.ScaleAnimationsProfile
 import com.sameerasw.essentials.domain.model.Snippet
 import com.sameerasw.essentials.domain.model.SystemShortcutsState
-import com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService
-import java.util.UUID
 import com.sameerasw.essentials.domain.model.TrackedRepo
 import com.sameerasw.essentials.domain.model.github.GitHubUser
 import com.sameerasw.essentials.utils.RootUtils
 import com.sameerasw.essentials.utils.ShellUtils
 import com.sameerasw.essentials.utils.ShizukuUtils
+import java.util.UUID
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -4919,7 +4918,6 @@ class SettingsRepository(
     fun isTextSnippetsEnabled(): Boolean = getBoolean(KEY_KEYBOARD_TEXT_SNIPPETS_ENABLED, false)
     fun setTextSnippetsEnabled(enabled: Boolean) {
         putBoolean(KEY_KEYBOARD_TEXT_SNIPPETS_ENABLED, enabled)
-        ScreenOffAccessibilityService.updateSnippetTextListening(enabled)
     }
 
     fun getSnippetPrefix(): String {
