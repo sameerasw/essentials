@@ -2344,7 +2344,6 @@
     <string name="btn_reset_update_note">Сбросить примечание об обновлении</string>
     <string name="btn_clear_search_history">Очистить историю поиска</string>
     <string name="island_action_open_label">Open Island</string>
-    <string name="island_action_open_brief_label">Open Brief</string>
     <string name="tile_accessibility">Accessibility</string>
     <string name="tile_accessibility_on">Services on</string>
     <string name="tile_accessibility_off">Services off</string>
