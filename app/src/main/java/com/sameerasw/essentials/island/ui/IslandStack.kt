@@ -16,6 +16,11 @@ import androidx.compose.animation.scaleOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.unit.sp
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.res.stringResource
+import com.sameerasw.essentials.R
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.snapshotFlow
 import kotlinx.coroutines.flow.first
@@ -364,9 +369,19 @@ fun IslandStackPill(
     bond: LiquidBond? = null,
     accent: Color? = null,
     reversed: Boolean = false,
+    onClearAll: (() -> Unit)? = null,
     onInteraction: () -> Unit = {},
 ) {
     val ring by animateColorAsState(accent ?: islandAccent(), label = "stackRing")
+    var confirming by remember { mutableStateOf(false) }
+    val keysSignature = icons.joinToString("|") { it.key }
+    LaunchedEffect(selectedKey, keysSignature, interactive) { confirming = false }
+    LaunchedEffect(confirming) {
+        if (confirming) {
+            delay(5000)
+            confirming = false
+        }
+    }
     val container by animateColorAsState(
         if (accent != null) androidx.compose.ui.graphics.lerp(Color.Black, accent, 0.22f) else Color.Black,
         label = "stackContainer",
@@ -407,6 +422,11 @@ fun IslandStackPill(
             }
         }
     }
+    val startClear: (() -> Unit)? = if (interactive && onClearAll != null) {
+        { IslandHaptics.button(hapticContext); onInteraction(); confirming = true }
+    } else {
+        null
+    }
     val visibleSlots = icons.size.coerceAtMost(PILL_MAX_ICONS)
     val carouselWidth by animateDpAsState(itemWidth * visibleSlots + spacing * (visibleSlots - 1).coerceAtLeast(0) + 12.dp, IslandMotion.expressiveDefaultSpatial(), label = "pillWidth")
     Box(
@@ -415,9 +435,51 @@ fun IslandStackPill(
             .clip(CircleShape)
             .background(container)
             .islandOutline(outlineColor, outlineThickness, CircleShape)
+            .then(
+                if (startClear != null) Modifier.pointerInput(Unit) { detectTapGestures(onLongPress = { startClear() }) } else Modifier,
+            )
             .animateContentSize(IslandMotion.compactSize)
             .padding(vertical = 5.dp),
     ) {
+        AnimatedContent(
+            targetState = confirming,
+            transitionSpec = {
+                (fadeIn(IslandMotion.expressiveDefaultEffects()) togetherWith fadeOut(IslandMotion.expressiveFastEffects()))
+                    .using(androidx.compose.animation.SizeTransform(clip = false) { _, _ -> androidx.compose.animation.core.snap() })
+            },
+            label = "stackClearAll",
+        ) { clearing ->
+        if (clearing) {
+            Box(
+                Modifier
+                    .height(itemWidth)
+                    .padding(horizontal = 18.dp)
+                    .pointerInput(Unit) {
+                        detectTapGestures {
+                            IslandHaptics.button(hapticContext)
+                            confirming = false
+                            onClearAll?.invoke()
+                        }
+                    },
+                contentAlignment = Alignment.Center,
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                    androidx.compose.material3.Icon(
+                        painter = androidx.compose.ui.res.painterResource(R.drawable.rounded_delete_24),
+                        contentDescription = null,
+                        tint = ring,
+                        modifier = Modifier.size(18.dp),
+                    )
+                    Text(
+                        text = stringResource(R.string.label_clear_all),
+                        color = ring,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        maxLines = 1,
+                    )
+                }
+            }
+        } else {
         CompositionLocalProvider(LocalLayoutDirection provides if (reversed) LayoutDirection.Rtl else LayoutDirection.Ltr) {
         HorizontalUncontainedCarousel(
             state = carouselState,
@@ -439,7 +501,12 @@ fun IslandStackPill(
                     .background(Color.White.copy(alpha = 0.08f))
                     .then(
                         if (interactive && icon.onSelect != null) {
-                            Modifier.pointerInput(icon.key) { detectTapGestures { IslandHaptics.button(hapticContext); onInteraction(); icon.onSelect.invoke() } }
+                            Modifier.pointerInput(icon.key) {
+                                detectTapGestures(
+                                    onLongPress = startClear?.let { start -> { _ -> start() } },
+                                    onTap = { IslandHaptics.button(hapticContext); onInteraction(); icon.onSelect.invoke() },
+                                )
+                            }
                         } else {
                             Modifier
                         },
@@ -454,6 +521,8 @@ fun IslandStackPill(
                     Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { icon.content(itemWidth) }
                 }
             }
+        }
+        }
         }
         }
     }

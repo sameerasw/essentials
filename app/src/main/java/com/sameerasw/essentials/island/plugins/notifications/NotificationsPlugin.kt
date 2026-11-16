@@ -696,6 +696,7 @@ class NotificationsPlugin : BaseIslandPlugin() {
         publish(
             itemFor(alert).let { current ->
                 current.withStack(
+                    onClearAll = { dismissEverything() },
                     sideBubble = bubble,
                     compactVisible = minimal || bubble == null,
                     leadingCell = if (inlineQueue) queueCell(waiting) else null,
@@ -716,6 +717,13 @@ class NotificationsPlugin : BaseIslandPlugin() {
 
     private fun queueCell(icons: List<StackIcon>): CompactCell = CompactCell("notif.queue") {
         IslandStackOverlap(icons, 22.dp)
+    }
+
+    private fun dismissEverything() {
+        val keys = alerts.map { it.key }
+        clearAll()
+        keys.forEach { NotificationListener.dismissNotification(it) }
+        ctx?.request?.invoke(PluginRequest.Collapse(ITEM_KEY))
     }
 
     private fun clearWaiting() {
@@ -973,6 +981,7 @@ class NotificationsPlugin : BaseIslandPlugin() {
     private fun IslandItem.withStack(
         queue: QueueInfo?,
         stack: List<StackIcon>,
+        onClearAll: (() -> Unit)? = this.onClearAll,
         sideBubble: SideBubble? = null,
         compactVisible: Boolean = sideBubble == null,
         leadingCell: CompactCell? = null,
@@ -987,6 +996,7 @@ class NotificationsPlugin : BaseIslandPlugin() {
         accent = accent,
         dismissible = dismissible,
         onDismiss = onDismiss,
+        onClearAll = onClearAll,
         onOpen = onOpen,
         interactions = interactions,
         queue = queue,
