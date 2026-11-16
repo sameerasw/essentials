@@ -322,7 +322,7 @@ private fun BriefBackground(
         label = "briefArt",
     )
     val event = (page as? BriefPage.Event)?.event
-    val glowColor = event?.calendarColor?.let { Color(soften(it)) } ?: islandAccent()
+    val glowColor = scope.spec.glowColor ?: event?.calendarColor?.let { Color(soften(it)) } ?: islandAccent()
     val glowAlpha by animateFloatAsState(if (event != null) 1f else 0f, motionTween(400), label = "briefGlow")
     Box(modifier) {
         if (artAlpha > 0f) {
@@ -333,7 +333,7 @@ private fun BriefBackground(
                 Modifier
                     .matchParentSize()
                     .graphicsLayer { alpha = glowAlpha }
-                    .accentGlow(glowColor, showGlow, scope.cameraClearance),
+                    .accentGlow(glowColor, showGlow, scope.cameraClearance, scope.spec.glowIntensity),
             )
         }
     }

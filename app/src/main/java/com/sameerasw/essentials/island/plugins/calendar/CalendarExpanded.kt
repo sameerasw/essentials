@@ -68,6 +68,7 @@ fun CalendarExpanded(
     val context = LocalContext.current
     val sidePadding = spec.expandedPadding + spec.expandedCorner * 0.35f
     val calendarColor = event.calendarColor?.let { Color(soften(it)) } ?: islandAccent()
+    val glowColor = spec.glowColor ?: calendarColor
     IslandSurfaceAccent(calendarColor)
     val timeSettings = remember { SettingsRepository(context) }
     val timeText = { millis: Long -> IslandTimeFormat.format(context, timeSettings, millis) }
@@ -81,8 +82,8 @@ fun CalendarExpanded(
     val detailStyle = IslandTextStyles.body.copy(color = islandTextColor(), fontSize = 15.sp, lineHeight = 20.sp)
 
     Box(propagateMinConstraints = true) {
-        if (drawBackground && !SurfaceBackdrop { Box(Modifier.fillMaxSize().accentGlow(calendarColor, showGlow, scope.cameraClearance)) }) {
-            Box(Modifier.matchParentSize().accentGlow(calendarColor, showGlow, scope.cameraClearance))
+        if (drawBackground && !SurfaceBackdrop { Box(Modifier.fillMaxSize().accentGlow(glowColor, showGlow, scope.cameraClearance, spec.glowIntensity)) }) {
+            Box(Modifier.matchParentSize().accentGlow(glowColor, showGlow, scope.cameraClearance, spec.glowIntensity))
         }
         Column(
             modifier = Modifier.fillMaxWidth().resizableCard(resize).padding(spec.expandedOutset),

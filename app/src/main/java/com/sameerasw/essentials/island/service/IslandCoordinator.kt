@@ -809,6 +809,11 @@ class IslandCoordinator(
             neuralExpressive = transparent && settings.isIslandNeuralExpressiveEnabled(),
             neuralExpressiveAlways = settings.isIslandNeuralExpressiveAlwaysEnabled(),
             glowIntensity = if (settings.isIslandShowGlowEnabled()) settings.getIslandGlowIntensity().coerceIn(0f, 2f) else 0f,
+            glowSize = settings.getIslandGlowSize().coerceIn(0.25f, 2f),
+            glowRim = settings.isIslandGlowRimEnabled(),
+            glowColor = if (settings.isIslandGlowDynamicEnabled()) null else {
+                runCatching { Color(AndroidColor.parseColor(settings.getIslandGlowColor())) }.getOrNull()
+            },
             transparency = transparent,
             backdropBlur = transparent && settings.isIslandBackdropBlurEnabled(),
             backdropBlurRadius = settings.getIslandBackdropBlurRadius().coerceIn(5f, 120f).dp,
@@ -1121,6 +1126,10 @@ class IslandCoordinator(
             SettingsRepository.KEY_ISLAND_PROGRESSIVE_BLUR,
             SettingsRepository.KEY_ISLAND_SHOW_GLOW,
             SettingsRepository.KEY_ISLAND_GLOW_INTENSITY,
+            SettingsRepository.KEY_ISLAND_GLOW_SIZE,
+            SettingsRepository.KEY_ISLAND_GLOW_RIM,
+            SettingsRepository.KEY_ISLAND_GLOW_DYNAMIC,
+            SettingsRepository.KEY_ISLAND_GLOW_COLOR,
             SettingsRepository.KEY_ISLAND_SECONDARY_BUBBLE,
             SettingsRepository.KEY_ISLAND_NOTIF_HUB_ICONS,
             SettingsRepository.KEY_ISLAND_SECONDARY_BUBBLE_SIDE,

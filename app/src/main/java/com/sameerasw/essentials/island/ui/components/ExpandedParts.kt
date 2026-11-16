@@ -124,15 +124,15 @@ fun IslandExpandedScope.CameraRow(
 val IslandExpandedScope.cameraClearance: Dp
     get() = spec.expandedOutset + spec.expandedTopPadding + spec.compactHeight + 8.dp
 
-fun Modifier.accentGlow(color: Color, enabled: Boolean, clearTop: Dp): Modifier =
-    if (!enabled) this else drawBehind {
+fun Modifier.accentGlow(color: Color, enabled: Boolean, clearTop: Dp, intensity: Float = 1f): Modifier =
+    if (!enabled || intensity <= 0f) this else drawBehind {
         val top = clearTop.toPx().coerceAtMost(size.height)
         if (size.height - top <= 0f) return@drawBehind
         drawRect(
             brush = Brush.verticalGradient(
                 0f to Color.Transparent,
-                0.55f to color.copy(alpha = 0.25f),
-                1f to color.copy(alpha = 0.51f),
+                0.55f to color.copy(alpha = (0.25f * intensity).coerceAtMost(1f)),
+                1f to color.copy(alpha = (0.51f * intensity).coerceAtMost(1f)),
                 startY = top,
                 endY = size.height,
             ),
