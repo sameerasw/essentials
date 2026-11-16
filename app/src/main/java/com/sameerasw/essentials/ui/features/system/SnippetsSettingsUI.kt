@@ -17,22 +17,23 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonGroupDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.ToggleButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -46,13 +47,15 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.model.Snippet
-import com.sameerasw.essentials.ui.components.StackedActionCard
 import com.sameerasw.essentials.ui.core.cards.SelectionCardItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.sheets.EssentialsBottomSheet
@@ -77,7 +80,6 @@ fun SnippetsSettingsUI(
     val snippets by viewModel.textSnippets
     val isAccessibilityEnabled by viewModel.isAccessibilityEnabled
 
-    var showPrefixSheet by remember { mutableStateOf(false) }
     var showPermissionSheet by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
@@ -99,17 +101,9 @@ fun SnippetsSettingsUI(
             }
         }
 
-        StackedActionCard(
-            iconRes = R.drawable.rounded_edit_note_24,
-            title = stringResource(R.string.snippets_trigger_prefix),
-            description = if (prefix.isEmpty()) {
-                stringResource(R.string.snippets_prefix_space_expansion)
-            } else {
-                stringResource(R.string.snippets_prefix_symbol_desc, prefix)
-            },
-            actionLabel = stringResource(R.string.snippets_action_change),
-            actionIconRes = R.drawable.rounded_edit_24,
-            onAction = { showPrefixSheet = true },
+        SnippetPrefixPicker(
+            selected = prefix,
+            onSelected = { viewModel.setSnippetPrefix(it) },
         )
 
         Text(
@@ -148,82 +142,6 @@ fun SnippetsSettingsUI(
                         onAddSheetVisibleChange(true)
                     },
                 )
-            }
-        }
-    }
-
-    if (showPrefixSheet) {
-        val options = listOf(
-            Triple(";", stringResource(R.string.snippets_prefix_semicolon), ";shrug"),
-            Triple(":", stringResource(R.string.snippets_prefix_colon), ":shrug"),
-            Triple("@@", stringResource(R.string.snippets_prefix_at), "@@shrug"),
-            Triple("", stringResource(R.string.snippets_prefix_space), "shrug ␣"),
-        )
-
-        EssentialsBottomSheet(onDismissRequest = { showPrefixSheet = false }) {
-            val sheetView = LocalView.current
-            Column(
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp, vertical = 8.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-            ) {
-                Text(
-                    text = stringResource(R.string.snippets_set_prefix_dialog_title),
-                    style = MaterialTheme.typography.headlineSmall,
-                    fontWeight = FontWeight.Bold,
-                )
-                Text(
-                    text = stringResource(R.string.snippets_set_prefix_dialog_desc),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-
-                RoundedCardContainer(spacing = 2.dp) {
-                    options.forEachIndexed { index, (sym, label, example) ->
-                        val isSelected = prefix == sym
-                        val shape = RoundedCornerShape(
-                            topStart = if (index == 0) 24.dp else 4.dp,
-                            topEnd = if (index == 0) 24.dp else 4.dp,
-                            bottomStart = if (index == options.lastIndex) 24.dp else 4.dp,
-                            bottomEnd = if (index == options.lastIndex) 24.dp else 4.dp,
-                        )
-                        Row(
-                            modifier = Modifier.fillMaxWidth()
-                                .clip(shape)
-                                .clickable {
-                                    HapticUtil.performUIHaptic(sheetView)
-                                    viewModel.setSnippetPrefix(sym)
-                                    showPrefixSheet = false
-                                }
-                                .background(MaterialTheme.colorScheme.surfaceBright)
-                                .padding(horizontal = 16.dp, vertical = 14.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(12.dp),
-                        ) {
-                            RadioButton(
-                                selected = isSelected,
-                                onClick = {
-                                    HapticUtil.performUIHaptic(sheetView)
-                                    viewModel.setSnippetPrefix(sym)
-                                    showPrefixSheet = false
-                                },
-                            )
-                            Column(modifier = Modifier.weight(1f)) {
-                                Text(
-                                    text = label,
-                                    style = MaterialTheme.typography.bodyLarge,
-                                    fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Normal,
-                                    color = MaterialTheme.colorScheme.onSurface,
-                                )
-                                Text(
-                                    text = "e.g., $example",
-                                    style = MaterialTheme.typography.bodySmall,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                )
-                            }
-                        }
-                    }
-                }
-                Spacer(Modifier.height(8.dp))
             }
         }
     }
@@ -461,6 +379,51 @@ fun SnippetBottomSheet(
                     enabled = isSaveEnabled,
                 ) {
                     Text(stringResource(R.string.action_save))
+                }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
+private fun SnippetPrefixPicker(
+    selected: String,
+    onSelected: (String) -> Unit,
+) {
+    val view = LocalView.current
+    val options = listOf(";", ":", "@@", "")
+
+    RoundedCardContainer(spacing = 2.dp) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(MaterialTheme.colorScheme.surfaceBright)
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+        ) {
+            Text(
+                text = stringResource(R.string.snippets_trigger_prefix),
+                style = MaterialTheme.typography.titleMedium,
+            )
+            Row(horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween)) {
+                options.forEachIndexed { index, symbol ->
+                    ToggleButton(
+                        checked = selected == symbol,
+                        onCheckedChange = {
+                            HapticUtil.performLightHaptic(view)
+                            onSelected(symbol)
+                        },
+                        modifier = Modifier.weight(1f).semantics { role = Role.RadioButton },
+                        shapes =
+                            when (index) {
+                                0 -> ButtonGroupDefaults.connectedLeadingButtonShapes()
+                                options.lastIndex -> ButtonGroupDefaults.connectedTrailingButtonShapes()
+                                else -> ButtonGroupDefaults.connectedMiddleButtonShapes()
+                            },
+                    ) {
+                        Text(text = symbol.ifEmpty { "␣" }, maxLines = 1)
+                    }
                 }
             }
         }
