@@ -3707,6 +3707,9 @@
     <string name="about_desc_mono_audio_tile">Quick Settings tile to toggle mono audio.\n\nMono audio plays the same sound in both ears, which helps when using a single earbud or if you have hearing difficulty in one ear.</string>
     <string name="about_desc_back_gesture">Fine tune the system back gesture.\n\nAdjust the edge widths for the left and right gesture areas and set up per-app back gesture behavior. Requires secure settings permission.</string>
     <string name="feature_reset_hold">Hold to reset</string>
+    <string name="settings_reset_all_hold">Hold to reset all data</string>
+    <string name="settings_reset_all_info_title">Reset Essentials data</string>
+    <string name="settings_reset_all_info_desc">Resets all Essentials settings and data to a fresh start. System settings, permissions and anything Essentials changed on your device, such as secure settings, are not reverted.</string>
     <string name="feature_reset_done">Settings reset</string>
     <string name="feature_reset_info_title">Reset this feature</string>
     <string name="feature_reset_info_desc">Resets every Essentials setting for this feature to its default. System settings and permissions are not changed.</string>
