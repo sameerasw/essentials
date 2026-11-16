@@ -185,8 +185,7 @@ class IslandController(
             IslandStage.Compact -> {
                 val tapped = itemKey?.let { current.items[it] }
                 if (tapped?.expanded == null && tapped?.interactions?.onTap?.invoke() == true) return true
-                val target = itemKey?.let { current.items[it] }?.takeIf { it.expanded != null }
-                    ?: defaultTapTarget(current)
+                val target = tapped?.takeIf { it.expanded != null }
                     ?: fallbackTapKey?.invoke()?.let { current.items[it] }?.takeIf { it.expanded != null }
                     ?: return false
                 if (target.interactions.onTap?.invoke() != true) expand(target.key)
@@ -198,7 +197,6 @@ class IslandController(
     fun onLongPress(itemKey: String?) {
         val current = _state.value
         val item = (if (current.stage == IslandStage.Compact) itemKey?.let { current.items[it] } else current.focused)
-            ?: defaultTapTarget(current)
             ?: return
         val action = item.interactions.onLongPress ?: item.onOpen ?: return
         action()
@@ -300,12 +298,6 @@ class IslandController(
             }
         }
     }
-
-    private fun defaultTapTarget(state: IslandUiState): IslandItem? =
-        state.arrangement.visibleItems
-            .mapNotNull { state.items[it] }
-            .filter { it.placement == CompactPlacement.Dynamic && it.expanded != null }
-            .minByOrNull { it.effectivePriority }
 
     private fun restartExpandedTimer() {
         expandedTimer?.cancel()
