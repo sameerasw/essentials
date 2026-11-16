@@ -45,7 +45,6 @@ import com.sameerasw.essentials.R
 import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
-import com.sameerasw.essentials.ui.core.cards.SelectionCardItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.sheets.PermissionsBottomSheet
 import com.sameerasw.essentials.ui.modifiers.highlight
@@ -362,28 +361,15 @@ fun KeyboardSettingsUI(
                         viewModel.setTextSnippetsEnabled(checked)
                     }
                 },
+                onSettingsClick = {
+                    context.startActivity(
+                        Intent(context, FeatureSettingsActivity::class.java).apply {
+                            putExtra("feature", "Text Snippets")
+                        },
+                    )
+                },
                 modifier = Modifier.highlight(highlightSetting == "keyboard_text_snippets"),
             )
-
-            if (viewModel.isTextSnippetsEnabled.value) {
-                SelectionCardItem(
-                    title = stringResource(R.string.title_manage_snippets),
-                    description =
-                        stringResource(
-                            R.string.desc_snippets_summary,
-                            viewModel.snippetPrefix.value.ifEmpty { "␣" },
-                            viewModel.textSnippets.value.size,
-                        ),
-                    iconRes = R.drawable.rounded_settings_24,
-                    onClick = {
-                        val intent =
-                            Intent(context, FeatureSettingsActivity::class.java).apply {
-                                putExtra("feature", "Text Snippets")
-                            }
-                        context.startActivity(intent)
-                    },
-                )
-            }
         }
 
         Spacer(Modifier.height(32.dp))
