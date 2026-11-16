@@ -119,7 +119,6 @@ import com.sameerasw.essentials.ui.features.system.HilightProgressSettingsUI
 import com.sameerasw.essentials.ui.features.system.HilightSettingsUI
 import com.sameerasw.essentials.ui.features.system.HilightStatus
 import com.sameerasw.essentials.ui.features.system.KeyboardSettingsUI
-import com.sameerasw.essentials.ui.features.system.SnippetsSettingsUI
 import com.sameerasw.essentials.ui.features.system.LiveWallpaperSettingsUI
 import com.sameerasw.essentials.ui.features.system.LocationReachedSettingsUI
 import com.sameerasw.essentials.ui.features.system.LockScreenClockSettingsUI
@@ -141,6 +140,7 @@ import com.sameerasw.essentials.ui.features.system.ScreenLockedSecuritySettingsU
 import com.sameerasw.essentials.ui.features.system.ScreenOffWidgetSettingsUI
 import com.sameerasw.essentials.ui.features.system.ShutUpSettingsUI
 import com.sameerasw.essentials.ui.features.system.SnoozeNotificationsSettingsUI
+import com.sameerasw.essentials.ui.features.system.SnippetsSettingsUI
 import com.sameerasw.essentials.ui.features.system.SoundModeTileSettingsUI
 import com.sameerasw.essentials.ui.features.system.StandbyAppsSettingsUI
 import com.sameerasw.essentials.ui.features.system.StatusBarIconSettingsUI

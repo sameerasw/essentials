@@ -49,8 +49,6 @@ import com.sameerasw.essentials.services.handlers.FlashlightHandler
 import com.sameerasw.essentials.island.service.IslandCoordinator
 import com.sameerasw.essentials.services.handlers.NotificationLightingHandler
 import com.sameerasw.essentials.services.handlers.SnippetExpansionHandler
-import com.sameerasw.essentials.services.handlers.SmartPixelsHandler
-import com.sameerasw.essentials.services.handlers.StatusBarSectionsDebugHandler
 import com.sameerasw.essentials.services.handlers.OmniGestureOverlayHandler
 import com.sameerasw.essentials.services.handlers.FaceUnlockBrightnessHandler
 import com.sameerasw.essentials.services.handlers.PocketModeHandler
@@ -97,7 +95,7 @@ class ScreenOffAccessibilityService :
     private lateinit var statusBarIconHandler: StatusBarIconHandler
     private lateinit var pocketModeHandler: PocketModeHandler
     private lateinit var faceUnlockBrightnessHandler: FaceUnlockBrightnessHandler
-    private lateinit var smartPixelsHandler: SmartPixelsHandler
+    private lateinit var smartPixelsHandler: com.sameerasw.essentials.services.handlers.SmartPixelsHandler
     private lateinit var duoOverlayHandler: DuoOverlayHandler
     lateinit var islandOverlayHandler: IslandCoordinator
     private lateinit var statusGlanceHandler: StatusGlanceHandler
@@ -106,7 +104,7 @@ class ScreenOffAccessibilityService :
     private lateinit var lockscreenShortcutsHandler: LockscreenShortcutsHandler
     private lateinit var appVolumeOverlayHandler: AppVolumeOverlayHandler
     private lateinit var snippetExpansionHandler: SnippetExpansionHandler
-    private lateinit var statusBarSectionsDebugHandler: StatusBarSectionsDebugHandler
+    private lateinit var statusBarSectionsDebugHandler: com.sameerasw.essentials.services.handlers.StatusBarSectionsDebugHandler
 
     private var lightSensor: Sensor? = null
     private var lightSensorLux: Float = 100f
@@ -435,7 +433,9 @@ class ScreenOffAccessibilityService :
         statusBarIconHandler = StatusBarIconHandler(this)
         pocketModeHandler = PocketModeHandler(this)
         faceUnlockBrightnessHandler = FaceUnlockBrightnessHandler(this)
-        smartPixelsHandler = SmartPixelsHandler(this)
+        smartPixelsHandler =
+            com.sameerasw.essentials.services.handlers
+                .SmartPixelsHandler(this)
         duoOverlayHandler = DuoOverlayHandler(this)
         islandOverlayHandler = IslandCoordinator(this)
         islandOverlayHandler.onVisibilityChanged = {
@@ -444,7 +444,7 @@ class ScreenOffAccessibilityService :
         }
         duoOverlayHandler.openBrief = { islandOverlayHandler.openBrief() }
         statusGlanceHandler = StatusGlanceHandler(this)
-        statusBarSectionsDebugHandler = StatusBarSectionsDebugHandler(this)
+        statusBarSectionsDebugHandler = com.sameerasw.essentials.services.handlers.StatusBarSectionsDebugHandler(this)
         lockscreenShortcutsHandler = LockscreenShortcutsHandler(this, flashlightHandler)
         appVolumeOverlayHandler = AppVolumeOverlayHandler(this)
         screenshotShareCleanupHandler = ScreenshotShareCleanupHandler(this, serviceScope)
