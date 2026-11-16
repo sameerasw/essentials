@@ -724,6 +724,7 @@ class NotificationsPlugin : BaseIslandPlugin() {
         val keys = alerts.map { it.key }
         clearAll()
         keys.forEach { NotificationListener.dismissNotification(it) }
+        NotificationListener.dismissSilentNotifications()
         ctx?.request?.invoke(PluginRequest.Collapse(ITEM_KEY))
     }
 
