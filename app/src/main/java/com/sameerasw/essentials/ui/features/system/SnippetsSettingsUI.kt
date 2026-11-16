@@ -11,6 +11,8 @@ package com.sameerasw.essentials.ui.features.system
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,6 +24,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ButtonGroupDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -30,9 +33,10 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.ToggleButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -43,6 +47,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
@@ -56,6 +61,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.model.Snippet
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.cards.SelectionCardItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
@@ -319,82 +325,97 @@ fun SnippetBottomSheet(
     }
     val isSaveEnabled = errorMessage == null && trimmedKeyword.isNotEmpty() && content.isNotBlank()
 
+    val view = LocalView.current
+
     EssentialsBottomSheet(onDismissRequest = onDismiss) {
         Column(
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp, vertical = 8.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+                .verticalScroll(rememberScrollState()),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            Text(
-                text = stringResource(if (snippet == null) R.string.snippets_dialog_new_title else R.string.snippets_dialog_edit_title),
-                style = MaterialTheme.typography.headlineSmall,
+            TranslatableText(
+                stringResId = if (snippet == null) R.string.snippets_dialog_new_title else R.string.snippets_dialog_edit_title,
+                style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
             )
 
-            OutlinedTextField(
-                value = keyword,
-                onValueChange = { keyword = it },
-                label = { Text(stringResource(R.string.snippets_keyword_label)) },
-                placeholder = { Text(stringResource(R.string.snippets_keyword_placeholder)) },
-                isError = errorMessage != null,
-                supportingText = if (errorMessage != null) { { Text(errorMessage) } } else null,
-                singleLine = true,
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(16.dp),
-            )
-
-            OutlinedTextField(
-                value = title,
-                onValueChange = { title = it },
-                label = { Text(stringResource(R.string.snippets_title_label)) },
-                placeholder = { Text(stringResource(R.string.snippets_title_placeholder)) },
-                singleLine = true,
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(16.dp),
-            )
-
-            OutlinedTextField(
-                value = content,
-                onValueChange = { content = it },
-                label = { Text(stringResource(R.string.snippets_content_label)) },
-                placeholder = { Text(stringResource(R.string.snippets_content_placeholder)) },
-                minLines = 3,
-                maxLines = 6,
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(16.dp),
-            )
+            RoundedCardContainer(spacing = 2.dp) {
+                SnippetFieldCard(
+                    value = keyword,
+                    onValueChange = { keyword = it },
+                    label = stringResource(R.string.snippets_keyword_label),
+                    placeholder = stringResource(R.string.snippets_keyword_placeholder),
+                    isError = errorMessage != null,
+                    supportingText = errorMessage,
+                    singleLine = true,
+                    isFirst = true,
+                    isLast = false,
+                )
+                SnippetFieldCard(
+                    value = title,
+                    onValueChange = { title = it },
+                    label = stringResource(R.string.snippets_title_label),
+                    placeholder = stringResource(R.string.snippets_title_placeholder),
+                    singleLine = true,
+                    isFirst = false,
+                    isLast = false,
+                )
+                SnippetFieldCard(
+                    value = content,
+                    onValueChange = { content = it },
+                    label = stringResource(R.string.snippets_content_label),
+                    placeholder = stringResource(R.string.snippets_content_placeholder),
+                    singleLine = false,
+                    isFirst = false,
+                    isLast = true,
+                )
+            }
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.End,
-                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                if (snippet != null && onDelete != null) {
-                    TextButton(onClick = { onDelete(snippet) }) {
-                        Text(text = stringResource(R.string.action_delete), color = MaterialTheme.colorScheme.error)
-                    }
-                    Spacer(Modifier.weight(1f))
+                OutlinedButton(
+                    onClick = {
+                        HapticUtil.performUIHaptic(view)
+                        onDismiss()
+                    },
+                    modifier = Modifier.weight(1f),
+                ) {
+                    TranslatableText(R.string.action_cancel)
                 }
-
-                TextButton(onClick = onDismiss) {
-                    Text(stringResource(R.string.action_cancel))
-                }
-                Spacer(Modifier.width(8.dp))
                 Button(
                     onClick = {
-                        if (isSaveEnabled) {
-                            onSave(
-                                Snippet(
-                                    id = snippet?.id ?: UUID.randomUUID().toString(),
-                                    keyword = trimmedKeyword,
-                                    title = title.trim(),
-                                    content = content,
-                                ),
-                            )
-                        }
+                        HapticUtil.performMediumHaptic(view)
+                        onSave(
+                            Snippet(
+                                id = snippet?.id ?: UUID.randomUUID().toString(),
+                                keyword = trimmedKeyword,
+                                title = title.trim(),
+                                content = content,
+                            ),
+                        )
                     },
+                    modifier = Modifier.weight(1f),
                     enabled = isSaveEnabled,
                 ) {
-                    Text(stringResource(R.string.action_save))
+                    TranslatableText(R.string.action_save)
+                }
+            }
+
+            if (snippet != null && onDelete != null) {
+                OutlinedButton(
+                    onClick = {
+                        HapticUtil.performMediumHaptic(view)
+                        onDelete(snippet)
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.error),
+                ) {
+                    TranslatableText(R.string.action_delete)
                 }
             }
         }
@@ -443,4 +464,47 @@ private fun SnippetPrefixPicker(
             }
         }
     }
+}
+
+@Composable
+private fun SnippetFieldCard(
+    value: String,
+    onValueChange: (String) -> Unit,
+    label: String,
+    placeholder: String,
+    singleLine: Boolean,
+    isFirst: Boolean,
+    isLast: Boolean,
+    modifier: Modifier = Modifier,
+    isError: Boolean = false,
+    supportingText: String? = null,
+) {
+    val shape = RoundedCornerShape(
+        topStart = if (isFirst) 24.dp else 4.dp,
+        topEnd = if (isFirst) 24.dp else 4.dp,
+        bottomStart = if (isLast) 24.dp else 4.dp,
+        bottomEnd = if (isLast) 24.dp else 4.dp,
+    )
+
+    TextField(
+        value = value,
+        onValueChange = onValueChange,
+        modifier = modifier.fillMaxWidth().clip(shape),
+        label = { Text(label) },
+        placeholder = { Text(placeholder) },
+        isError = isError,
+        supportingText = supportingText?.let { { Text(it) } },
+        singleLine = singleLine,
+        minLines = if (singleLine) 1 else 3,
+        maxLines = if (singleLine) 1 else 6,
+        shape = shape,
+        colors = TextFieldDefaults.colors(
+            focusedContainerColor = MaterialTheme.colorScheme.surfaceBright,
+            unfocusedContainerColor = MaterialTheme.colorScheme.surfaceBright,
+            errorContainerColor = MaterialTheme.colorScheme.surfaceBright,
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent,
+            errorIndicatorColor = Color.Transparent,
+        ),
+    )
 }

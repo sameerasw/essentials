@@ -2473,7 +2473,6 @@ object FeatureRegistry {
                 contributors = listOf("Balajitechlabs"),
                 permissionKeys = listOf("ACCESSIBILITY"),
                 showToggle = false,
-                parentFeatureId = "System Keyboard",
                 isVisibleInMain = false,
             ) {
                 override fun isEnabled(viewModel: MainViewModel) = viewModel.isTextSnippetsEnabled.value
