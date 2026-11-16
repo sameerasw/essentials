@@ -18,6 +18,20 @@ import com.sameerasw.essentials.data.repository.SettingsRepository
 class SettingsExternalHandler : ExternalHandler {
     override val path: String = "settings"
 
+    private val blockedKeys =
+        setOf(
+            SettingsRepository.KEY_GITHUB_ACCESS_TOKEN,
+            SettingsRepository.KEY_SHIZUKU_AUTH_TOKEN,
+            SettingsRepository.KEY_EXTERNAL_CONTROL_TOKEN,
+            SettingsRepository.KEY_UNSPLASH_ACCESS_KEY,
+        )
+
+    // Only primitive feature flags and numbers are exposed; strings may hold tokens or action JSON
+    private fun isExposed(
+        key: String,
+        value: Any?,
+    ): Boolean = key !in blockedKeys && (value is Boolean || value is Int || value is Float || value is Long)
+
     override fun onQuery(
         context: Context,
         remainingPath: String,
@@ -29,6 +43,7 @@ class SettingsExternalHandler : ExternalHandler {
         if (!prefs.contains(key)) return null
 
         val value = prefs.all[key] ?: return null
+        if (!isExposed(key, value)) return null
         val cursor = MatrixCursor(arrayOf("key", "value", "type"))
         cursor.addRow(arrayOf(key, value, value.javaClass.simpleName))
         return cursor
@@ -46,12 +61,12 @@ class SettingsExternalHandler : ExternalHandler {
         if (!prefs.contains(key)) return false
 
         val currentValue = prefs.all[key] ?: return false
+        if (!isExposed(key, currentValue)) return false
         val repository = SettingsRepository(context)
 
         return try {
             when (currentValue) {
                 is Boolean -> repository.putBoolean(key, value?.toBoolean() ?: false)
-                is String -> repository.putString(key, value)
                 is Int -> repository.putInt(key, value?.toInt() ?: 0)
                 is Float -> repository.putFloat(key, value?.toFloat() ?: 0f)
                 is Long -> repository.putLong(key, value?.toLong() ?: 0L)
@@ -74,7 +89,7 @@ class SettingsExternalHandler : ExternalHandler {
             val prefs =
                 context.getSharedPreferences(SettingsRepository.PREFS_NAME, Context.MODE_PRIVATE)
             val currentValue = prefs.all[key]
-            if (currentValue is Boolean) {
+            if (currentValue is Boolean && key !in blockedKeys) {
                 val repository = SettingsRepository(context)
                 val newValue = !currentValue
                 repository.putBoolean(key, newValue)
