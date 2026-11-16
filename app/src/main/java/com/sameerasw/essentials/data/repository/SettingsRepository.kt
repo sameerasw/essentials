@@ -43,7 +43,6 @@ import com.sameerasw.essentials.domain.model.github.GitHubUser
 import com.sameerasw.essentials.utils.RootUtils
 import com.sameerasw.essentials.utils.ShellUtils
 import com.sameerasw.essentials.utils.ShizukuUtils
-import java.util.UUID
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -4934,13 +4933,13 @@ class SettingsRepository(
 
     fun getTextSnippets(): List<Snippet> {
         cachedSnippets?.let { return it }
-        val json = getString(KEY_KEYBOARD_SNIPPETS_DATA, null) ?: return defaultSnippets().also { cachedSnippets = it }
+        val json = getString(KEY_KEYBOARD_SNIPPETS_DATA, null) ?: return emptyList<Snippet>().also { cachedSnippets = it }
         val list =
             try {
                 val type = object : TypeToken<List<Snippet>>() {}.type
-                gson.fromJson<List<Snippet>>(json, type) ?: defaultSnippets()
+                gson.fromJson<List<Snippet>>(json, type) ?: emptyList()
             } catch (_: Exception) {
-                defaultSnippets()
+                emptyList()
             }
         cachedSnippets = list
         return list
@@ -4950,9 +4949,4 @@ class SettingsRepository(
         cachedSnippets = snippets
         putString(KEY_KEYBOARD_SNIPPETS_DATA, gson.toJson(snippets))
     }
-
-    fun defaultSnippets(): List<Snippet> =
-        listOf(
-            Snippet(id = UUID.randomUUID().toString(), keyword = "shrug", title = "Shrug", content = "¯\\_(ツ)_/¯"),
-        )
 }
