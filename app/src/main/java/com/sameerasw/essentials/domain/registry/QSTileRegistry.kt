@@ -38,6 +38,7 @@ import com.sameerasw.essentials.services.tiles.NfcTileService
 import com.sameerasw.essentials.services.tiles.NotificationLightingTileService
 import com.sameerasw.essentials.services.tiles.PrivateDnsTileService
 import com.sameerasw.essentials.services.tiles.HeadsUpNotificationsTileService
+import com.sameerasw.essentials.services.tiles.AccessibilityTileService
 import com.sameerasw.essentials.services.tiles.PrivateNotificationsTileService
 import com.sameerasw.essentials.services.tiles.RefreshRateTileService
 import com.sameerasw.essentials.services.tiles.RestartSystemUiTileService
@@ -89,6 +90,14 @@ object QSTileRegistry {
                 PrivateNotificationsTileService::class.java,
                 listOf("WRITE_SECURE_SETTINGS"),
                 R.string.about_desc_sensitive_content,
+                R.string.cat_privacy,
+            ),
+            QSTileInfo(
+                R.string.tile_accessibility,
+                R.drawable.rounded_accessibility_new_24,
+                AccessibilityTileService::class.java,
+                listOf("WRITE_SECURE_SETTINGS"),
+                R.string.about_desc_accessibility_tile,
                 R.string.cat_privacy,
             ),
             QSTileInfo(

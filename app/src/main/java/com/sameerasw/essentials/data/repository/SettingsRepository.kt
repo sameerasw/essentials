@@ -874,6 +874,7 @@ class SettingsRepository(
         const val KEY_SHUT_UP_ATTEMPT_SHIZUKU_RESTART = "shut_up_attempt_shizuku_restart"
         const val KEY_SHUT_UP_RESTORE_DELAY = "shut_up_restore_delay"
         const val KEY_SHUT_UP_RESTORE_MODE = "shut_up_restore_mode"
+        const val KEY_ACCESSIBILITY_TILE_SAVED = "accessibility_tile_saved_services"
         const val KEY_SHUT_UP_KEYBOARD = "shut_up_keyboard"
         const val KEY_SHIZUKU_AUTH_TOKEN = "shizuku_auth_token"
         const val KEY_EDGE_LIGHTING_SWEEP_SELECTED_SHAPES = "edge_lighting_sweep_selected_shapes"

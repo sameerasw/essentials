@@ -1089,6 +1089,20 @@
         </service>
 
         <service
+            android:name=".services.tiles.AccessibilityTileService"
+            android:exported="true"
+            android:icon="@drawable/rounded_accessibility_new_24"
+            android:label="@string/tile_accessibility"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.service.quicksettings.TILE_CATEGORY"
+                android:value="android.service.quicksettings.CATEGORY_PRIVACY" />
+        </service>
+
+        <service
             android:name=".services.tiles.PrivateNotificationsTileService"
             android:exported="true"
             android:icon="@drawable/rounded_notifications_off_24"
