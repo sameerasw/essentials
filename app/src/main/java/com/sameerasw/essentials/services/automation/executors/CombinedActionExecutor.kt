@@ -773,7 +773,8 @@ object CombinedActionExecutor {
 
                     if (action.changeLockScreenClock) {
                         val key = "lock_screen_custom_clock_face"
-                        val value = "{\"clockId\":\"${action.lockScreenClockStyle}\"}"
+                        val clockId = action.lockScreenClockStyle.filter { it.isLetterOrDigit() || it == '_' || it == '-' || it == '.' }
+                        val value = "{\"clockId\":\"$clockId\"}"
                         val success =
                             try {
                                 android.provider.Settings.Secure.putString(
@@ -785,7 +786,7 @@ object CombinedActionExecutor {
                                 false
                             }
                         if (!success) {
-                            val command = "settings put secure $key $value"
+                            val command = "settings put secure $key '$value'"
                             com.sameerasw.essentials.utils.ShellUtils
                                 .runCommand(context, command)
                         }
@@ -1264,7 +1265,8 @@ object CombinedActionExecutor {
         context: Context,
         action: Action.OpenActivity,
     ) {
-        if (action.packageName.isBlank() || action.className.isBlank()) return
+        val identifier = Regex("[A-Za-z0-9_.$]+")
+        if (!identifier.matches(action.packageName) || !identifier.matches(action.className)) return
         val component = ComponentName(action.packageName, action.className)
         // Single quotes keep the shell from expanding the $ in nested class names
         val startCommand = "am start -n '${component.flattenToShortString()}'"
