@@ -311,6 +311,22 @@ class DuoOverlayView(context: Context) : View(context) {
             }
         }
 
+    var matchIslandColors: Boolean = false
+        set(value) {
+            if (field != value) {
+                field = value
+                animateThemeChange()
+            }
+        }
+
+    var islandColor: Int? = null
+        set(value) {
+            if (field != value) {
+                field = value
+                if (matchIslandColors) animateThemeChange()
+            }
+        }
+
     var customColor: Int = Color.WHITE
         set(value) {
             if (field != value) {
@@ -1203,6 +1219,13 @@ class DuoOverlayView(context: Context) : View(context) {
             val trackAlpha = if (isDarkTheme) 90 else 110
             val track = Color.argb(trackAlpha, Color.red(lowAccent), Color.green(lowAccent), Color.blue(lowAccent))
             return Triple(track, lowAccent, lowAccent)
+        }
+
+        val matched = islandColor
+        if (matchIslandColors && matched != null) {
+            val trackAlpha = if (isDarkTheme) 90 else 110
+            val track = Color.argb(trackAlpha, Color.red(matched), Color.green(matched), Color.blue(matched))
+            return Triple(track, matched, matched)
         }
 
         if (!useMaterialYouColors) {

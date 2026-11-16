@@ -1728,6 +1728,7 @@ Cần có quyền quản trị thiết bị nếu sử dụng chế độ khóa.
     <string name="duo_differentiate_wifi_title">Phân biệt Wi-Fi</string>
     <string name="duo_differentiate_wifi_desc">Khi kết nối Wi-Fi, màn hình sẽ hiển thị các đoạn cung cong riêng biệt thay vì các chấm</string>
     <string name="duo_show_progress_title">Thông báo tiến độ</string>
+    <string name="duo_match_island_colors_title">Match island colors</string>
     <string name="duo_material_you_title">Sử dụng màu Material You</string>
     <string name="duo_hide_when_screen_off_title">Ẩn khi màn hình tắt</string>
     <string name="duo_hide_when_screen_off_only_idle_title">Chỉ ẩn trên màn hình AOD khi không hoạt động</string>

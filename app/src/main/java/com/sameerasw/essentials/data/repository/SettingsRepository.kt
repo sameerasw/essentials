@@ -560,6 +560,7 @@ class SettingsRepository(
         const val KEY_DUO_HIDE_WHEN_SCREEN_OFF_ONLY_IDLE = "duo_hide_when_screen_off_only_idle"
         const val KEY_DUO_HIDE_WHEN_LOCKED = "duo_hide_when_locked"
         const val KEY_DUO_USE_MATERIAL_YOU = "duo_use_material_you"
+        const val KEY_DUO_MATCH_ISLAND_COLORS = "duo_match_island_colors"
         const val KEY_DUO_CUSTOM_COLOR = "duo_custom_color"
         const val KEY_DUO_TAP_ACTION = "duo_tap_action"
         const val KEY_DUO_DOUBLE_TAP_ACTION = "duo_double_tap_action"
@@ -4102,6 +4103,8 @@ class SettingsRepository(
 
     fun isDuoUseMaterialYouEnabled(): Boolean = getBoolean(KEY_DUO_USE_MATERIAL_YOU, true)
     fun setDuoUseMaterialYouEnabled(enabled: Boolean) = putBoolean(KEY_DUO_USE_MATERIAL_YOU, enabled)
+    fun isDuoMatchIslandColorsEnabled(): Boolean = getBoolean(KEY_DUO_MATCH_ISLAND_COLORS, false)
+    fun setDuoMatchIslandColorsEnabled(enabled: Boolean) = putBoolean(KEY_DUO_MATCH_ISLAND_COLORS, enabled)
 
     fun getDuoCustomColor(): String = getString(KEY_DUO_CUSTOM_COLOR, "#FFFFFF") ?: "#FFFFFF"
     fun setDuoCustomColor(colorHex: String) = putString(KEY_DUO_CUSTOM_COLOR, colorHex)

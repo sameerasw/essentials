@@ -1629,6 +1629,7 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla s
     <string name="duo_show_media_title">Reproduccion de medios</string>
     <string name="duo_show_progress_title">Progreso de notificaciones</string>
     <string name="duo_show_flashlight_title">Linterna</string>
+    <string name="duo_match_island_colors_title">Match island colors</string>
     <string name="duo_material_you_title">Usar colores Material You</string>
     <string name="duo_hide_when_screen_off_title">Ocultar si la pantalla esta apgada</string>
     <string name="duo_action_tap_title">Toque</string>

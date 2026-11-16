@@ -1740,6 +1740,7 @@ Zudem muss die Einstellung unter Umständen mehrfach angewendet werden, damit si
     <string name="duo_battery_critical_color_title">Kritisch niedriger Akkustand (&lt;10%)</string>
     <string name="duo_battery_power_save_color_title">Energiesparmodus</string>
     <string name="duo_show_progress_title">Fortschrittsbenachrichtigungen</string>
+    <string name="duo_match_island_colors_title">Match island colors</string>
     <string name="duo_material_you_title">Material You Farben</string>
     <string name="duo_action_tap_title">Tippen</string>
     <string name="duo_action_swipe_down_title">Nach unten wischen</string>

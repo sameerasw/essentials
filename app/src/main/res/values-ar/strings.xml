@@ -2124,6 +2124,7 @@
     <string name="duo_differentiate_wifi_title">تمييز الواي فاي</string>
     <string name="duo_differentiate_wifi_desc">أظهر مقاطع قوس منحنية مميزة بدلا من النقاط عند الاتصال بالواي فاي</string>
     <string name="duo_show_progress_title">إشعارات التقدم</string>
+    <string name="duo_match_island_colors_title">Match island colors</string>
     <string name="duo_material_you_title">استخدم ألوان الماتيريال</string>
     <string name="duo_hide_when_screen_off_title">إخفاء عندما تكون الشاشة مطفأة</string>
     <string name="duo_hide_when_screen_off_only_idle_title">إخفاء فقط على AOD أثناء الخمول</string>

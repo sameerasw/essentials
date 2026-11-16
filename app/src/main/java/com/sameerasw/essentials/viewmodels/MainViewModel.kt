@@ -213,6 +213,7 @@ class MainViewModel : ViewModel() {
     val isDuoHideWhenScreenOffOnlyIdle = mutableStateOf(false)
     val isDuoHideWhenLocked = mutableStateOf(false)
     val isDuoUseMaterialYou = mutableStateOf(true)
+    val isDuoMatchIslandColors = mutableStateOf(false)
     val duoCustomColor = mutableStateOf("#FFFFFF")
     val duoTapAction = mutableStateOf<Action?>(null)
     val duoDoubleTapAction = mutableStateOf<Action?>(null)
@@ -919,6 +920,9 @@ class MainViewModel : ViewModel() {
 
                     SettingsRepository.KEY_DUO_USE_MATERIAL_YOU ->
                         isDuoUseMaterialYou.value = settingsRepository.isDuoUseMaterialYouEnabled()
+
+                    SettingsRepository.KEY_DUO_MATCH_ISLAND_COLORS ->
+                        isDuoMatchIslandColors.value = settingsRepository.isDuoMatchIslandColorsEnabled()
 
                     SettingsRepository.KEY_DUO_CUSTOM_COLOR ->
                         duoCustomColor.value = settingsRepository.getDuoCustomColor()
@@ -2531,6 +2535,7 @@ class MainViewModel : ViewModel() {
         isDuoHideWhenScreenOffOnlyIdle.value = settingsRepository.isDuoHideWhenScreenOffOnlyIdleEnabled()
         isDuoHideWhenLocked.value = settingsRepository.isDuoHideWhenLockedEnabled()
         isDuoUseMaterialYou.value = settingsRepository.isDuoUseMaterialYouEnabled()
+        isDuoMatchIslandColors.value = settingsRepository.isDuoMatchIslandColorsEnabled()
         duoCustomColor.value = settingsRepository.getDuoCustomColor()
         duoTapAction.value = settingsRepository.getDuoTapAction()
         duoDoubleTapAction.value = settingsRepository.getDuoDoubleTapAction()
@@ -6610,6 +6615,11 @@ class MainViewModel : ViewModel() {
     fun setDuoHideWhenLocked(enabled: Boolean) {
         isDuoHideWhenLocked.value = enabled
         settingsRepository.setDuoHideWhenLockedEnabled(enabled)
+    }
+
+    fun setDuoMatchIslandColors(enabled: Boolean) {
+        isDuoMatchIslandColors.value = enabled
+        settingsRepository.setDuoMatchIslandColorsEnabled(enabled)
     }
 
     fun setDuoUseMaterialYou(enabled: Boolean) {
