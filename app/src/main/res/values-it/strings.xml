@@ -1183,7 +1183,7 @@
     <string name="auth_sign_in_rationale">Accedi per estendere i limiti delle chiamate API</string>
     <string name="auth_waiting_for_authorization">In attesa di autorizzazione...</string>
     <string name="action_sign_in_github">Accedi con GitHub</string>
-    <string name="action_sign_out">disconnessione</string>
+    <string name="action_sign_out">Disconnettiti</string>
     <string name="action_profile">Profilo</string>
     <!-- App Updates / Repos -->
     <string name="label_release_notes">Note sulla versione</string>
@@ -1802,4 +1802,11 @@
     <string name="island_action_show">Show</string>
     <string name="island_gesture_hints_title">Show gesture hints</string>
     <string name="wallpaper_staging_not_set">Not set yet</string>
+    <string name="settings_section_more">Di più</string>
+    <string name="settings_translations_section">Traduzioni</string>
+    <string name="permission_required_for">Richiesto per:</string>
+    <string name="btn_reset_update_note">Resetta note aggiornamenti</string>
+    <string name="label_top_contributors">Contributori Migliori</string>
+    <string name="settings_section_permissions">Autorizzazioni</string>
+    <string name="settings_section_customizations">Personalizzazione</string>
 </resources>
