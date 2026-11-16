@@ -16,7 +16,6 @@ import android.text.InputType
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
 import com.sameerasw.essentials.data.repository.SettingsRepository
-import com.sameerasw.essentials.ime.EssentialsInputMethodService
 import com.sameerasw.essentials.ime.SnippetExpansionEngine
 
 class SnippetExpansionHandler(
@@ -34,7 +33,6 @@ class SnippetExpansionHandler(
 
     fun onTextChanged(event: AccessibilityEvent) {
         if (!settings.isTextSnippetsEnabled()) return
-        if (EssentialsInputMethodService.isInputActive) return
         if (event.isPassword) return
 
         val source = event.source ?: return
