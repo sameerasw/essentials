@@ -7,7 +7,7 @@ import com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService
 class IslandActionActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val brief = intent?.action == ACTION_OPEN_BRIEF || intent?.component?.className?.endsWith("IslandBriefLauncher") == true
+        val brief = intent?.action == ACTION_OPEN_BRIEF
         runCatching {
             val island = ScreenOffAccessibilityService.instance?.islandOverlayHandler
             if (brief) island?.openBriefIfEnabled() else island?.openHub()

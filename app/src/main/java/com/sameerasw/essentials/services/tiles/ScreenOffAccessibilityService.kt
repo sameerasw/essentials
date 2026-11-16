@@ -577,7 +577,7 @@ class ScreenOffAccessibilityService :
                 addAction(FlashlightActionReceiver.ACTION_INCREASE)
                 addAction(FlashlightActionReceiver.ACTION_DECREASE)
             }
-        registerReceiver(screenReceiver, filter, RECEIVER_EXPORTED)
+        ContextCompat.registerReceiver(this, screenReceiver, filter, ContextCompat.RECEIVER_NOT_EXPORTED)
         registerReceiver(
             remapReceiver,
             IntentFilter().apply {

@@ -265,6 +265,7 @@ private fun BubbleWebScreen(
                                             val intent = Intent.parseUri(uri.toString(), Intent.URI_INTENT_SCHEME).apply {
                                                 addCategory(Intent.CATEGORY_BROWSABLE)
                                                 component = null
+                                                selector = null
                                             }
                                             context.startActivity(intent)
                                         } catch (_: Exception) {}

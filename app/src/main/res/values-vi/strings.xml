@@ -2333,7 +2333,6 @@ Tính năng này chỉ được dùng cho trình khởi chạy và không phải
     <string name="diy_category_sound_media">Âm thanh &amp; Media</string>
     <string name="diy_category_essentials">Điều chỉnh Essentials</string>
     <string name="island_action_open_label">Open Island</string>
-    <string name="island_action_open_brief_label">Open Brief</string>
     <string name="tile_accessibility">Accessibility</string>
     <string name="tile_accessibility_on">Services on</string>
     <string name="tile_accessibility_off">Services off</string>

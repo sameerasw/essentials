@@ -2566,7 +2566,6 @@ Android がバッテリーセーバーモードを有効にすると、これら
     <string name="action_reset_battery_stats">統計をリセット</string>
     <string name="label_reset_battery_stats_desc">システムのバッテリー統計をリセットします (dumpsys batterystats --reset)。これにより、過去のバッテリー使用状況とアプリの消費データがクリアされ、現在の充電状態から新たに追跡が開始されます。</string>
     <string name="island_action_open_label">Open Island</string>
-    <string name="island_action_open_brief_label">Open Brief</string>
     <string name="tile_accessibility">Accessibility</string>
     <string name="tile_accessibility_on">Services on</string>
     <string name="tile_accessibility_off">Services off</string>

@@ -37,6 +37,11 @@ jobs:
           echo "final_chat_id=${CHAT_ID:- -1001653455300}" >> $GITHUB_OUTPUT
           echo "final_topic_id=${TOPIC_ID:-71370}" >> $GITHUB_OUTPUT
 
+          esc() { printf '%s' "$1" | sed -e 's/&/\&amp;/g' -e 's/</\&lt;/g' -e 's/>/\&gt;/g' | tr -d '\r\n'; }
+          ISSUE_TITLE=$(esc "$ISSUE_TITLE")
+          PR_TITLE=$(esc "$PR_TITLE")
+          EVENT_SENDER=$(esc "$EVENT_SENDER")
+
           REPO="$GITHUB_REPOSITORY"
           EVENT="$GITHUB_EVENT_NAME"
           

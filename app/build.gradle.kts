@@ -210,7 +210,7 @@ dependencies {
     // Shizuku
     implementation(libs.shizuku.api)
     implementation(libs.shizuku.provider)
-    implementation("com.github.d4rken-org.porter-api:shizuku-bridge:+")
+    implementation("com.github.d4rken-org.porter-api:shizuku-bridge:0.9.0")
     implementation(libs.androidx.car.app)
 
     // Hidden API Bypass

@@ -945,6 +945,14 @@ class SettingsRepository(
         const val KEY_POWER_SAVING_APPLY_ON_BOOT = "power_saving_apply_on_boot"
         const val KEY_UNSPLASH_ACCESS_KEY = "unsplash_access_key"
         const val KEY_EXTERNAL_CONTROL_TOKEN = "external_control_token"
+        private val CONFIG_PREF_FILES =
+            listOf(
+                "essentials_prefs",
+                "caffeinate_prefs",
+                "link_prefs",
+                "diy_automations_prefs",
+                "live_wallpaper_prefs",
+            )
     }
 
     fun getExternalControlToken(): String? = prefs.getString(KEY_EXTERNAL_CONTROL_TOKEN, null)?.takeIf { it.isNotBlank() }
@@ -1955,16 +1963,7 @@ class SettingsRepository(
     fun getAllConfigsAsJsonString(): String {
         return try {
             val allConfigs = mutableMapOf<String, Map<String, Map<String, Any>>>()
-            val prefFiles =
-                listOf(
-                    "essentials_prefs",
-                    "caffeinate_prefs",
-                    "link_prefs",
-                    "diy_automations_prefs",
-                    "live_wallpaper_prefs",
-                )
-
-            prefFiles.forEach { fileName ->
+            CONFIG_PREF_FILES.forEach { fileName ->
                 val p = context.getSharedPreferences(fileName, Context.MODE_PRIVATE)
                 val wrapperMap = mutableMapOf<String, Map<String, Any>>()
 
@@ -1974,6 +1973,8 @@ class SettingsRepository(
                     if (key == KEY_GITHUB_ACCESS_TOKEN ||
                         key == KEY_GITHUB_WORKFLOW_TOKEN ||
                         key == KEY_SHIZUKU_AUTH_TOKEN ||
+                        key == KEY_EXTERNAL_CONTROL_TOKEN ||
+                        key == KEY_UNSPLASH_ACCESS_KEY ||
                         key.startsWith(LEGACY_WEATHER_API_KEY_PREFIX) ||
                         key.startsWith("mac_battery_") ||
                         key == "airsync_mac_connected" ||
@@ -2059,6 +2060,7 @@ class SettingsRepository(
                 gson.fromJson(json, type) ?: emptyMap()
 
             allConfigs.forEach { (fileName, prefWrapper) ->
+                if (fileName !in CONFIG_PREF_FILES) return@forEach
                 val p = context.getSharedPreferences(fileName, Context.MODE_PRIVATE)
 
                 // Preserve sensitive or volatile local state not present in backups
@@ -2068,6 +2070,8 @@ class SettingsRepository(
                         KEY_GITHUB_ACCESS_TOKEN,
                         KEY_GITHUB_WORKFLOW_TOKEN,
                         KEY_SHIZUKU_AUTH_TOKEN,
+                        KEY_EXTERNAL_CONTROL_TOKEN,
+                        KEY_UNSPLASH_ACCESS_KEY,
                         LEGACY_WEATHER_API_KEY_PREFIX,
                         "airsync_mac_connected",
                         KEY_SNOOZE_DISCOVERED_CHANNELS,
@@ -2108,6 +2112,8 @@ class SettingsRepository(
                             if (key == KEY_GITHUB_ACCESS_TOKEN ||
                                 key == KEY_GITHUB_WORKFLOW_TOKEN ||
                                 key == KEY_SHIZUKU_AUTH_TOKEN ||
+                                key == KEY_EXTERNAL_CONTROL_TOKEN ||
+                                key == KEY_UNSPLASH_ACCESS_KEY ||
                                 key.startsWith(LEGACY_WEATHER_API_KEY_PREFIX)
                             ) {
                                 return@forEach

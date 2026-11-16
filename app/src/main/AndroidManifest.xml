@@ -437,32 +437,6 @@
             </intent-filter>
         </activity>
 
-        <activity-alias
-            android:name=".IslandActionLauncher"
-            android:enabled="true"
-            android:exported="true"
-            android:icon="@drawable/rounded_rocket_launch_24"
-            android:label="@string/island_action_open_label"
-            android:targetActivity=".ui.activities.IslandActionActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity-alias>
-
-        <activity-alias
-            android:name=".IslandBriefLauncher"
-            android:enabled="true"
-            android:exported="true"
-            android:icon="@drawable/rounded_rocket_launch_24"
-            android:label="@string/island_action_open_brief_label"
-            android:targetActivity=".ui.activities.IslandActionActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity-alias>
-
         <activity
             android:name=".ui.activities.PixelSearchbarTapActivity"
             android:excludeFromRecents="true"
