@@ -56,6 +56,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.model.Snippet
+import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.cards.SelectionCardItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.sheets.EssentialsBottomSheet
@@ -77,6 +78,7 @@ fun SnippetsSettingsUI(
 ) {
     val context = LocalContext.current
     val prefix by viewModel.snippetPrefix
+    val isEnabled by viewModel.isTextSnippetsEnabled
     val snippets by viewModel.textSnippets
     val isAccessibilityEnabled by viewModel.isAccessibilityEnabled
 
@@ -101,10 +103,24 @@ fun SnippetsSettingsUI(
             }
         }
 
-        SnippetPrefixPicker(
-            selected = prefix,
-            onSelected = { viewModel.setSnippetPrefix(it) },
-        )
+        RoundedCardContainer(spacing = 2.dp) {
+            IconToggleItem(
+                iconRes = R.drawable.rounded_edit_note_24,
+                title = stringResource(R.string.feat_text_snippets_title),
+                isChecked = isEnabled,
+                onCheckedChange = { checked ->
+                    if (checked && !isAccessibilityEnabled) {
+                        showPermissionSheet = true
+                    } else {
+                        viewModel.setTextSnippetsEnabled(checked)
+                    }
+                },
+            )
+            SnippetPrefixPicker(
+                selected = prefix,
+                onSelected = { viewModel.setSnippetPrefix(it) },
+            )
+        }
 
         Text(
             text = stringResource(R.string.snippets_saved_title, snippets.size),
@@ -394,36 +410,35 @@ private fun SnippetPrefixPicker(
     val view = LocalView.current
     val options = listOf(";", ":", "@@", "")
 
-    RoundedCardContainer(spacing = 2.dp) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.surfaceBright)
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-        ) {
-            Text(
-                text = stringResource(R.string.snippets_trigger_prefix),
-                style = MaterialTheme.typography.titleMedium,
-            )
-            Row(horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween)) {
-                options.forEachIndexed { index, symbol ->
-                    ToggleButton(
-                        checked = selected == symbol,
-                        onCheckedChange = {
-                            HapticUtil.performLightHaptic(view)
-                            onSelected(symbol)
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(MaterialTheme.shapes.extraSmall)
+            .background(MaterialTheme.colorScheme.surfaceBright)
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+    ) {
+        Text(
+            text = stringResource(R.string.snippets_trigger_prefix),
+            style = MaterialTheme.typography.titleMedium,
+        )
+        Row(horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween)) {
+            options.forEachIndexed { index, symbol ->
+                ToggleButton(
+                    checked = selected == symbol,
+                    onCheckedChange = {
+                        HapticUtil.performLightHaptic(view)
+                        onSelected(symbol)
+                    },
+                    modifier = Modifier.weight(1f).semantics { role = Role.RadioButton },
+                    shapes =
+                        when (index) {
+                            0 -> ButtonGroupDefaults.connectedLeadingButtonShapes()
+                            options.lastIndex -> ButtonGroupDefaults.connectedTrailingButtonShapes()
+                            else -> ButtonGroupDefaults.connectedMiddleButtonShapes()
                         },
-                        modifier = Modifier.weight(1f).semantics { role = Role.RadioButton },
-                        shapes =
-                            when (index) {
-                                0 -> ButtonGroupDefaults.connectedLeadingButtonShapes()
-                                options.lastIndex -> ButtonGroupDefaults.connectedTrailingButtonShapes()
-                                else -> ButtonGroupDefaults.connectedMiddleButtonShapes()
-                            },
-                    ) {
-                        Text(text = symbol.ifEmpty { "␣" }, maxLines = 1)
-                    }
+                ) {
+                    Text(text = symbol.ifEmpty { "␣" }, maxLines = 1)
                 }
             }
         }
