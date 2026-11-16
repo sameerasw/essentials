@@ -119,6 +119,7 @@ object SharedOverlayWindow {
             setViewTreeSavedStateRegistryOwner(lifecycle)
             setViewTreeViewModelStoreOwner(lifecycle)
             clipChildren = true
+            com.sameerasw.essentials.utils.ForceInvertUtils.optOut(this)
         }
         val lp = WindowManager.LayoutParams(
             WindowManager.LayoutParams.MATCH_PARENT,

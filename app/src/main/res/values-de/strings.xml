@@ -1831,6 +1831,8 @@ Zugriff auf die Barrierefreiheit ist erforderlich, um die Überlagerung zu zeich
     <string name="island_glow_intensity_title">Glow intensity</string>
     <string name="island_glow_size_title">Glow size</string>
     <string name="island_glow_rim_title">Rim light</string>
+    <string name="island_expanded_dark_theme_warning">Expanded dark theme is on. If the island text or colors look wrong, filter Essentials out of it in Display settings.</string>
+    <string name="island_expanded_dark_theme_action">Open display settings</string>
     <string name="settings_reset_all_hold">Hold to reset all data</string>
     <string name="settings_reset_all_info_title">Reset Essentials data</string>
     <string name="settings_reset_all_info_desc">Resets all Essentials settings and data to a fresh start. System settings, permissions and anything Essentials changed on your device, such as secure settings, are not reverted.</string>
