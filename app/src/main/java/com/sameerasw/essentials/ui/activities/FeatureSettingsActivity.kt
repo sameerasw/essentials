@@ -598,6 +598,10 @@ fun FeatureSettingsScreen(
                         featureId != "Quick settings tiles" &&
                         featureId != "Location reached" &&
                         featureId != "Watch Controls"
+                val hasCollapsingHeader =
+                    featureId == "AOD wallpaper" ||
+                        featureId == "Batteries" ||
+                        (featureObj != null && featureObj.animationRes != 0)
                 Column(
                     modifier =
                         Modifier
@@ -606,7 +610,7 @@ fun FeatureSettingsScreen(
                                 if (hasScroll) {
                                     Modifier
                                         .scrollMotionBlur(scrollState, enabled = isMotionBlurEnabled)
-                                        .nestedScroll(nestedScrollConnection)
+                                        .then(if (hasCollapsingHeader) Modifier.nestedScroll(nestedScrollConnection) else Modifier)
                                         .verticalScroll(scrollState)
                                 } else {
                                     Modifier
@@ -738,6 +742,7 @@ fun FeatureSettingsScreen(
                                                     "Navigation",
                                                     "Link actions",
                                                     "System Keyboard",
+                                                    "Text Snippets",
                                                 ),
                                             )
 
@@ -842,6 +847,7 @@ fun FeatureSettingsScreen(
                                                     "Watch Wireless Debugging" -> android.os.Build.VERSION.SDK_INT >= 37 && !viewModel.isLocalNetworkGranted.value
                                                     "Lock screen shortcuts" -> !isAccessibilityEnabled
                                                     "Volume steps" -> !isAccessibilityEnabled
+                                                    "Text Snippets" -> !isAccessibilityEnabled
                                                     "App volume" -> !isAccessibilityEnabled || !isShizukuPermissionGranted
                                                     "Dynamic night light" ->
                                                         (if (viewModel.isUseUsageAccess.value) !viewModel.isUsageStatsPermissionGranted.value else !isAccessibilityEnabled) ||

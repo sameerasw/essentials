@@ -9,7 +9,6 @@
 
 package com.sameerasw.essentials.ui.features.system
 
-import android.app.Activity
 import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -46,9 +45,7 @@ import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
-import com.sameerasw.essentials.ui.core.sheets.PermissionsBottomSheet
 import com.sameerasw.essentials.ui.modifiers.highlight
-import com.sameerasw.essentials.utils.PermissionUIHelper
 import com.sameerasw.essentials.viewmodels.MainViewModel
 import kotlinx.coroutines.delay
 
@@ -64,8 +61,6 @@ fun KeyboardSettingsUI(
     var text by remember { mutableStateOf("") }
     val isKeyboardEnabled by viewModel.isKeyboardEnabled
     val isKeyboardSelected by viewModel.isKeyboardSelected
-    val isAccessibilityEnabled by viewModel.isAccessibilityEnabled
-    var showPermissionSheet by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         while (true) {
@@ -353,43 +348,19 @@ fun KeyboardSettingsUI(
             IconToggleItem(
                 iconRes = R.drawable.rounded_edit_note_24,
                 title = stringResource(R.string.feat_text_snippets_title),
-                isChecked = viewModel.isTextSnippetsEnabled.value,
-                onCheckedChange = { checked ->
-                    if (checked && !isAccessibilityEnabled) {
-                        showPermissionSheet = true
-                    } else {
-                        viewModel.setTextSnippetsEnabled(checked)
-                    }
-                },
-                onSettingsClick = {
+                description = stringResource(R.string.feat_text_snippets_desc),
+                showToggle = false,
+                onClick = {
                     context.startActivity(
                         Intent(context, FeatureSettingsActivity::class.java).apply {
                             putExtra("feature", "Text Snippets")
                         },
                     )
                 },
-                modifier = Modifier.highlight(highlightSetting == "keyboard_text_snippets"),
             )
         }
 
         Spacer(Modifier.height(32.dp))
-
-        if (showPermissionSheet) {
-            val permissionItems =
-                PermissionUIHelper.getPermissionItems(
-                    listOf("ACCESSIBILITY"),
-                    context,
-                    viewModel,
-                    context as? Activity,
-                )
-            if (permissionItems.isNotEmpty()) {
-                PermissionsBottomSheet(
-                    onDismissRequest = { showPermissionSheet = false },
-                    featureTitle = stringResource(R.string.feat_text_snippets_title),
-                    permissions = permissionItems,
-                )
-            }
-        }
 
         if (viewModel.isUserDictionarySheetVisible.value) {
             com.sameerasw.essentials.ui.features.apps.sheets.UserDictionaryBottomSheet(
