@@ -1260,9 +1260,9 @@ class MainViewModel : ViewModel() {
                         isLocationReachedFullScreenAlarmEnabled.value =
                             settingsRepository.getLocationReachedFullScreenAlarmEnabled()
 
-                    SettingsRepository.KEY_KEYBOARD_TEXT_SNIPPETS_ENABLED,
-                    SettingsRepository.KEY_KEYBOARD_SNIPPET_PREFIX,
-                    SettingsRepository.KEY_KEYBOARD_SNIPPETS_DATA,
+                    SettingsRepository.KEY_TEXT_SNIPPETS_ENABLED,
+                    SettingsRepository.KEY_TEXT_SNIPPETS_PREFIX,
+                    SettingsRepository.KEY_TEXT_SNIPPETS_DATA,
                     -> {
                         loadTextSnippets()
                     }

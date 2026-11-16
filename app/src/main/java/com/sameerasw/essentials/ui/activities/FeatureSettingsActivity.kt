@@ -598,10 +598,6 @@ fun FeatureSettingsScreen(
                         featureId != "Quick settings tiles" &&
                         featureId != "Location reached" &&
                         featureId != "Watch Controls"
-                val hasCollapsingHeader =
-                    featureId == "AOD wallpaper" ||
-                        featureId == "Batteries" ||
-                        (featureObj != null && featureObj.animationRes != 0)
                 Column(
                     modifier =
                         Modifier
@@ -610,7 +606,7 @@ fun FeatureSettingsScreen(
                                 if (hasScroll) {
                                     Modifier
                                         .scrollMotionBlur(scrollState, enabled = isMotionBlurEnabled)
-                                        .then(if (hasCollapsingHeader) Modifier.nestedScroll(nestedScrollConnection) else Modifier)
+                                        .nestedScroll(nestedScrollConnection)
                                         .verticalScroll(scrollState)
                                 } else {
                                     Modifier
