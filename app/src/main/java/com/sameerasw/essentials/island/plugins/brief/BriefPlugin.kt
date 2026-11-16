@@ -1,6 +1,7 @@
 package com.sameerasw.essentials.island.plugins.brief
 
 import com.sameerasw.essentials.island.ui.components.islandAccent
+import com.sameerasw.essentials.island.ui.components.islandSectionBackground
 
 import com.sameerasw.essentials.island.ui.motionSpring
 
@@ -631,7 +632,7 @@ private fun BriefEventRow(event: UpcomingCalendarEvent, now: Long, accent: Color
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
-            .background(Color.Black)
+            .background(islandSectionBackground(color))
             .clickable(onClick = onClick)
             .padding(horizontal = 12.dp, vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -811,7 +812,7 @@ private fun BriefAlarmChip(time: String, accent: Color) {
     Row(
         modifier = Modifier
             .clip(RoundedCornerShape(50))
-            .background(Color.Black)
+            .background(islandSectionBackground(accent))
             .padding(horizontal = 8.dp, vertical = 4.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {

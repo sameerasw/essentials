@@ -44,6 +44,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.ColorMatrix
 import androidx.compose.ui.graphics.CompositingStrategy
@@ -185,6 +186,8 @@ val LocalIslandIconColor = compositionLocalOf<Color?> { null }
 
 @Composable
 fun islandAccent(): Color = LocalIslandIconColor.current ?: MaterialTheme.colorScheme.primary
+
+fun islandSectionBackground(accent: Color): Color = accent.copy(alpha = 0.14f).compositeOver(Color.Black)
 
 @Composable
 fun resolveIconTint(tint: Color): Color {

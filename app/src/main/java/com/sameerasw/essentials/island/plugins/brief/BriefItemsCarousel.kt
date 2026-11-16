@@ -28,6 +28,8 @@ import androidx.compose.ui.unit.Dp
 import com.sameerasw.essentials.island.ui.LocalIslandTextColor
 import com.sameerasw.essentials.island.ui.components.LocalIslandChipInk
 import com.sameerasw.essentials.island.ui.components.LocalIslandIconColor
+import com.sameerasw.essentials.island.ui.components.islandAccent
+import com.sameerasw.essentials.island.ui.components.islandSectionBackground
 import androidx.compose.ui.unit.dp
 
 internal class BriefCarouselItem(
@@ -78,7 +80,7 @@ private fun CarouselPill(entry: BriefCarouselItem, modifier: Modifier) {
     Box(
         modifier
             .clip(RoundedCornerShape(50))
-            .background(container ?: Color.Black)
+            .background(container ?: islandSectionBackground(entry.container ?: islandAccent()))
             .clickable(enabled = entry.onClick != null) { entry.onClick?.invoke() }
             .padding(horizontal = 12.dp),
         contentAlignment = Alignment.Center,
