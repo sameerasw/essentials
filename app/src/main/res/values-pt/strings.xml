@@ -1502,18 +1502,18 @@
     <string name="duo_desc">Isso não dobra </string>
     <string name="island_title">ilha</string>
     <string name="island_desc">ilha dinâmica </string>
-    <string name="island_enable_title">ativar a ilha dinâmica (davi_oficial145 esteve aqui)</string>
+    <string name="island_enable_title">ativar a ilha dinâmica</string>
     <string name="island_camera_position_title">Posição da câmera </string>
     <string name="island_camera_position_center">Centro</string>
-    <string name="island_camera_position_left">esquedar</string>
+    <string name="island_camera_position_left">esquerda</string>
     <string name="island_camera_position_right">direita</string>
     <string name="duo_camera_offset_x_title">Posição horizontal </string>
     <string name="duo_camera_offset_y_title">Posição vertical</string>
-    <string name="duo_camera_size_title">Tamanho da câmera </string>
+    <string name="duo_camera_size_title">Tamanho da camera</string>
     <string name="island_max_width_title">Largura máxima </string>
     <string name="island_expanded_width_title">Largura expandido </string>
     <string name="island_cutout_gap_title">Distância da câmera </string>
-    <string name="island_padding_around_title">Padding around</string>
+    <string name="island_padding_around_title">Área vazia ao redor</string>
     <string name="setting_show_legacy_features_title">mostrar funções legacy (nota: legacy no português é legado)</string>
     <string name="setting_show_legacy_features_desc">Essas funcionalidades não vão receber atualizações futuras devido a limitações técnicas ou por não serem consideradas essenciais.</string>
     <string name="setting_app_icon_title">ícone do aplicativo (nota deixa ele mais estiloso)</string>
@@ -1639,8 +1639,8 @@
     <string name="island_section_behavior">Comportamento</string>
     <string name="island_section_interactions">Interactions</string>
     <string name="island_section_gestures">Gestures</string>
-    <string name="island_section_expanded">Expanded island</string>
-    <string name="island_section_landscape">Landscape</string>
+    <string name="island_section_expanded">Ilha expandida</string>
+    <string name="island_section_landscape">Paisagem</string>
     <string name="island_section_experimental">Experimental</string>
     <string name="island_call_options_title">chamadas telefônicas</string>
     <string name="island_section_notifications">notificações </string>
@@ -1830,7 +1830,7 @@ adicionar algum app</string>
     <string name="island_balance_compact_title">visual balanceado para um ilha compacto</string>
     <string name="island_neural_expressive_title">Neural Expressive expanded animations</string>
     <string name="island_neural_expressive_always_title">Always show on expansion</string>
-    <string name="island_statusbar_aware_width_title">Statusbar aware width</string>
+    <string name="island_statusbar_aware_width_title">Consciência da largura da barra de status</string>
     <string name="duo_auto_detect_title">detectar automaticamente a câmera </string>
     <string name="duo_auto_detect_desc">localizar automaticamente o corte da câmera frontal</string>
     <string name="duo_match_island_colors_title">Match island colors</string>
@@ -1870,4 +1870,12 @@ adicionar algum app</string>
     <string name="widget_stack_interval_seconds">Notifique-nos sobre novas atualizações. </string>
     <string name="island_notif_lock_hidden_title">Hidden</string>
     <string name="text_snippets_how_to_use">1. Turn on Text Snippets and grant the Accessibility permission so shortcuts can expand in any app.\n\n2. Pick a Trigger Prefix: ; : @@ or a space.\n\n3. Tap the + button to add a snippet. Enter a keyword without spaces and the text it should expand into.\n\n4. Type the prefix followed by the keyword, for example ;brb, to expand it. With the space prefix, type the keyword and press space.\n\nTips: keywords only expand at the start of a word, so URLs and times are left alone. Password fields are always ignored. Some apps do not allow text replacement and will not expand snippets.</string>
+    <string name="duo_show_battery_percentage_title">porcentagem da bateria</string>
+    <string name="island_progressive_blur_title">Animação de desfoque progressivo</string>
+    <string name="feat_aod_wallpaper_use_album_art">use a arte do album</string>
+    <string name="feat_aod_wallpaper_share_lock">Compartilhar com papel de parede de tela de bloqueio</string>
+    <string name="label_notify_new_updates">Notifique para novas atualizações</string>
+    <string name="settings_section_customizations">customizações </string>
+    <string name="island_auto_align_camera">Alinhar automaticamente com a câmera </string>
+    <string name="island_expanded_offset_y_title">Distância vertical expandido</string>
 </resources>

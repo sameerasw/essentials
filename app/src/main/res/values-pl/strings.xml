@@ -1672,7 +1672,7 @@ Aby ustawienie zadziałało, może być konieczne wielokrotne zastosowanie.</str
     <string name="island_pulse_shadow_title">Pulse for new notifications</string>
     <string name="island_statusbar_aware_width_info">This may not work on all devices. It works best on Pixels and devices with a status bar close to AOSP.</string>
     <string name="island_statusbar_aware_width_info_tip">Even on those devices, try reducing the number of visible status bar icons to give the island more space.</string>
-    <string name="island_dismiss_direction_title">Dismiss swipe</string>
+    <string name="island_dismiss_direction_title">Dismissals</string>
     <string name="island_dismiss_direction_horizontal">Horizontal</string>
     <string name="island_dismiss_direction_down">Down</string>
     <string name="island_media_bubble_title">Show as a bubble</string>
@@ -1717,4 +1717,6 @@ Aby ustawienie zadziałało, może być konieczne wielokrotne zastosowanie.</str
     <string name="island_padding_around_title">Padding around</string>
     <string name="island_notif_lock_hidden_title">Hidden</string>
     <string name="text_snippets_how_to_use">1. Turn on Text Snippets and grant the Accessibility permission so shortcuts can expand in any app.\n\n2. Pick a Trigger Prefix: ; : @@ or a space.\n\n3. Tap the + button to add a snippet. Enter a keyword without spaces and the text it should expand into.\n\n4. Type the prefix followed by the keyword, for example ;brb, to expand it. With the space prefix, type the keyword and press space.\n\nTips: keywords only expand at the start of a word, so URLs and times are left alone. Password fields are always ignored. Some apps do not allow text replacement and will not expand snippets.</string>
+    <string name="label_notify_new_updates">Powiadom o aktualizacjach</string>
+    <string name="label_online_help_media">Pomoc Online</string>
 </resources>
