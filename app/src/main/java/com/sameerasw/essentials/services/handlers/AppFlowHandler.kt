@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials.services.handlers
 
+import androidx.core.content.ContextCompat
 import com.sameerasw.essentials.R
 import android.accessibilityservice.AccessibilityService
 import android.app.NotificationManager
@@ -114,11 +115,7 @@ class AppFlowHandler(
                 addAction(ACTION_ABORT_FREEZE)
                 addAction(ACTION_RESTORE_NOW)
             }
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
-            context.registerReceiver(shutUpReceiver, filter, Context.RECEIVER_EXPORTED)
-        } else {
-            context.registerReceiver(shutUpReceiver, filter)
-        }
+        ContextCompat.registerReceiver(context, shutUpReceiver, filter, ContextCompat.RECEIVER_NOT_EXPORTED)
         settingsRepository.registerOnSharedPreferenceChangeListener(backGestureConfigsListener)
     }
 

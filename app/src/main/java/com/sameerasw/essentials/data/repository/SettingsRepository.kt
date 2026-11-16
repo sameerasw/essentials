@@ -36,6 +36,7 @@ import com.sameerasw.essentials.domain.model.NotificationLightingSweepPosition
 import com.sameerasw.essentials.domain.model.PowerChoice
 import com.sameerasw.essentials.domain.model.RemapSlot
 import com.sameerasw.essentials.domain.model.ScaleAnimationsProfile
+import com.sameerasw.essentials.domain.model.Snippet
 import com.sameerasw.essentials.domain.model.SystemShortcutsState
 import com.sameerasw.essentials.domain.model.TrackedRepo
 import com.sameerasw.essentials.domain.model.github.GitHubUser
@@ -197,6 +198,9 @@ class SettingsRepository(
 
     companion object {
         const val PREFS_NAME = "essentials_prefs"
+
+        @Volatile
+        private var cachedSnippets: List<Snippet>? = null
 
         // Keys
         const val KEY_DEBUGGING_TILE_TAP_ACTION = "debugging_tile_tap_action"
@@ -403,6 +407,9 @@ class SettingsRepository(
         const val KEY_KEYBOARD_CLIPBOARD_ENABLED = "keyboard_clipboard_enabled"
         const val KEY_KEYBOARD_LONG_PRESS_SYMBOLS = "keyboard_long_press_symbols"
         const val KEY_KEYBOARD_ACCENTED_CHARACTERS = "keyboard_accented_characters"
+        const val KEY_TEXT_SNIPPETS_ENABLED = "text_snippets_enabled"
+        const val KEY_TEXT_SNIPPETS_PREFIX = "text_snippets_prefix"
+        const val KEY_TEXT_SNIPPETS_DATA = "text_snippets_data"
 
         // Essentials-AirSync Bridge
         const val KEY_AIRSYNC_CONNECTION_ENABLED = "airsync_connection_enabled"
@@ -560,6 +567,7 @@ class SettingsRepository(
         const val KEY_DUO_HIDE_WHEN_SCREEN_OFF_ONLY_IDLE = "duo_hide_when_screen_off_only_idle"
         const val KEY_DUO_HIDE_WHEN_LOCKED = "duo_hide_when_locked"
         const val KEY_DUO_USE_MATERIAL_YOU = "duo_use_material_you"
+        const val KEY_DUO_MATCH_ISLAND_COLORS = "duo_match_island_colors"
         const val KEY_DUO_CUSTOM_COLOR = "duo_custom_color"
         const val KEY_DUO_TAP_ACTION = "duo_tap_action"
         const val KEY_DUO_DOUBLE_TAP_ACTION = "duo_double_tap_action"
@@ -605,6 +613,12 @@ class SettingsRepository(
         const val KEY_ISLAND_TIMEOUT_MS = "island_timeout_ms"
         const val KEY_ISLAND_SHOW_GLOW = "island_show_glow"
         const val KEY_ISLAND_GLOW_INTENSITY = "island_glow_intensity"
+        const val KEY_ISLAND_GLOW_SIZE = "island_glow_size"
+        const val KEY_ISLAND_GLOW_RIM = "island_glow_rim"
+        const val KEY_ISLAND_GLOW_DYNAMIC = "island_glow_dynamic"
+        const val KEY_ISLAND_GLOW_COLOR = "island_glow_color"
+        const val KEY_ISLAND_EXPANDED_DARK_NOTICE_DISMISSED = "island_expanded_dark_notice_dismissed"
+        const val ISLAND_GLOW_DEFAULT_COLOR = "#FFFFFF"
         const val KEY_ISLAND_PREFER_STILL = "island_prefer_still"
         const val KEY_ISLAND_NOTIF_THEMED_BUBBLE = "island_notif_themed_bubble"
         const val KEY_ISLAND_EXPANDED_WIDTH = "island_expanded_width"
@@ -741,6 +755,7 @@ class SettingsRepository(
         const val KEY_ISLAND_SHOW_NAVIGATION = "island_show_navigation"
         const val KEY_ISLAND_NAVIGATION_ON_NEW = "island_navigation_on_new"
         const val KEY_ISLAND_NAVIGATION_PEEK_AFTER_EXPAND = "island_navigation_peek_after_expand"
+        const val KEY_ISLAND_NAVIGATION_HIDE_WHILE_DRIVING = "island_navigation_hide_while_driving"
         const val ISLAND_NAVIGATION_ON_NEW_EXPAND = "expand"
         const val ISLAND_NAVIGATION_ON_NEW_PEEK = "peek"
         const val ISLAND_NAVIGATION_ON_NEW_OFF = "off"
@@ -859,6 +874,7 @@ class SettingsRepository(
         const val KEY_SHUT_UP_ATTEMPT_SHIZUKU_RESTART = "shut_up_attempt_shizuku_restart"
         const val KEY_SHUT_UP_RESTORE_DELAY = "shut_up_restore_delay"
         const val KEY_SHUT_UP_RESTORE_MODE = "shut_up_restore_mode"
+        const val KEY_ACCESSIBILITY_TILE_SAVED = "accessibility_tile_saved_services"
         const val KEY_SHUT_UP_KEYBOARD = "shut_up_keyboard"
         const val KEY_SHIZUKU_AUTH_TOKEN = "shizuku_auth_token"
         const val KEY_EDGE_LIGHTING_SWEEP_SELECTED_SHAPES = "edge_lighting_sweep_selected_shapes"
@@ -929,6 +945,14 @@ class SettingsRepository(
         const val KEY_POWER_SAVING_APPLY_ON_BOOT = "power_saving_apply_on_boot"
         const val KEY_UNSPLASH_ACCESS_KEY = "unsplash_access_key"
         const val KEY_EXTERNAL_CONTROL_TOKEN = "external_control_token"
+        private val CONFIG_PREF_FILES =
+            listOf(
+                "essentials_prefs",
+                "caffeinate_prefs",
+                "link_prefs",
+                "diy_automations_prefs",
+                "live_wallpaper_prefs",
+            )
     }
 
     fun getExternalControlToken(): String? = prefs.getString(KEY_EXTERNAL_CONTROL_TOKEN, null)?.takeIf { it.isNotBlank() }
@@ -1939,16 +1963,7 @@ class SettingsRepository(
     fun getAllConfigsAsJsonString(): String {
         return try {
             val allConfigs = mutableMapOf<String, Map<String, Map<String, Any>>>()
-            val prefFiles =
-                listOf(
-                    "essentials_prefs",
-                    "caffeinate_prefs",
-                    "link_prefs",
-                    "diy_automations_prefs",
-                    "live_wallpaper_prefs",
-                )
-
-            prefFiles.forEach { fileName ->
+            CONFIG_PREF_FILES.forEach { fileName ->
                 val p = context.getSharedPreferences(fileName, Context.MODE_PRIVATE)
                 val wrapperMap = mutableMapOf<String, Map<String, Any>>()
 
@@ -1958,6 +1973,8 @@ class SettingsRepository(
                     if (key == KEY_GITHUB_ACCESS_TOKEN ||
                         key == KEY_GITHUB_WORKFLOW_TOKEN ||
                         key == KEY_SHIZUKU_AUTH_TOKEN ||
+                        key == KEY_EXTERNAL_CONTROL_TOKEN ||
+                        key == KEY_UNSPLASH_ACCESS_KEY ||
                         key.startsWith(LEGACY_WEATHER_API_KEY_PREFIX) ||
                         key.startsWith("mac_battery_") ||
                         key == "airsync_mac_connected" ||
@@ -2043,6 +2060,7 @@ class SettingsRepository(
                 gson.fromJson(json, type) ?: emptyMap()
 
             allConfigs.forEach { (fileName, prefWrapper) ->
+                if (fileName !in CONFIG_PREF_FILES) return@forEach
                 val p = context.getSharedPreferences(fileName, Context.MODE_PRIVATE)
 
                 // Preserve sensitive or volatile local state not present in backups
@@ -2052,6 +2070,8 @@ class SettingsRepository(
                         KEY_GITHUB_ACCESS_TOKEN,
                         KEY_GITHUB_WORKFLOW_TOKEN,
                         KEY_SHIZUKU_AUTH_TOKEN,
+                        KEY_EXTERNAL_CONTROL_TOKEN,
+                        KEY_UNSPLASH_ACCESS_KEY,
                         LEGACY_WEATHER_API_KEY_PREFIX,
                         "airsync_mac_connected",
                         KEY_SNOOZE_DISCOVERED_CHANNELS,
@@ -2092,6 +2112,8 @@ class SettingsRepository(
                             if (key == KEY_GITHUB_ACCESS_TOKEN ||
                                 key == KEY_GITHUB_WORKFLOW_TOKEN ||
                                 key == KEY_SHIZUKU_AUTH_TOKEN ||
+                                key == KEY_EXTERNAL_CONTROL_TOKEN ||
+                                key == KEY_UNSPLASH_ACCESS_KEY ||
                                 key.startsWith(LEGACY_WEATHER_API_KEY_PREFIX)
                             ) {
                                 return@forEach
@@ -4096,6 +4118,8 @@ class SettingsRepository(
 
     fun isDuoUseMaterialYouEnabled(): Boolean = getBoolean(KEY_DUO_USE_MATERIAL_YOU, true)
     fun setDuoUseMaterialYouEnabled(enabled: Boolean) = putBoolean(KEY_DUO_USE_MATERIAL_YOU, enabled)
+    fun isDuoMatchIslandColorsEnabled(): Boolean = getBoolean(KEY_DUO_MATCH_ISLAND_COLORS, false)
+    fun setDuoMatchIslandColorsEnabled(enabled: Boolean) = putBoolean(KEY_DUO_MATCH_ISLAND_COLORS, enabled)
 
     fun getDuoCustomColor(): String = getString(KEY_DUO_CUSTOM_COLOR, "#FFFFFF") ?: "#FFFFFF"
     fun setDuoCustomColor(colorHex: String) = putString(KEY_DUO_CUSTOM_COLOR, colorHex)
@@ -4208,6 +4232,17 @@ class SettingsRepository(
     fun setIslandShowGlowEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_SHOW_GLOW, enabled)
     fun getIslandGlowIntensity(): Float = getFloat(KEY_ISLAND_GLOW_INTENSITY, 1f)
     fun setIslandGlowIntensity(value: Float) = putFloat(KEY_ISLAND_GLOW_INTENSITY, value)
+    fun getIslandGlowSize(): Float = getFloat(KEY_ISLAND_GLOW_SIZE, 1f)
+    fun setIslandGlowSize(value: Float) = putFloat(KEY_ISLAND_GLOW_SIZE, value)
+    fun isIslandGlowRimEnabled(): Boolean = getBoolean(KEY_ISLAND_GLOW_RIM, true)
+    fun setIslandGlowRimEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_GLOW_RIM, enabled)
+    fun isIslandGlowDynamicEnabled(): Boolean = getBoolean(KEY_ISLAND_GLOW_DYNAMIC, true)
+    fun setIslandGlowDynamicEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_GLOW_DYNAMIC, enabled)
+    fun getIslandGlowColor(): String =
+        getString(KEY_ISLAND_GLOW_COLOR, ISLAND_GLOW_DEFAULT_COLOR) ?: ISLAND_GLOW_DEFAULT_COLOR
+    fun setIslandGlowColor(colorHex: String) = putString(KEY_ISLAND_GLOW_COLOR, colorHex)
+    fun isIslandExpandedDarkNoticeDismissed(): Boolean = getBoolean(KEY_ISLAND_EXPANDED_DARK_NOTICE_DISMISSED, false)
+    fun setIslandExpandedDarkNoticeDismissed(dismissed: Boolean) = putBoolean(KEY_ISLAND_EXPANDED_DARK_NOTICE_DISMISSED, dismissed)
     fun isIslandPreferStillEnabled(): Boolean = getBoolean(KEY_ISLAND_PREFER_STILL, false)
     fun setIslandPreferStillEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_PREFER_STILL, enabled)
 
@@ -4399,6 +4434,9 @@ class SettingsRepository(
 
     fun isIslandNavigationPeekAfterExpandEnabled(): Boolean = getBoolean(KEY_ISLAND_NAVIGATION_PEEK_AFTER_EXPAND, false)
     fun setIslandNavigationPeekAfterExpandEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_NAVIGATION_PEEK_AFTER_EXPAND, enabled)
+
+    fun isIslandNavigationHideWhileDrivingEnabled(): Boolean = getBoolean(KEY_ISLAND_NAVIGATION_HIDE_WHILE_DRIVING, false)
+    fun setIslandNavigationHideWhileDrivingEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_NAVIGATION_HIDE_WHILE_DRIVING, enabled)
 
     fun getIslandNavigationExpandDistance(): Int = getInt(KEY_ISLAND_NAVIGATION_EXPAND_DISTANCE, 200)
     fun setIslandNavigationExpandDistance(meters: Int) = putInt(KEY_ISLAND_NAVIGATION_EXPAND_DISTANCE, meters)
@@ -4883,4 +4921,32 @@ class SettingsRepository(
         } ?: emptyMap()
 
     fun setAppVolumeLevels(levels: Map<String, Float>) = putString(KEY_APP_VOLUME_LEVELS, gson.toJson(levels))
+
+    fun isTextSnippetsEnabled(): Boolean = getBoolean(KEY_TEXT_SNIPPETS_ENABLED, false)
+    fun setTextSnippetsEnabled(enabled: Boolean) {
+        putBoolean(KEY_TEXT_SNIPPETS_ENABLED, enabled)
+    }
+
+    fun getSnippetPrefix(): String = getString(KEY_TEXT_SNIPPETS_PREFIX, ";") ?: ";"
+
+    fun setSnippetPrefix(prefix: String) = putString(KEY_TEXT_SNIPPETS_PREFIX, prefix)
+
+    fun getTextSnippets(): List<Snippet> {
+        cachedSnippets?.let { return it }
+        val json = getString(KEY_TEXT_SNIPPETS_DATA, null) ?: return emptyList<Snippet>().also { cachedSnippets = it }
+        val list =
+            try {
+                val type = object : TypeToken<List<Snippet>>() {}.type
+                gson.fromJson<List<Snippet>>(json, type) ?: emptyList()
+            } catch (_: Exception) {
+                emptyList()
+            }
+        cachedSnippets = list
+        return list
+    }
+
+    fun saveTextSnippets(snippets: List<Snippet>) {
+        cachedSnippets = snippets
+        putString(KEY_TEXT_SNIPPETS_DATA, gson.toJson(snippets))
+    }
 }

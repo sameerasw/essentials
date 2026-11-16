@@ -46,7 +46,9 @@ class ShutUpShortcutActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         val packageName = intent.getStringExtra("package_name")
-        if (packageName == null) {
+        val settingsRepository = SettingsRepository(this)
+        val config = packageName?.let { requested -> settingsRepository.loadShutUpConfigs().find { it.packageName == requested } }
+        if (packageName == null || config == null) {
             finish()
             return
         }
@@ -70,9 +72,6 @@ class ShutUpShortcutActivity : ComponentActivity() {
             }
         }
 
-        val settingsRepository = SettingsRepository(this)
-        val config = settingsRepository.loadShutUpConfigs().find { it.packageName == packageName }
-
         lifecycleScope.launch {
             // Unfreeze first while Shizuku/Root is still  functional
             if (com.sameerasw.essentials.utils.FreezeManager.isAppFrozen(
@@ -87,7 +86,7 @@ class ShutUpShortcutActivity : ComponentActivity() {
                 delay(200.milliseconds) // Small extra delay for system to register unfreeze
             }
 
-            if (config != null && config.isEnabled) {
+            if (config.isEnabled) {
                 if (PermissionUtils.canWriteSecureSettings(this@ShutUpShortcutActivity)) {
                     applyShutUpSettings(config, settingsRepository)
                     withContext(Dispatchers.Main) {

@@ -1,6 +1,7 @@
 package com.sameerasw.essentials.island.plugins.brief
 
 import com.sameerasw.essentials.island.ui.components.islandAccent
+import com.sameerasw.essentials.island.ui.components.islandSectionBackground
 
 import com.sameerasw.essentials.island.ui.motionSpring
 
@@ -16,9 +17,12 @@ import com.sameerasw.essentials.island.remote.LocalRemotePaused
 import com.sameerasw.essentials.island.remote.RemoteExpanded
 import com.sameerasw.essentials.island.ui.SurfaceBackdrop
 import android.Manifest
+import android.content.BroadcastReceiver
 import android.content.Context
-import android.content.Intent
 import android.content.IntentFilter
+import android.os.PowerManager
+import androidx.compose.runtime.DisposableEffect
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.ContentUris
 import androidx.compose.foundation.Image
@@ -75,7 +79,6 @@ import com.sameerasw.essentials.island.plugins.soften
 import com.sameerasw.essentials.island.ui.IslandHaptics
 import com.sameerasw.essentials.translation.TranslatableText
 import kotlinx.coroutines.launch
-import android.os.BatteryManager
 import android.os.Build
 import com.sameerasw.essentials.utils.BluetoothBatteryUtils
 import com.sameerasw.essentials.utils.BluetoothDeviceIcons
@@ -123,6 +126,12 @@ import com.sameerasw.essentials.island.plugins.BaseIslandPlugin
 import com.sameerasw.essentials.island.ui.IslandTextStyles
 import com.sameerasw.essentials.island.ui.islandTextColor
 import com.sameerasw.essentials.island.ui.components.BatteryGlyph
+import com.sameerasw.essentials.island.plugins.timebattery.BatteryStatus
+import com.sameerasw.essentials.island.state.IslandItemEntry
+import com.sameerasw.essentials.island.state.IslandItemsState
+import com.sameerasw.essentials.island.plugins.timebattery.batteryIdleColor
+import com.sameerasw.essentials.island.plugins.timebattery.batteryStateColor
+import com.sameerasw.essentials.island.plugins.timebattery.readBatteryStatus
 import com.sameerasw.essentials.island.ui.components.BatteryRing
 import com.sameerasw.essentials.island.ui.components.CameraRow
 import com.sameerasw.essentials.utils.CalendarEventUtil
@@ -163,7 +172,13 @@ class BriefPlugin : BaseIslandPlugin() {
         val showGlow = settings.isIslandShowGlowEnabled()
         val calendarEnabled = context.checkSelfPermission(Manifest.permission.READ_CALENDAR) == PackageManager.PERMISSION_GRANTED
         val twoLineHeader = settings.getBoolean(SettingsRepository.KEY_ISLAND_BRIEF_TWO_LINE_HEADER, false)
-        ctx?.scope?.launch(Dispatchers.IO) { BriefDevicesCache.devices = readDevices(context) }
+        ctx?.scope?.launch(Dispatchers.IO) {
+            BriefDevicesCache.dateFormat()
+            BriefDevicesCache.settings(context)
+            BriefDevicesCache.devices = readDevices(context)
+            BriefDevicesCache.stamp = System.currentTimeMillis()
+            if (calendarEnabled) BriefDevicesCache.events = CalendarEventUtil.queryBriefEvents(context, calendarIds, showAllDay)
+        }
         publish(
             IslandItem(
                 key = ITEM_KEY,
@@ -175,6 +190,7 @@ class BriefPlugin : BaseIslandPlugin() {
                     BriefExpanded(
                         scope, iconStyle, devicesIconStyle, alarmHours, calendarEnabled, calendarIds, showAllDay, showGlow, twoLineHeader,
                         onOpenLivePlayer = { ctx?.request?.invoke(PluginRequest.Expand(MediaPlugin.ITEM_KEY)) },
+                        onRequestExpand = { ctx?.request?.invoke(PluginRequest.Expand(it)) },
                     ) { open ->
                         pageOpen = open
                     }
@@ -202,6 +218,7 @@ private fun BriefExpanded(
     showGlow: Boolean,
     twoLineHeader: Boolean,
     onOpenLivePlayer: () -> Unit,
+    onRequestExpand: (String) -> Unit,
     onPageOpenChanged: ((() -> Unit)?) -> Unit,
 ) {
     val context = LocalContext.current
@@ -253,6 +270,10 @@ private fun BriefExpanded(
                         onEventClick = { page = BriefPage.Event(it) },
                         onPlayerClick = { if (IslandMediaState.live.value) onOpenLivePlayer() else page = BriefPage.Player },
                         onCardClick = { page = BriefPage.Remote(it) },
+                        onItemClick = { entry ->
+                            val item = entry.item
+                            if (item.expanded != null) onRequestExpand(item.key) else item.onOpen?.invoke()
+                        },
                     )
                     is BriefPage.Event -> SwipeBackPage(scope, onBack = { page = BriefPage.Overview }) {
                         BriefEventDetail(target.event, showGlow, scope)
@@ -308,7 +329,7 @@ private fun BriefBackground(
         label = "briefArt",
     )
     val event = (page as? BriefPage.Event)?.event
-    val glowColor = event?.calendarColor?.let { Color(soften(it)) } ?: islandAccent()
+    val glowColor = scope.spec.glowColor ?: event?.calendarColor?.let { Color(soften(it)) } ?: islandAccent()
     val glowAlpha by animateFloatAsState(if (event != null) 1f else 0f, motionTween(400), label = "briefGlow")
     Box(modifier) {
         if (artAlpha > 0f) {
@@ -319,7 +340,7 @@ private fun BriefBackground(
                 Modifier
                     .matchParentSize()
                     .graphicsLayer { alpha = glowAlpha }
-                    .accentGlow(glowColor, showGlow, scope.cameraClearance),
+                    .accentGlow(glowColor, showGlow, scope.cameraClearance, scope.spec.glowIntensity),
             )
         }
     }
@@ -427,13 +448,19 @@ private fun BriefOverview(
     onEventClick: (UpcomingCalendarEvent) -> Unit,
     onPlayerClick: () -> Unit,
     onCardClick: (String) -> Unit,
+    onItemClick: (IslandItemEntry) -> Unit,
 ) {
     val context = LocalContext.current
     val spec = scope.spec
+    val allItemEntries by IslandItemsState.entries.collectAsState()
     val sidePadding = spec.expandedPadding * 0.6f + spec.expandedCorner * 0.25f
     val accent = islandAccent()
     val cardsByPackage by RemoteBriefCards.cards.collectAsState()
     val remoteCards = remember(cardsByPackage) { cardsByPackage.values.flatten() }
+    val itemEntries = remember(allItemEntries, cardsByPackage) {
+        val briefPackages = cardsByPackage.filterValues { it.isNotEmpty() }.keys
+        allItemEntries.filter { entry -> !entry.shown && briefPackages.none { entry.item.key.startsWith("$it:") } }
+    }
 
     var now by remember { mutableLongStateOf(System.currentTimeMillis()) }
     LaunchedEffect(Unit) {
@@ -442,24 +469,46 @@ private fun BriefOverview(
             now = System.currentTimeMillis()
         }
     }
-    val battery = remember(now) { readBattery(context) }
+    var batteryState by remember {
+        mutableStateOf<BatteryStatus?>(
+            readBatteryStatus(context, context.registerReceiver(null, IntentFilter(Intent.ACTION_BATTERY_CHANGED))),
+        )
+    }
+    DisposableEffect(context) {
+        val receiver = object : BroadcastReceiver() {
+            override fun onReceive(c: Context, intent: Intent) {
+                batteryState = readBatteryStatus(context, if (intent.action == Intent.ACTION_BATTERY_CHANGED) intent else null)
+            }
+        }
+        val filter = IntentFilter(Intent.ACTION_BATTERY_CHANGED).apply { addAction(PowerManager.ACTION_POWER_SAVE_MODE_CHANGED) }
+        val sticky = context.registerReceiver(receiver, filter)
+        batteryState = readBatteryStatus(context, sticky)
+        onDispose { context.unregisterReceiver(receiver) }
+    }
     val alarm = remember(now, alarmHours) { alarmHours?.let { NextAlarm.within(context, it) } }
     val devices by produceState(BriefDevicesCache.devices, now) {
+        if (BriefDevicesCache.isFresh()) return@produceState
+        delay(1000L)
         val fresh = withContext(Dispatchers.IO) { readDevices(context) }
         BriefDevicesCache.devices = fresh
+        BriefDevicesCache.stamp = System.currentTimeMillis()
         if (fresh != value) value = fresh
     }
-    val events by produceState<List<UpcomingCalendarEvent>?>(null, calendarEnabled) {
-        value = if (calendarEnabled) {
-            withContext(Dispatchers.IO) { CalendarEventUtil.queryBriefEvents(context, calendarIds, showAllDay) }
-        } else {
-            emptyList()
+    val events by produceState<List<UpcomingCalendarEvent>?>(if (calendarEnabled) BriefDevicesCache.events else emptyList(), calendarEnabled) {
+        if (!calendarEnabled) {
+            value = emptyList()
+            return@produceState
         }
+        val fresh = withContext(Dispatchers.IO) { CalendarEventUtil.queryBriefEvents(context, calendarIds, showAllDay) }
+        BriefDevicesCache.events = fresh
+        if (fresh != value) value = fresh
     }
 
-    val timeSettings = remember { SettingsRepository(context) }
-    val time = IslandTimeFormat.format(context, timeSettings, now)
-    val date = SimpleDateFormat(DateFormat.getBestDateTimePattern(Locale.getDefault(), "EEEMMMd"), Locale.getDefault()).format(Date(now))
+    val battery = batteryState
+    val timeSettings = remember { BriefDevicesCache.settings(context) }
+    val time = remember(now) { IslandTimeFormat.format(context, timeSettings, now) }
+    val batteryColor = remember(battery, accent) { battery?.let { batteryStateColor(timeSettings, it) ?: batteryIdleColor(timeSettings) } ?: accent }
+    val date = remember(now) { BriefDevicesCache.dateFormat().format(Date(now)) }
 
     val artwork = remember(media?.artwork) { media?.artwork?.asImageBitmap() }
     Box(propagateMinConstraints = true) {
@@ -483,11 +532,11 @@ private fun BriefOverview(
                             Spacer(Modifier.width(8.dp))
                         }
                     }
-                    if (battery >= 0) {
+                    if (battery != null) {
                         if (iconStyle) {
-                            BatteryGlyph(battery, accent, showLevel = true)
+                            BatteryGlyph(battery.level, batteryColor, showLevel = true, charging = battery.charging, powerSave = battery.powerSave, limited = battery.limited)
                         } else {
-                            BatteryRing(battery, accent, showLevel = true)
+                            BatteryRing(battery.level, batteryColor, showLevel = true, charging = battery.charging, powerSave = battery.powerSave, limited = battery.limited)
                         }
                     }
                 },
@@ -504,16 +553,31 @@ private fun BriefOverview(
             }
 
             val blockPadding = sidePadding
+            val carouselItems = itemEntries.map { entry ->
+                BriefCarouselItem(entry.item.key, { onItemClick(entry) }, entry.item.accent ?: accent) {
+                    entry.item.compact.forEach { it.content() }
+                }
+            } + devices.map { device ->
+                BriefCarouselItem(device.key, null) {
+                    IslandIcon(device.iconRes, tint = accent, size = 18.dp)
+                    Spacer(Modifier.width(6.dp))
+                    if (devicesIconStyle) {
+                        BatteryGlyph(device.level, accent, showLevel = true)
+                    } else {
+                        BatteryRing(device.level, accent, showLevel = true)
+                    }
+                }
+            }
+            val itemsBlock: @Composable () -> Unit = {
+                if (carouselItems.isNotEmpty()) {
+                    Spacer(Modifier.height(12.dp))
+                    BriefItemsCarousel(carouselItems, spec.compactHeight, Modifier.padding(horizontal = blockPadding))
+                }
+            }
             val cardsBlock: @Composable () -> Unit = {
                 remoteCards.forEach { card ->
                     Spacer(Modifier.height(12.dp))
                     RemoteBriefCardRow(card, { if (card.hasPage) onCardClick(card.key) }, Modifier.padding(horizontal = blockPadding))
-                }
-            }
-            val devicesBlock: @Composable () -> Unit = {
-                if (devices.isNotEmpty()) {
-                    Spacer(Modifier.height(12.dp))
-                    BriefDeviceRows(devices, devicesIconStyle, accent, Modifier.fillMaxWidth().padding(horizontal = blockPadding))
                 }
             }
             val calendarBlock: @Composable () -> Unit = {
@@ -530,7 +594,7 @@ private fun BriefOverview(
                                 stringResId = R.string.island_brief_no_events,
                                 style = IslandTextStyles.body,
                             )
-                            else -> list.forEach { event -> BriefEventRow(event, now, accent) { onEventClick(event) } }
+                            else -> list.forEach { event -> BriefEventRow(event, now, accent, timeSettings) { onEventClick(event) } }
                         }
                     }
                 }
@@ -541,22 +605,18 @@ private fun BriefOverview(
                     BriefPlayer(media, artwork, onPlayerClick, Modifier.padding(horizontal = blockPadding))
                 }
             }
+            itemsBlock()
             if (spec.landscape) {
                 val landscapeItems = buildList<@Composable () -> Unit> {
                     remoteCards.forEach { card ->
                         add { RemoteBriefCardRow(card, { if (card.hasPage) onCardClick(card.key) }) }
-                    }
-                    if (devices.isNotEmpty()) {
-                        add {
-                            BriefDeviceRows(devices, devicesIconStyle, accent, Modifier.fillMaxWidth())
-                        }
                     }
                     if (calendarEnabled) {
                         val list = events
                         when {
                             list == null -> Unit
                             list.isEmpty() -> add { TranslatableText(R.string.island_brief_no_events, style = IslandTextStyles.body) }
-                            else -> list.forEach { event -> add { BriefEventRow(event, now, accent) { onEventClick(event) } } }
+                            else -> list.forEach { event -> add { BriefEventRow(event, now, accent, timeSettings) { onEventClick(event) } } }
                         }
                     }
                 }
@@ -571,7 +631,6 @@ private fun BriefOverview(
                 playerBlock()
             } else {
                 cardsBlock()
-                devicesBlock()
                 calendarBlock()
                 playerBlock()
             }
@@ -580,15 +639,15 @@ private fun BriefOverview(
 }
 
 @Composable
-private fun BriefEventRow(event: UpcomingCalendarEvent, now: Long, accent: Color, onClick: () -> Unit) {
+private fun BriefEventRow(event: UpcomingCalendarEvent, now: Long, accent: Color, timeSettings: SettingsRepository, onClick: () -> Unit) {
     val context = LocalContext.current
-    val whenText = remember(event, now) { briefWhen(context, event, now) }
+    val whenText = remember(event, now) { briefWhen(context, timeSettings, event, now) }
     val color = event.calendarColor?.let { Color(soften(it)) } ?: accent
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
-            .background(Color.White.copy(alpha = 0.1f))
+            .background(islandSectionBackground(color))
             .clickable(onClick = onClick)
             .padding(horizontal = 12.dp, vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -615,13 +674,6 @@ private fun BriefEventRow(event: UpcomingCalendarEvent, now: Long, accent: Color
             )
         }
     }
-}
-
-private fun readBattery(context: Context): Int {
-    val intent = context.registerReceiver(null, IntentFilter(Intent.ACTION_BATTERY_CHANGED)) ?: return -1
-    val level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1)
-    val scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, 100)
-    return if (level < 0 || scale <= 0) -1 else level * 100 / scale
 }
 
 @Composable
@@ -702,8 +754,7 @@ private fun BriefPlayerButton(
     }
 }
 
-private fun briefWhen(context: Context, event: UpcomingCalendarEvent, now: Long): String {
-    val timeSettings = SettingsRepository(context)
+private fun briefWhen(context: Context, timeSettings: SettingsRepository, event: UpcomingCalendarEvent, now: Long): String {
     val timeText = { millis: Long -> IslandTimeFormat.format(context, timeSettings, millis) }
     val start = event.startTimeMillis
     val tomorrow = !isSameDay(start, now) && start > now
@@ -742,6 +793,28 @@ private data class BriefDevice(val key: String, val iconRes: Int, val level: Int
 private object BriefDevicesCache {
     @Volatile
     var devices: List<BriefDevice> = emptyList()
+
+    @Volatile
+    var events: List<UpcomingCalendarEvent>? = null
+
+    @Volatile
+    var stamp = 0L
+
+    fun isFresh() = System.currentTimeMillis() - stamp < 30_000L
+
+    @Volatile
+    private var settingsCache: SettingsRepository? = null
+
+    fun settings(context: Context): SettingsRepository =
+        settingsCache ?: SettingsRepository(context.applicationContext).also { settingsCache = it }
+
+    private var dateFormatCache: Pair<Locale, SimpleDateFormat>? = null
+
+    fun dateFormat(): SimpleDateFormat {
+        val locale = Locale.getDefault()
+        dateFormatCache?.takeIf { it.first == locale }?.let { return it.second }
+        return SimpleDateFormat(DateFormat.getBestDateTimePattern(locale, "EEEMMMd"), locale).also { dateFormatCache = locale to it }
+    }
 }
 
 private fun readDevices(context: Context): List<BriefDevice> {
@@ -775,49 +848,13 @@ private fun BriefAlarmChip(time: String, accent: Color) {
     Row(
         modifier = Modifier
             .clip(RoundedCornerShape(50))
-            .background(Color.White.copy(alpha = 0.1f))
+            .background(islandSectionBackground(accent))
             .padding(horizontal = 8.dp, vertical = 4.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         IslandIcon(R.drawable.rounded_alarm_24, tint = accent, size = 16.dp)
         Spacer(Modifier.width(4.dp))
         Text(time, style = IslandTextStyles.compact.copy(fontSize = 13.sp))
-    }
-}
-
-@Composable
-private fun BriefDeviceRows(devices: List<BriefDevice>, iconStyle: Boolean, accent: Color, modifier: Modifier = Modifier) {
-    val rows = if (devices.size > 4) devices.chunked((devices.size + 1) / 2) else listOf(devices)
-    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(6.dp)) {
-        rows.forEach { row ->
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(6.dp, Alignment.CenterHorizontally),
-            ) {
-                val single = row.size == 1
-                row.forEach { device -> BriefDeviceChip(device, iconStyle, accent, if (single) Modifier else Modifier.weight(1f)) }
-            }
-        }
-    }
-}
-
-@Composable
-private fun BriefDeviceChip(device: BriefDevice, iconStyle: Boolean, accent: Color, modifier: Modifier = Modifier) {
-    Row(
-        modifier = modifier
-            .clip(RoundedCornerShape(50))
-            .background(Color.White.copy(alpha = 0.1f))
-            .padding(horizontal = 10.dp, vertical = 8.dp),
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        IslandIcon(device.iconRes, tint = accent, size = 18.dp)
-        Spacer(Modifier.width(6.dp))
-        if (iconStyle) {
-            BatteryGlyph(device.level, accent, showLevel = true)
-        } else {
-            BatteryRing(device.level, accent, showLevel = true)
-        }
     }
 }
 

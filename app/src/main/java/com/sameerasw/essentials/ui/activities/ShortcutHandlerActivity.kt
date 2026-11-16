@@ -23,6 +23,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
+import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.ui.activities.AppFreezingActivity
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
 import com.sameerasw.essentials.utils.FreezeManager
@@ -46,7 +47,10 @@ class ShortcutHandlerActivity : ComponentActivity() {
             return
         }
 
-        val packageName = intent.getStringExtra("package_name")
+        val packageName =
+            intent.getStringExtra("package_name")?.takeIf { requested ->
+                SettingsRepository(this).loadFreezeSelectedApps().any { it.packageName == requested }
+            }
 
         if (packageName != null) {
             setContent {

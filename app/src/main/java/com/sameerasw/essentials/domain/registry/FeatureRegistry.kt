@@ -2463,6 +2463,29 @@ object FeatureRegistry {
                 ) {}
             },
             object : Feature(
+                id = "Text Snippets",
+                title = R.string.feat_text_snippets_title,
+                iconRes = R.drawable.rounded_edit_note_24,
+                category = R.string.cat_interaction,
+                description = R.string.feat_text_snippets_desc,
+                aboutDescription = R.string.about_desc_text_snippets,
+                howToUse = R.string.text_snippets_how_to_use,
+                contributors = listOf("Balajitechlabs"),
+                permissionKeys = listOf("ACCESSIBILITY"),
+                hasMoreSettings = true,
+                parentFeatureId = "Input",
+            ) {
+                override fun isEnabled(viewModel: MainViewModel) = viewModel.isTextSnippetsEnabled.value && viewModel.isAccessibilityEnabled.value
+
+                override fun onToggle(
+                    viewModel: MainViewModel,
+                    context: Context,
+                    enabled: Boolean,
+                ) {
+                    viewModel.setTextSnippetsEnabled(enabled)
+                }
+            },
+            object : Feature(
                 id = "Batteries",
                 title = R.string.feat_batteries_title,
                 iconRes = R.drawable.rounded_battery_charging_60_24,

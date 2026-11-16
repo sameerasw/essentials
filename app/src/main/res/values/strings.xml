@@ -405,6 +405,24 @@
     <string name="flashlight_overheat_title">Overheating prevention</string>
     <string name="flashlight_overheat_desc">Lower brightness on longer period of use</string>
     <string name="content_desc_settings">Settings</string>
+    <string name="feat_text_snippets_title">Text Snippets</string>
+    <string name="feat_text_snippets_desc">Expand text</string>
+    <string name="about_desc_text_snippets">Create customizable shortcuts that expand into full phrases, links, or templates when you type a trigger prefix (like ;, :, or @@) or press space.</string>
+    <string name="snippets_trigger_prefix">Trigger Prefix</string>
+    <string name="snippets_saved_title">Saved Snippets (%1$d)</string>
+    <string name="snippets_empty_title">No snippets yet</string>
+    <string name="snippets_empty_subtitle">Tap + below to create your first shortcut</string>
+    <string name="snippets_dialog_new_title">New Snippet</string>
+    <string name="snippets_dialog_edit_title">Edit Snippet</string>
+    <string name="snippets_keyword_label">Keyword</string>
+    <string name="snippets_keyword_placeholder">e.g., brb, addr, shrug</string>
+    <string name="snippets_title_label">Label (Optional)</string>
+    <string name="snippets_title_placeholder">e.g., Be Right Back</string>
+    <string name="snippets_content_label">Expanded Text</string>
+    <string name="snippets_content_placeholder">Enter replacement text or multi-line snippet</string>
+    <string name="snippets_error_whitespace">Keyword cannot contain spaces</string>
+    <string name="snippets_error_prefix">Do not include prefix in keyword</string>
+    <string name="snippets_error_duplicate">Keyword already in use</string>
 
     <!-- Caffeinate / Permissions -->
     <string name="permission_show_notification_title">Show Notification</string>
@@ -3125,6 +3143,7 @@
     <string name="duo_show_progress_title">Progress notifications</string>
     <string name="duo_show_flashlight_title">Flashlight</string>
     <string name="duo_section_behavior">Behavior</string>
+    <string name="duo_match_island_colors_title">Match island colors</string>
     <string name="duo_material_you_title">Use Material You colors</string>
     <string name="duo_hide_when_screen_off_title">Hide when screen off</string>
     <string name="duo_hide_when_screen_off_only_idle_title">Only hide on AOD while idle</string>
@@ -3320,6 +3339,10 @@
     <string name="island_preview_sample">Dynamic notifications preview</string>
     <string name="island_show_glow_title">Expanded accent glow</string>
     <string name="island_glow_intensity_title">Glow intensity</string>
+    <string name="island_glow_size_title">Glow size</string>
+    <string name="island_glow_rim_title">Rim light</string>
+    <string name="island_expanded_dark_theme_warning">Expanded dark theme is on. If the island text or colors look wrong, filter Essentials out of it in Display settings.</string>
+    <string name="island_expanded_dark_theme_action">Open display settings</string>
     <string name="island_prefer_still_title">Prefer still island</string>
     <string name="island_prefer_still_info">Stops the island\'s animations after a few seconds without interaction, so the display can drop to a low refresh rate and save battery. Media visualizers, second by second counters and other looping animations pause until you interact with the island again.</string>
     <string name="island_border_outline_dynamic_title">Dynamic colors</string>
@@ -3434,6 +3457,7 @@
     <string name="island_navigation_expand_off">Off</string>
     <string name="island_navigation_expand_meters">%d m</string>
     <string name="island_navigation_peek_after_expand_title">Keep showing in peek</string>
+    <string name="island_navigation_hide_while_driving_title">Hide while driving</string>
     <string name="island_show_hotspot_title">Hotspot</string>
     <string name="island_hotspot_desc">Shows while your hotspot is on, with connected devices and data shared</string>
     <plurals name="island_hotspot_clients">
@@ -3705,6 +3729,9 @@
     <string name="about_desc_mono_audio_tile">Quick Settings tile to toggle mono audio.\n\nMono audio plays the same sound in both ears, which helps when using a single earbud or if you have hearing difficulty in one ear.</string>
     <string name="about_desc_back_gesture">Fine tune the system back gesture.\n\nAdjust the edge widths for the left and right gesture areas and set up per-app back gesture behavior. Requires secure settings permission.</string>
     <string name="feature_reset_hold">Hold to reset</string>
+    <string name="settings_reset_all_hold">Hold to reset all data</string>
+    <string name="settings_reset_all_info_title">Reset Essentials data</string>
+    <string name="settings_reset_all_info_desc">Resets all Essentials settings and data to a fresh start. System settings, permissions and anything Essentials changed on your device, such as secure settings, are not reverted.</string>
     <string name="feature_reset_done">Settings reset</string>
     <string name="feature_reset_info_title">Reset this feature</string>
     <string name="feature_reset_info_desc">Resets every Essentials setting for this feature to its default. System settings and permissions are not changed.</string>
@@ -3980,4 +4007,10 @@
     <string name="label_feature_settings">Feature Settings</string>
     <string name="label_open_link">Open Link</string>
     <string name="dream_ambience_label">Ambience</string>
+    <string name="text_snippets_how_to_use">1. Turn on Text Snippets and grant the Accessibility permission so shortcuts can expand in any app.\n\n2. Pick a Trigger Prefix: ; : @@ or a space.\n\n3. Tap the + button to add a snippet. Enter a keyword without spaces and the text it should expand into.\n\n4. Type the prefix followed by the keyword, for example ;brb, to expand it. With the space prefix, type the keyword and press space.\n\nTips: keywords only expand at the start of a word, so URLs and times are left alone. Password fields are always ignored. Some apps do not allow text replacement and will not expand snippets.</string>
+    <string name="island_action_open_label">Open Island</string>
+    <string name="tile_accessibility">Accessibility</string>
+    <string name="tile_accessibility_on">Services on</string>
+    <string name="tile_accessibility_off">Services off</string>
+    <string name="about_desc_accessibility_tile">Turn off all accessibility services with one tap and bring them back with another.\n\nUseful for apps that refuse to work while accessibility services are enabled.</string>
 </resources>

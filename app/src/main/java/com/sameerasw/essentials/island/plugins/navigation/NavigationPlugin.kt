@@ -26,6 +26,8 @@ import com.sameerasw.essentials.island.ui.components.IslandIcon
 import com.sameerasw.essentials.island.ui.components.LocalIslandChipInk
 import com.sameerasw.essentials.island.ui.components.RollingText
 import com.sameerasw.essentials.services.NotificationListener
+import com.sameerasw.essentials.utils.AppUtil
+import com.sameerasw.essentials.utils.CarConnectionMonitor
 
 class NavigationPlugin : BaseIslandPlugin() {
     override val id = "navigation"
@@ -35,7 +37,10 @@ class NavigationPlugin : BaseIslandPlugin() {
         SettingsRepository.KEY_ISLAND_NAVIGATION_ON_NEW,
         SettingsRepository.KEY_ISLAND_NAVIGATION_PEEK_AFTER_EXPAND,
         SettingsRepository.KEY_ISLAND_NAVIGATION_EXPAND_DISTANCE,
+        SettingsRepository.KEY_ISLAND_NAVIGATION_HIDE_WHILE_DRIVING,
     )
+
+    private val carListener: (Boolean) -> Unit = { ctx?.mainHandler?.post { refresh() } }
 
     private var data: NavigationNotificationData? = null
 
@@ -69,10 +74,12 @@ class NavigationPlugin : BaseIslandPlugin() {
 
     override fun onStart() {
         NotificationListener.addNavigationNotificationListener(listener)
+        CarConnectionMonitor.addListener(carListener)
     }
 
     override fun onStop() {
         NotificationListener.removeNavigationNotificationListener(listener)
+        CarConnectionMonitor.removeListener(carListener)
         ctx?.mainHandler?.removeCallbacks(endExpand)
         ctx?.mainHandler?.removeCallbacks(peekAfterCollapse)
         ctx?.mainHandler?.removeCallbacks(endRoute)
@@ -139,7 +146,8 @@ class NavigationPlugin : BaseIslandPlugin() {
         c.mainHandler.postDelayed(endExpand, EXPANDED_MS)
     }
 
-    private fun enabled() = settings.isIslandShowNavigationEnabled()
+    private fun enabled() = settings.isIslandShowNavigationEnabled() &&
+        !(settings.isIslandNavigationHideWhileDrivingEnabled() && AppUtil.isAndroidAutoRunning(context))
 
     private fun render() {
         val d = data

@@ -623,7 +623,7 @@ class AppUpdatesViewModel : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 // Use external cache dir if possible for better accessibility by shell/shizuku
-                val cacheDir = context.externalCacheDir ?: context.cacheDir
+                val cacheDir = context.cacheDir
                 val file = File(cacheDir, "${repo.name}.apk")
 
                 // Ensure parent exists

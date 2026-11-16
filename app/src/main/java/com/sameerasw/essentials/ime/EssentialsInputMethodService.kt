@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials.ime
 
+import android.content.ClipDescription
 import android.content.ClipboardManager
 import android.inputmethodservice.InputMethodService
 import android.util.Log
@@ -110,9 +111,9 @@ class EssentialsInputMethodService :
 
         try {
             val clip = clipboardManager.primaryClip ?: return
-            if (clip.itemCount > 0) {
+            val sensitive = clip.description.extras?.getBoolean(ClipDescription.EXTRA_IS_SENSITIVE, false) == true
+            if (clip.itemCount > 0 && !sensitive) {
                 val text = clip.getItemAt(0).text?.toString()
-                Log.d("EssentialsIME", "Clipboard item: $text")
                 if (!text.isNullOrBlank()) {
                     val current = _clipboardHistory.value.toMutableList()
                     // Remove if exists to move to top

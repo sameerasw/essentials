@@ -156,6 +156,8 @@ private data class ContentKey(val stage: IslandStage, val itemKey: String?)
 
 private const val COLLAPSE_COMMIT = 0.2f
 
+private val HUB_SCREEN_MARGIN = 8.dp
+
 private enum class SwipeIntent { Hide, Dismiss }
 
 // The window never moves; the surface is always horizontally centred in it (= on the camera).
@@ -187,6 +189,10 @@ fun IslandRoot(
     fun iconFor(accent: Color?): Color =
         readableOnDark(if (targetSpec.iconDynamic) accent ?: iconBase else targetSpec.iconColorCustom ?: iconBase)
     val compactAccent = state.arrangement.visibleItems.firstNotNullOfOrNull { key -> state.items[key]?.accent }
+    if (IslandColorBridge.enabled) {
+        val bridgedColor = iconFor(state.items[state.focusedKey]?.accent ?: compactAccent)
+        LaunchedEffect(bridgedColor) { IslandColorBridge.publish(bridgedColor.toArgb()) }
+    }
     IslandRootContent(
         state, targetSpec, actions, onTargetBoundsChanged, registerCollapseAnimator, showCameraRing, cameraGeometry,
         iconTarget = iconFor(state.items[state.focusedKey]?.accent ?: compactAccent),
@@ -640,27 +646,36 @@ private fun IslandRootContent(
     val compactBaseWidth = remember { mutableIntStateOf(0) }
     val compactNeedLeft = remember { mutableIntStateOf(-1) }
     val bubbleMaxIcons = lastCatchUp?.maxIcons?.let { chosen ->
-        if (chosen > 0) {
-            chosen
+        val gap = with(density) { spec.contentGap.toPx() }
+        val needLeft = compactNeedLeft.intValue
+        val iconCount = lastCatchUp?.icons?.size ?: 0
+        val sideRoom = if (windowWidth > 0 && !spec.balanceCompact) {
+            (windowWidth - cameraSlotPx) / 2f - with(density) { HUB_SCREEN_MARGIN.toPx() }
         } else {
-            val sizePx = with(density) { spec.compactHeight.toPx() }
-            val budget = with(density) { spec.lineWidth.toPx() }
-            val gap = with(density) { spec.contentGap.toPx() }
-            val needLeft = compactNeedLeft.intValue
-            // Balanced, the bubble's room grows the pill on the far side, so only the near side's content eats into the budget
-            val room = if (needLeft >= 0) {
-                (budget - cameraSlotPx) / 2f - needLeft - gap
-            } else {
-                (budget - maxOf(fallbackCompact.width, compactBaseWidth.intValue)) - gap
-            }
-            (((room - sizePx) / (sizePx * 0.55f)).toInt() + 1).coerceIn(1, 8)
+            with(density) { spec.lineWidth.toPx() - cameraSlotPx } / 2f
         }
+        val room = if (needLeft >= 0) {
+            sideRoom - needLeft - gap
+        } else {
+            sideRoom * 2f - maxOf(fallbackCompact.width, compactBaseWidth.intValue) - gap
+        }
+        val icons = lastCatchUp?.icons.orEmpty()
+        val overflow = lastCatchUp?.overflow ?: com.sameerasw.essentials.island.model.QueueOverflow.Number
+        fun drawnPx(max: Int): Float = with(density) {
+            (stackOverlapWidth(icons.size, spec.compactHeight, overlapSlots(icons, max), overflow) +
+                overlapExtraWidth(icons, spec.compactHeight, max, overflow)).toPx()
+        }
+        val lowest = if (icons.size > 1) 2 else 1
+        val fit = remember(icons, overflow, room, spec.compactHeight, density) { (8 downTo lowest).firstOrNull { drawnPx(it) <= room } ?: 0 }
+        val cap = if (chosen > 0) chosen + if (iconCount > chosen) 1 else 0 else fit
+        minOf(cap, fit)
     } ?: OVERLAP_MAX
     val sideBubbleWidth = lastCatchUp
         ?.takeIf { it.content == null && it.icons.isNotEmpty() }
         ?.let {
-            stackOverlapWidth(it.icons.size, spec.compactHeight, overlapSlots(it.icons, bubbleMaxIcons), it.overflow) +
-                overlapExtraWidth(it.icons, spec.compactHeight, bubbleMaxIcons, it.overflow)
+            val overflow = overlapOverflow(bubbleMaxIcons, it.overflow)
+            stackOverlapWidth(it.icons.size, spec.compactHeight, overlapSlots(it.icons, bubbleMaxIcons), overflow) +
+                overlapExtraWidth(it.icons, spec.compactHeight, bubbleMaxIcons, overflow)
         }
         ?: spec.compactHeight
     val sideWidthPx = with(density) { sideBubbleWidth.roundToPx() }
@@ -677,14 +692,19 @@ private fun IslandRootContent(
     }
     fun bubbleSide(): Float = bubbleSideAnim.value
     fun balanceSign(): Float = if (spec.balanceCompact && spec.growDirection == 0) 1f - 2f * bubbleSide() else 1f
-    val bubbleGapPx = with(density) { spec.contentGap.roundToPx() }
+    val bubbleGapPx = with(density) { (spec.contentGap + 4.dp).roundToPx() }
     fun sideBubbleProgress(): Float =
         if (spec.growDirection == 0 && (hasCompactCells || stage == IslandStage.Hidden)) catchUpAnim.value.coerceIn(0f, 1f) else 0f
     val slackAnim = remember { Animatable(slackTarget.toFloat()) }
     LaunchedEffect(slackTarget) {
         if (inspection) slackAnim.snapTo(slackTarget.toFloat()) else slackAnim.animateTo(slackTarget.toFloat(), IslandMotion.smoothSpatial())
     }
-    fun catchShiftPx(): Float = sideBubbleProgress() * slackAnim.value / 2f * balanceSign()
+    val unbalancedShift by animateFloatAsState(
+        if (!spec.balanceCompact && spec.growDirection == 0 && hasCompactCells && stage == IslandStage.Compact) 1f else 0f,
+        motionSpring(Spring.DampingRatioNoBouncy, 300f),
+        label = "unbalancedShift",
+    )
+    fun catchShiftPx(): Float = maxOf(sideBubbleProgress(), unbalancedShift) * slackAnim.value / 2f * balanceSign()
     val lineShift = remember { Animatable(0f) }
     val liveSurfaceHeight = remember { mutableIntStateOf(0) }
     val liveSurfaceWidth = remember { mutableIntStateOf(0) }
@@ -794,14 +814,14 @@ private fun IslandRootContent(
 
     LaunchedEffect(
         target, windowWidth, stage, queueShown, pillSize, lineInsetActive, catchUpShown, hasCompactCells,
-        bubbleOnlyLayout, condensedLineActive, queueWidthPx, sideWidthPx, slackTarget, bubbleRight,
+        bubbleOnlyLayout, condensedLineActive, queueWidthPx, sideWidthPx, slackTarget, bubbleRight, spec.balanceCompact,
     ) {
         if (target == IntSize.Zero || windowWidth == 0) return@LaunchedEffect
         val g = if (stage == IslandStage.Expanded) outsetPx.roundToInt() else 0
         val shift = when {
             spec.growDirection != 0 || condensedLineActive -> 0
             lineInsetActive -> (queueWidthPx + bubbleGapPx) / 2
-            catchUpShown && hasCompactCells -> if (bubbleRight && spec.balanceCompact) -slackTarget / 2 else slackTarget / 2
+            (catchUpShown || (!spec.balanceCompact && stage == IslandStage.Compact)) && hasCompactCells -> if (bubbleRight && spec.balanceCompact) -slackTarget / 2 else slackTarget / 2
             else -> 0
         }
         val left = windowWidth / 2 - target.width / 2 + surfaceShiftFor(target.width) + shift
@@ -912,7 +932,7 @@ private fun IslandRootContent(
         activeOwner?.let { owner ->
             val ownerItem = state.items[owner] ?: lastItems[owner]
             val glow by animateColorAsState(
-                reportedAccents[owner] ?: ownerItem?.accent ?: islandAccent(),
+                spec.glowColor ?: reportedAccents[owner] ?: ownerItem?.accent ?: islandAccent(),
                 label = "islandSurfaceGlow",
             )
             val geometry = { visualFrame().let { MediaVisualGeometry(it.bounds, it.cornerRadius) } }
@@ -926,7 +946,7 @@ private fun IslandRootContent(
                 if (spec.backdropBlur) {
                     IslandBackdropBlur({ visualFrame() }, with(density) { spec.backdropBlurRadius.toPx() }, Modifier.matchParentSize())
                 }
-                MediaSurface(glow, spec.expandedCorner, { visualFrame().pulse }, geometry, camera, Modifier.matchParentSize(), transparent = spec.transparency, transparencyIntensity = spec.transparencyIntensity, progressiveBlur = spec.progressiveBlur, glowIntensity = spec.glowIntensity)
+                MediaSurface(glow, spec.expandedCorner, { visualFrame().pulse }, geometry, camera, Modifier.matchParentSize(), transparent = spec.transparency, transparencyIntensity = spec.transparencyIntensity, progressiveBlur = spec.progressiveBlur, glowIntensity = spec.glowIntensity, glowSize = spec.glowSize, glowRim = spec.glowRim)
                 if (spec.neuralExpressive && (spec.neuralExpressiveAlways || ownerItem?.expandedParticles == true)) {
                     GeminiParticlePill(
                         modifier = Modifier.matchParentSize(),
@@ -939,8 +959,7 @@ private fun IslandRootContent(
                 }
             }
         }
-        LiquidBridges(liquidField)
-        val pillGapPx = with(density) { 2.dp.roundToPx() }
+        val pillGapPx = with(density) { 8.dp.roundToPx() }
         AnimatedVisibility(
             visible = queueShown,
             enter = if (stage == IslandStage.Expanded) EnterTransition.None else fadeIn(IslandMotion.contentIn()),
@@ -1016,6 +1035,8 @@ private fun IslandRootContent(
                     bond = pillBond,
                     accent = focusedItem?.queueAccent,
                     reversed = bubbleRight,
+                    onClearAll = focusedItem?.onClearAll,
+                    onSnoozeAll = focusedItem?.onSnoozeAll,
                     onInteraction = actions::onInteraction,
                     modifier = Modifier
                         .queueSlot(0.5f, 1f, slides = true) { k -> ((k - 0.3f) / 0.7f).coerceIn(0f, 1f) }

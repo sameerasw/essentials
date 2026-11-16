@@ -4,6 +4,7 @@ import com.sameerasw.essentials.island.model.SideBubble
 import com.sameerasw.essentials.island.model.SideBubblePriority
 import com.sameerasw.essentials.island.model.QueueOverflow
 import com.sameerasw.essentials.island.ui.OVERLAP_MAX
+import com.sameerasw.essentials.island.ui.overlapMinFactor
 import com.sameerasw.essentials.island.ui.overlapSlots
 import kotlin.math.ceil
 import com.sameerasw.essentials.island.ui.inlineBubbleCell
@@ -42,7 +43,7 @@ class IslandController(
     val state: StateFlow<IslandUiState> = _state.asStateFlow()
 
     var maxCells: Int = CompactLayoutEngine.MAX_CELLS
-    var compactFits: ((before: List<String>, after: List<String>, leftExtra: Int, growing: Boolean) -> Int?)? = null
+    var compactFits: ((before: List<String>, after: List<String>, leftExtra: Int, hubFactor: Float, growing: Boolean) -> Int?)? = null
     var compactCellWidth: (String) -> Float = { 1f }
     var compactBubbleWidth: (Int) -> Float = { it.toFloat() }
     var balanceCompact: Boolean = true
@@ -61,6 +62,7 @@ class IslandController(
     var expandedTimeoutMs: Long = 0L
     var holdFocus: Boolean = false
     var onStageChanged: ((IslandStage) -> Unit)? = null
+    var onStateChanged: ((IslandUiState) -> Unit)? = null
     var onAutoExpand: (() -> Unit)? = null
 
     var collapseAnimator: ((commit: () -> Unit) -> Unit)? = null
@@ -184,8 +186,7 @@ class IslandController(
             IslandStage.Compact -> {
                 val tapped = itemKey?.let { current.items[it] }
                 if (tapped?.expanded == null && tapped?.interactions?.onTap?.invoke() == true) return true
-                val target = itemKey?.let { current.items[it] }?.takeIf { it.expanded != null }
-                    ?: defaultTapTarget(current)
+                val target = tapped?.takeIf { it.expanded != null }
                     ?: fallbackTapKey?.invoke()?.let { current.items[it] }?.takeIf { it.expanded != null }
                     ?: return false
                 if (target.interactions.onTap?.invoke() != true) expand(target.key)
@@ -197,7 +198,6 @@ class IslandController(
     fun onLongPress(itemKey: String?) {
         val current = _state.value
         val item = (if (current.stage == IslandStage.Compact) itemKey?.let { current.items[it] } else current.focused)
-            ?: defaultTapTarget(current)
             ?: return
         val action = item.interactions.onLongPress ?: item.onOpen ?: return
         action()
@@ -300,12 +300,6 @@ class IslandController(
         }
     }
 
-    private fun defaultTapTarget(state: IslandUiState): IslandItem? =
-        state.arrangement.visibleItems
-            .mapNotNull { state.items[it] }
-            .filter { it.placement == CompactPlacement.Dynamic && it.expanded != null }
-            .minByOrNull { it.effectivePriority }
-
     private fun restartExpandedTimer() {
         expandedTimer?.cancel()
         expandedTimer = null
@@ -378,6 +372,9 @@ class IslandController(
         val anchor = anchorProvider()
         val mirrored = bubbleOnRight && anchor == CameraAnchor.Center
         fun CompactArrangement.flipped() = if (mirrored) CompactArrangement(after, before, visibleItems) else this
+        val hub = merged ?: bubbleOwner?.sideBubble
+        val hubFactor = hub?.let { overlapMinFactor(it.icons) } ?: 0f
+        val hubCells = if (hub != null) ceil(hubFactor).toInt() else 0
         val arrangement = CompactLayoutEngine.arrange(
             items.values.filter {
                 it.compactVisible && !(usesBubbleOnly && it.key == bubbleOwner?.key) && !(mediaBubble != null && it.key == mediaItem?.key)
@@ -395,17 +392,17 @@ class IslandController(
             },
             anchor,
             maxCells = maxCells,
-            leftExtra = (merged ?: bubbleOwner?.sideBubble)?.cells?.coerceAtLeast(1) ?: 0,
+            leftExtra = hubCells,
             balance = balanceCompact,
             cellWidth = compactCellWidth,
-            leftExtraWidth = (merged ?: bubbleOwner?.sideBubble)?.cells?.coerceAtLeast(1)?.let(compactBubbleWidth) ?: 0f,
+            leftExtraWidth = hub?.cells?.coerceAtLeast(1)?.let(compactBubbleWidth) ?: 0f,
             previous = _state.value.arrangement.flipped(),
             fits = compactFits?.let { fits ->
-                val extra = (merged ?: bubbleOwner?.sideBubble)?.cells?.coerceAtLeast(1) ?: 0
+                val extra = hubCells
                 val shown = (_state.value.arrangement.before + _state.value.arrangement.after).toSet()
                 val wrapped: (List<String>, List<String>) -> Int? = { before, after ->
                     val growing = (before + after).any { it !in shown }
-                    if (mirrored) fits(after, before, extra, growing) else fits(before, after, extra, growing)
+                    if (mirrored) fits(after, before, extra, hubFactor, growing) else fits(before, after, extra, hubFactor, growing)
                 }
                 wrapped
             },
@@ -423,7 +420,11 @@ class IslandController(
         val bubble = merged ?: bubbleOwner?.sideBubble
         val bubbleKey = if (merged != null) MERGED_BUBBLE_KEY else bubbleOwner?.key
         _state.value = IslandUiState(stage, items, arrangement, focusedKey, bubble, bubbleKey)
+        val shownKeys = arrangement.visibleItems + listOfNotNull(bubbleOwner?.key, mediaItem?.key.takeIf { mediaBubble != null }, focusedKey)
+        IslandItemsState.publish(items, shownKeys)
+        IslandItemsState.publishPresence(itemsBySource, shownKeys)
         if (previous != stage) onStageChanged?.invoke(stage)
+        onStateChanged?.invoke(_state.value)
     }
 
     private fun mergedBubble(items: Map<String, IslandItem>, owner: IslandItem?, media: SideBubble?): SideBubble? {

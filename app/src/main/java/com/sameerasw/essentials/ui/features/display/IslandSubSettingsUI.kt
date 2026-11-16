@@ -67,6 +67,7 @@ import com.sameerasw.essentials.ui.features.display.actions.HorizontalSlideModeS
 import com.sameerasw.essentials.ui.features.display.actions.horizontalSlideDescription
 import com.sameerasw.essentials.ui.features.display.sheets.IslandAlarmOptionsBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.IslandBorderOutlineOptionsBottomSheet
+import com.sameerasw.essentials.ui.features.display.sheets.IslandGlowOptionsBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.IslandNotificationHubOptionsBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.IslandBriefOptionsBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.IslandCallOptionsBottomSheet
@@ -563,6 +564,7 @@ fun IslandVisualsSettingsUI(
     val context = LocalContext.current
     val view = LocalView.current
     var showBorderOutlineSheet by remember { mutableStateOf(false) }
+    var showGlowSheet by remember { mutableStateOf(false) }
     var showBackdropBlurInfo by remember { mutableStateOf(false) }
     var windowBlurEnabled by remember { mutableStateOf(IslandBackdropBlurSupport.windowBlurEnabled(context)) }
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -592,6 +594,8 @@ fun IslandVisualsSettingsUI(
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
+        ExpandedDarkThemeNotice()
+
         IslandPreviewControls()
 
         RoundedCardContainer(
@@ -652,29 +656,9 @@ fun IslandVisualsSettingsUI(
                     HapticUtil.performVirtualKeyHaptic(view)
                     viewModel.setIslandShowGlow(checked)
                 },
+                onSettingsClick = { showGlowSheet = true },
                 modifier = Modifier.highlight(highlightSetting == "island_show_glow"),
             )
-
-            AnimatedVisibility(
-                visible = viewModel.isIslandShowGlow.value,
-                enter = expandVertically() + fadeIn(),
-                exit = shrinkVertically() + fadeOut(),
-            ) {
-                ConfigSliderItem(
-                    title = stringResource(R.string.island_glow_intensity_title),
-                    value = viewModel.islandGlowIntensity.floatValue,
-                    onValueChange = {
-                        HapticUtil.performUIHaptic(view)
-                        viewModel.setIslandGlowIntensity(it)
-                    },
-                    valueRange = 0.1f..2f,
-                    increment = 0.1f,
-                    iconRes = R.drawable.rounded_blur_on_24,
-                    valueFormatter = { "%.1fx".format(it) },
-                    allowDecimals = true,
-                    modifier = Modifier.highlight(highlightSetting == "island_glow_intensity"),
-                )
-            }
         }
 
         Column {
@@ -946,6 +930,13 @@ fun IslandVisualsSettingsUI(
                 )
             }
         }
+    }
+
+    if (showGlowSheet) {
+        IslandGlowOptionsBottomSheet(
+            viewModel = viewModel,
+            onDismissRequest = { showGlowSheet = false },
+        )
     }
 
     if (showBorderOutlineSheet) {

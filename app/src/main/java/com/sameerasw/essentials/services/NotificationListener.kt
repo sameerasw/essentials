@@ -157,6 +157,15 @@ class NotificationListener : NotificationListenerService() {
             listenersCopy.forEach { it.onNotificationAlertRemoved(key) }
         }
 
+        fun dismissSilentNotifications() {
+            val listener = instance ?: return
+            runCatching {
+                listener.activeNotifications?.forEach { sbn ->
+                    if (sbn.isClearable && !sbn.isOngoing && listener.isSilentNotification(sbn)) listener.cancelNotification(sbn.key)
+                }
+            }
+        }
+
         fun dismissNotification(key: String) {
             try {
                 instance?.cancelNotification(key)

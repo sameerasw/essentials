@@ -696,6 +696,8 @@ class NotificationsPlugin : BaseIslandPlugin() {
         publish(
             itemFor(alert).let { current ->
                 current.withStack(
+                    onClearAll = { dismissEverything() },
+                    onSnoozeAll = if (snoozeAvailable()) ({ minutes: Int -> snoozeCurrent(minutes) }) else null,
                     sideBubble = bubble,
                     compactVisible = minimal || bubble == null,
                     leadingCell = if (inlineQueue) queueCell(waiting) else null,
@@ -716,6 +718,26 @@ class NotificationsPlugin : BaseIslandPlugin() {
 
     private fun queueCell(icons: List<StackIcon>): CompactCell = CompactCell("notif.queue") {
         IslandStackOverlap(icons, 22.dp)
+    }
+
+    private fun dismissEverything() {
+        val keys = alerts.map { it.key }
+        clearAll()
+        keys.forEach { NotificationListener.dismissNotification(it) }
+        NotificationListener.dismissSilentNotifications()
+        ctx?.request?.invoke(PluginRequest.Collapse(ITEM_KEY))
+    }
+
+    private fun snoozeAvailable(): Boolean =
+        NotificationListener.instance != null &&
+            runCatching { android.provider.Settings.Secure.getInt(context.contentResolver, "show_notification_snooze", 0) == 1 }.getOrDefault(false)
+
+    private fun snoozeCurrent(minutes: Int) {
+        val key = currentAlert()?.key ?: return
+        runCatching { NotificationListener.instance?.snoozeNotification(key, minutes * 60_000L) }
+        val remaining = alerts.any { it.key != key }
+        onRemoved(key)
+        if (!remaining) ctx?.request?.invoke(PluginRequest.Collapse(ITEM_KEY))
     }
 
     private fun clearWaiting() {
@@ -973,6 +995,8 @@ class NotificationsPlugin : BaseIslandPlugin() {
     private fun IslandItem.withStack(
         queue: QueueInfo?,
         stack: List<StackIcon>,
+        onClearAll: (() -> Unit)? = this.onClearAll,
+        onSnoozeAll: ((Int) -> Unit)? = this.onSnoozeAll,
         sideBubble: SideBubble? = null,
         compactVisible: Boolean = sideBubble == null,
         leadingCell: CompactCell? = null,
@@ -987,6 +1011,8 @@ class NotificationsPlugin : BaseIslandPlugin() {
         accent = accent,
         dismissible = dismissible,
         onDismiss = onDismiss,
+        onClearAll = onClearAll,
+        onSnoozeAll = onSnoozeAll,
         onOpen = onOpen,
         interactions = interactions,
         queue = queue,

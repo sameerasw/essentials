@@ -284,6 +284,9 @@ class IslandCoordinator(
             syncStatusBar()
             reportVisibility(stage != IslandStage.Hidden)
         }
+        controller.onStateChanged = { state ->
+            reportCameraOccupied(state.stage != IslandStage.Hidden && !(state.stage == IslandStage.Compact && state.arrangement.visibleItems.isEmpty()))
+        }
         settings.setIslandPreviewRingEnabled(false)
         settings.setIslandPreviewStage(SettingsRepository.ISLAND_PREVIEW_STAGE_AUTO)
         updateState()
@@ -293,6 +296,15 @@ class IslandCoordinator(
     var onVisibilityChanged: ((Boolean) -> Unit)? = null
     private var lastVisible = false
 
+    var onCameraOccupiedChanged: ((Boolean) -> Unit)? = null
+    private var lastCameraOccupied = false
+
+    private fun reportCameraOccupied(occupied: Boolean) {
+        if (occupied == lastCameraOccupied) return
+        lastCameraOccupied = occupied
+        onCameraOccupiedChanged?.invoke(occupied)
+    }
+
     private fun reportVisibility(visible: Boolean) {
         if (visible == lastVisible) return
         lastVisible = visible
@@ -301,6 +313,21 @@ class IslandCoordinator(
 
     fun openBrief() {
         mainHandler.post { controller.expand(BriefPlugin.ITEM_KEY) }
+    }
+
+    fun openBriefIfEnabled() {
+        if (settings.isIslandBriefEnabled()) openBrief()
+    }
+
+    fun openHub() {
+        mainHandler.post {
+            val state = controller.state.value
+            val hub = state.items[NotificationsPlugin.ITEM_KEY]?.takeIf { it.expanded != null }
+            when {
+                hub != null -> controller.expand(hub.key)
+                settings.isIslandBriefEnabled() -> controller.expand(BriefPlugin.ITEM_KEY)
+            }
+        }
     }
 
     fun updateState() {
@@ -760,6 +787,7 @@ class IslandCoordinator(
         CompactSideLimits.set(Int.MAX_VALUE, Int.MAX_VALUE)
         windowHost.detach()
         reportVisibility(false)
+        reportCameraOccupied(false)
         IslandStatusBarHider.restore(service)
         if (settings.isIslandSuppressSystemHeadsUpEnabled()) settings.applyHeadsUpSuppression(false)
     }
@@ -809,6 +837,11 @@ class IslandCoordinator(
             neuralExpressive = transparent && settings.isIslandNeuralExpressiveEnabled(),
             neuralExpressiveAlways = settings.isIslandNeuralExpressiveAlwaysEnabled(),
             glowIntensity = if (settings.isIslandShowGlowEnabled()) settings.getIslandGlowIntensity().coerceIn(0f, 2f) else 0f,
+            glowSize = settings.getIslandGlowSize().coerceIn(0.25f, 2f),
+            glowRim = settings.isIslandGlowRimEnabled(),
+            glowColor = if (settings.isIslandGlowDynamicEnabled()) null else {
+                runCatching { Color(AndroidColor.parseColor(settings.getIslandGlowColor())) }.getOrNull()
+            },
             transparency = transparent,
             backdropBlur = transparent && settings.isIslandBackdropBlurEnabled(),
             backdropBlurRadius = settings.getIslandBackdropBlurRadius().coerceIn(5f, 120f).dp,
@@ -931,7 +964,7 @@ class IslandCoordinator(
 
     private fun publishSideLimits() {
         val (left, right) = sideRooms()
-        val mirrored = geometry?.anchor == CameraAnchor.Center && controller.state.value.sideBubble == null
+        val mirrored = geometry?.anchor == CameraAnchor.Center && controller.state.value.sideBubble == null && settings.isIslandBalanceCompactEnabled()
         if (mirrored) {
             val both = minOf(left, right)
             CompactSideLimits.set(both, both)
@@ -951,7 +984,7 @@ class IslandCoordinator(
         return (((px + (geometry?.contentGap ?: 0f)) / unit) * 4f).roundToInt() / 4f
     }
 
-    private fun fitsCompactWidth(before: List<String>, after: List<String>, leftExtra: Int, growing: Boolean): Int? {
+    private fun fitsCompactWidth(before: List<String>, after: List<String>, leftExtra: Int, hubFactor: Float, growing: Boolean): Int? {
         val geo = geometry ?: return 0
         val density = service.resources.displayMetrics.density
         val cell = geo.contentSize.toInt()
@@ -959,7 +992,7 @@ class IslandCoordinator(
         val inset = geo.edgeInset.toInt()
         fun need(keys: List<String>, extra: Int): Int =
             if (keys.isEmpty() && extra == 0) 0 else keys.sumOf { CompactCellWidths.get(it) ?: cell } + spacing * keys.size + inset +
-                if (extra > 0) maxOf(CompactCellWidths.bubbleExtent, extra * (cell + spacing)) else 0
+                if (extra > 0) (geo.compactHeight * hubFactor).roundToInt() + spacing else 0
         val slack = if (growing) (GROW_SLACK_DP * density).toInt() else 0
         val (leftRoom, rightRoom) = sideRooms()
         val left = if (leftRoom == Int.MAX_VALUE) leftRoom else leftRoom - slack
@@ -968,7 +1001,7 @@ class IslandCoordinator(
         val needLeft = need(before, if (extraRight) 0 else leftExtra)
         val needRight = need(after, if (extraRight) leftExtra else 0)
         if (needLeft > left || needRight > right) return null
-        val mirrored = geo.anchor == CameraAnchor.Center && leftExtra == 0
+        val mirrored = geo.anchor == CameraAnchor.Center && leftExtra == 0 && settings.isIslandBalanceCompactEnabled()
         if (mirrored && maxOf(needLeft, needRight) > minOf(left, right)) return null
         return maxOf(needLeft, needRight)
     }
@@ -1121,6 +1154,10 @@ class IslandCoordinator(
             SettingsRepository.KEY_ISLAND_PROGRESSIVE_BLUR,
             SettingsRepository.KEY_ISLAND_SHOW_GLOW,
             SettingsRepository.KEY_ISLAND_GLOW_INTENSITY,
+            SettingsRepository.KEY_ISLAND_GLOW_SIZE,
+            SettingsRepository.KEY_ISLAND_GLOW_RIM,
+            SettingsRepository.KEY_ISLAND_GLOW_DYNAMIC,
+            SettingsRepository.KEY_ISLAND_GLOW_COLOR,
             SettingsRepository.KEY_ISLAND_SECONDARY_BUBBLE,
             SettingsRepository.KEY_ISLAND_NOTIF_HUB_ICONS,
             SettingsRepository.KEY_ISLAND_SECONDARY_BUBBLE_SIDE,

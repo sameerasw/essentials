@@ -73,6 +73,7 @@ import com.sameerasw.essentials.domain.model.PowerChoice
 import com.sameerasw.essentials.domain.model.RemapSlot
 import com.sameerasw.essentials.domain.model.ScaleAnimationsProfile
 import com.sameerasw.essentials.domain.model.SearchableItem
+import com.sameerasw.essentials.domain.model.Snippet
 import com.sameerasw.essentials.domain.model.SystemShortcutsState
 import com.sameerasw.essentials.domain.model.UpdateInfo
 import com.sameerasw.essentials.domain.registry.SearchRegistry
@@ -213,6 +214,7 @@ class MainViewModel : ViewModel() {
     val isDuoHideWhenScreenOffOnlyIdle = mutableStateOf(false)
     val isDuoHideWhenLocked = mutableStateOf(false)
     val isDuoUseMaterialYou = mutableStateOf(true)
+    val isDuoMatchIslandColors = mutableStateOf(false)
     val duoCustomColor = mutableStateOf("#FFFFFF")
     val duoTapAction = mutableStateOf<Action?>(null)
     val duoDoubleTapAction = mutableStateOf<Action?>(null)
@@ -279,6 +281,7 @@ class MainViewModel : ViewModel() {
     val islandNavigationOnNew = mutableStateOf(SettingsRepository.ISLAND_NAVIGATION_ON_NEW_PEEK)
     val islandNavigationExpandDistance = mutableIntStateOf(200)
     val isIslandNavigationPeekAfterExpand = mutableStateOf(false)
+    val isIslandNavigationHideWhileDriving = mutableStateOf(false)
     val isIslandShowHotspot = mutableStateOf(false)
     val isIslandShowDevices = mutableStateOf(true)
     val isIslandBriefEnabled = mutableStateOf(false)
@@ -326,6 +329,10 @@ class MainViewModel : ViewModel() {
     val islandOtpTimeoutMs = mutableLongStateOf(60_000L)
     val isIslandShowGlow = mutableStateOf(true)
     val islandGlowIntensity = mutableFloatStateOf(1f)
+    val islandGlowSize = mutableFloatStateOf(1f)
+    val isIslandGlowRim = mutableStateOf(true)
+    val isIslandGlowDynamic = mutableStateOf(true)
+    val islandGlowColor = mutableStateOf(SettingsRepository.ISLAND_GLOW_DEFAULT_COLOR)
     val isIslandNotifThemedBubble = mutableStateOf(false)
     val isIslandBorderOutline = mutableStateOf(false)
     val islandBorderOutlineColor = mutableStateOf(SettingsRepository.ISLAND_BORDER_OUTLINE_DEFAULT_COLOR)
@@ -649,6 +656,9 @@ class MainViewModel : ViewModel() {
     val isUserDictionarySheetVisible = mutableStateOf(false)
     val isLongPressSymbolsEnabled = mutableStateOf(false)
     val isAccentedCharactersEnabled = mutableStateOf(false)
+    val isTextSnippetsEnabled = mutableStateOf(false)
+    val snippetPrefix = mutableStateOf(";")
+    val textSnippets = mutableStateOf<List<Snippet>>(emptyList())
 
     // AirSync Bridge
     val isAirSyncConnectionEnabled = mutableStateOf(false)
@@ -916,6 +926,9 @@ class MainViewModel : ViewModel() {
                     SettingsRepository.KEY_DUO_USE_MATERIAL_YOU ->
                         isDuoUseMaterialYou.value = settingsRepository.isDuoUseMaterialYouEnabled()
 
+                    SettingsRepository.KEY_DUO_MATCH_ISLAND_COLORS ->
+                        isDuoMatchIslandColors.value = settingsRepository.isDuoMatchIslandColorsEnabled()
+
                     SettingsRepository.KEY_DUO_CUSTOM_COLOR ->
                         duoCustomColor.value = settingsRepository.getDuoCustomColor()
 
@@ -1056,6 +1069,9 @@ class MainViewModel : ViewModel() {
 
                     SettingsRepository.KEY_ISLAND_NAVIGATION_PEEK_AFTER_EXPAND ->
                         isIslandNavigationPeekAfterExpand.value = settingsRepository.isIslandNavigationPeekAfterExpandEnabled()
+
+                    SettingsRepository.KEY_ISLAND_NAVIGATION_HIDE_WHILE_DRIVING ->
+                        isIslandNavigationHideWhileDriving.value = settingsRepository.isIslandNavigationHideWhileDrivingEnabled()
 
                     SettingsRepository.KEY_ISLAND_CATCH_UP_ENABLED ->
                         isIslandCatchUpEnabled.value = settingsRepository.isIslandCatchUpEnabled()
@@ -1247,6 +1263,13 @@ class MainViewModel : ViewModel() {
                     SettingsRepository.KEY_LOCATION_REACHED_FULL_SCREEN_ALARM_ENABLED ->
                         isLocationReachedFullScreenAlarmEnabled.value =
                             settingsRepository.getLocationReachedFullScreenAlarmEnabled()
+
+                    SettingsRepository.KEY_TEXT_SNIPPETS_ENABLED,
+                    SettingsRepository.KEY_TEXT_SNIPPETS_PREFIX,
+                    SettingsRepository.KEY_TEXT_SNIPPETS_DATA,
+                    -> {
+                        loadTextSnippets()
+                    }
 
                     SettingsRepository.KEY_ENABLE_UNSUPPORTED_FEATURES -> {
                         isEnableUnsupportedFeatures.value =
@@ -2041,6 +2064,7 @@ class MainViewModel : ViewModel() {
             settingsRepository.getLockScreenClockSelectedColorId()
         lockScreenClockSeedColor.intValue = settingsRepository.getLockScreenClockSeedColor()
         loadShutUpConfigs()
+        loadTextSnippets()
         recentSearches.value = settingsRepository.getRecentSearches()
         loadCachedWallpaper()
         isDailyWallpaperAutoUpdateEnabled.value =
@@ -2527,6 +2551,7 @@ class MainViewModel : ViewModel() {
         isDuoHideWhenScreenOffOnlyIdle.value = settingsRepository.isDuoHideWhenScreenOffOnlyIdleEnabled()
         isDuoHideWhenLocked.value = settingsRepository.isDuoHideWhenLockedEnabled()
         isDuoUseMaterialYou.value = settingsRepository.isDuoUseMaterialYouEnabled()
+        isDuoMatchIslandColors.value = settingsRepository.isDuoMatchIslandColorsEnabled()
         duoCustomColor.value = settingsRepository.getDuoCustomColor()
         duoTapAction.value = settingsRepository.getDuoTapAction()
         duoDoubleTapAction.value = settingsRepository.getDuoDoubleTapAction()
@@ -2595,6 +2620,7 @@ class MainViewModel : ViewModel() {
         islandNavigationOnNew.value = settingsRepository.getIslandNavigationOnNew()
         islandNavigationExpandDistance.intValue = settingsRepository.getIslandNavigationExpandDistance()
         isIslandNavigationPeekAfterExpand.value = settingsRepository.isIslandNavigationPeekAfterExpandEnabled()
+        isIslandNavigationHideWhileDriving.value = settingsRepository.isIslandNavigationHideWhileDrivingEnabled()
         isIslandShowHotspot.value = settingsRepository.isIslandShowHotspotEnabled()
         isIslandShowDevices.value = settingsRepository.isIslandShowDevicesEnabled()
         isIslandBriefEnabled.value = settingsRepository.isIslandBriefEnabled()
@@ -2650,6 +2676,10 @@ class MainViewModel : ViewModel() {
         islandOtpTimeoutMs.longValue = settingsRepository.getIslandOtpTimeoutMs()
         isIslandShowGlow.value = settingsRepository.isIslandShowGlowEnabled()
         islandGlowIntensity.floatValue = settingsRepository.getIslandGlowIntensity()
+        islandGlowSize.floatValue = settingsRepository.getIslandGlowSize()
+        isIslandGlowRim.value = settingsRepository.isIslandGlowRimEnabled()
+        isIslandGlowDynamic.value = settingsRepository.isIslandGlowDynamicEnabled()
+        islandGlowColor.value = settingsRepository.getIslandGlowColor()
         isIslandNotifThemedBubble.value = settingsRepository.isIslandNotifThemedBubbleEnabled()
         isIslandBorderOutline.value = settingsRepository.isIslandBorderOutlineEnabled()
         islandBorderOutlineColor.value = settingsRepository.getIslandBorderOutlineColor()
@@ -5900,6 +5930,11 @@ class MainViewModel : ViewModel() {
         settingsRepository.setIslandNavigationPeekAfterExpandEnabled(enabled)
     }
 
+    fun setIslandNavigationHideWhileDriving(enabled: Boolean) {
+        isIslandNavigationHideWhileDriving.value = enabled
+        settingsRepository.setIslandNavigationHideWhileDrivingEnabled(enabled)
+    }
+
     fun setIslandShowHotspot(enabled: Boolean) {
         isIslandShowHotspot.value = enabled
         settingsRepository.setIslandShowHotspotEnabled(enabled)
@@ -6387,6 +6422,26 @@ class MainViewModel : ViewModel() {
         settingsRepository.setIslandGlowIntensity(value)
     }
 
+    fun setIslandGlowSize(value: Float) {
+        islandGlowSize.floatValue = value
+        settingsRepository.setIslandGlowSize(value)
+    }
+
+    fun setIslandGlowRim(enabled: Boolean) {
+        isIslandGlowRim.value = enabled
+        settingsRepository.setIslandGlowRimEnabled(enabled)
+    }
+
+    fun setIslandGlowDynamic(enabled: Boolean) {
+        isIslandGlowDynamic.value = enabled
+        settingsRepository.setIslandGlowDynamicEnabled(enabled)
+    }
+
+    fun setIslandGlowColor(colorHex: String) {
+        islandGlowColor.value = colorHex
+        settingsRepository.setIslandGlowColor(colorHex)
+    }
+
     fun setIslandNotifThemedBubble(enabled: Boolean) {
         isIslandNotifThemedBubble.value = enabled
         settingsRepository.setIslandNotifThemedBubbleEnabled(enabled)
@@ -6582,6 +6637,11 @@ class MainViewModel : ViewModel() {
     fun setDuoHideWhenLocked(enabled: Boolean) {
         isDuoHideWhenLocked.value = enabled
         settingsRepository.setDuoHideWhenLockedEnabled(enabled)
+    }
+
+    fun setDuoMatchIslandColors(enabled: Boolean) {
+        isDuoMatchIslandColors.value = enabled
+        settingsRepository.setDuoMatchIslandColorsEnabled(enabled)
     }
 
     fun setDuoUseMaterialYou(enabled: Boolean) {
@@ -10831,6 +10891,42 @@ class MainViewModel : ViewModel() {
         } catch (e: Exception) {
             e.printStackTrace()
         }
+    }
+
+    fun loadTextSnippets() {
+        if (::settingsRepository.isInitialized) {
+            isTextSnippetsEnabled.value = settingsRepository.isTextSnippetsEnabled()
+            snippetPrefix.value = settingsRepository.getSnippetPrefix()
+            textSnippets.value = settingsRepository.getTextSnippets()
+        }
+    }
+
+    fun setTextSnippetsEnabled(enabled: Boolean) {
+        isTextSnippetsEnabled.value = enabled
+        settingsRepository.setTextSnippetsEnabled(enabled)
+    }
+
+    fun setSnippetPrefix(prefix: String) {
+        snippetPrefix.value = prefix
+        settingsRepository.setSnippetPrefix(prefix)
+    }
+
+    fun saveSnippet(snippet: Snippet) {
+        val current = textSnippets.value.toMutableList()
+        val index = current.indexOfFirst { it.id == snippet.id }
+        if (index >= 0) {
+            current[index] = snippet
+        } else {
+            current.add(0, snippet)
+        }
+        textSnippets.value = current
+        settingsRepository.saveTextSnippets(current)
+    }
+
+    fun deleteSnippet(id: String) {
+        val updated = textSnippets.value.filter { it.id != id }
+        textSnippets.value = updated
+        settingsRepository.saveTextSnippets(updated)
     }
 
     companion object {
