@@ -43,18 +43,19 @@ fun MarqueeText(
     fadeEnd: Boolean = true,
     fadeWidth: Dp = 14.dp,
 ) {
+    val resolved = remember(style, text) { style.forContent(text.text) }
     val measurer = rememberTextMeasurer()
     BoxWithConstraints(modifier) {
-        val textWidth = remember(text, style) { measurer.measure(text, style, maxLines = 1, softWrap = false).size.width }
+        val textWidth = remember(text, resolved) { measurer.measure(text, resolved, maxLines = 1, softWrap = false).size.width }
         val overflows = constraints.hasBoundedWidth && textWidth > constraints.maxWidth
         if (!overflows) {
-            Text(text, style = style.copy(textAlign = textAlign), maxLines = 1, softWrap = false, modifier = Modifier.fillMaxWidth())
+            Text(text, style = resolved.copy(textAlign = textAlign), maxLines = 1, softWrap = false, modifier = Modifier.fillMaxWidth())
         } else if (islandStill()) {
-            Text(text, style = style.copy(textAlign = textAlign), maxLines = 1, softWrap = false, overflow = TextOverflow.Ellipsis, modifier = Modifier.fillMaxWidth())
+            Text(text, style = resolved.copy(textAlign = textAlign), maxLines = 1, softWrap = false, overflow = TextOverflow.Ellipsis, modifier = Modifier.fillMaxWidth())
         } else {
             Text(
                 text = text,
-                style = style,
+                style = resolved,
                 maxLines = 1,
                 softWrap = false,
                 modifier = Modifier
