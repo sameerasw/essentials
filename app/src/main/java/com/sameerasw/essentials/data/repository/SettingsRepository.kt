@@ -36,6 +36,7 @@ import com.sameerasw.essentials.domain.model.NotificationLightingSweepPosition
 import com.sameerasw.essentials.domain.model.PowerChoice
 import com.sameerasw.essentials.domain.model.RemapSlot
 import com.sameerasw.essentials.domain.model.ScaleAnimationsProfile
+import com.sameerasw.essentials.domain.model.Snippet
 import com.sameerasw.essentials.domain.model.SystemShortcutsState
 import com.sameerasw.essentials.domain.model.TrackedRepo
 import com.sameerasw.essentials.domain.model.github.GitHubUser
@@ -197,6 +198,9 @@ class SettingsRepository(
 
     companion object {
         const val PREFS_NAME = "essentials_prefs"
+
+        @Volatile
+        private var cachedSnippets: List<Snippet>? = null
 
         // Keys
         const val KEY_DEBUGGING_TILE_TAP_ACTION = "debugging_tile_tap_action"
@@ -403,6 +407,9 @@ class SettingsRepository(
         const val KEY_KEYBOARD_CLIPBOARD_ENABLED = "keyboard_clipboard_enabled"
         const val KEY_KEYBOARD_LONG_PRESS_SYMBOLS = "keyboard_long_press_symbols"
         const val KEY_KEYBOARD_ACCENTED_CHARACTERS = "keyboard_accented_characters"
+        const val KEY_TEXT_SNIPPETS_ENABLED = "text_snippets_enabled"
+        const val KEY_TEXT_SNIPPETS_PREFIX = "text_snippets_prefix"
+        const val KEY_TEXT_SNIPPETS_DATA = "text_snippets_data"
 
         // Essentials-AirSync Bridge
         const val KEY_AIRSYNC_CONNECTION_ENABLED = "airsync_connection_enabled"
@@ -4903,4 +4910,32 @@ class SettingsRepository(
         } ?: emptyMap()
 
     fun setAppVolumeLevels(levels: Map<String, Float>) = putString(KEY_APP_VOLUME_LEVELS, gson.toJson(levels))
+
+    fun isTextSnippetsEnabled(): Boolean = getBoolean(KEY_TEXT_SNIPPETS_ENABLED, false)
+    fun setTextSnippetsEnabled(enabled: Boolean) {
+        putBoolean(KEY_TEXT_SNIPPETS_ENABLED, enabled)
+    }
+
+    fun getSnippetPrefix(): String = getString(KEY_TEXT_SNIPPETS_PREFIX, ";") ?: ";"
+
+    fun setSnippetPrefix(prefix: String) = putString(KEY_TEXT_SNIPPETS_PREFIX, prefix)
+
+    fun getTextSnippets(): List<Snippet> {
+        cachedSnippets?.let { return it }
+        val json = getString(KEY_TEXT_SNIPPETS_DATA, null) ?: return emptyList<Snippet>().also { cachedSnippets = it }
+        val list =
+            try {
+                val type = object : TypeToken<List<Snippet>>() {}.type
+                gson.fromJson<List<Snippet>>(json, type) ?: emptyList()
+            } catch (_: Exception) {
+                emptyList()
+            }
+        cachedSnippets = list
+        return list
+    }
+
+    fun saveTextSnippets(snippets: List<Snippet>) {
+        cachedSnippets = snippets
+        putString(KEY_TEXT_SNIPPETS_DATA, gson.toJson(snippets))
+    }
 }

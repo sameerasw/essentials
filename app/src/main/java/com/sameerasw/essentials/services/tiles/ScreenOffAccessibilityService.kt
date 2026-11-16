@@ -48,6 +48,7 @@ import com.sameerasw.essentials.services.handlers.DuoOverlayHandler
 import com.sameerasw.essentials.services.handlers.FlashlightHandler
 import com.sameerasw.essentials.island.service.IslandCoordinator
 import com.sameerasw.essentials.services.handlers.NotificationLightingHandler
+import com.sameerasw.essentials.services.handlers.SnippetExpansionHandler
 import com.sameerasw.essentials.services.handlers.OmniGestureOverlayHandler
 import com.sameerasw.essentials.services.handlers.FaceUnlockBrightnessHandler
 import com.sameerasw.essentials.services.handlers.PocketModeHandler
@@ -102,6 +103,7 @@ class ScreenOffAccessibilityService :
     private lateinit var screenshotAutoCleanHandler: ScreenshotAutoCleanHandler
     private lateinit var lockscreenShortcutsHandler: LockscreenShortcutsHandler
     private lateinit var appVolumeOverlayHandler: AppVolumeOverlayHandler
+    private lateinit var snippetExpansionHandler: SnippetExpansionHandler
     private lateinit var statusBarSectionsDebugHandler: com.sameerasw.essentials.services.handlers.StatusBarSectionsDebugHandler
 
     private var lightSensor: Sensor? = null
@@ -391,6 +393,8 @@ class ScreenOffAccessibilityService :
                 key == SettingsRepository.KEY_LOCKSCREEN_SHORTCUT_RIGHT_ACTIONS
             ) {
                 lockscreenShortcutsHandler.updateState()
+            } else if (key == SettingsRepository.KEY_TEXT_SNIPPETS_ENABLED) {
+                updateSnippetTextListening()
             } else if (key == SettingsRepository.KEY_APP_VOLUME_ENABLED ||
                 key == SettingsRepository.KEY_APP_VOLUME_LEVELS
             ) {
@@ -445,6 +449,7 @@ class ScreenOffAccessibilityService :
         appVolumeOverlayHandler = AppVolumeOverlayHandler(this)
         screenshotShareCleanupHandler = ScreenshotShareCleanupHandler(this, serviceScope)
         screenshotAutoCleanHandler = ScreenshotAutoCleanHandler(this, serviceScope)
+        snippetExpansionHandler = SnippetExpansionHandler(this)
 
         flashlightHandler.register()
         statusBarIconHandler.register()
@@ -625,6 +630,7 @@ class ScreenOffAccessibilityService :
                     AccessibilityServiceInfo.FLAG_REQUEST_FILTER_KEY_EVENTS or
                     AccessibilityServiceInfo.FLAG_RETRIEVE_INTERACTIVE_WINDOWS
             }
+        updateSnippetTextListening()
         updateOmniOverlay()
         com.sameerasw.essentials.island.service.SharedOverlayWindow.revalidate()
         duoOverlayHandler.restart()
@@ -667,6 +673,21 @@ class ScreenOffAccessibilityService :
         val hiddenByShade = shadeExpandedNow && prefs.getBoolean(SettingsRepository.KEY_CIRCLE_TO_SEARCH_HIDE_ON_SHADE, false)
         val shouldShow = isGestureEnabled && isScreenOn && !keyguardManager.isKeyguardLocked && !hiddenByShade
         omniGestureOverlayHandler.updateOverlay(shouldShow, height, width, isPreview)
+    }
+
+    private fun updateSnippetTextListening() {
+        val info = serviceInfo ?: return
+        val enabled = SettingsRepository(this).isTextSnippetsEnabled()
+        val target =
+            if (enabled) {
+                info.eventTypes or AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED
+            } else {
+                info.eventTypes and AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED.inv()
+            }
+        if (info.eventTypes != target) {
+            info.eventTypes = target
+            serviceInfo = info
+        }
     }
 
     override fun onDestroy() {
@@ -745,6 +766,10 @@ class ScreenOffAccessibilityService :
 
         if (event.eventType == AccessibilityEvent.TYPE_VIEW_CLICKED) {
             screenshotShareCleanupHandler.onViewClicked(event, appFlowHandler.currentPackage)
+        }
+
+        if (event.eventType == AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED) {
+            snippetExpansionHandler.onTextChanged(event)
         }
 
         if (event.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED ||

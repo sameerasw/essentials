@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials.ui.features.system
 
+import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -38,6 +39,7 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.sameerasw.essentials.FeatureSettingsActivity
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
@@ -340,6 +342,22 @@ fun KeyboardSettingsUI(
                     onCheckedChange = { viewModel.isUserDictionarySheetVisible.value = true },
                 )
             }
+        }
+
+        RoundedCardContainer(spacing = 2.dp) {
+            IconToggleItem(
+                iconRes = R.drawable.rounded_edit_note_24,
+                title = stringResource(R.string.feat_text_snippets_title),
+                description = stringResource(R.string.feat_text_snippets_desc),
+                showToggle = false,
+                onClick = {
+                    context.startActivity(
+                        Intent(context, FeatureSettingsActivity::class.java).apply {
+                            putExtra("feature", "Text Snippets")
+                        },
+                    )
+                },
+            )
         }
 
         Spacer(Modifier.height(32.dp))
