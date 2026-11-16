@@ -2147,12 +2147,6 @@
     <string name="app_icon_gta">6</string>
     <string name="island_notif_lock_hidden_title">Hidden</string>
     <string name="text_snippets_how_to_use">1. Turn on Text Snippets and grant the Accessibility permission so shortcuts can expand in any app.\n\n2. Pick a Trigger Prefix: ; : @@ or a space.\n\n3. Tap the + button to add a snippet. Enter a keyword without spaces and the text it should expand into.\n\n4. Type the prefix followed by the keyword, for example ;brb, to expand it. With the space prefix, type the keyword and press space.\n\nTips: keywords only expand at the start of a word, so URLs and times are left alone. Password fields are always ignored. Some apps do not allow text replacement and will not expand snippets.</string>
-    <string name="island_notif_queue_style_stack">Стопка</string>
-    <string name="island_notif_queue_style_overlap">Внахлест</string>
-    <string name="island_notif_queue_inline_title">Очередь внутри острова </string>
-    <string name="island_notif_queue_inline_desc">Покажите очередь внутри острова </string>
-    <string name="island_navigation_peek_after_expand_desc">Когда выключено остров возвращается в компактный режим</string>
-    <string name="island_secondary_style_title">Стиль вторичных предметов </string>
     <string name="duo_section_what_to_show">Что показать </string>
     <string name="island_progressive_blur_title">Прогрессивная анимация размытия </string>
     <string name="instruction_section_freezetags_title">Замораживание приложений и умное замораживание </string>
