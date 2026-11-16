@@ -202,9 +202,6 @@ class SettingsRepository(
         @Volatile
         private var cachedSnippets: List<Snippet>? = null
 
-        @Volatile
-        private var cachedPrefix: String? = null
-
         // Keys
         const val KEY_DEBUGGING_TILE_TAP_ACTION = "debugging_tile_tap_action"
         const val KEY_GENAI_AUTOMATION_ENABLED = "genai_automation_enabled"
@@ -410,9 +407,9 @@ class SettingsRepository(
         const val KEY_KEYBOARD_CLIPBOARD_ENABLED = "keyboard_clipboard_enabled"
         const val KEY_KEYBOARD_LONG_PRESS_SYMBOLS = "keyboard_long_press_symbols"
         const val KEY_KEYBOARD_ACCENTED_CHARACTERS = "keyboard_accented_characters"
-        const val KEY_KEYBOARD_TEXT_SNIPPETS_ENABLED = "keyboard_text_snippets_enabled"
-        const val KEY_KEYBOARD_SNIPPET_PREFIX = "keyboard_snippet_prefix"
-        const val KEY_KEYBOARD_SNIPPETS_DATA = "keyboard_snippets_data"
+        const val KEY_TEXT_SNIPPETS_ENABLED = "text_snippets_enabled"
+        const val KEY_TEXT_SNIPPETS_PREFIX = "text_snippets_prefix"
+        const val KEY_TEXT_SNIPPETS_DATA = "text_snippets_data"
 
         // Essentials-AirSync Bridge
         const val KEY_AIRSYNC_CONNECTION_ENABLED = "airsync_connection_enabled"
@@ -4914,26 +4911,18 @@ class SettingsRepository(
 
     fun setAppVolumeLevels(levels: Map<String, Float>) = putString(KEY_APP_VOLUME_LEVELS, gson.toJson(levels))
 
-    fun isTextSnippetsEnabled(): Boolean = getBoolean(KEY_KEYBOARD_TEXT_SNIPPETS_ENABLED, false)
+    fun isTextSnippetsEnabled(): Boolean = getBoolean(KEY_TEXT_SNIPPETS_ENABLED, false)
     fun setTextSnippetsEnabled(enabled: Boolean) {
-        putBoolean(KEY_KEYBOARD_TEXT_SNIPPETS_ENABLED, enabled)
+        putBoolean(KEY_TEXT_SNIPPETS_ENABLED, enabled)
     }
 
-    fun getSnippetPrefix(): String {
-        cachedPrefix?.let { return it }
-        val prefix = getString(KEY_KEYBOARD_SNIPPET_PREFIX, ";") ?: ";"
-        cachedPrefix = prefix
-        return prefix
-    }
+    fun getSnippetPrefix(): String = getString(KEY_TEXT_SNIPPETS_PREFIX, ";") ?: ";"
 
-    fun setSnippetPrefix(prefix: String) {
-        cachedPrefix = prefix
-        putString(KEY_KEYBOARD_SNIPPET_PREFIX, prefix)
-    }
+    fun setSnippetPrefix(prefix: String) = putString(KEY_TEXT_SNIPPETS_PREFIX, prefix)
 
     fun getTextSnippets(): List<Snippet> {
         cachedSnippets?.let { return it }
-        val json = getString(KEY_KEYBOARD_SNIPPETS_DATA, null) ?: return emptyList<Snippet>().also { cachedSnippets = it }
+        val json = getString(KEY_TEXT_SNIPPETS_DATA, null) ?: return emptyList<Snippet>().also { cachedSnippets = it }
         val list =
             try {
                 val type = object : TypeToken<List<Snippet>>() {}.type
@@ -4947,6 +4936,6 @@ class SettingsRepository(
 
     fun saveTextSnippets(snippets: List<Snippet>) {
         cachedSnippets = snippets
-        putString(KEY_KEYBOARD_SNIPPETS_DATA, gson.toJson(snippets))
+        putString(KEY_TEXT_SNIPPETS_DATA, gson.toJson(snippets))
     }
 }

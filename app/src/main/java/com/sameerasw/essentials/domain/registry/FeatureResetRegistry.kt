@@ -31,6 +31,7 @@ object FeatureResetRegistry {
             "Volume steps" to listOf("volume_steps_"),
             "App volume" to listOf("app_volume_"),
             "Lock screen shortcuts" to listOf("lockscreen_shortcut"),
+            "Text Snippets" to listOf("text_snippets_"),
         )
 
     fun prefixesFor(featureId: String): List<String>? = prefixes[featureId]

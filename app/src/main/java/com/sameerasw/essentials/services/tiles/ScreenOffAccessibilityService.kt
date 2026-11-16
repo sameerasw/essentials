@@ -393,8 +393,8 @@ class ScreenOffAccessibilityService :
                 key == SettingsRepository.KEY_LOCKSCREEN_SHORTCUT_RIGHT_ACTIONS
             ) {
                 lockscreenShortcutsHandler.updateState()
-            } else if (key == SettingsRepository.KEY_KEYBOARD_TEXT_SNIPPETS_ENABLED) {
-                updateSnippetTextListening(SettingsRepository(this).isTextSnippetsEnabled())
+            } else if (key == SettingsRepository.KEY_TEXT_SNIPPETS_ENABLED) {
+                updateSnippetTextListening()
             } else if (key == SettingsRepository.KEY_APP_VOLUME_ENABLED ||
                 key == SettingsRepository.KEY_APP_VOLUME_LEVELS
             ) {
@@ -626,13 +626,11 @@ class ScreenOffAccessibilityService :
         isA11yConnected = true
         serviceInfo =
             serviceInfo.apply {
-                if (SettingsRepository(this@ScreenOffAccessibilityService).isTextSnippetsEnabled()) {
-                    eventTypes = eventTypes or AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED
-                }
                 flags = flags or
                     AccessibilityServiceInfo.FLAG_REQUEST_FILTER_KEY_EVENTS or
                     AccessibilityServiceInfo.FLAG_RETRIEVE_INTERACTIVE_WINDOWS
             }
+        updateSnippetTextListening()
         updateOmniOverlay()
         com.sameerasw.essentials.island.service.SharedOverlayWindow.revalidate()
         duoOverlayHandler.restart()
@@ -677,8 +675,22 @@ class ScreenOffAccessibilityService :
         omniGestureOverlayHandler.updateOverlay(shouldShow, height, width, isPreview)
     }
 
+    private fun updateSnippetTextListening() {
+        val info = serviceInfo ?: return
+        val enabled = SettingsRepository(this).isTextSnippetsEnabled()
+        val target =
+            if (enabled) {
+                info.eventTypes or AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED
+            } else {
+                info.eventTypes and AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED.inv()
+            }
+        if (info.eventTypes != target) {
+            info.eventTypes = target
+            serviceInfo = info
+        }
+    }
+
     override fun onDestroy() {
-        if (instance == this) instance = null
         Shizuku.removeBinderReceivedListener(shizukuBinderListener)
         try {
             unregisterReceiver(screenReceiver)
@@ -1258,22 +1270,6 @@ class ScreenOffAccessibilityService :
 
         fun updateSmartPixelsState() {
             instance?.smartPixelsHandler?.updateState()
-        }
-
-        fun updateSnippetTextListening(enabled: Boolean) {
-            val service = instance ?: return
-            val info = service.serviceInfo ?: return
-            val current = info.eventTypes
-            val target =
-                if (enabled) {
-                    current or AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED
-                } else {
-                    current and AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED.inv()
-                }
-            if (current != target) {
-                info.eventTypes = target
-                service.serviceInfo = info
-            }
         }
     }
 }
