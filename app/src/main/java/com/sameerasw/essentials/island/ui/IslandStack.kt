@@ -357,6 +357,184 @@ fun IslandStackOverlap(
     }
 }
 
+private enum class ClearMode { Off, Actions, Snooze }
+
+private fun formatSnooze(minutes: Int): String = when {
+    minutes >= 60 && minutes % 60 == 0 -> "${minutes / 60}h"
+    minutes >= 60 -> "${minutes / 60}h ${minutes % 60}m"
+    else -> "${minutes}m"
+}
+
+private fun readSnoozeOptions(context: android.content.Context): Pair<Int, List<Int>> {
+    var default = 60
+    var options = listOf(15, 30, 60, 120)
+    val raw = runCatching { android.provider.Settings.Global.getString(context.contentResolver, "notification_snooze_options") }.getOrNull().orEmpty()
+    raw.split(",").forEach { pair ->
+        val parts = pair.split("=", limit = 2)
+        if (parts.size != 2) return@forEach
+        when (parts[0].trim()) {
+            "default" -> default = parts[1].trim().toIntOrNull() ?: default
+            "options_array" -> options = parts[1].split(":").mapNotNull { it.trim().toIntOrNull() }.ifEmpty { options }
+        }
+    }
+    return default to options
+}
+
+private fun <S> androidx.compose.animation.AnimatedContentTransitionScope<S>.clearTransition(): androidx.compose.animation.ContentTransform =
+    (fadeIn(IslandMotion.expressiveDefaultEffects()) togetherWith fadeOut(IslandMotion.expressiveFastEffects()))
+        .using(androidx.compose.animation.SizeTransform(clip = false) { _, _ -> androidx.compose.animation.core.snap() })
+
+@Composable
+private fun ClearActions(
+    snoozing: Boolean,
+    height: Dp,
+    itemHeight: Dp,
+    ring: Color,
+    container: Color,
+    outlineColor: Color?,
+    outlineThickness: Dp,
+    canSnooze: Boolean,
+    onClear: () -> Unit,
+    onCancel: () -> Unit,
+    onOpenSnooze: () -> Unit,
+    onSnooze: (Int) -> Unit,
+) {
+    val context = LocalContext.current
+    val density = LocalDensity.current
+    val field = remember { LiquidField() }
+    field.reach = with(density) { height.toPx() } * 0.3f
+    val leftLiquid = rememberLiquidBody(LiquidSpec.Droplet, remember { LiquidBond("clear_left") }, field)
+    val rightLiquid = rememberLiquidBody(LiquidSpec.Droplet, remember { LiquidBond("clear_right") }, field)
+    val (defaultMinutes, options) = remember { readSnoozeOptions(context) }
+    val tint = ring.copy(alpha = 0.16f)
+    val snoozeState = rememberCarouselState { options.size }
+    Box(Modifier.height(height)) {
+        LiquidBridges(field, container, Modifier.matchParentSize())
+        Row(
+            Modifier.height(height),
+            horizontalArrangement = Arrangement.spacedBy(6.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Box(
+                Modifier
+                    .liquid(leftLiquid)
+                    .height(height)
+                    .clip(CircleShape)
+                    .background(container)
+                    .background(tint)
+                    .islandOutline(outlineColor, outlineThickness, CircleShape)
+                    .animateContentSize(IslandMotion.compactSize)
+                    .pointerInput(snoozing) {
+                        detectTapGestures {
+                            IslandHaptics.button(context)
+                            if (snoozing) onCancel() else onClear()
+                        }
+                    },
+                contentAlignment = Alignment.Center,
+            ) {
+                AnimatedContent(targetState = snoozing, transitionSpec = { clearTransition() }, label = "clearLeft") { snooze ->
+                    if (snooze) {
+                        Box(Modifier.size(height), contentAlignment = Alignment.Center) {
+                            androidx.compose.material3.Icon(
+                                painter = androidx.compose.ui.res.painterResource(R.drawable.rounded_close_24),
+                                contentDescription = null,
+                                tint = ring,
+                                modifier = Modifier.size(20.dp),
+                            )
+                        }
+                    } else {
+                        Row(
+                            Modifier.height(height).padding(horizontal = 18.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(6.dp),
+                        ) {
+                            androidx.compose.material3.Icon(
+                                painter = androidx.compose.ui.res.painterResource(R.drawable.rounded_delete_24),
+                                contentDescription = null,
+                                tint = ring,
+                                modifier = Modifier.size(18.dp),
+                            )
+                            Text(
+                                text = stringResource(R.string.label_clear_all),
+                                color = ring,
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.SemiBold,
+                                maxLines = 1,
+                            )
+                        }
+                    }
+                }
+            }
+            if (canSnooze) {
+                Box(
+                    Modifier
+                        .liquid(rightLiquid)
+                        .height(height)
+                        .clip(CircleShape)
+                        .background(container)
+                        .background(tint)
+                        .islandOutline(outlineColor, outlineThickness, CircleShape)
+                        .animateContentSize(IslandMotion.compactSize)
+                        .pointerInput(snoozing) {
+                            if (!snoozing) detectTapGestures { IslandHaptics.button(context); onOpenSnooze() }
+                        },
+                    contentAlignment = Alignment.Center,
+                ) {
+                    AnimatedContent(targetState = snoozing, transitionSpec = { clearTransition() }, label = "clearRight") { snooze ->
+                        if (snooze) {
+                            val optionWidth = 56.dp
+                            val slots = options.size.coerceAtMost(3)
+                            HorizontalUncontainedCarousel(
+                                state = snoozeState,
+                                itemWidth = optionWidth,
+                                itemSpacing = 2.dp,
+                                contentPadding = PaddingValues(horizontal = 6.dp),
+                                modifier = Modifier
+                                    .width(optionWidth * slots + 2.dp * (slots - 1).coerceAtLeast(0) + 12.dp)
+                                    .height(itemHeight),
+                            ) { index ->
+                                val minutes = options[index]
+                                val shape = RoundedCornerShape(14.dp)
+                                Box(
+                                    Modifier
+                                        .fillMaxSize()
+                                        .maskClip(shape)
+                                        .maskBorder(BorderStroke(2.dp, ring.copy(alpha = if (minutes == defaultMinutes) 1f else 0f)), shape)
+                                        .background(Color.White.copy(alpha = 0.08f))
+                                        .pointerInput(minutes) {
+                                            detectTapGestures {
+                                                IslandHaptics.button(context)
+                                                onSnooze(minutes)
+                                            }
+                                        },
+                                    contentAlignment = Alignment.Center,
+                                ) {
+                                    Text(
+                                        text = formatSnooze(minutes),
+                                        color = ring,
+                                        fontSize = 14.sp,
+                                        fontWeight = FontWeight.SemiBold,
+                                        maxLines = 1,
+                                    )
+                                }
+                            }
+                        } else {
+                            Box(Modifier.size(height), contentAlignment = Alignment.Center) {
+                                androidx.compose.material3.Icon(
+                                    painter = androidx.compose.ui.res.painterResource(R.drawable.rounded_notifications_paused_24),
+                                    contentDescription = null,
+                                    tint = ring,
+                                    modifier = Modifier.size(20.dp),
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
 @Composable
 fun IslandStackPill(
     icons: List<StackIcon>,
@@ -370,22 +548,32 @@ fun IslandStackPill(
     accent: Color? = null,
     reversed: Boolean = false,
     onClearAll: (() -> Unit)? = null,
+    onSnoozeAll: ((Int) -> Unit)? = null,
     onInteraction: () -> Unit = {},
 ) {
     val ring by animateColorAsState(accent ?: islandAccent(), label = "stackRing")
-    var confirming by remember { mutableStateOf(false) }
+    var mode by remember { mutableStateOf(ClearMode.Off) }
     val keysSignature = icons.joinToString("|") { it.key }
-    LaunchedEffect(selectedKey, keysSignature, interactive) { confirming = false }
-    LaunchedEffect(confirming) {
-        if (confirming) {
-            delay(5000)
-            confirming = false
+    LaunchedEffect(selectedKey, keysSignature, interactive) { mode = ClearMode.Off }
+    var touching by remember { mutableStateOf(false) }
+    var activity by remember { mutableIntStateOf(0) }
+    LaunchedEffect(mode) {
+        while (mode != ClearMode.Off) {
+            onInteraction()
+            delay(500)
+        }
+    }
+    LaunchedEffect(mode, touching, activity) {
+        if (mode != ClearMode.Off && !touching) {
+            delay(8000)
+            mode = ClearMode.Off
         }
     }
     val container by animateColorAsState(
         if (accent != null) androidx.compose.ui.graphics.lerp(Color.Black, accent, 0.22f) else Color.Black,
         label = "stackContainer",
     )
+    val pillAlpha by animateFloatAsState(if (mode == ClearMode.Off) 1f else 0f, IslandMotion.expressiveFastEffects(), label = "pillAlpha")
     val liquid = rememberLiquidBody(bond = bond)
     val itemWidth = iconSize + 8.dp
     val spacing = 2.dp
@@ -423,7 +611,7 @@ fun IslandStackPill(
         }
     }
     val startClear: (() -> Unit)? = if (interactive && onClearAll != null) {
-        { IslandHaptics.button(hapticContext); onInteraction(); confirming = true }
+        { IslandHaptics.button(hapticContext); onInteraction(); mode = ClearMode.Actions }
     } else {
         null
     }
@@ -432,54 +620,57 @@ fun IslandStackPill(
     Box(
         modifier = modifier
             .liquid(liquid)
-            .clip(CircleShape)
-            .background(container)
-            .islandOutline(outlineColor, outlineThickness, CircleShape)
+            .background(container.copy(alpha = container.alpha * pillAlpha), CircleShape)
+            .islandOutline(outlineColor?.let { it.copy(alpha = it.alpha * pillAlpha) }, outlineThickness, CircleShape)
             .then(
                 if (startClear != null) Modifier.pointerInput(Unit) { detectTapGestures(onLongPress = { startClear() }) } else Modifier,
             )
-            .animateContentSize(IslandMotion.compactSize)
-            .padding(vertical = 5.dp),
+            .animateContentSize(IslandMotion.compactSize),
     ) {
         AnimatedContent(
-            targetState = confirming,
-            transitionSpec = {
-                (fadeIn(IslandMotion.expressiveDefaultEffects()) togetherWith fadeOut(IslandMotion.expressiveFastEffects()))
-                    .using(androidx.compose.animation.SizeTransform(clip = false) { _, _ -> androidx.compose.animation.core.snap() })
-            },
+            targetState = mode != ClearMode.Off,
+            transitionSpec = { clearTransition() },
             label = "stackClearAll",
         ) { clearing ->
         if (clearing) {
             Box(
-                Modifier
-                    .height(itemWidth)
-                    .padding(horizontal = 18.dp)
-                    .pointerInput(Unit) {
-                        detectTapGestures {
-                            IslandHaptics.button(hapticContext)
-                            confirming = false
-                            onClearAll?.invoke()
+                Modifier.pointerInput(Unit) {
+                    awaitPointerEventScope {
+                        while (true) {
+                            val event = awaitPointerEvent(androidx.compose.ui.input.pointer.PointerEventPass.Initial)
+                            val down = event.changes.any { it.pressed }
+                            if (touching && !down) activity++
+                            touching = down
                         }
-                    },
-                contentAlignment = Alignment.Center,
+                    }
+                },
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                    androidx.compose.material3.Icon(
-                        painter = androidx.compose.ui.res.painterResource(R.drawable.rounded_delete_24),
-                        contentDescription = null,
-                        tint = ring,
-                        modifier = Modifier.size(18.dp),
-                    )
-                    Text(
-                        text = stringResource(R.string.label_clear_all),
-                        color = ring,
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        maxLines = 1,
-                    )
-                }
+            ClearActions(
+                snoozing = mode == ClearMode.Snooze,
+                height = itemWidth + 10.dp,
+                itemHeight = itemWidth,
+                ring = ring,
+                container = container,
+                outlineColor = outlineColor,
+                outlineThickness = outlineThickness,
+                canSnooze = onSnoozeAll != null,
+                onClear = {
+                    mode = ClearMode.Off
+                    onClearAll?.invoke()
+                },
+                onCancel = { mode = ClearMode.Off },
+                onOpenSnooze = {
+                    onInteraction()
+                    mode = ClearMode.Snooze
+                },
+                onSnooze = { minutes ->
+                    mode = ClearMode.Off
+                    onSnoozeAll?.invoke(minutes)
+                },
+            )
             }
         } else {
+        Box(Modifier.clip(CircleShape)) {
         CompositionLocalProvider(LocalLayoutDirection provides if (reversed) LayoutDirection.Rtl else LayoutDirection.Ltr) {
         HorizontalUncontainedCarousel(
             state = carouselState,
@@ -487,6 +678,7 @@ fun IslandStackPill(
             itemSpacing = spacing,
             contentPadding = PaddingValues(horizontal = 6.dp),
             modifier = Modifier
+                .padding(vertical = 5.dp)
                 .width(carouselWidth)
                 .height(itemWidth),
         ) { index ->
@@ -521,6 +713,7 @@ fun IslandStackPill(
                     Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { icon.content(itemWidth) }
                 }
             }
+        }
         }
         }
         }
