@@ -605,6 +605,11 @@ class SettingsRepository(
         const val KEY_ISLAND_TIMEOUT_MS = "island_timeout_ms"
         const val KEY_ISLAND_SHOW_GLOW = "island_show_glow"
         const val KEY_ISLAND_GLOW_INTENSITY = "island_glow_intensity"
+        const val KEY_ISLAND_GLOW_SIZE = "island_glow_size"
+        const val KEY_ISLAND_GLOW_RIM = "island_glow_rim"
+        const val KEY_ISLAND_GLOW_DYNAMIC = "island_glow_dynamic"
+        const val KEY_ISLAND_GLOW_COLOR = "island_glow_color"
+        const val ISLAND_GLOW_DEFAULT_COLOR = "#FFFFFF"
         const val KEY_ISLAND_PREFER_STILL = "island_prefer_still"
         const val KEY_ISLAND_NOTIF_THEMED_BUBBLE = "island_notif_themed_bubble"
         const val KEY_ISLAND_EXPANDED_WIDTH = "island_expanded_width"
@@ -4208,6 +4213,15 @@ class SettingsRepository(
     fun setIslandShowGlowEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_SHOW_GLOW, enabled)
     fun getIslandGlowIntensity(): Float = getFloat(KEY_ISLAND_GLOW_INTENSITY, 1f)
     fun setIslandGlowIntensity(value: Float) = putFloat(KEY_ISLAND_GLOW_INTENSITY, value)
+    fun getIslandGlowSize(): Float = getFloat(KEY_ISLAND_GLOW_SIZE, 1f)
+    fun setIslandGlowSize(value: Float) = putFloat(KEY_ISLAND_GLOW_SIZE, value)
+    fun isIslandGlowRimEnabled(): Boolean = getBoolean(KEY_ISLAND_GLOW_RIM, true)
+    fun setIslandGlowRimEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_GLOW_RIM, enabled)
+    fun isIslandGlowDynamicEnabled(): Boolean = getBoolean(KEY_ISLAND_GLOW_DYNAMIC, true)
+    fun setIslandGlowDynamicEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_GLOW_DYNAMIC, enabled)
+    fun getIslandGlowColor(): String =
+        getString(KEY_ISLAND_GLOW_COLOR, ISLAND_GLOW_DEFAULT_COLOR) ?: ISLAND_GLOW_DEFAULT_COLOR
+    fun setIslandGlowColor(colorHex: String) = putString(KEY_ISLAND_GLOW_COLOR, colorHex)
     fun isIslandPreferStillEnabled(): Boolean = getBoolean(KEY_ISLAND_PREFER_STILL, false)
     fun setIslandPreferStillEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_PREFER_STILL, enabled)
 

@@ -326,6 +326,10 @@ class MainViewModel : ViewModel() {
     val islandOtpTimeoutMs = mutableLongStateOf(60_000L)
     val isIslandShowGlow = mutableStateOf(true)
     val islandGlowIntensity = mutableFloatStateOf(1f)
+    val islandGlowSize = mutableFloatStateOf(1f)
+    val isIslandGlowRim = mutableStateOf(true)
+    val isIslandGlowDynamic = mutableStateOf(true)
+    val islandGlowColor = mutableStateOf(SettingsRepository.ISLAND_GLOW_DEFAULT_COLOR)
     val isIslandNotifThemedBubble = mutableStateOf(false)
     val isIslandBorderOutline = mutableStateOf(false)
     val islandBorderOutlineColor = mutableStateOf(SettingsRepository.ISLAND_BORDER_OUTLINE_DEFAULT_COLOR)
@@ -2650,6 +2654,10 @@ class MainViewModel : ViewModel() {
         islandOtpTimeoutMs.longValue = settingsRepository.getIslandOtpTimeoutMs()
         isIslandShowGlow.value = settingsRepository.isIslandShowGlowEnabled()
         islandGlowIntensity.floatValue = settingsRepository.getIslandGlowIntensity()
+        islandGlowSize.floatValue = settingsRepository.getIslandGlowSize()
+        isIslandGlowRim.value = settingsRepository.isIslandGlowRimEnabled()
+        isIslandGlowDynamic.value = settingsRepository.isIslandGlowDynamicEnabled()
+        islandGlowColor.value = settingsRepository.getIslandGlowColor()
         isIslandNotifThemedBubble.value = settingsRepository.isIslandNotifThemedBubbleEnabled()
         isIslandBorderOutline.value = settingsRepository.isIslandBorderOutlineEnabled()
         islandBorderOutlineColor.value = settingsRepository.getIslandBorderOutlineColor()
@@ -6385,6 +6393,26 @@ class MainViewModel : ViewModel() {
     fun setIslandGlowIntensity(value: Float) {
         islandGlowIntensity.floatValue = value
         settingsRepository.setIslandGlowIntensity(value)
+    }
+
+    fun setIslandGlowSize(value: Float) {
+        islandGlowSize.floatValue = value
+        settingsRepository.setIslandGlowSize(value)
+    }
+
+    fun setIslandGlowRim(enabled: Boolean) {
+        isIslandGlowRim.value = enabled
+        settingsRepository.setIslandGlowRimEnabled(enabled)
+    }
+
+    fun setIslandGlowDynamic(enabled: Boolean) {
+        isIslandGlowDynamic.value = enabled
+        settingsRepository.setIslandGlowDynamicEnabled(enabled)
+    }
+
+    fun setIslandGlowColor(colorHex: String) {
+        islandGlowColor.value = colorHex
+        settingsRepository.setIslandGlowColor(colorHex)
     }
 
     fun setIslandNotifThemedBubble(enabled: Boolean) {

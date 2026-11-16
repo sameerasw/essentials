@@ -912,7 +912,7 @@ private fun IslandRootContent(
         activeOwner?.let { owner ->
             val ownerItem = state.items[owner] ?: lastItems[owner]
             val glow by animateColorAsState(
-                reportedAccents[owner] ?: ownerItem?.accent ?: islandAccent(),
+                spec.glowColor ?: reportedAccents[owner] ?: ownerItem?.accent ?: islandAccent(),
                 label = "islandSurfaceGlow",
             )
             val geometry = { visualFrame().let { MediaVisualGeometry(it.bounds, it.cornerRadius) } }
@@ -926,7 +926,7 @@ private fun IslandRootContent(
                 if (spec.backdropBlur) {
                     IslandBackdropBlur({ visualFrame() }, with(density) { spec.backdropBlurRadius.toPx() }, Modifier.matchParentSize())
                 }
-                MediaSurface(glow, spec.expandedCorner, { visualFrame().pulse }, geometry, camera, Modifier.matchParentSize(), transparent = spec.transparency, transparencyIntensity = spec.transparencyIntensity, progressiveBlur = spec.progressiveBlur, glowIntensity = spec.glowIntensity)
+                MediaSurface(glow, spec.expandedCorner, { visualFrame().pulse }, geometry, camera, Modifier.matchParentSize(), transparent = spec.transparency, transparencyIntensity = spec.transparencyIntensity, progressiveBlur = spec.progressiveBlur, glowIntensity = spec.glowIntensity, glowSize = spec.glowSize, glowRim = spec.glowRim)
                 if (spec.neuralExpressive && (spec.neuralExpressiveAlways || ownerItem?.expandedParticles == true)) {
                     GeminiParticlePill(
                         modifier = Modifier.matchParentSize(),
