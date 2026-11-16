@@ -1793,4 +1793,5 @@
     <string name="wallpaper_home_screen">Schermata Home</string>
     <string name="wallpaper_lock_screen">Schermata di Blocco</string>
     <string name="island_show_when_screen_on">Schermo acceso</string>
+    <string name="island_navigation_hide_while_driving_title">Hide while driving</string>
 </resources>

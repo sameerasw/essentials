@@ -3457,6 +3457,7 @@
     <string name="island_navigation_expand_off">Off</string>
     <string name="island_navigation_expand_meters">%d m</string>
     <string name="island_navigation_peek_after_expand_title">Keep showing in peek</string>
+    <string name="island_navigation_hide_while_driving_title">Hide while driving</string>
     <string name="island_show_hotspot_title">Hotspot</string>
     <string name="island_hotspot_desc">Shows while your hotspot is on, with connected devices and data shared</string>
     <plurals name="island_hotspot_clients">

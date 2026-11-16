@@ -281,6 +281,7 @@ class MainViewModel : ViewModel() {
     val islandNavigationOnNew = mutableStateOf(SettingsRepository.ISLAND_NAVIGATION_ON_NEW_PEEK)
     val islandNavigationExpandDistance = mutableIntStateOf(200)
     val isIslandNavigationPeekAfterExpand = mutableStateOf(false)
+    val isIslandNavigationHideWhileDriving = mutableStateOf(false)
     val isIslandShowHotspot = mutableStateOf(false)
     val isIslandShowDevices = mutableStateOf(true)
     val isIslandBriefEnabled = mutableStateOf(false)
@@ -1068,6 +1069,9 @@ class MainViewModel : ViewModel() {
 
                     SettingsRepository.KEY_ISLAND_NAVIGATION_PEEK_AFTER_EXPAND ->
                         isIslandNavigationPeekAfterExpand.value = settingsRepository.isIslandNavigationPeekAfterExpandEnabled()
+
+                    SettingsRepository.KEY_ISLAND_NAVIGATION_HIDE_WHILE_DRIVING ->
+                        isIslandNavigationHideWhileDriving.value = settingsRepository.isIslandNavigationHideWhileDrivingEnabled()
 
                     SettingsRepository.KEY_ISLAND_CATCH_UP_ENABLED ->
                         isIslandCatchUpEnabled.value = settingsRepository.isIslandCatchUpEnabled()
@@ -2616,6 +2620,7 @@ class MainViewModel : ViewModel() {
         islandNavigationOnNew.value = settingsRepository.getIslandNavigationOnNew()
         islandNavigationExpandDistance.intValue = settingsRepository.getIslandNavigationExpandDistance()
         isIslandNavigationPeekAfterExpand.value = settingsRepository.isIslandNavigationPeekAfterExpandEnabled()
+        isIslandNavigationHideWhileDriving.value = settingsRepository.isIslandNavigationHideWhileDrivingEnabled()
         isIslandShowHotspot.value = settingsRepository.isIslandShowHotspotEnabled()
         isIslandShowDevices.value = settingsRepository.isIslandShowDevicesEnabled()
         isIslandBriefEnabled.value = settingsRepository.isIslandBriefEnabled()
@@ -5923,6 +5928,11 @@ class MainViewModel : ViewModel() {
     fun setIslandNavigationPeekAfterExpand(enabled: Boolean) {
         isIslandNavigationPeekAfterExpand.value = enabled
         settingsRepository.setIslandNavigationPeekAfterExpandEnabled(enabled)
+    }
+
+    fun setIslandNavigationHideWhileDriving(enabled: Boolean) {
+        isIslandNavigationHideWhileDriving.value = enabled
+        settingsRepository.setIslandNavigationHideWhileDrivingEnabled(enabled)
     }
 
     fun setIslandShowHotspot(enabled: Boolean) {

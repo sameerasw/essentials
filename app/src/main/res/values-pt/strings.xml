@@ -1878,4 +1878,5 @@ adicionar algum app</string>
     <string name="settings_section_customizations">customizações </string>
     <string name="island_auto_align_camera">Alinhar automaticamente com a câmera </string>
     <string name="island_expanded_offset_y_title">Distância vertical expandido</string>
+    <string name="island_navigation_hide_while_driving_title">Hide while driving</string>
 </resources>

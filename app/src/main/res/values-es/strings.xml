@@ -1841,6 +1841,7 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="button_remap_pause_on_volume_dialog_title">Deshabilirar si el panel de volumen esta abierto</string>
     <string name="island_navigation_expand_title">Expandir antes de una curva</string>
     <string name="island_navigation_peek_after_expand_title">Mantener de manera compacta</string>
+    <string name="island_navigation_hide_while_driving_title">Hide while driving</string>
     <string name="island_secondary_bubble_title">Burbuja secundaria</string>
     <string name="island_balance_compact_title">Isla compacta visualmente equilibrada</string>
     <string name="island_neural_expressive_title">Animación expresiva</string>

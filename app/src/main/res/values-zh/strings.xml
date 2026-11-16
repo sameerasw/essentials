@@ -1951,4 +1951,5 @@
     <string name="perm_sensitive_notifications_desc">Android 系統會對通知監聽器隱藏一次性驗證碼。 Essentials 需要此權限才能在主畫面上顯示驗證碼。</string>
     <string name="perm_local_network_title">本機網路存取</string>
     <string name="perm_local_network_desc">Android 17 會阻止應用程式與 Wi-Fi 網路上的裝置通訊，除非您允許。 Essentials 需要此權限才能透過本機網路與您的手錶搭配使用。</string>
+    <string name="island_navigation_hide_while_driving_title">Hide while driving</string>
 </resources>

@@ -755,6 +755,7 @@ class SettingsRepository(
         const val KEY_ISLAND_SHOW_NAVIGATION = "island_show_navigation"
         const val KEY_ISLAND_NAVIGATION_ON_NEW = "island_navigation_on_new"
         const val KEY_ISLAND_NAVIGATION_PEEK_AFTER_EXPAND = "island_navigation_peek_after_expand"
+        const val KEY_ISLAND_NAVIGATION_HIDE_WHILE_DRIVING = "island_navigation_hide_while_driving"
         const val ISLAND_NAVIGATION_ON_NEW_EXPAND = "expand"
         const val ISLAND_NAVIGATION_ON_NEW_PEEK = "peek"
         const val ISLAND_NAVIGATION_ON_NEW_OFF = "off"
@@ -4426,6 +4427,9 @@ class SettingsRepository(
 
     fun isIslandNavigationPeekAfterExpandEnabled(): Boolean = getBoolean(KEY_ISLAND_NAVIGATION_PEEK_AFTER_EXPAND, false)
     fun setIslandNavigationPeekAfterExpandEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_NAVIGATION_PEEK_AFTER_EXPAND, enabled)
+
+    fun isIslandNavigationHideWhileDrivingEnabled(): Boolean = getBoolean(KEY_ISLAND_NAVIGATION_HIDE_WHILE_DRIVING, false)
+    fun setIslandNavigationHideWhileDrivingEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_NAVIGATION_HIDE_WHILE_DRIVING, enabled)
 
     fun getIslandNavigationExpandDistance(): Int = getInt(KEY_ISLAND_NAVIGATION_EXPAND_DISTANCE, 200)
     fun setIslandNavigationExpandDistance(meters: Int) = putInt(KEY_ISLAND_NAVIGATION_EXPAND_DISTANCE, meters)

@@ -1664,4 +1664,5 @@
     <string name="diy_no_automations">Ingen automatiseringer ennå</string>
     <string name="search_smart_pixels_enable_title">Slå på smarte piksler</string>
     <string name="smart_pixels_intensity_title">Intensitet</string>
+    <string name="island_navigation_hide_while_driving_title">Hide while driving</string>
 </resources>
