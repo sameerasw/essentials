@@ -172,7 +172,13 @@ class BriefPlugin : BaseIslandPlugin() {
         val showGlow = settings.isIslandShowGlowEnabled()
         val calendarEnabled = context.checkSelfPermission(Manifest.permission.READ_CALENDAR) == PackageManager.PERMISSION_GRANTED
         val twoLineHeader = settings.getBoolean(SettingsRepository.KEY_ISLAND_BRIEF_TWO_LINE_HEADER, false)
-        ctx?.scope?.launch(Dispatchers.IO) { BriefDevicesCache.devices = readDevices(context) }
+        ctx?.scope?.launch(Dispatchers.IO) {
+            BriefDevicesCache.dateFormat()
+            BriefDevicesCache.settings(context)
+            BriefDevicesCache.devices = readDevices(context)
+            BriefDevicesCache.stamp = System.currentTimeMillis()
+            if (calendarEnabled) BriefDevicesCache.events = CalendarEventUtil.queryBriefEvents(context, calendarIds, showAllDay)
+        }
         publish(
             IslandItem(
                 key = ITEM_KEY,
@@ -463,7 +469,11 @@ private fun BriefOverview(
             now = System.currentTimeMillis()
         }
     }
-    var batteryState by remember { mutableStateOf<BatteryStatus?>(null) }
+    var batteryState by remember {
+        mutableStateOf<BatteryStatus?>(
+            readBatteryStatus(context, context.registerReceiver(null, IntentFilter(Intent.ACTION_BATTERY_CHANGED))),
+        )
+    }
     DisposableEffect(context) {
         val receiver = object : BroadcastReceiver() {
             override fun onReceive(c: Context, intent: Intent) {
@@ -477,23 +487,28 @@ private fun BriefOverview(
     }
     val alarm = remember(now, alarmHours) { alarmHours?.let { NextAlarm.within(context, it) } }
     val devices by produceState(BriefDevicesCache.devices, now) {
+        if (BriefDevicesCache.isFresh()) return@produceState
+        delay(1000L)
         val fresh = withContext(Dispatchers.IO) { readDevices(context) }
         BriefDevicesCache.devices = fresh
+        BriefDevicesCache.stamp = System.currentTimeMillis()
         if (fresh != value) value = fresh
     }
-    val events by produceState<List<UpcomingCalendarEvent>?>(null, calendarEnabled) {
-        value = if (calendarEnabled) {
-            withContext(Dispatchers.IO) { CalendarEventUtil.queryBriefEvents(context, calendarIds, showAllDay) }
-        } else {
-            emptyList()
+    val events by produceState<List<UpcomingCalendarEvent>?>(if (calendarEnabled) BriefDevicesCache.events else emptyList(), calendarEnabled) {
+        if (!calendarEnabled) {
+            value = emptyList()
+            return@produceState
         }
+        val fresh = withContext(Dispatchers.IO) { CalendarEventUtil.queryBriefEvents(context, calendarIds, showAllDay) }
+        BriefDevicesCache.events = fresh
+        if (fresh != value) value = fresh
     }
 
     val battery = batteryState
-    val timeSettings = remember { SettingsRepository(context) }
-    val time = IslandTimeFormat.format(context, timeSettings, now)
-    val batteryColor = battery?.let { batteryStateColor(timeSettings, it) ?: batteryIdleColor(timeSettings) } ?: accent
-    val date = SimpleDateFormat(DateFormat.getBestDateTimePattern(Locale.getDefault(), "EEEMMMd"), Locale.getDefault()).format(Date(now))
+    val timeSettings = remember { BriefDevicesCache.settings(context) }
+    val time = remember(now) { IslandTimeFormat.format(context, timeSettings, now) }
+    val batteryColor = remember(battery, accent) { battery?.let { batteryStateColor(timeSettings, it) ?: batteryIdleColor(timeSettings) } ?: accent }
+    val date = remember(now) { BriefDevicesCache.dateFormat().format(Date(now)) }
 
     val artwork = remember(media?.artwork) { media?.artwork?.asImageBitmap() }
     Box(propagateMinConstraints = true) {
@@ -579,7 +594,7 @@ private fun BriefOverview(
                                 stringResId = R.string.island_brief_no_events,
                                 style = IslandTextStyles.body,
                             )
-                            else -> list.forEach { event -> BriefEventRow(event, now, accent) { onEventClick(event) } }
+                            else -> list.forEach { event -> BriefEventRow(event, now, accent, timeSettings) { onEventClick(event) } }
                         }
                     }
                 }
@@ -601,7 +616,7 @@ private fun BriefOverview(
                         when {
                             list == null -> Unit
                             list.isEmpty() -> add { TranslatableText(R.string.island_brief_no_events, style = IslandTextStyles.body) }
-                            else -> list.forEach { event -> add { BriefEventRow(event, now, accent) { onEventClick(event) } } }
+                            else -> list.forEach { event -> add { BriefEventRow(event, now, accent, timeSettings) { onEventClick(event) } } }
                         }
                     }
                 }
@@ -624,9 +639,9 @@ private fun BriefOverview(
 }
 
 @Composable
-private fun BriefEventRow(event: UpcomingCalendarEvent, now: Long, accent: Color, onClick: () -> Unit) {
+private fun BriefEventRow(event: UpcomingCalendarEvent, now: Long, accent: Color, timeSettings: SettingsRepository, onClick: () -> Unit) {
     val context = LocalContext.current
-    val whenText = remember(event, now) { briefWhen(context, event, now) }
+    val whenText = remember(event, now) { briefWhen(context, timeSettings, event, now) }
     val color = event.calendarColor?.let { Color(soften(it)) } ?: accent
     Row(
         modifier = Modifier
@@ -739,8 +754,7 @@ private fun BriefPlayerButton(
     }
 }
 
-private fun briefWhen(context: Context, event: UpcomingCalendarEvent, now: Long): String {
-    val timeSettings = SettingsRepository(context)
+private fun briefWhen(context: Context, timeSettings: SettingsRepository, event: UpcomingCalendarEvent, now: Long): String {
     val timeText = { millis: Long -> IslandTimeFormat.format(context, timeSettings, millis) }
     val start = event.startTimeMillis
     val tomorrow = !isSameDay(start, now) && start > now
@@ -779,6 +793,28 @@ private data class BriefDevice(val key: String, val iconRes: Int, val level: Int
 private object BriefDevicesCache {
     @Volatile
     var devices: List<BriefDevice> = emptyList()
+
+    @Volatile
+    var events: List<UpcomingCalendarEvent>? = null
+
+    @Volatile
+    var stamp = 0L
+
+    fun isFresh() = System.currentTimeMillis() - stamp < 30_000L
+
+    @Volatile
+    private var settingsCache: SettingsRepository? = null
+
+    fun settings(context: Context): SettingsRepository =
+        settingsCache ?: SettingsRepository(context.applicationContext).also { settingsCache = it }
+
+    private var dateFormatCache: Pair<Locale, SimpleDateFormat>? = null
+
+    fun dateFormat(): SimpleDateFormat {
+        val locale = Locale.getDefault()
+        dateFormatCache?.takeIf { it.first == locale }?.let { return it.second }
+        return SimpleDateFormat(DateFormat.getBestDateTimePattern(locale, "EEEMMMd"), locale).also { dateFormatCache = locale to it }
+    }
 }
 
 private fun readDevices(context: Context): List<BriefDevice> {
