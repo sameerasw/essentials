@@ -665,15 +665,17 @@ private fun IslandRootContent(
             (stackOverlapWidth(icons.size, spec.compactHeight, overlapSlots(icons, max), overflow) +
                 overlapExtraWidth(icons, spec.compactHeight, max, overflow)).toPx()
         }
-        val fit = remember(icons, overflow, room, spec.compactHeight, density) { (8 downTo 1).firstOrNull { drawnPx(it) <= room } ?: 1 }
+        val lowest = if (icons.size > 1) 2 else 1
+        val fit = remember(icons, overflow, room, spec.compactHeight, density) { (8 downTo lowest).firstOrNull { drawnPx(it) <= room } ?: 0 }
         val cap = if (chosen > 0) chosen + if (iconCount > chosen) 1 else 0 else fit
         minOf(cap, fit)
     } ?: OVERLAP_MAX
     val sideBubbleWidth = lastCatchUp
         ?.takeIf { it.content == null && it.icons.isNotEmpty() }
         ?.let {
-            stackOverlapWidth(it.icons.size, spec.compactHeight, overlapSlots(it.icons, bubbleMaxIcons), it.overflow) +
-                overlapExtraWidth(it.icons, spec.compactHeight, bubbleMaxIcons, it.overflow)
+            val overflow = overlapOverflow(bubbleMaxIcons, it.overflow)
+            stackOverlapWidth(it.icons.size, spec.compactHeight, overlapSlots(it.icons, bubbleMaxIcons), overflow) +
+                overlapExtraWidth(it.icons, spec.compactHeight, bubbleMaxIcons, overflow)
         }
         ?: spec.compactHeight
     val sideWidthPx = with(density) { sideBubbleWidth.roundToPx() }
