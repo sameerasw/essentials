@@ -452,7 +452,7 @@ private fun BriefOverview(
     val remoteCards = remember(cardsByPackage) { cardsByPackage.values.flatten() }
     val itemEntries = remember(allItemEntries, cardsByPackage) {
         val briefPackages = cardsByPackage.filterValues { it.isNotEmpty() }.keys
-        allItemEntries.filter { entry -> briefPackages.none { entry.item.key.startsWith("$it:") } }
+        allItemEntries.filter { entry -> !entry.shown && briefPackages.none { entry.item.key.startsWith("$it:") } }
     }
 
     var now by remember { mutableLongStateOf(System.currentTimeMillis()) }
