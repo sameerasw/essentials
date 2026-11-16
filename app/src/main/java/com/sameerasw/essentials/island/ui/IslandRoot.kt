@@ -665,7 +665,7 @@ private fun IslandRootContent(
             (stackOverlapWidth(icons.size, spec.compactHeight, overlapSlots(icons, max), overflow) +
                 overlapExtraWidth(icons, spec.compactHeight, max, overflow)).toPx()
         }
-        val fit = (8 downTo 1).firstOrNull { drawnPx(it) <= room } ?: 1
+        val fit = remember(icons, overflow, room, spec.compactHeight, density) { (8 downTo 1).firstOrNull { drawnPx(it) <= room } ?: 1 }
         val cap = if (chosen > 0) chosen + if (iconCount > chosen) 1 else 0 else fit
         minOf(cap, fit)
     } ?: OVERLAP_MAX
@@ -697,7 +697,12 @@ private fun IslandRootContent(
     LaunchedEffect(slackTarget) {
         if (inspection) slackAnim.snapTo(slackTarget.toFloat()) else slackAnim.animateTo(slackTarget.toFloat(), IslandMotion.smoothSpatial())
     }
-    fun catchShiftPx(): Float = sideBubbleProgress() * slackAnim.value / 2f * balanceSign()
+    val unbalancedShift by animateFloatAsState(
+        if (!spec.balanceCompact && spec.growDirection == 0 && hasCompactCells && stage == IslandStage.Compact) 1f else 0f,
+        motionSpring(Spring.DampingRatioNoBouncy, 300f),
+        label = "unbalancedShift",
+    )
+    fun catchShiftPx(): Float = maxOf(sideBubbleProgress(), unbalancedShift) * slackAnim.value / 2f * balanceSign()
     val lineShift = remember { Animatable(0f) }
     val liveSurfaceHeight = remember { mutableIntStateOf(0) }
     val liveSurfaceWidth = remember { mutableIntStateOf(0) }
@@ -807,14 +812,14 @@ private fun IslandRootContent(
 
     LaunchedEffect(
         target, windowWidth, stage, queueShown, pillSize, lineInsetActive, catchUpShown, hasCompactCells,
-        bubbleOnlyLayout, condensedLineActive, queueWidthPx, sideWidthPx, slackTarget, bubbleRight,
+        bubbleOnlyLayout, condensedLineActive, queueWidthPx, sideWidthPx, slackTarget, bubbleRight, spec.balanceCompact,
     ) {
         if (target == IntSize.Zero || windowWidth == 0) return@LaunchedEffect
         val g = if (stage == IslandStage.Expanded) outsetPx.roundToInt() else 0
         val shift = when {
             spec.growDirection != 0 || condensedLineActive -> 0
             lineInsetActive -> (queueWidthPx + bubbleGapPx) / 2
-            catchUpShown && hasCompactCells -> if (bubbleRight && spec.balanceCompact) -slackTarget / 2 else slackTarget / 2
+            (catchUpShown || (!spec.balanceCompact && stage == IslandStage.Compact)) && hasCompactCells -> if (bubbleRight && spec.balanceCompact) -slackTarget / 2 else slackTarget / 2
             else -> 0
         }
         val left = windowWidth / 2 - target.width / 2 + surfaceShiftFor(target.width) + shift

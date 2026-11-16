@@ -276,7 +276,7 @@ fun CompactTemplate(
         val bubbleOnRight = side >= 0.5f
         val hubReserve = state.sideBubble?.let { hub ->
             minOf(bubbleNow, (spec.compactHeight.toPx() * overlapMinFactor(hub.icons)).roundToInt() + spec.contentGap.roundToPx())
-        } ?: 0
+        } ?: bubbleExtent().coerceAtLeast(0)
         fun bodyLimit(limit: Int) = if (limit == Int.MAX_VALUE) limit else (limit - hubReserve).coerceAtLeast(0)
         val bodyLimitLeft = if (bubbleOnRight) limitLeft else bodyLimit(limitLeft)
         val bodyLimitRight = if (bubbleOnRight) bodyLimit(limitRight) else limitRight
@@ -353,7 +353,7 @@ fun CompactTemplate(
         val edge = if (hasCells) spacing else 0
         val needLeft = content(left) + leftInset + edge
         val needRight = content(right) + rightInset + edge
-        val t = if (hasCells) sideBubble().coerceIn(0f, 1f) else 0f
+        val t = if (!hasCells) 0f else if (spec.balanceCompact) sideBubble().coerceIn(0f, 1f) else 1f
         val mirrored = maxOf(needLeft, needRight)
         val extent = if (spec.balanceCompact) bubbleExtent().coerceAtLeast(0) else 0
         val leftNear = maxOf(needLeft, needRight - extent)
