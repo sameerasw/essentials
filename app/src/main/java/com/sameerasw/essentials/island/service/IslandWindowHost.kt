@@ -136,7 +136,7 @@ class IslandWindowHost(
         removeTouchWindow()
         removeGestureWindow()
         alwaysGestures = false
-        SharedOverlayWindow.detach(SharedOverlayWindow.Layer.Island)
+        SharedOverlayWindow.detach(SharedOverlayWindow.Layer.Island, composeView)
         composeView = null
         drawRect = null
         targetBounds = null
