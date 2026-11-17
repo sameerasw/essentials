@@ -608,6 +608,7 @@ class SettingsRepository(
         const val KEY_ISLAND_CALENDAR_HIDE_LOCKED = "island_calendar_hide_locked"
         const val KEY_ISLAND_CALENDAR_COMPACT_TIME = "island_calendar_compact_time"
         const val KEY_ISLAND_CALENDAR_SHOW_ONGOING = "island_calendar_show_ongoing"
+        const val KEY_ISLAND_CALENDAR_HIDDEN_EVENTS = "island_calendar_hidden_events"
         const val KEY_ISLAND_TIME_HIDE_LOCKED = "island_time_hide_locked"
         const val KEY_ISLAND_BATTERY_HIDE_LOCKED = "island_battery_hide_locked"
         const val KEY_ISLAND_TIMEOUT_MS = "island_timeout_ms"
@@ -702,6 +703,7 @@ class SettingsRepository(
         const val KEY_ISLAND_MAX_ITEMS = "island_max_items"
         const val KEY_ISLAND_ALWAYS_GESTURES = "island_always_gestures"
         const val KEY_ISLAND_DISMISS_ON_OUTSIDE = "island_dismiss_on_outside"
+        const val KEY_ISLAND_GESTURE_HINTS = "island_gesture_hints"
         const val KEY_ISLAND_HIDE_LIVE_UPDATES = "island_hide_live_updates"
         const val KEY_ISLAND_HIDE_STATUS_BAR_INSETS = "island_hide_status_bar_insets"
         const val KEY_ISLAND_CAMERA_POSITION = "island_camera_position"
@@ -944,6 +946,8 @@ class SettingsRepository(
         const val KEY_SIM_NAMES_APPLY_ON_BOOT = "sim_names_apply_on_boot"
         const val KEY_POWER_SAVING_APPLY_ON_BOOT = "power_saving_apply_on_boot"
         const val KEY_UNSPLASH_ACCESS_KEY = "unsplash_access_key"
+        const val KEY_WALLPAPER_STAGING_SEEN = "wallpaper_staging_seen"
+        private const val WALLPAPER_STAGING_SEEN_MAX = 300
         const val KEY_EXTERNAL_CONTROL_TOKEN = "external_control_token"
         private val CONFIG_PREF_FILES =
             listOf(
@@ -960,6 +964,18 @@ class SettingsRepository(
     fun setExternalControlToken(token: String) = putString(KEY_EXTERNAL_CONTROL_TOKEN, token.trim())
 
     fun getUnsplashAccessKey(): String? = prefs.getString(KEY_UNSPLASH_ACCESS_KEY, null)
+
+    fun getWallpaperStagingSeen(): List<String> =
+        prefs.getString(KEY_WALLPAPER_STAGING_SEEN, null)?.split(',')?.filter { it.isNotBlank() }.orEmpty()
+
+    fun markWallpaperStagingSeen(id: String) {
+        val seen = (getWallpaperStagingSeen() - id + id).takeLast(WALLPAPER_STAGING_SEEN_MAX)
+        prefs.edit().putString(KEY_WALLPAPER_STAGING_SEEN, seen.joinToString(",")).apply()
+    }
+
+    fun clearWallpaperStagingSeen() {
+        prefs.edit().remove(KEY_WALLPAPER_STAGING_SEEN).apply()
+    }
 
     fun setUnsplashAccessKey(key: String?) {
         if (key.isNullOrBlank()) {
@@ -4350,6 +4366,13 @@ class SettingsRepository(
     fun setIslandDevicesBatteryOnlyLowEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_DEVICES_BATTERY_ONLY_LOW, enabled)
     fun setIslandBatteryPercentageConditional(enabled: Boolean) = putBoolean(KEY_ISLAND_BATTERY_PERCENTAGE_CONDITIONAL, enabled)
 
+    fun getIslandCalendarHiddenEvents(): Set<String> =
+        prefs.getStringSet(KEY_ISLAND_CALENDAR_HIDDEN_EVENTS, emptySet())?.toSet() ?: emptySet()
+
+    fun setIslandCalendarHiddenEvents(keys: Set<String>) {
+        prefs.edit().putStringSet(KEY_ISLAND_CALENDAR_HIDDEN_EVENTS, keys).apply()
+    }
+
     fun getIslandCalendarIcons(): Map<Long, String> =
         try {
             val json = org.json.JSONObject(getString(KEY_ISLAND_CALENDAR_ICONS, "{}") ?: "{}")
@@ -4482,6 +4505,9 @@ class SettingsRepository(
     fun setIslandHideStatusBarInsetsEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_HIDE_STATUS_BAR_INSETS, enabled)
     fun isIslandDismissOnOutsideEnabled(): Boolean = getBoolean(KEY_ISLAND_DISMISS_ON_OUTSIDE, false)
     fun setIslandDismissOnOutsideEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_DISMISS_ON_OUTSIDE, enabled)
+
+    fun isIslandGestureHintsEnabled(): Boolean = getBoolean(KEY_ISLAND_GESTURE_HINTS, true)
+    fun setIslandGestureHintsEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_GESTURE_HINTS, enabled)
 
     fun isIslandHideInOwnerAppEnabled(): Boolean = getBoolean(KEY_ISLAND_HIDE_IN_OWNER_APP, false)
     fun setIslandHideInOwnerAppEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_HIDE_IN_OWNER_APP, enabled)

@@ -1098,6 +1098,11 @@ object FeatureRegistry {
                             R.string.island_section_interactions,
                             "island_dismiss_on_outside",
                         ),
+                        SearchSetting(
+                            R.string.island_gesture_hints_title,
+                            R.string.island_section_interactions,
+                            "island_gesture_hints",
+                        ),
                     ),
             ) {
                 override fun isEnabled(viewModel: MainViewModel) = true

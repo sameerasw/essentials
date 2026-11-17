@@ -199,6 +199,17 @@ fun IslandInteractionsSettingsUI(
                 },
                 modifier = Modifier.highlight(highlightSetting == "island_dismiss_on_outside"),
             )
+
+            IconToggleItem(
+                iconRes = R.drawable.rounded_lightbulb_24,
+                title = stringResource(R.string.island_gesture_hints_title),
+                isChecked = viewModel.isIslandGestureHints.value,
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    viewModel.setIslandGestureHints(checked)
+                },
+                modifier = Modifier.highlight(highlightSetting == "island_gesture_hints"),
+            )
         }
 
         TranslatableText(
