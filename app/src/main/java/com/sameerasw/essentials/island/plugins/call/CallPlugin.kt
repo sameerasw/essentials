@@ -152,7 +152,9 @@ class CallPlugin : BaseIslandPlugin() {
         val status = if (ringing) snap.text ?: incomingLabel else elapsed(snap.startedAt)
         val subtitle = listOfNotNull(snap.number?.takeIf { snap.name != null }, snap.text?.takeIf { !ringing })
             .joinToString(" · ").takeIf { it.isNotEmpty() }
-        val photo = snap.photo
+        val appIcon = snap.appIcon?.takeIf { !isDefaultDialer(snap.packageName) }
+        val photo = snap.photo ?: appIcon
+        val badge = appIcon ?: photo
         val buttons = buttonsFor(snap, ringing)
         publish(
             IslandItem(
@@ -160,7 +162,7 @@ class CallPlugin : BaseIslandPlugin() {
                 priority = IslandPriority.CALL,
                 placement = CompactPlacement.Dynamic,
                 compact = listOf(
-                    CompactCell("call.avatar") { IslandBitmap(photo, 22.dp, circle = true, fallbackRes = R.drawable.rounded_call_24) },
+                    CompactCell("call.avatar") { IslandBitmap(badge, 22.dp, circle = appIcon == null, fallbackRes = R.drawable.rounded_call_24) },
                     if (ringing) {
                         CompactCell("call.ringing") { RingingIcon() }
                     } else {
@@ -168,7 +170,7 @@ class CallPlugin : BaseIslandPlugin() {
                     },
                 ),
                 line = LineContent(
-                    icon = { IslandBitmap(photo, 24.dp, circle = true, fallbackRes = R.drawable.rounded_call_24) },
+                    icon = { IslandBitmap(badge, 24.dp, circle = appIcon == null, fallbackRes = R.drawable.rounded_call_24) },
                     start = caller,
                     end = status,
                     endSlot = ringingSlot(ringing),
@@ -198,9 +200,11 @@ class CallPlugin : BaseIslandPlugin() {
         val hasOwn = snap.allActions.isNotEmpty() || snap.answerIntent != null || snap.endIntent != null
         if (!hasOwn) return false
         if (!snap.fromTelephony) return true
-        val dialer = guarded<String?>(null) { context.getSystemService(TelecomManager::class.java)?.defaultDialerPackage }
-        return snap.packageName != null && snap.packageName != dialer
+        return snap.packageName != null && !isDefaultDialer(snap.packageName)
     }
+
+    private fun isDefaultDialer(packageName: String?): Boolean =
+        packageName != null && packageName == guarded<String?>(null) { context.getSystemService(TelecomManager::class.java)?.defaultDialerPackage }
 
     private fun telephonyButtons(snap: CallSnapshot, ringing: Boolean): List<CallButtonSpec> {
         val end = CallButtonSpec(

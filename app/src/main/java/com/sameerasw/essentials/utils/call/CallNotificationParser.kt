@@ -9,6 +9,7 @@ import android.graphics.drawable.Icon
 import android.os.Build
 import android.os.Bundle
 import android.service.notification.StatusBarNotification
+import com.sameerasw.essentials.utils.AppIconUtil
 import com.sameerasw.essentials.utils.AppUtil
 
 
@@ -27,6 +28,7 @@ data class NotificationCall(
     val appName: String?,
     val caller: String?,
     val photo: Bitmap?,
+    val appIcon: Bitmap? = null,
     val ringing: Boolean,
     val startedAt: Long?,
     val answerIntent: PendingIntent?,
@@ -47,6 +49,7 @@ object CallNotificationParser {
     private const val EXTRA_ANSWER_INTENT = "android.answerIntent"
     private const val EXTRA_DECLINE_INTENT = "android.declineIntent"
     private const val EXTRA_HANG_UP_INTENT = "android.hangUpIntent"
+    private const val EXTRA_APP_LABEL = "android.appLabel"
     private const val CALL_TYPE_INCOMING = 1
     private const val CALL_TYPE_ONGOING = 2
     private const val CALL_TYPE_SCREENING = 3
@@ -124,7 +127,13 @@ object CallNotificationParser {
         return CallNotificationAction(role, title, intent, active)
     }
 
-    fun isCall(sbn: StatusBarNotification): Boolean = sbn.notification.category == Notification.CATEGORY_CALL
+    fun isCall(sbn: StatusBarNotification): Boolean {
+        val n = sbn.notification
+        if (n.category == Notification.CATEGORY_CALL) return true
+        val extras = n.extras ?: return false
+        if (extras.getInt(EXTRA_CALL_TYPE, 0) > 0) return true
+        return extras.getString(Notification.EXTRA_TEMPLATE)?.endsWith("\$CallStyle") == true
+    }
 
     @Suppress("DEPRECATION")
     fun parse(context: Context, sbn: StatusBarNotification): NotificationCall? {
@@ -177,12 +186,15 @@ object CallNotificationParser {
             !extras.getBoolean(Notification.EXTRA_CHRONOMETER_COUNT_DOWN)
         val startedAt = n.`when`.takeIf { !ringing && chronometer && it > 0L && it <= System.currentTimeMillis() }
 
-        val appName = try {
-            val pm = context.packageManager
-            pm.getApplicationLabel(pm.getApplicationInfo(sbn.packageName, 0)).toString()
+        val pm = context.packageManager
+        val appInfo = try {
+            pm.getApplicationInfo(sbn.packageName, 0)
         } catch (_: Exception) {
             null
         }
+        val appName = extras.getCharSequence(EXTRA_APP_LABEL)?.toString()?.takeIf { it.isNotBlank() }
+            ?: appInfo?.let { runCatching { pm.getApplicationLabel(it).toString() }.getOrNull() }
+        val appIcon = runCatching { AppUtil.drawableToBitmap(AppIconUtil.islandAppIcon(context, sbn.packageName)) }.getOrNull()
 
         return NotificationCall(
             key = sbn.key,
@@ -190,6 +202,7 @@ object CallNotificationParser {
             appName = appName,
             caller = caller,
             photo = photo,
+            appIcon = appIcon,
             ringing = ringing,
             startedAt = startedAt,
             answerIntent = answer,

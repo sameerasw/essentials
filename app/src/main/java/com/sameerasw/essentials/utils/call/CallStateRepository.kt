@@ -21,6 +21,7 @@ data class CallSnapshot(
     val startedAt: Long,
     
     val appName: String? = null,
+    val appIcon: Bitmap? = null,
     val packageName: String? = null,
     val answerIntent: PendingIntent? = null,
     val endIntent: PendingIntent? = null,
@@ -141,6 +142,7 @@ object CallStateRepository {
             incoming = call.ringing || phone?.incoming == true,
             startedAt = activeSince[call.key] ?: phone?.startedAt ?: call.postedAt,
             appName = call.appName,
+            appIcon = call.appIcon,
             packageName = call.packageName,
             answerIntent = call.answerIntent,
             endIntent = call.endIntent,
