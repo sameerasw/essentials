@@ -57,7 +57,7 @@ fun CallExpanded(
 ) {
     val spec = scope.spec
     val sidePadding = spec.expandedPadding + spec.expandedCorner * 0.35f
-    val on = remember(buttons.map { it.key }) { mutableStateListOf(*buttons.map { it.initialOn }.toTypedArray()) }
+    val on = remember(buttons.map { it.key to it.initialOn }) { mutableStateListOf(*buttons.map { it.initialOn }.toTypedArray()) }
 
     Box(propagateMinConstraints = true) {
         Column(
@@ -74,7 +74,7 @@ fun CallExpanded(
                     },
                     end = {
                         if (ringing) {
-                            Text(status, style = IslandTextStyles.body, maxLines = 1)
+                            Text(status, style = IslandTextStyles.body, maxLines = 1, overflow = TextOverflow.Ellipsis)
                         } else {
                             RollingText(status)
                         }

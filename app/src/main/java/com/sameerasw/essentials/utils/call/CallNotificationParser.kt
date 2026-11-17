@@ -18,6 +18,7 @@ data class CallNotificationAction(
     val role: CallActionRole,
     val title: String,
     val intent: PendingIntent,
+    val active: Boolean? = null,
 )
 
 data class NotificationCall(
@@ -34,6 +35,9 @@ data class NotificationCall(
     val postedAt: Long,
     val extraActions: List<CallNotificationAction> = emptyList(),
     val allActions: List<CallNotificationAction> = emptyList(),
+    val text: String? = null,
+    val answerLabel: String? = null,
+    val endLabel: String? = null,
 )
 
 object CallNotificationParser {
@@ -57,11 +61,67 @@ object CallNotificationParser {
         CallActionRole.HangUp to listOf("hang up", "hangup", "end", "leave"),
     )
 
-    private fun roleOf(title: String): CallActionRole {
+    private val ICON_WORDS = listOf(
+        CallActionRole.HangUp to listOf("call_end", "end_call", "hang_up", "hangup"),
+        CallActionRole.Decline to listOf("decline", "reject"),
+        CallActionRole.Answer to listOf("answer", "accept"),
+        CallActionRole.Mute to listOf("mic", "mute"),
+        CallActionRole.Speaker to listOf("speaker", "volume_up", "volume"),
+        CallActionRole.Hold to listOf("phone_paused", "pause", "hold"),
+        CallActionRole.Video to listOf("videocam", "video"),
+    )
+
+    private fun roleOfTitle(title: String): CallActionRole? {
         val lowered = title.lowercase()
         return ROLE_WORDS.firstOrNull { (_, words) ->
             words.any { Regex("\\b${Regex.escape(it)}\\b").containsMatchIn(lowered) }
-        }?.first ?: CallActionRole.Other
+        }?.first
+    }
+
+    private fun roleOfIcon(context: Context, packageName: String, action: Notification.Action): CallActionRole? {
+        val name = iconName(context, packageName, action)?.lowercase() ?: return null
+        return ICON_WORDS.firstOrNull { (_, words) -> words.any { it in name } }?.first
+    }
+
+    private fun iconName(context: Context, packageName: String, action: Notification.Action): String? = try {
+        val icon = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) action.getIcon() else null
+        if (icon == null || icon.type != Icon.TYPE_RESOURCE) {
+            null
+        } else {
+            val pkg = icon.resPackage?.takeIf { it.isNotBlank() } ?: packageName
+            context.packageManager.getResourcesForApplication(pkg).getResourceEntryName(icon.resId)
+        }
+    } catch (_: Exception) {
+        null
+    }
+
+    private fun classify(
+        context: Context,
+        packageName: String,
+        action: Notification.Action,
+        intent: PendingIntent,
+        title: String,
+        answer: PendingIntent?,
+        decline: PendingIntent?,
+        hangUp: PendingIntent?,
+    ): CallNotificationAction {
+        val semantic = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) action.semanticAction else Notification.Action.SEMANTIC_ACTION_NONE
+        val role = when {
+            intent == answer -> CallActionRole.Answer
+            intent == decline -> CallActionRole.Decline
+            intent == hangUp -> CallActionRole.HangUp
+            semantic == Notification.Action.SEMANTIC_ACTION_MUTE || semantic == Notification.Action.SEMANTIC_ACTION_UNMUTE -> CallActionRole.Mute
+            semantic == Notification.Action.SEMANTIC_ACTION_CALL -> CallActionRole.Answer
+            else -> roleOfIcon(context, packageName, action) ?: roleOfTitle(title) ?: CallActionRole.Other
+        }
+        val active = when {
+            role != CallActionRole.Mute -> null
+            semantic == Notification.Action.SEMANTIC_ACTION_UNMUTE -> true
+            semantic == Notification.Action.SEMANTIC_ACTION_MUTE -> false
+            Regex("\\bunmute\\b").containsMatchIn(title.lowercase()) -> true
+            else -> null
+        }
+        return CallNotificationAction(role, title, intent, active)
     }
 
     fun isCall(sbn: StatusBarNotification): Boolean = sbn.notification.category == Notification.CATEGORY_CALL
@@ -89,16 +149,20 @@ object CallNotificationParser {
         val photo = (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) person?.icon else null)?.let { iconBitmap(context, it) }
             ?: n.getLargeIcon()?.let { iconBitmap(context, it) }
 
+        val answerExtra = pendingIntent(extras, EXTRA_ANSWER_INTENT)
+        val declineExtra = pendingIntent(extras, EXTRA_DECLINE_INTENT)
+        val hangUpExtra = pendingIntent(extras, EXTRA_HANG_UP_INTENT)
         val classified = n.actions.orEmpty().mapNotNull { a ->
             val intent = a.actionIntent ?: return@mapNotNull null
             if (!a.remoteInputs.isNullOrEmpty()) return@mapNotNull null
             val title = a.title?.toString()?.trim().orEmpty()
-            CallNotificationAction(roleOf(title), title, intent)
+            classify(context, sbn.packageName, a, intent, title, answerExtra, declineExtra, hangUpExtra)
         }
         fun actionFor(role: CallActionRole) = classified.firstOrNull { it.role == role }?.intent
-        val answer = pendingIntent(extras, EXTRA_ANSWER_INTENT) ?: actionFor(CallActionRole.Answer)
-        val hangUp = pendingIntent(extras, EXTRA_HANG_UP_INTENT) ?: actionFor(CallActionRole.HangUp)
-        val decline = pendingIntent(extras, EXTRA_DECLINE_INTENT) ?: actionFor(CallActionRole.Decline)
+        fun labelFor(role: CallActionRole) = classified.firstOrNull { it.role == role && it.title.isNotBlank() }?.title
+        val answer = answerExtra ?: actionFor(CallActionRole.Answer)
+        val hangUp = hangUpExtra ?: actionFor(CallActionRole.HangUp)
+        val decline = declineExtra ?: actionFor(CallActionRole.Decline)
         val extraActions = classified.filter {
             it.role !in setOf(CallActionRole.Answer, CallActionRole.Decline, CallActionRole.HangUp) && it.title.isNotBlank()
         }
@@ -136,6 +200,10 @@ object CallNotificationParser {
             postedAt = sbn.postTime,
             extraActions = extraActions,
             allActions = classified.filter { it.title.isNotBlank() },
+            text = (extras.getCharSequence(Notification.EXTRA_TEXT) ?: extras.getCharSequence(Notification.EXTRA_SUB_TEXT))
+                ?.toString()?.trim()?.takeIf { it.isNotBlank() && it != caller },
+            answerLabel = labelFor(CallActionRole.Answer),
+            endLabel = if (ringing) labelFor(CallActionRole.Decline) ?: labelFor(CallActionRole.HangUp) else labelFor(CallActionRole.HangUp) ?: labelFor(CallActionRole.Decline),
         )
     }
 

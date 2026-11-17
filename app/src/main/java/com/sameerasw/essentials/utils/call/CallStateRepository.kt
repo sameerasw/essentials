@@ -28,6 +28,9 @@ data class CallSnapshot(
     val fromTelephony: Boolean = false,
     val extraActions: List<CallNotificationAction> = emptyList(),
     val allActions: List<CallNotificationAction> = emptyList(),
+    val text: String? = null,
+    val answerLabel: String? = null,
+    val endLabel: String? = null,
 )
 
 
@@ -142,6 +145,9 @@ object CallStateRepository {
             fromTelephony = phone != null,
             extraActions = call.extraActions,
             allActions = call.allActions,
+            text = call.text,
+            answerLabel = call.answerLabel,
+            endLabel = call.endLabel,
         )
     }
 
