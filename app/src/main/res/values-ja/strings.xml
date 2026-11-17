@@ -2696,4 +2696,5 @@ Android がバッテリーセーバーモードを有効にすると、これら
     <string name="overlay_mode_toggle">切り替える</string>
     <string name="overlay_mode_off">オフ</string>
     <string name="overlay_mode_on">オン</string>
+    <string name="action_install_update">アップデートをインストール</string>
 </resources>
