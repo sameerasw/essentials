@@ -388,6 +388,7 @@ private fun IslandRootContent(
     val carouselSnapshot = rememberGraphicsLayer()
     val carouselProgress = remember { Animatable(0f) }
     var carouselDrag by remember { mutableStateOf(false) }
+    var pinnedReveal by remember { mutableStateOf<IslandItem?>(null) }
     var carouselActive by remember { mutableStateOf(false) }
     var carouselReady by remember { mutableStateOf(false) }
     var carouselDir by remember { mutableFloatStateOf(0f) }
@@ -1639,19 +1640,32 @@ private fun IslandRootContent(
                                         return@launch
                                     }
                                     IslandHaptics.commit(context)
-                                    val remaining = abs(dir * flyOff - dismissOffset.value)
+                                    val next = focused.queue?.next
+                                    val travel = if (next != null) surfaceSize.width.toFloat().coerceAtLeast(1f) else flyOff
+                                    val remaining = abs(dir * travel - dismissOffset.value)
                                     val speed = maxOf(abs(v.x), 2500f)
                                     val throwMs = (remaining / speed * 1000f).toInt().coerceIn(90, 200)
                                     val throwSpec = tween<Float>(throwMs, easing = LinearEasing)
-                                    dismissOffset.animateTo(dir * flyOff, throwSpec)
                                     if (focused.queue != null) {
-                                        actions.onDismiss()
-                                        awaitNextContent(focused)
+                                        pinnedReveal = next
+                                        try {
+                                            if (next != null) {
+                                                dismissOffset.animateTo(dir * travel, IslandMotion.fling(), initialVelocity = v.x)
+                                            } else {
+                                                dismissOffset.animateTo(dir * travel, throwSpec)
+                                            }
+                                            actions.onDismiss()
+                                            awaitNextContent(focused)
+                                        } finally {
+                                            dismissOffset.snapTo(0f)
+                                            pinnedReveal = null
+                                        }
                                     } else {
+                                        dismissOffset.animateTo(dir * travel, throwSpec)
                                         dismissCommitted = true
                                         actions.onDismiss()
+                                        dismissOffset.snapTo(0f)
                                     }
-                                    dismissOffset.snapTo(0f)
                                 }
                             } else {
                                 val pullVelocity = (if (peek) maxOf(v.x * inwardSign(), -v.y) else -v.y) / collapseRange
@@ -1693,18 +1707,15 @@ private fun IslandRootContent(
                 spec.growDirection < 0 -> Alignment.TopEnd
                 else -> Alignment.TopCenter
             }
-            val queuedNext = item?.queue?.next
-            if (showDismissReveal && queuedNext != null && !spec.dismissDown && item?.dismissible == true) {
+            val queuedNext = pinnedReveal ?: item?.queue?.next?.takeIf { item.dismissible }
+            val slideReveal = queuedNext != null && !spec.dismissDown
+            if (showDismissReveal && slideReveal && queuedNext != null) {
                 Box(
                     Modifier
                         .matchParentSize()
                         .graphicsLayer {
-                            val p = (abs(dismissOffset.value) / (surfaceSize.width.coerceAtLeast(1) * 0.6f)).coerceIn(0f, 1f)
-                            val s = 0.94f + 0.06f * p
-                            scaleX = s
-                            scaleY = s
-                            alpha = 0.4f + 0.6f * p
-                            transformOrigin = TransformOrigin(contentOriginX, 0f)
+                            val offset = dismissOffset.value
+                            translationX = offset - sign(offset) * size.width
                         },
                     contentAlignment = layerAlign,
                 ) {
@@ -1728,7 +1739,7 @@ private fun IslandRootContent(
                         }
                         .graphicsLayer {
                             alpha = contentAlpha.value * growGate(0.3f, 0.5f) * (1f - collapse.value * 1.6f).coerceIn(0f, 1f) *
-                                if (surfaceSize.width > 0) (1f - abs(dismissOffset.value) / surfaceSize.width * 0.6f).coerceIn(0f, 1f) else 1f
+                                if (surfaceSize.width > 0 && !slideReveal) (1f - abs(dismissOffset.value) / surfaceSize.width * 0.6f).coerceIn(0f, 1f) else 1f
                             translationX = dismissOffset.value + wiggle.value
                             val sliding = dismissOffset.value != 0f
                             shape = RoundedCornerShape(if (sliding) cardCorner.toPx() else 0f)
@@ -1760,7 +1771,7 @@ private fun IslandRootContent(
                         .graphicsLayer {
                             alpha = (if (pending) 0f else contentAlpha.value) * growGate(0.3f, 0.5f) *
                                 (if (previewing) 1f - collapse.value * 1.6f else 1f).coerceIn(0f, 1f) *
-                                (if (carouselDrag || carouselActive || surfaceSize.width <= 0) 1f else (1f - abs(dismissOffset.value) / surfaceSize.width * 0.6f).coerceIn(0f, 1f)) *
+                                (if (carouselDrag || carouselActive || slideReveal || surfaceSize.width <= 0) 1f else (1f - abs(dismissOffset.value) / surfaceSize.width * 0.6f).coerceIn(0f, 1f)) *
                                 (if (surfaceSize.height > 0) (1f - dropOffset.value / surfaceSize.height).coerceIn(0f, 1f) else 1f)
                             translationX = if (carouselActive) {
                                 carouselStart + (carouselDir * size.width - carouselStart) * carouselProgress.value - carouselDir * size.width
