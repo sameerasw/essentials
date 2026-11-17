@@ -95,8 +95,9 @@ fun WallpaperStagingScreen(
     val coroutineScope = rememberCoroutineScope()
     val stagingRepository = remember { WallpaperStagingRepository(settingsRepository) }
 
+    val isOwner = remember { settingsRepository.getGitHubUser()?.login?.equals(OWNER_LOGIN, ignoreCase = true) == true }
     var accessKey by remember { mutableStateOf(settingsRepository.getUnsplashAccessKey() ?: "") }
-    var showApiKeyDialog by remember { mutableStateOf(accessKey.isBlank()) }
+    var showApiKeyDialog by remember { mutableStateOf(isOwner && accessKey.isBlank()) }
     var tempApiKey by remember { mutableStateOf(accessKey) }
 
     var isLoading by remember { mutableStateOf(true) }
@@ -196,6 +197,15 @@ fun WallpaperStagingScreen(
     }
 
     fun loadData() {
+        if (!isOwner) {
+            isLoading = true
+            coroutineScope.launch {
+                stagedInfo = stagingRepository.fetchStagedWallpaper()
+                candidatePhotos = emptyList()
+                isLoading = false
+            }
+            return
+        }
         if (accessKey.isBlank()) {
             isLoading = false
             return
@@ -232,7 +242,7 @@ fun WallpaperStagingScreen(
     }
 
     LaunchedEffect(accessKey) {
-        if (accessKey.isNotBlank()) {
+        if (!isOwner || accessKey.isNotBlank()) {
             loadData()
         }
     }
@@ -375,17 +385,19 @@ fun WallpaperStagingScreen(
                         modifier = Modifier.size(56.dp),
                     )
                     TranslatableText(
-                        stringResId = R.string.wallpaper_staging_error,
+                        stringResId = if (isOwner) R.string.wallpaper_staging_error else R.string.wallpaper_staging_not_set,
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
-                    Button(
-                        onClick = {
-                            HapticUtil.performUIHaptic(view)
-                            showApiKeyDialog = true
-                        },
-                    ) {
-                        TranslatableText(R.string.wallpaper_staging_set_api_key)
+                    if (isOwner) {
+                        Button(
+                            onClick = {
+                                HapticUtil.performUIHaptic(view)
+                                showApiKeyDialog = true
+                            },
+                        ) {
+                            TranslatableText(R.string.wallpaper_staging_set_api_key)
+                        }
                     }
                 }
             }
@@ -393,7 +405,7 @@ fun WallpaperStagingScreen(
 
         
         AnimatedVisibility(
-            visible = currentPhoto != null && !isLoading,
+            visible = isOwner && currentPhoto != null && !isLoading,
             enter = fadeIn() + slideInVertically { it / 2 },
             exit = fadeOut() + slideOutVertically { it / 2 },
             modifier =
@@ -546,12 +558,16 @@ fun WallpaperStagingScreen(
                 HapticUtil.performUIHaptic(view)
                 onBack()
             },
-            fabAction = {
-                HapticUtil.performUIHaptic(view)
-                tempApiKey = accessKey
-                showApiKeyDialog = true
+            fabAction = if (isOwner) {
+                {
+                    HapticUtil.performUIHaptic(view)
+                    tempApiKey = accessKey
+                    showApiKeyDialog = true
+                }
+            } else {
+                null
             },
-            fabIconRes = R.drawable.rounded_vpn_key_24,
+            fabIconRes = R.drawable.rounded_vpn_key_24.takeIf { isOwner },
             fabContentDescription = stringResource(R.string.wallpaper_staging_set_api_key),
             modifier =
                 Modifier
@@ -603,5 +619,6 @@ fun WallpaperStagingScreen(
     }
 }
 
+private const val OWNER_LOGIN = "sameerasw"
 private const val RANDOM_ATTEMPTS = 3
 private const val FALLBACK_PAGES = 10
