@@ -2805,6 +2805,7 @@
     <string name="wallpaper_staging_staged_success">Picked as the next wallpaper!</string>
     <string name="wallpaper_staging_cleared_success">Cleared picked wallpaper</string>
     <string name="wallpaper_staging_error">Could not load photos. Check Unsplash connection or token.</string>
+    <string name="wallpaper_staging_not_set">Not set yet</string>
     <string name="wallpaper_staging_set_api_key">Set Unsplash Access Key</string>
     <string name="wallpaper_staging_api_key_desc">Enter your Unsplash developer Access Key to load collection photos.</string>
     <string name="wallpaper_staging_api_key_hint">Access Key</string>

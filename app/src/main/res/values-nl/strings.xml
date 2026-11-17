@@ -1840,4 +1840,5 @@
     <string name="about_desc_accessibility_tile">Turn off all accessibility services with one tap and bring them back with another.\n\nUseful for apps that refuse to work while accessibility services are enabled.</string>
     <string name="island_action_show">Show</string>
     <string name="island_gesture_hints_title">Show gesture hints</string>
+    <string name="wallpaper_staging_not_set">Not set yet</string>
 </resources>
