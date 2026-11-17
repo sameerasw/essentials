@@ -565,7 +565,6 @@ class ScreenOffAccessibilityService :
             IntentFilter().apply {
                 addAction(Intent.ACTION_SCREEN_ON)
                 addAction(Intent.ACTION_SCREEN_OFF)
-                addAction(Intent.ACTION_USER_PRESENT)
                 addAction("SHOW_AMBIENT_GLANCE")
                 addAction("HIDE_AMBIENT_GLANCE_TEMPORARILY")
                 addAction("FORCE_TURN_OFF_AOD")
@@ -578,6 +577,12 @@ class ScreenOffAccessibilityService :
                 addAction(FlashlightActionReceiver.ACTION_DECREASE)
             }
         ContextCompat.registerReceiver(this, screenReceiver, filter, ContextCompat.RECEIVER_NOT_EXPORTED)
+        ContextCompat.registerReceiver(
+            this,
+            screenReceiver,
+            IntentFilter(Intent.ACTION_USER_PRESENT),
+            ContextCompat.RECEIVER_EXPORTED,
+        )
         registerReceiver(
             remapReceiver,
             IntentFilter().apply {
