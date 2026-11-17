@@ -68,7 +68,10 @@ object CallStateRepository {
         } catch (_: Exception) {
             null
         } ?: return
-        if (!call.ringing) activeSince.putIfAbsent(call.key, call.startedAt ?: System.currentTimeMillis())
+        if (!call.ringing) {
+            val notified = call.startedAt
+            if (notified != null) activeSince[call.key] = notified else activeSince.putIfAbsent(call.key, System.currentTimeMillis())
+        }
         notificationCalls[call.key] = call
         publish()
     }

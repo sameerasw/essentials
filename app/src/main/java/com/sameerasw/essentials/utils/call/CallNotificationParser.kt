@@ -173,11 +173,9 @@ object CallNotificationParser {
             CALL_TYPE_ONGOING -> false
             else -> answer != null
         }
-        val startedAt = if (!ringing && (n.`when` > 0L) && (extras.getBoolean(Notification.EXTRA_SHOW_CHRONOMETER) || n.`when` <= System.currentTimeMillis())) {
-            n.`when`
-        } else {
-            null
-        }
+        val chronometer = extras.getBoolean(Notification.EXTRA_SHOW_CHRONOMETER) &&
+            !extras.getBoolean(Notification.EXTRA_CHRONOMETER_COUNT_DOWN)
+        val startedAt = n.`when`.takeIf { !ringing && chronometer && it > 0L && it <= System.currentTimeMillis() }
 
         val appName = try {
             val pm = context.packageManager

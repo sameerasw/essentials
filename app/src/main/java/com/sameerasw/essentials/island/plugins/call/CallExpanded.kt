@@ -92,27 +92,29 @@ fun CallExpanded(
                 }
             }
             Column {
-                Spacer(Modifier.height(14.dp))
-                val items = buttons.mapIndexed { index, spec ->
-                    val container = when (spec.style) {
-                        CallButtonStyle.Answer -> AnswerGreen
-                        CallButtonStyle.End -> EndRed
-                        CallButtonStyle.Neutral -> if (on.getOrElse(index) { false }) Color.White.copy(alpha = 0.4f) else null
+                if (buttons.isNotEmpty()) {
+                    Spacer(Modifier.height(14.dp))
+                    val items = buttons.mapIndexed { index, spec ->
+                        val container = when (spec.style) {
+                            CallButtonStyle.Answer -> AnswerGreen
+                            CallButtonStyle.End -> EndRed
+                            CallButtonStyle.Neutral -> if (on.getOrElse(index) { false }) Color.White.copy(alpha = 0.4f) else null
+                        }
+                        ConnectedItem(
+                            onClick = { spec.onClick()?.let { if (index < on.size) on[index] = it } },
+                            container = container,
+                        ) {
+                            val icon = if (on.getOrElse(index) { false }) spec.onIcon ?: spec.icon else spec.icon
+                            CallButton(icon, spec.label)
+                        }
                     }
-                    ConnectedItem(
-                        onClick = { spec.onClick()?.let { if (index < on.size) on[index] = it } },
-                        container = container,
-                    ) {
-                        val icon = if (on.getOrElse(index) { false }) spec.onIcon ?: spec.icon else spec.icon
-                        CallButton(icon, spec.label)
-                    }
+                    ConnectedButtonRow(
+                        height = 44.dp,
+                        modifier = Modifier.padding(horizontal = sidePadding),
+                        container = Color.White.copy(alpha = 0.2f),
+                        items = items,
+                    )
                 }
-                ConnectedButtonRow(
-                    height = 44.dp,
-                    modifier = Modifier.padding(horizontal = sidePadding),
-                    container = Color.White.copy(alpha = 0.2f),
-                    items = items,
-                )
                 Spacer(Modifier.height(spec.expandedBottomPadding))
             }
         }

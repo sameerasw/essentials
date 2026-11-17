@@ -191,11 +191,8 @@ class CallPlugin : BaseIslandPlugin() {
         )
     }
 
-    private fun buttonsFor(snap: CallSnapshot, ringing: Boolean): List<CallButtonSpec> {
-        val buttons = if (usesOwnControls(snap)) notificationButtons(snap, ringing) else telephonyButtons(snap, ringing)
-        if (buttons.isNotEmpty()) return buttons
-        return listOf(openButton(snap))
-    }
+    private fun buttonsFor(snap: CallSnapshot, ringing: Boolean): List<CallButtonSpec> =
+        if (usesOwnControls(snap)) notificationButtons(snap, ringing) else telephonyButtons(snap, ringing)
 
     private fun usesOwnControls(snap: CallSnapshot): Boolean {
         val hasOwn = snap.allActions.isNotEmpty() || snap.answerIntent != null || snap.endIntent != null
@@ -216,11 +213,7 @@ class CallPlugin : BaseIslandPlugin() {
                 null
             },
         )
-        if (!ringing) {
-            val extras = snap.extraActions.map { notificationButton(it) }
-            val open = openButton(snap).takeIf { extras.size + 2 <= MAX_NOTIFICATION_BUTTONS }
-            return listOfNotNull(open) + extras.take(MAX_NOTIFICATION_BUTTONS - 1) + end
-        }
+        if (!ringing) return snap.extraActions.take(MAX_NOTIFICATION_BUTTONS - 1).map(::notificationButton) + end
         val answer = CallButtonSpec(
             key = "answer",
             icon = R.drawable.rounded_call_24,
@@ -284,16 +277,6 @@ class CallPlugin : BaseIslandPlugin() {
             add(CallNotificationAction(CallActionRole.HangUp, snap.endLabel ?: context.getString(R.string.island_call_end), end))
         }
     }
-
-    private fun openButton(snap: CallSnapshot) = CallButtonSpec(
-        key = "open",
-        icon = R.drawable.rounded_open_in_new_24,
-        label = context.getString(R.string.island_call_open),
-        onClick = {
-            guarded { openCall(snap) }
-            null
-        },
-    )
 
     private fun ownButton(
         action: CallNotificationAction,
