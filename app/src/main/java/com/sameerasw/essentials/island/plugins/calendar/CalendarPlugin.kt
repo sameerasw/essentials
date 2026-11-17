@@ -99,15 +99,22 @@ class CalendarPlugin : BaseIslandPlugin() {
         val now = System.currentTimeMillis()
         val hiddenKeys = pruneHidden(now)
         val (hidden, visible) = events.partition { eventKey(it) in hiddenKeys }
-        val shown = concurrent(visible)
+        val shown = selection(visible, now)
         val parked = if (settings.isIslandBriefEnabled()) hidden.take(MAX_EVENTS) else emptyList()
         publish(shown.map { item(it, now, hidden = false) } + parked.map { item(it, now, hidden = true) })
     }
 
-    private fun concurrent(events: List<UpcomingCalendarEvent>): List<UpcomingCalendarEvent> {
-        val first = events.firstOrNull() ?: return emptyList()
-        val firstEnd = maxOf(first.endTimeMillis, first.startTimeMillis + 1)
-        return events.filter { it === first || it.startTimeMillis < firstEnd }.take(MAX_EVENTS)
+    private fun selection(events: List<UpcomingCalendarEvent>, now: Long): List<UpcomingCalendarEvent> {
+        val (ongoing, upcoming) = events.partition { it.startTimeMillis <= now }
+        val next = upcoming.firstOrNull()
+        val nextGroup = next?.let { n -> upcoming.filter { it.startTimeMillis / 60_000L == n.startTimeMillis / 60_000L } }.orEmpty()
+        val shown = if (ongoing.isEmpty() || (next != null && isUrgent(next, now))) nextGroup else ongoing
+        return shown.take(MAX_EVENTS)
+    }
+
+    private fun isUrgent(e: UpcomingCalendarEvent, now: Long): Boolean {
+        val priorityMs = settings.getIslandCalendarPriorityMinutes() * 60_000L
+        return priorityMs > 0 && e.startTimeMillis - now in 0..priorityMs
     }
 
     private fun item(e: UpcomingCalendarEvent, now: Long, hidden: Boolean): IslandItem {
@@ -119,8 +126,7 @@ class CalendarPlugin : BaseIslandPlugin() {
         }
         val showGlow = settings.isIslandShowGlowEnabled()
         val icon = settings.getIslandCalendarIcons()[e.calendarId]
-        val priorityMs = settings.getIslandCalendarPriorityMinutes() * 60_000L
-        val urgent = !hidden && priorityMs > 0 && e.startTimeMillis - now in 0..priorityMs
+        val urgent = !hidden && isUrgent(e, now)
         val key = "$ITEM_KEY:${eventKey(e)}"
         return IslandItem(
             key = key,
