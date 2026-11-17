@@ -2214,4 +2214,11 @@ Bu izin için sadece şunlara ihtiyaç duyulmaktadır: </string>
     <string name="diy_category_notifications">Bildirimler</string>
     <string name="diy_category_battery_power">Pil &amp; Güç</string>
     <string name="diy_category_system_screen">Sistem &amp; Ekran</string>
+    <string name="watch_esim_enter_code">Aktivasyon kodu</string>
+    <string name="watch_esim_scan_qr">QR kodu tara</string>
+    <string name="watch_esim_sheet_title">Pixel Watch\'a eSIM yükleyin</string>
+    <string name="watch_esim_error_companion_missing">Pixel Watch uygulaması yüklü değil veya açılamıyor</string>
+    <string name="watch_esim_continue">Pixel Watch\'ta devam et</string>
+    <string name="watch_wireless_debugging_info_title">Saat Bağlantı Bilgileri</string>
+    <string name="watch_wireless_debugging_refresh">Bilgileri Yenile</string>
 </resources>
