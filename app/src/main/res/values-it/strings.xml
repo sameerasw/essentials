@@ -1183,7 +1183,7 @@
     <string name="auth_sign_in_rationale">Accedi per estendere i limiti delle chiamate API</string>
     <string name="auth_waiting_for_authorization">In attesa di autorizzazione...</string>
     <string name="action_sign_in_github">Accedi con GitHub</string>
-    <string name="action_sign_out">Disconnettiti</string>
+    <string name="action_sign_out">disconnessione</string>
     <string name="action_profile">Profilo</string>
     <!-- App Updates / Repos -->
     <string name="label_release_notes">Note sulla versione</string>
@@ -1347,10 +1347,10 @@
     <string name="desc_use_blur">Abilita gli elementi di sfocatura progressiva nell\'interfaccia utente</string>
     <string name="msg_blur_compatibility_error">La sfocatura è disabilitata su questo dispositivo per prevenire un noto bug di visualizzazione sui dispositivi Samsung con Android 15 o versioni precedenti.</string>
     <!-- Empty State Actions -->
-    <string name="msg_no_apps_frozen">No apps selected to freeze.</string>
-    <string name="action_get_started">Get Started</string>
+    <string name="msg_no_apps_frozen">Nessuna app selezionata da congelare.</string>
+    <string name="action_get_started">Inizia</string>
     <string name="action_new_automation">Nuova Automazione</string>
-    <string name="action_add_repository">Add Repository</string>
+    <string name="action_add_repository">Aggiungi Repository</string>
     <!-- Bug Report Enhancement -->
     <string name="bug_report_feedback_placeholder">Describe the issue or provide feedback…</string>
     <string name="bug_report_contact_email_label">Contact email</string>
@@ -1758,9 +1758,9 @@
     <string name="island_notif_lock_hidden_title">Hidden</string>
     <string name="text_snippets_how_to_use">1. Turn on Text Snippets and grant the Accessibility permission so shortcuts can expand in any app.\n\n2. Pick a Trigger Prefix: ; : @@ or a space.\n\n3. Tap the + button to add a snippet. Enter a keyword without spaces and the text it should expand into.\n\n4. Type the prefix followed by the keyword, for example ;brb, to expand it. With the space prefix, type the keyword and press space.\n\nTips: keywords only expand at the start of a word, so URLs and times are left alone. Password fields are always ignored. Some apps do not allow text replacement and will not expand snippets.</string>
     <string name="label_notify_new_updates">Notifica per nuovi aggiornamenti</string>
-    <string name="btn_import_config">Importa Config.</string>
-    <string name="btn_export_config">Esporta Config.</string>
-    <string name="translation_logged_in_as">Accesso eseguito come %1$s</string>
+    <string name="btn_import_config">Importa Configurazione</string>
+    <string name="btn_export_config">Esporta Configurazione</string>
+    <string name="translation_logged_in_as">Accesso eseguito come%1$s</string>
     <string name="auto_backup_title">Backup automatico configurazioni</string>
     <string name="auto_backup_folder">Cartella di backup</string>
     <string name="btn_grant_all_permissions">Consenti tutte le autorizzazioni</string>
@@ -1769,8 +1769,8 @@
     <string name="action_licenses_and_credits">Licenze</string>
     <string name="external_control_token_title">Token controllo esterno</string>
     <string name="shizuku_auth_token_label">Token autorizz. Shizuku</string>
-    <string name="setting_privileged_mode_title">Accesso privilegiato</string>
-    <string name="settings_permissions_all">Tutte le autorizzazioni</string>
+    <string name="setting_privileged_mode_title">Privilegi di accesso</string>
+    <string name="settings_permissions_all">Tutti i permessi</string>
     <string name="label_haptics_title">Aptica</string>
     <string name="diy_no_automations">Ancora nessuna automazione</string>
     <string name="action_backup_app_list">Backup lista app</string>
@@ -1809,4 +1809,6 @@
     <string name="label_top_contributors">Contributori Migliori</string>
     <string name="settings_section_permissions">Autorizzazioni</string>
     <string name="settings_section_customizations">Personalizzazione</string>
+    <string name="subreddit_description">Un luogo dove discutere di Essentials e di altre app create da me. Unisciti alla community e contribuisci ai progetti, ricevi aiuto e impara qualcosa di nuovo. ( ´ ▽ ` )ﾉ</string>
+    <string name="settings_genai_automation_desc">Utilizza Gemini Nano sul dispositivo per creare automazioni a partire dalle descrizioni</string>
 </resources>
