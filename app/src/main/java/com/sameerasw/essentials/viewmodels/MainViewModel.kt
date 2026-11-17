@@ -2162,7 +2162,7 @@ class MainViewModel : ViewModel() {
         isUsageStatsPermissionGranted.value = PermissionUtils.hasUsageStatsPermission(context)
 
         isBluetoothPermissionGranted.value = PermissionUtils.hasBluetoothPermission(context)
-        isStoragePermissionGranted.value = PermissionUtils.hasStoragePermission(context)
+        isStoragePermissionGranted.value = PermissionUtils.hasManageExternalStoragePermission(context)
 
         context.contentResolver.registerContentObserver(
             Settings.System.getUriFor(Settings.System.FONT_SCALE),

@@ -475,7 +475,7 @@ object PermissionUIHelper {
             }
 
             AppPermission.STORAGE -> {
-                val isGranted = PermissionUtils.hasStoragePermission(context)
+                val isGranted = PermissionUtils.hasManageExternalStoragePermission(context)
                 var targetActivity: Activity? = activity
                 if (targetActivity == null) {
                     var ctx: Context? = context
