@@ -388,6 +388,7 @@ private fun IslandRootContent(
     val carouselSnapshot = rememberGraphicsLayer()
     val carouselProgress = remember { Animatable(0f) }
     var carouselDrag by remember { mutableStateOf(false) }
+    var pinnedReveal by remember { mutableStateOf<IslandItem?>(null) }
     var carouselActive by remember { mutableStateOf(false) }
     var carouselReady by remember { mutableStateOf(false) }
     var carouselDir by remember { mutableFloatStateOf(0f) }
@@ -665,15 +666,17 @@ private fun IslandRootContent(
             (stackOverlapWidth(icons.size, spec.compactHeight, overlapSlots(icons, max), overflow) +
                 overlapExtraWidth(icons, spec.compactHeight, max, overflow)).toPx()
         }
-        val fit = remember(icons, overflow, room, spec.compactHeight, density) { (8 downTo 1).firstOrNull { drawnPx(it) <= room } ?: 1 }
+        val lowest = if (icons.size > 1) 2 else 1
+        val fit = remember(icons, overflow, room, spec.compactHeight, density) { (8 downTo lowest).firstOrNull { drawnPx(it) <= room } ?: 0 }
         val cap = if (chosen > 0) chosen + if (iconCount > chosen) 1 else 0 else fit
         minOf(cap, fit)
     } ?: OVERLAP_MAX
     val sideBubbleWidth = lastCatchUp
         ?.takeIf { it.content == null && it.icons.isNotEmpty() }
         ?.let {
-            stackOverlapWidth(it.icons.size, spec.compactHeight, overlapSlots(it.icons, bubbleMaxIcons), it.overflow) +
-                overlapExtraWidth(it.icons, spec.compactHeight, bubbleMaxIcons, it.overflow)
+            val overflow = overlapOverflow(bubbleMaxIcons, it.overflow)
+            stackOverlapWidth(it.icons.size, spec.compactHeight, overlapSlots(it.icons, bubbleMaxIcons), overflow) +
+                overlapExtraWidth(it.icons, spec.compactHeight, bubbleMaxIcons, overflow)
         }
         ?: spec.compactHeight
     val sideWidthPx = with(density) { sideBubbleWidth.roundToPx() }
@@ -1637,19 +1640,32 @@ private fun IslandRootContent(
                                         return@launch
                                     }
                                     IslandHaptics.commit(context)
-                                    val remaining = abs(dir * flyOff - dismissOffset.value)
+                                    val next = focused.queue?.next
+                                    val travel = if (next != null) surfaceSize.width.toFloat().coerceAtLeast(1f) else flyOff
+                                    val remaining = abs(dir * travel - dismissOffset.value)
                                     val speed = maxOf(abs(v.x), 2500f)
                                     val throwMs = (remaining / speed * 1000f).toInt().coerceIn(90, 200)
                                     val throwSpec = tween<Float>(throwMs, easing = LinearEasing)
-                                    dismissOffset.animateTo(dir * flyOff, throwSpec)
                                     if (focused.queue != null) {
-                                        actions.onDismiss()
-                                        awaitNextContent(focused)
+                                        pinnedReveal = next
+                                        try {
+                                            if (next != null) {
+                                                dismissOffset.animateTo(dir * travel, IslandMotion.fling(), initialVelocity = v.x)
+                                            } else {
+                                                dismissOffset.animateTo(dir * travel, throwSpec)
+                                            }
+                                            actions.onDismiss()
+                                            awaitNextContent(focused)
+                                        } finally {
+                                            dismissOffset.snapTo(0f)
+                                            pinnedReveal = null
+                                        }
                                     } else {
+                                        dismissOffset.animateTo(dir * travel, throwSpec)
                                         dismissCommitted = true
                                         actions.onDismiss()
+                                        dismissOffset.snapTo(0f)
                                     }
-                                    dismissOffset.snapTo(0f)
                                 }
                             } else {
                                 val pullVelocity = (if (peek) maxOf(v.x * inwardSign(), -v.y) else -v.y) / collapseRange
@@ -1691,24 +1707,21 @@ private fun IslandRootContent(
                 spec.growDirection < 0 -> Alignment.TopEnd
                 else -> Alignment.TopCenter
             }
-            val queuedNext = item?.queue?.next
-            if (showDismissReveal && queuedNext != null && !spec.dismissDown && item?.dismissible == true) {
+            val queuedNext = pinnedReveal ?: item?.queue?.next?.takeIf { item.dismissible }
+            val slideReveal = queuedNext != null && !spec.dismissDown
+            if (showDismissReveal && slideReveal && queuedNext != null) {
                 Box(
                     Modifier
                         .matchParentSize()
                         .graphicsLayer {
-                            val p = (abs(dismissOffset.value) / (surfaceSize.width.coerceAtLeast(1) * 0.6f)).coerceIn(0f, 1f)
-                            val s = 0.94f + 0.06f * p
-                            scaleX = s
-                            scaleY = s
-                            alpha = 0.4f + 0.6f * p
-                            transformOrigin = TransformOrigin(contentOriginX, 0f)
+                            val offset = dismissOffset.value
+                            translationX = offset - sign(offset) * size.width
                         },
                     contentAlignment = layerAlign,
                 ) {
                     StageContent(key.stage, queuedNext, state, spec, actions, interactive = false)
                 }
-            } else if (showDismissReveal && item?.dismissible == true && !spec.dismissDown) {
+            } else if (showDismissReveal && spec.gestureHints && item?.dismissible == true && !spec.dismissDown) {
                 DismissReveal(
                     fromStart = revealDirection > 0f,
                     progress = { (abs(dismissOffset.value) / dismissThresholdPx).coerceIn(0f, 1f) },
@@ -1726,7 +1739,7 @@ private fun IslandRootContent(
                         }
                         .graphicsLayer {
                             alpha = contentAlpha.value * growGate(0.3f, 0.5f) * (1f - collapse.value * 1.6f).coerceIn(0f, 1f) *
-                                if (surfaceSize.width > 0) (1f - abs(dismissOffset.value) / surfaceSize.width * 0.6f).coerceIn(0f, 1f) else 1f
+                                if (surfaceSize.width > 0 && !slideReveal) (1f - abs(dismissOffset.value) / surfaceSize.width * 0.6f).coerceIn(0f, 1f) else 1f
                             translationX = dismissOffset.value + wiggle.value
                             val sliding = dismissOffset.value != 0f
                             shape = RoundedCornerShape(if (sliding) cardCorner.toPx() else 0f)
@@ -1758,7 +1771,7 @@ private fun IslandRootContent(
                         .graphicsLayer {
                             alpha = (if (pending) 0f else contentAlpha.value) * growGate(0.3f, 0.5f) *
                                 (if (previewing) 1f - collapse.value * 1.6f else 1f).coerceIn(0f, 1f) *
-                                (if (carouselDrag || carouselActive || surfaceSize.width <= 0) 1f else (1f - abs(dismissOffset.value) / surfaceSize.width * 0.6f).coerceIn(0f, 1f)) *
+                                (if (carouselDrag || carouselActive || slideReveal || surfaceSize.width <= 0) 1f else (1f - abs(dismissOffset.value) / surfaceSize.width * 0.6f).coerceIn(0f, 1f)) *
                                 (if (surfaceSize.height > 0) (1f - dropOffset.value / surfaceSize.height).coerceIn(0f, 1f) else 1f)
                             translationX = if (carouselActive) {
                                 carouselStart + (carouselDir * size.width - carouselStart) * carouselProgress.value - carouselDir * size.width
@@ -1844,7 +1857,7 @@ private fun IslandRootContent(
                     .drawBehind { if (morph.running) morph.draw(this, Offset(morphOrigin[0], morphOrigin[1])) },
             )
             SwipeIntentChip(
-                intent = swipeIntent.takeIf { key.stage == IslandStage.Expanded },
+                intent = swipeIntent.takeIf { key.stage == IslandStage.Expanded && spec.gestureHints },
                 modifier = Modifier
                     .align(Alignment.TopCenter)
                     .padding(top = spec.expandedOutset + spec.expandedTopPadding + spec.compactHeight + 4.dp),

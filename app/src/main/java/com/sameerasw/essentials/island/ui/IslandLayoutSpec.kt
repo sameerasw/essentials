@@ -28,6 +28,7 @@ data class IslandLayoutSpec(
     val bondEdge: Boolean = false,
     val balanceCompact: Boolean = true,
     val dismissDown: Boolean = false,
+    val gestureHints: Boolean = true,
     val neuralExpressive: Boolean = false,
     val neuralExpressiveAlways: Boolean = false,
     val glowIntensity: Float = 1f,

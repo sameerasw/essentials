@@ -227,7 +227,9 @@ fun stackOverlapWidth(count: Int, size: Dp, maxIcons: Int = OVERLAP_MAX, overflo
 }
 
 fun overlapSlots(icons: List<StackIcon>, maxIcons: Int): Int =
-    (maxIcons - icons.take(maxIcons).count { it.widthFactor > 1f }).coerceAtLeast(if (icons.size > 1) 2 else 1)
+    if (maxIcons <= 0) 1 else (maxIcons - icons.take(maxIcons).count { it.widthFactor > 1f }).coerceAtLeast(if (icons.size > 1) 2 else 1)
+
+fun overlapOverflow(maxIcons: Int, overflow: QueueOverflow): QueueOverflow = if (maxIcons <= 0) QueueOverflow.None else overflow
 
 fun overlapMinFactor(icons: List<StackIcon>): Float =
     (icons.firstOrNull()?.widthFactor ?: 1f).coerceAtLeast(1f) + if (icons.size > 1) OVERFLOW_STEP else 0f
@@ -252,6 +254,7 @@ fun IslandStackOverlap(
     travel: () -> Float = { 0f },
 ) {
     val slots = overlapSlots(icons, maxIcons)
+    val overflow = overlapOverflow(maxIcons, overflow)
     val shown = queueVisible(icons, slots, overflow)
     val width by animateDpAsState(
         stackOverlapWidth(icons.size, size, slots, overflow) + overlapExtraWidth(icons, size, maxIcons, overflow),

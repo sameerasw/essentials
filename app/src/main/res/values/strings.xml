@@ -3324,6 +3324,7 @@
     <string name="island_hide_live_updates_title">Remove live updates while island is visible</string>
     <string name="island_tap_to_open_expanded_title">Tap to open when expanded</string>
     <string name="island_dismiss_on_outside_title">Dismiss on outside activity</string>
+    <string name="island_gesture_hints_title">Show gesture hints</string>
     <string name="island_like_while_playing_title">Like music while playing</string>
     <string name="island_gesture_visuals_hint">Turn on Time &amp; battery to see volume, brightness and sound mode changes on the island.</string>
     <string name="island_battery_percentage_title">Show percentage</string>
@@ -3521,7 +3522,6 @@
     <string name="island_call_answer">Answer</string>
     <string name="island_call_decline">Decline</string>
     <string name="island_call_end">End</string>
-    <string name="island_call_open">Open</string>
     <string name="island_call_mute">Mute</string>
     <string name="island_call_speaker">Speaker</string>
     <string name="island_calendar_view_event">View event</string>
@@ -3529,6 +3529,7 @@
     <string name="island_line_peek_title">Line peek</string>
     <string name="island_line_peek_desc">Briefly show updates across the island, then return to compact</string>
     <string name="island_action_hide">Hide</string>
+    <string name="island_action_show">Show</string>
     <string name="island_notif_queue_title">Notification queue</string>
     <string name="island_notification_options_title">Notification options</string>
     <string name="feat_face_unlock_brightness_title">Face illumination</string>

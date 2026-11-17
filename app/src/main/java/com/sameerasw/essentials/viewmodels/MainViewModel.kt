@@ -261,6 +261,7 @@ class MainViewModel : ViewModel() {
     val isIslandAlwaysGestures = mutableStateOf(false)
     val islandLandscapeTopSpacing = mutableFloatStateOf(0f)
     val isIslandDismissOnOutside = mutableStateOf(false)
+    val isIslandGestureHints = mutableStateOf(true)
     val isIslandHideLiveUpdates = mutableStateOf(false)
     val isIslandHideStatusBarInsets = mutableStateOf(false)
     val islandExpandedScale = mutableFloatStateOf(1f)
@@ -2595,6 +2596,7 @@ class MainViewModel : ViewModel() {
         isIslandAlwaysGestures.value = settingsRepository.isIslandAlwaysGesturesEnabled()
         islandLandscapeTopSpacing.floatValue = settingsRepository.getIslandLandscapeTopSpacing()
         isIslandDismissOnOutside.value = settingsRepository.isIslandDismissOnOutsideEnabled()
+        isIslandGestureHints.value = settingsRepository.isIslandGestureHintsEnabled()
         isIslandHideLiveUpdates.value = settingsRepository.isIslandHideLiveUpdatesEnabled()
         isIslandHideStatusBarInsets.value = settingsRepository.isIslandHideStatusBarInsetsEnabled()
         islandExpandedScale.floatValue = settingsRepository.getIslandExpandedScale()
@@ -6050,6 +6052,11 @@ class MainViewModel : ViewModel() {
     fun setIslandDismissOnOutside(enabled: Boolean) {
         isIslandDismissOnOutside.value = enabled
         settingsRepository.setIslandDismissOnOutsideEnabled(enabled)
+    }
+
+    fun setIslandGestureHints(enabled: Boolean) {
+        isIslandGestureHints.value = enabled
+        settingsRepository.setIslandGestureHintsEnabled(enabled)
     }
 
     fun setIslandHideMediaInOwnerApp(enabled: Boolean) {

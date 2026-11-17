@@ -93,7 +93,7 @@ class EssentialsApp : Application() {
                 addAction(Intent.ACTION_USER_PRESENT)
             }
 
-        ContextCompat.registerReceiver(this, securityReceiver, intentFilter, ContextCompat.RECEIVER_NOT_EXPORTED)
+        ContextCompat.registerReceiver(this, securityReceiver, intentFilter, ContextCompat.RECEIVER_EXPORTED)
 
         ContextCompat.registerReceiver(
             this,

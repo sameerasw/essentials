@@ -63,6 +63,8 @@ fun CalendarExpanded(
     scope: IslandExpandedScope,
     icon: String? = null,
     drawBackground: Boolean = true,
+    hidden: Boolean? = null,
+    onToggleHidden: () -> Unit = {},
 ) {
     val spec = scope.spec
     val context = LocalContext.current
@@ -125,7 +127,14 @@ fun CalendarExpanded(
                     height = 36.dp,
                     modifier = Modifier.padding(horizontal = sidePadding),
                     container = Color.White.copy(alpha = 0.2f),
-                    items = listOf(ConnectedItem(onView) { ConnectedTextLabel(stringResource(R.string.island_calendar_view_event)) }),
+                    items = listOfNotNull(
+                        ConnectedItem(onView) { ConnectedTextLabel(stringResource(R.string.island_calendar_view_event)) },
+                        hidden?.let {
+                            ConnectedItem(onToggleHidden) {
+                                ConnectedTextLabel(stringResource(if (it) R.string.island_action_show else R.string.island_action_hide))
+                            }
+                        },
+                    ),
                 )
                 ResizeHandle(resize, spec.expandedBottomPadding.coerceAtLeast(18.dp))
             }

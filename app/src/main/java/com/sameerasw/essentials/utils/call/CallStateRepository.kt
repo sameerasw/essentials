@@ -21,6 +21,7 @@ data class CallSnapshot(
     val startedAt: Long,
     
     val appName: String? = null,
+    val appIcon: Bitmap? = null,
     val packageName: String? = null,
     val answerIntent: PendingIntent? = null,
     val endIntent: PendingIntent? = null,
@@ -28,6 +29,9 @@ data class CallSnapshot(
     val fromTelephony: Boolean = false,
     val extraActions: List<CallNotificationAction> = emptyList(),
     val allActions: List<CallNotificationAction> = emptyList(),
+    val text: String? = null,
+    val answerLabel: String? = null,
+    val endLabel: String? = null,
 )
 
 
@@ -65,7 +69,10 @@ object CallStateRepository {
         } catch (_: Exception) {
             null
         } ?: return
-        if (!call.ringing) activeSince.putIfAbsent(call.key, call.startedAt ?: System.currentTimeMillis())
+        if (!call.ringing) {
+            val notified = call.startedAt
+            if (notified != null) activeSince[call.key] = notified else activeSince.putIfAbsent(call.key, System.currentTimeMillis())
+        }
         notificationCalls[call.key] = call
         publish()
     }
@@ -135,6 +142,7 @@ object CallStateRepository {
             incoming = call.ringing || phone?.incoming == true,
             startedAt = activeSince[call.key] ?: phone?.startedAt ?: call.postedAt,
             appName = call.appName,
+            appIcon = call.appIcon,
             packageName = call.packageName,
             answerIntent = call.answerIntent,
             endIntent = call.endIntent,
@@ -142,6 +150,9 @@ object CallStateRepository {
             fromTelephony = phone != null,
             extraActions = call.extraActions,
             allActions = call.allActions,
+            text = call.text,
+            answerLabel = call.answerLabel,
+            endLabel = call.endLabel,
         )
     }
 
