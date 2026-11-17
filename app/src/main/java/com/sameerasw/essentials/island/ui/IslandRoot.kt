@@ -1710,7 +1710,7 @@ private fun IslandRootContent(
                 ) {
                     StageContent(key.stage, queuedNext, state, spec, actions, interactive = false)
                 }
-            } else if (showDismissReveal && item?.dismissible == true && !spec.dismissDown) {
+            } else if (showDismissReveal && spec.gestureHints && item?.dismissible == true && !spec.dismissDown) {
                 DismissReveal(
                     fromStart = revealDirection > 0f,
                     progress = { (abs(dismissOffset.value) / dismissThresholdPx).coerceIn(0f, 1f) },
@@ -1846,7 +1846,7 @@ private fun IslandRootContent(
                     .drawBehind { if (morph.running) morph.draw(this, Offset(morphOrigin[0], morphOrigin[1])) },
             )
             SwipeIntentChip(
-                intent = swipeIntent.takeIf { key.stage == IslandStage.Expanded },
+                intent = swipeIntent.takeIf { key.stage == IslandStage.Expanded && spec.gestureHints },
                 modifier = Modifier
                     .align(Alignment.TopCenter)
                     .padding(top = spec.expandedOutset + spec.expandedTopPadding + spec.compactHeight + 4.dp),

@@ -703,6 +703,7 @@ class SettingsRepository(
         const val KEY_ISLAND_MAX_ITEMS = "island_max_items"
         const val KEY_ISLAND_ALWAYS_GESTURES = "island_always_gestures"
         const val KEY_ISLAND_DISMISS_ON_OUTSIDE = "island_dismiss_on_outside"
+        const val KEY_ISLAND_GESTURE_HINTS = "island_gesture_hints"
         const val KEY_ISLAND_HIDE_LIVE_UPDATES = "island_hide_live_updates"
         const val KEY_ISLAND_HIDE_STATUS_BAR_INSETS = "island_hide_status_bar_insets"
         const val KEY_ISLAND_CAMERA_POSITION = "island_camera_position"
@@ -4490,6 +4491,9 @@ class SettingsRepository(
     fun setIslandHideStatusBarInsetsEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_HIDE_STATUS_BAR_INSETS, enabled)
     fun isIslandDismissOnOutsideEnabled(): Boolean = getBoolean(KEY_ISLAND_DISMISS_ON_OUTSIDE, false)
     fun setIslandDismissOnOutsideEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_DISMISS_ON_OUTSIDE, enabled)
+
+    fun isIslandGestureHintsEnabled(): Boolean = getBoolean(KEY_ISLAND_GESTURE_HINTS, true)
+    fun setIslandGestureHintsEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_GESTURE_HINTS, enabled)
 
     fun isIslandHideInOwnerAppEnabled(): Boolean = getBoolean(KEY_ISLAND_HIDE_IN_OWNER_APP, false)
     fun setIslandHideInOwnerAppEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_HIDE_IN_OWNER_APP, enabled)
