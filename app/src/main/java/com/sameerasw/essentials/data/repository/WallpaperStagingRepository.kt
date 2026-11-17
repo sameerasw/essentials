@@ -128,16 +128,15 @@ class WallpaperStagingRepository(
                         .build()
 
                 val response = client.newCall(request).execute()
-                if (!response.isSuccessful) return@withContext 1
+                if (!response.isSuccessful) return@withContext 0
 
-                val body = response.body?.string() ?: return@withContext 1
-                val collection = gson.fromJson(body, Map::class.java) as? Map<*, *> ?: return@withContext 1
+                val body = response.body?.string() ?: return@withContext 0
+                val collection = gson.fromJson(body, Map::class.java) as? Map<*, *> ?: return@withContext 0
                 val totalPhotos = (collection["total_photos"] as? Number)?.toInt() ?: 0
-                val totalPages = Math.ceil(totalPhotos / 30.0).toInt().coerceAtLeast(1)
-                totalPages
+                Math.ceil(totalPhotos / 30.0).toInt()
             } catch (e: Exception) {
                 e.printStackTrace()
-                1
+                0
             }
         }
 
@@ -158,46 +157,72 @@ class WallpaperStagingRepository(
                 val body = response.body?.string() ?: return@withContext emptyList()
                 val photos = gson.fromJson(body, List::class.java) as? List<*> ?: return@withContext emptyList()
 
-                photos.filterIsInstance<Map<*, *>>().mapNotNull { item ->
-                    val id = item["id"] as? String ?: return@mapNotNull null
-                    val width = (item["width"] as? Number)?.toInt() ?: 0
-                    val height = (item["height"] as? Number)?.toInt() ?: 0
-
-                    // Only select portrait (or square) photos for mobile wallpaper, identical to daily-unsplash.js
-                    if (height < width) return@mapNotNull null
-
-                    val urls = item["urls"] as? Map<*, *>
-                    val rawUrl = urls?.get("raw") as? String ?: return@mapNotNull null
-                    val fullUrl = urls?.get("full") as? String ?: rawUrl
-
-                    val user = item["user"] as? Map<*, *>
-                    val userName = user?.get("name") as? String ?: ""
-                    val userUsername = user?.get("username") as? String ?: ""
-                    val userLinks = user?.get("links") as? Map<*, *>
-                    val userHtml = userLinks?.get("html") as? String ?: ""
-
-                    val links = item["links"] as? Map<*, *>
-                    val photoHtml = links?.get("html") as? String ?: ""
-
-                    val mobileUrl = "$rawUrl&w=1080&q=90"
-
-                    WallpaperInfo(
-                        id = id,
-                        url = mobileUrl,
-                        urlMobile = mobileUrl,
-                        urlFull = fullUrl,
-                        authorName = userName,
-                        authorUsername = userUsername,
-                        authorLink = "$userHtml?utm_source=Glance&utm_medium=referral",
-                        photoLink = "$photoHtml?utm_source=Glance&utm_medium=referral",
-                        updatedAt = "",
-                    )
-                }
+                photos.filterIsInstance<Map<*, *>>().mapNotNull(::parsePhoto)
             } catch (e: Exception) {
                 e.printStackTrace()
                 emptyList()
             }
         }
+
+    suspend fun fetchRandomCollectionPhotos(accessKey: String, count: Int = 30): List<WallpaperInfo> =
+        withContext(Dispatchers.IO) {
+            try {
+                val url = "https://api.unsplash.com/photos/random?collections=$collectionId&orientation=portrait&count=$count"
+                val request =
+                    Request.Builder()
+                        .url(url)
+                        .header("Authorization", "Client-ID $accessKey")
+                        .header("Accept-Version", "v1")
+                        .header("Cache-Control", "no-cache")
+                        .build()
+
+                val response = client.newCall(request).execute()
+                if (!response.isSuccessful) return@withContext emptyList()
+
+                val body = response.body?.string() ?: return@withContext emptyList()
+                val photos = gson.fromJson(body, List::class.java) as? List<*> ?: return@withContext emptyList()
+                photos.filterIsInstance<Map<*, *>>().mapNotNull(::parsePhoto)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                emptyList()
+            }
+        }
+
+    private fun parsePhoto(item: Map<*, *>): WallpaperInfo? {
+        val id = item["id"] as? String ?: return null
+        val width = (item["width"] as? Number)?.toInt() ?: 0
+        val height = (item["height"] as? Number)?.toInt() ?: 0
+
+        // Only select portrait (or square) photos for mobile wallpaper, identical to daily-unsplash.js
+        if (height < width) return null
+
+        val urls = item["urls"] as? Map<*, *>
+        val rawUrl = urls?.get("raw") as? String ?: return null
+        val fullUrl = urls?.get("full") as? String ?: rawUrl
+
+        val user = item["user"] as? Map<*, *>
+        val userName = user?.get("name") as? String ?: ""
+        val userUsername = user?.get("username") as? String ?: ""
+        val userLinks = user?.get("links") as? Map<*, *>
+        val userHtml = userLinks?.get("html") as? String ?: ""
+
+        val links = item["links"] as? Map<*, *>
+        val photoHtml = links?.get("html") as? String ?: ""
+
+        val mobileUrl = "$rawUrl&w=1080&q=90"
+
+        return WallpaperInfo(
+            id = id,
+            url = mobileUrl,
+            urlMobile = mobileUrl,
+            urlFull = fullUrl,
+            authorName = userName,
+            authorUsername = userUsername,
+            authorLink = "$userHtml?utm_source=Glance&utm_medium=referral",
+            photoLink = "$photoHtml?utm_source=Glance&utm_medium=referral",
+            updatedAt = "",
+        )
+    }
 
     suspend fun stageTomorrowWallpaper(
         info: WallpaperInfo?,
