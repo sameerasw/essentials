@@ -608,6 +608,7 @@ class SettingsRepository(
         const val KEY_ISLAND_CALENDAR_HIDE_LOCKED = "island_calendar_hide_locked"
         const val KEY_ISLAND_CALENDAR_COMPACT_TIME = "island_calendar_compact_time"
         const val KEY_ISLAND_CALENDAR_SHOW_ONGOING = "island_calendar_show_ongoing"
+        const val KEY_ISLAND_CALENDAR_HIDDEN_EVENTS = "island_calendar_hidden_events"
         const val KEY_ISLAND_TIME_HIDE_LOCKED = "island_time_hide_locked"
         const val KEY_ISLAND_BATTERY_HIDE_LOCKED = "island_battery_hide_locked"
         const val KEY_ISLAND_TIMEOUT_MS = "island_timeout_ms"
@@ -4349,6 +4350,13 @@ class SettingsRepository(
     fun isIslandDevicesBatteryOnlyLowEnabled(): Boolean = getBoolean(KEY_ISLAND_DEVICES_BATTERY_ONLY_LOW, false)
     fun setIslandDevicesBatteryOnlyLowEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_DEVICES_BATTERY_ONLY_LOW, enabled)
     fun setIslandBatteryPercentageConditional(enabled: Boolean) = putBoolean(KEY_ISLAND_BATTERY_PERCENTAGE_CONDITIONAL, enabled)
+
+    fun getIslandCalendarHiddenEvents(): Set<String> =
+        prefs.getStringSet(KEY_ISLAND_CALENDAR_HIDDEN_EVENTS, emptySet())?.toSet() ?: emptySet()
+
+    fun setIslandCalendarHiddenEvents(keys: Set<String>) {
+        prefs.edit().putStringSet(KEY_ISLAND_CALENDAR_HIDDEN_EVENTS, keys).apply()
+    }
 
     fun getIslandCalendarIcons(): Map<Long, String> =
         try {

@@ -3528,6 +3528,7 @@
     <string name="island_line_peek_title">Line peek</string>
     <string name="island_line_peek_desc">Briefly show updates across the island, then return to compact</string>
     <string name="island_action_hide">Hide</string>
+    <string name="island_action_show">Show</string>
     <string name="island_notif_queue_title">Notification queue</string>
     <string name="island_notification_options_title">Notification options</string>
     <string name="feat_face_unlock_brightness_title">Face illumination</string>

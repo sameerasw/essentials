@@ -68,9 +68,19 @@ object CalendarEventUtil {
         }
     }
 
-    fun queryNextUpcomingEvent(context: Context, timeframe: String, selectedCalendarIds: Set<Long>, showAllDay: Boolean = false, includeOngoing: Boolean = false): UpcomingCalendarEvent? {
+    fun queryNextUpcomingEvent(context: Context, timeframe: String, selectedCalendarIds: Set<Long>, showAllDay: Boolean = false, includeOngoing: Boolean = false): UpcomingCalendarEvent? =
+        queryUpcomingEvents(context, timeframe, selectedCalendarIds, showAllDay, includeOngoing, limit = 1).firstOrNull()
+
+    fun queryUpcomingEvents(
+        context: Context,
+        timeframe: String,
+        selectedCalendarIds: Set<Long>,
+        showAllDay: Boolean = false,
+        includeOngoing: Boolean = false,
+        limit: Int = Int.MAX_VALUE,
+    ): List<UpcomingCalendarEvent> {
         if (ContextCompat.checkSelfPermission(context, android.Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
-            return null
+            return emptyList()
         }
 
         val now = System.currentTimeMillis()
@@ -122,8 +132,9 @@ object CalendarEventUtil {
                 val calIdIndex = cursor.getColumnIndex(CalendarContract.Instances.CALENDAR_ID)
                 val locationIndex = cursor.getColumnIndex(CalendarContract.Instances.EVENT_LOCATION)
                 val allDayIndex = cursor.getColumnIndex(CalendarContract.Instances.ALL_DAY)
+                val result = mutableListOf<UpcomingCalendarEvent>()
 
-                while (cursor.moveToNext()) {
+                while (result.size < limit && cursor.moveToNext()) {
                     val calId = cursor.getLong(calIdIndex)
                     if (selectedCalendarIds.isNotEmpty() && !selectedCalendarIds.contains(calId)) continue
                     if (statusIndex != -1 && cursor.getInt(statusIndex) == CalendarContract.Attendees.ATTENDEE_STATUS_DECLINED) continue
@@ -138,7 +149,7 @@ object CalendarEventUtil {
                         val location = if (locationIndex != -1) cursor.getString(locationIndex)?.trim()?.takeIf { it.isNotBlank() } else null
                         fun str(col: String) = cursor.getColumnIndex(col).takeIf { it != -1 }?.let { cursor.getString(it) }?.trim()?.takeIf { it.isNotBlank() }
                         val colorIndex = cursor.getColumnIndex(CalendarContract.Instances.DISPLAY_COLOR)
-                        return@use UpcomingCalendarEvent(
+                        result += UpcomingCalendarEvent(
                             title = rawTitle.trim(),
                             startTimeMillis = begin,
                             location = location,
@@ -152,10 +163,10 @@ object CalendarEventUtil {
                         )
                     }
                 }
-                null
-            }
+                result
+            } ?: emptyList()
         } catch (_: Exception) {
-            null
+            emptyList()
         }
     }
 
