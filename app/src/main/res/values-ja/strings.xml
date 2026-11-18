@@ -73,7 +73,7 @@
     <string name="essentials_on_display_random_shapes_title">ランダムな形</string>
     <string name="essentials_on_display_random_shapes_desc">アルバムアートにMaterial 3の形を使用する</string>
     <string name="essentials_on_display_album_art_title">アルバムアート</string>
-    <string name="essentials_on_display_clock_title">Clock</string>
+    <string name="essentials_on_display_clock_title">時計</string>
     <string name="essentials_on_display_force_fill_while_charging_title">充電中は常に使用する</string>
     <string name="essentials_on_display_force_fill_while_charging_desc">選択したモードに関係なく、デバイスが接続されているときに強制的にフィルモードを有効にする</string>
     <string name="label_size">大きさ</string>
@@ -618,7 +618,7 @@
     <string name="tab_apps">アプリ</string>
     <string name="tab_freeze_subtitle">アプリを無効化</string>
     <string name="tab_diy_subtitle">自分で作る</string>
-    <string name="diy_header_caption">Automate essentials</string>
+    <string name="diy_header_caption">Essentials を自動化</string>
     <string name="freeze_header_caption">%1$d/%2$d apps</string>
     <string name="tab_apps_subtitle">アプリを探して管理</string>
     <string name="feat_app_updates_title">アプリアップデート</string>
@@ -1733,7 +1733,7 @@ Wi-Fi、Bluetooth、モバイルデータなどの個々のアイコンを非表
     <string name="duo_show_media_title">メディアの再生</string>
     <string name="duo_show_progress_title">進捗通知</string>
     <string name="duo_show_flashlight_title">フラッシュライト</string>
-    <string name="duo_match_island_colors_title">Match island colors</string>
+    <string name="duo_match_island_colors_title">Island の色と一致させる</string>
     <string name="duo_material_you_title">Material You の色を使用する</string>
     <string name="duo_action_tap_title">タップ</string>
     <string name="duo_action_double_tap_title">ダブルタップ</string>
@@ -2124,7 +2124,15 @@ Duoと組み合わせることで、単一の統合カメラエリアとして�
 
 ヒント：ワイヤレスデバッグがオフになっている場合、Shizukuが動作しなくなる可能性があるため、Shizukuの再起動を試みてください。キーボードオプションを使用して復元するキーボードを選択するか、スキップのままにしてください。自動フリーズでは、通知がカウントダウンし、今すぐフリーズするか中止するかを選択できます。</string>
     <string name="island_notif_lock_hidden_title">非表示</string>
-    <string name="text_snippets_how_to_use">1. Turn on Text Snippets and grant the Accessibility permission so shortcuts can expand in any app.\n\n2. Pick a Trigger Prefix: ; : @@ or a space.\n\n3. Tap the + button to add a snippet. Enter a keyword without spaces and the text it should expand into.\n\n4. Type the prefix followed by the keyword, for example ;brb, to expand it. With the space prefix, type the keyword and press space.\n\nTips: keywords only expand at the start of a word, so URLs and times are left alone. Password fields are always ignored. Some apps do not allow text replacement and will not expand snippets.</string>
+    <string name="text_snippets_how_to_use">1. テキストスニペットをオンにし、アクセシビリティ権限を付与して、ショートカットがどのアプリでも展開できるようにします。
+
+2. トリガープレフィックスを選択します:;: @@ またはスペース。
+
+3. + ボタンをタップしてスニペットを追加します。スペースなしでキーワードと、展開後のテキストを入力します。
+
+4. プレフィックスの後にキーワードを入力します。例: brb と入力すると展開されます。スペースプレフィックスの場合は、キーワードを入力してスペースキーを押します。
+
+ヒント: キーワードは単語の先頭でのみ展開されるため、URL や時刻はそのままです。パスワードフィールドは常に無視されます。一部のアプリではテキスト置換が許可されていないため、スニペットは展開されません。</string>
     <string name="btn_export_config">設定をエクスポート</string>
     <string name="btn_import_config">設定をインポート</string>
     <string name="setting_force_flashlight_controls_title">フラッシュライト制御を強制的に有効化</string>
@@ -2566,11 +2574,127 @@ Android がバッテリーセーバーモードを有効にすると、これら
     <string name="action_reset_battery_stats">統計をリセット</string>
     <string name="label_reset_battery_stats_desc">システムのバッテリー統計をリセットします (dumpsys batterystats --reset)。これにより、過去のバッテリー使用状況とアプリの消費データがクリアされ、現在の充電状態から新たに追跡が開始されます。</string>
     <string name="island_action_open_label">Open Island</string>
-    <string name="tile_accessibility">Accessibility</string>
+    <string name="tile_accessibility">ユーザー補助</string>
     <string name="tile_accessibility_on">Services on</string>
     <string name="tile_accessibility_off">Services off</string>
-    <string name="about_desc_accessibility_tile">Turn off all accessibility services with one tap and bring them back with another.\n\nUseful for apps that refuse to work while accessibility services are enabled.</string>
+    <string name="about_desc_accessibility_tile">ワンタップで全てのアクセシビリティサービスをオフにし、もう一度タップしてオンに戻します。
+
+アクセシビリティサービスが有効になっている間、動作しないアプリに便利です。</string>
     <string name="island_action_show">Show</string>
     <string name="island_gesture_hints_title">Show gesture hints</string>
     <string name="wallpaper_staging_not_set">Not set yet</string>
+    <string name="action_test">テスト</string>
+    <string name="action_select">選択</string>
+    <string name="diy_category_system_screen">システム＆画面</string>
+    <string name="diy_category_battery_power">バッテリー＆電源</string>
+    <string name="diy_metric_battery_level">バッテリー残量</string>
+    <string name="diy_metric_now">現在：%1$s</string>
+    <string name="diy_metric_operator">状態</string>
+    <string name="diy_metric_advanced">詳細</string>
+    <string name="diy_metric_hold">待機時間</string>
+    <string name="diy_select_bluetooth_device_title">Bluetooth デバイスを選択</string>
+    <string name="diy_select_wifi_network_title">Wi-Fi ネットワークを選択</string>
+    <string name="diy_wifi_ssid_label">ネットワーク名 (SSID)</string>
+    <string name="diy_use_current_network">現在のネットワークを使用</string>
+    <string name="diy_category_notifications">通知</string>
+    <string name="diy_trigger_notification_received">通知を受信</string>
+    <string name="diy_notification_trigger_text">テキストに含まれるもの (任意)</string>
+    <string name="activity_icon_source_app">アプリ</string>
+    <string name="diy_notification_trigger_any_app">選択してください</string>
+    <string name="diy_category_location">位置</string>
+    <string name="diy_location_open_maps">Google マップ</string>
+    <string name="diy_location_paste_link">リンクを貼り付け</string>
+    <string name="diy_location_name_label">名前</string>
+    <string name="diy_location_distance_title">距離</string>
+    <string name="diy_location_approximate">おおよその位置です。Google マップで確認後、確定してください。</string>
+    <string name="diy_location_confirm_place">確認</string>
+    <string name="diy_category_time_schedule">時間＆スケジュール</string>
+    <string name="diy_category_calendar">カレンダー</string>
+    <string name="diy_calendar_state_title">カレンダーイベント</string>
+    <string name="diy_calendar_state_desc">選択したカレンダーのイベントが進行中の間有効です。すべてのカレンダーを使用するには、なにも選択しないでください。</string>
+    <string name="diy_calendar_include_all_day">終日イベントを含める</string>
+    <string name="diy_calendar_include_declined">拒否されたイベントを含める</string>
+    <string name="diy_calendar_include_tentative">仮イベントを含める</string>
+    <string name="diy_calendar_include_free">空きとして表示されているイベントを含める</string>
+    <string name="diy_action_auto_brightness_on">明るさの自動調節をオン</string>
+    <string name="diy_action_auto_brightness_off">明るさの自動調節をオフ</string>
+    <string name="diy_action_auto_brightness_toggle">明るさの自動調節を切り替える</string>
+    <string name="diy_action_caffeinate_on">カフェインをオン</string>
+    <string name="diy_action_caffeinate_off">カフェインをオフ</string>
+    <string name="diy_action_screen_off">画面オフ</string>
+    <string name="diy_action_open_app">アプリを開く</string>
+    <string name="diy_action_open_activity">アクティビティを開く</string>
+    <string name="diy_action_ai_assistant">アシスタント</string>
+    <string name="diy_action_freeze_apps">アプリをフリーズ</string>
+    <string name="diy_action_unfreeze_apps">アプリのフリーズを解除</string>
+    <string name="diy_action_freeze_tag">タグごとのフリーズ</string>
+    <string name="diy_action_pin_app">フォアグラウンドアプリを固定</string>
+    <string name="diy_action_split_screen">画面分割する</string>
+    <string name="diy_set_keyboard_title">キーボードを切り替える</string>
+    <string name="diy_set_keyboard_sheet_title">キーボードを選択</string>
+    <string name="diy_action_open_camera">カメラを開く</string>
+    <string name="diy_action_open_video_camera">ビデオカメラを開く</string>
+    <string name="diy_action_open_qr_scanner">QRコードスキャナーを開く</string>
+    <string name="diy_action_set_charging_mode">充電モードを設定</string>
+    <string name="diy_action_custom_settings">カスタム設定</string>
+    <string name="diy_custom_settings_how_it_works">仕組み</string>
+    <string name="diy_custom_settings_warning_title">警告</string>
+    <string name="diy_custom_settings_warning_desc">キャプチャされたキーの中には、システム動作に影響を与えるものや、セキュア設定への書き込み権限を必要とするものがあります。注意して変更してください。</string>
+    <string name="diy_custom_settings_how_to">「録画開始」をタップし、システム設定を調整します。
+その後、戻って「録画停止」をタップします。検出された変更を以下で確認し、編集します。</string>
+    <string name="diy_custom_settings_start_recording">録画開始</string>
+    <string name="diy_custom_settings_no_entries">まだ何もキャプチャされていません</string>
+    <string name="diy_custom_settings_stop_recording">録画停止</string>
+    <string name="diy_action_wait">待機</string>
+    <string name="diy_action_send_notification">通知を送信</string>
+    <string name="diy_action_circle_to_search">かこって検索</string>
+    <string name="diy_action_back_gesture_off">戻るジェスチャーをオフ</string>
+    <string name="diy_action_back_gesture_on">戻るジェスチャーをオン</string>
+    <string name="diy_action_take_screenshot">スクリーンショット</string>
+    <string name="diy_action_cycle_sound_modes">サウンドモードを切り替える</string>
+    <string name="diy_action_toggle_mute">ミュートを切り替える</string>
+    <string name="diy_action_toggle_dnd">マナーモードを切り替える</string>
+    <string name="diy_action_set_mode">マナーモードを設定</string>
+    <string name="diy_action_toggle_vibrate">バイブレーションを切り替える</string>
+    <string name="diy_action_toggle_media_volume">メディア音量を切り替える</string>
+    <string name="diy_action_set_volume">音量を設定</string>
+    <string name="diy_action_media_next">次へ</string>
+    <string name="diy_action_media_previous">前へ</string>
+    <string name="diy_action_like_current_song">再生中の曲をいいね</string>
+    <string name="diy_action_sometimes_essentials">Essentials の機能</string>
+    <string name="diy_action_notification_lighting">通知ライトを実行</string>
+    <string name="diy_action_overlay_control">オーバーレイ</string>
+    <string name="essential_search_label">Essential 検索</string>
+    <string name="diy_metric_cooldown">再度実行する前の待機時間</string>
+    <string name="diy_metric_hysteresis">リセットする残量差</string>
+    <string name="diy_notification_trigger_hint">このアプリからの通知、またはこのテキストを含む通知が届いたときに実行されます。少なくとも1つ設定してください。</string>
+    <string name="feat_text_snippets_title">テキストスニペット</string>
+    <string name="feat_text_snippets_desc">テキストを展開</string>
+    <string name="snippets_empty_title">スニペットがありません</string>
+    <string name="snippets_empty_subtitle">下の「+」をタップして最初のショートカットを作成</string>
+    <string name="snippets_dialog_new_title">新しいスニペット</string>
+    <string name="about_desc_text_snippets">トリガープレフィックス（;、:、@@など）を入力するか、スペースキーを押すと、完全なフレーズ、リンク、またはテンプレートに展開されるカスタマイズ可能なショートカットを作成します。</string>
+    <string name="notification_lighting_dash_adjustment_section">ダッシュの調整</string>
+    <string name="notification_lighting_dash_length_title">長さ</string>
+    <string name="hilight_pattern_glow">グロー</string>
+    <string name="notification_lighting_dash_glow_length_title">グローの強さ</string>
+    <string name="app_volume_overlay_title">UIオーバーレイをコントロール</string>
+    <string name="feat_aod_wallpaper_extended_app_icon">メモをアプリのアイコンに置き換える</string>
+    <string name="dim_wallpaper_amount">暗さ</string>
+    <string name="freeze_tag_name_hint">タグの名前</string>
+    <string name="freeze_tag_color_picker_label">色を選択</string>
+    <string name="freeze_tag_icon_picker_label">アイコンを選択</string>
+    <string name="diy_charging_mode_desc">充電を最適化しない、適応型、または80%に制限するかを選択します。</string>
+    <string name="diy_wait_desc">次のアクションが実行される前に一時停止</string>
+    <string name="diy_set_mode_desc">設定からいずれかのモードをオンまたはオフにします。</string>
+    <string name="diy_set_mode_turn_on">オンにする</string>
+    <string name="diy_set_mode_turn_off">オフにする</string>
+    <string name="diy_set_mode_empty">モードが見つかりませんでした。Shizuku が動作しているか確認してください。</string>
+    <string name="diy_volume_channel_ring">着信音</string>
+    <string name="diy_volume_channel_call">通話</string>
+    <string name="diy_volume_channel_notification">通知音</string>
+    <string name="overlay_mode_toggle">切り替える</string>
+    <string name="overlay_mode_off">オフ</string>
+    <string name="overlay_mode_on">オン</string>
+    <string name="action_install_update">アップデートをインストール</string>
 </resources>
