@@ -3740,6 +3740,7 @@
     <string name="island_chips_title">Island chips</string>
     <string name="island_time_chip_title">Show in chip</string>
     <string name="island_calendar_compact_time_title">Compact time</string>
+    <string name="island_calendar_hide_now_title">Hide \"Now\"</string>
     <string name="island_calendar_show_ongoing_title">Show ongoing events</string>
     <string name="icon_category_general">General</string>
     <string name="icon_category_celebrations">Celebrations</string>

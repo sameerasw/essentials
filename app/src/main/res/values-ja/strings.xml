@@ -2025,6 +2025,7 @@ Duoと組み合わせることで、単一の統合カメラエリアとして�
 左右のジェスチャー領域の端の幅を調整し、アプリごとの戻るジェスチャーの動作を設定します。セキュリティ設定の権限が必要です。</string>
     <string name="island_chips_title">Island チップ</string>
     <string name="island_calendar_compact_time_title">時間をコンパクトに表示</string>
+    <string name="island_calendar_hide_now_title">Hide \"Now\"</string>
     <string name="feat_aod_wallpaper_compat_title">互換モード</string>
     <string name="feat_aod_wallpaper_compat_info_why">一部のデバイス、特にOne UIでは、常時表示ディスプレイが表示されている間、アプリのアニメーションが一時停止し、アプリウィンドウの描画がスキップされます。これにより、AODの壁紙が半透明になったり、見えなくなったり、デバイスのスリープ解除後に画面に表示されたままになることがあります。</string>
     <string name="feat_aod_wallpaper_compat_info_what">互換モードでは、壁紙のフェードアニメーションがオフになります。壁紙はすぐにフルスクリーンで表示され、画面がスリープ解除されるとすぐに消え、画像の変更はクロスフェードなしに適用されます。壁紙がフェードしているように見える場合、まったく表示されない場合、またはスリープ解除後も残っている場合にのみオンにしてください。</string>
