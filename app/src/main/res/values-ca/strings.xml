@@ -1714,4 +1714,5 @@
     <string name="diy_action_location_on">Turn On Location</string>
     <string name="diy_action_location_off">Turn Off Location</string>
     <string name="diy_action_location_toggle">Toggle Location</string>
+    <string name="island_reorder_hide_line">Drag below to hide</string>
 </resources>

@@ -2334,6 +2334,7 @@ Duoと組み合わせることで、単一の統合カメラエリアとして�
     <string name="bt_device_icons_title">順番とアイコン</string>
     <string name="bt_order_separator">以下は非表示</string>
     <string name="island_reorder_title">並べ替え</string>
+    <string name="island_reorder_hide_line">Drag below to hide</string>
     <string name="island_providers_title">Island アプリ</string>
     <string name="status_glance_section_position">位置</string>
     <string name="status_glance_section_what_to_show">表示する項目</string>

@@ -2296,6 +2296,7 @@ Tính năng này chỉ được dùng cho trình khởi chạy và không phải
     <string name="island_providers_title">Ứng dụng Island</string>
     <string name="duo_section_actions">Hành động</string>
     <string name="island_reorder_title">Sửa</string>
+    <string name="island_reorder_hide_line">Drag below to hide</string>
     <string name="duo_section_what_to_show">Hiển thị những gì</string>
     <string name="island_hide_status_bar_info">Ẩn toàn bộ thanh trạng thái bằng cách sử dụng phần đệm vượt mức. Thao tác này cũng sẽ xóa thanh trạng thái khỏi màn hình khóa và ẩn mọi thứ, bao gồm cả nội dung cập nhật trực tiếp và trình ghi màn hình.</string>
     <string name="island_hide_status_bar_info_static">Đây không phải là một thiết lập động, vì vậy thanh trạng thái sẽ không tự động hiển thị. Cần buộc áp dụng thiết lập này.</string>

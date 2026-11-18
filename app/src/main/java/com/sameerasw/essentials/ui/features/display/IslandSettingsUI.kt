@@ -50,6 +50,10 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.layout.Box
+import androidx.compose.ui.draw.alpha
+import androidx.compose.material3.Text
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.border
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -123,6 +127,32 @@ fun IslandSettingsUI(
     var savedRaw by remember { mutableStateOf(prioritySettings.getIslandPriorityOrder().orEmpty()) }
     val savedOrder = remember(savedRaw, providerEntries) { IslandPriorityEntries.normalize(savedRaw, providerEntries) }
     var workingOrder by remember { mutableStateOf(savedOrder) }
+    var savedHidden by remember { mutableStateOf(prioritySettings.getIslandHiddenEntries()) }
+    val setEntryEnabled: (String, Boolean) -> Unit = { id, enabled ->
+        when (id) {
+            "live_updates" -> viewModel.setIslandNotifKeepProgress(enabled)
+            "notifications" -> viewModel.setIslandShowNotifications(enabled)
+            "time" -> viewModel.setIslandShowTimeBattery(enabled)
+            "battery" -> viewModel.setIslandShowBattery(enabled)
+            "flashlight" -> viewModel.setIslandShowFlashlight(enabled)
+            "timer" -> viewModel.setIslandShowTimers(enabled)
+            "media" -> viewModel.setIslandShowMedia(enabled)
+            "conscious_gate" -> viewModel.setIslandShowConsciousGate(enabled)
+            "caffeinate" -> viewModel.setIslandShowCaffeinate(enabled)
+            "travel" -> viewModel.setIslandShowTravel(enabled)
+            "calendar" -> viewModel.setIslandShowCalendar(enabled)
+            "sound_mode" -> viewModel.setIslandShowSoundMode(enabled)
+            "network" -> viewModel.setIslandShowNetwork(enabled)
+            "alarm" -> viewModel.setIslandShowAlarm(enabled)
+            "navigation" -> viewModel.setIslandShowNavigation(enabled)
+            "hotspot" -> viewModel.setIslandShowHotspot(enabled)
+            "devices" -> viewModel.setIslandShowDevices(enabled)
+            else -> if (IslandPriorityEntries.isProvider(id)) {
+                ProviderTrustStore(prioritySettings).setHiddenFromIsland(IslandPriorityEntries.providerPackage(id), !enabled)
+                providerVersion++
+            }
+        }
+    }
     var showMediaAppSelectionSheet by remember { mutableStateOf(false) }
     var showCalendarOptionsSheet by remember { mutableStateOf(false) }
     var showSoundModeOptionsSheet by remember { mutableStateOf(false) }
@@ -540,13 +570,33 @@ fun IslandSettingsUI(
             }
             renderEntry("calls", null)
             ReorderableColumn(
-                list = if (reorderMode) workingOrder else savedOrder,
+                list = if (reorderMode) workingOrder else savedOrder.filter { it !in savedHidden },
                 onSettle = { from, to -> workingOrder = workingOrder.toMutableList().apply { add(to, removeAt(from)) } },
                 verticalArrangement = Arrangement.spacedBy(2.dp),
                 onMove = { HapticUtil.performVirtualKeyHaptic(view) },
-            ) { _, entryId, _ ->
+            ) { index, entryId, _ ->
                 key(entryId) {
                     ReorderableItem {
+                        if (entryId == IslandPriorityEntries.HIDE_LINE) {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 8.dp, horizontal = 8.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                            ) {
+                                HorizontalDivider(modifier = Modifier.weight(1f))
+                                Text(
+                                    text = stringResource(R.string.island_reorder_hide_line),
+                                    style = MaterialTheme.typography.labelMedium,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                )
+                                HorizontalDivider(modifier = Modifier.weight(1f))
+                            }
+                            return@ReorderableItem
+                        }
+                        val belowLine = reorderMode && index > workingOrder.indexOf(IslandPriorityEntries.HIDE_LINE)
+                        Box(modifier = Modifier.alpha(if (belowLine) 0.45f else 1f)) {
                         renderEntry(
                             entryId,
                             if (reorderMode) {
@@ -567,6 +617,7 @@ fun IslandSettingsUI(
                                 null
                             },
                         )
+                        }
                     }
                 }
             }
@@ -575,15 +626,24 @@ fun IslandSettingsUI(
         IslandPriorityActions(
             editing = reorderMode,
             onStart = {
-                workingOrder = savedOrder
+                workingOrder = savedOrder.filter { it !in savedHidden } +
+                    IslandPriorityEntries.HIDE_LINE +
+                    savedOrder.filter { it in savedHidden }
                 reorderMode = true
             },
             onSave = {
-                prioritySettings.setIslandPriorityOrder(workingOrder.takeIf { it != IslandPriorityEntries.defaultOrder(providerEntries) })
-                savedRaw = workingOrder
+                val lineIndex = workingOrder.indexOf(IslandPriorityEntries.HIDE_LINE)
+                val order = workingOrder - IslandPriorityEntries.HIDE_LINE
+                val hidden = workingOrder.drop(lineIndex + 1).toSet()
+                (hidden - savedHidden).forEach { setEntryEnabled(it, false) }
+                (savedHidden - hidden).forEach { setEntryEnabled(it, true) }
+                prioritySettings.setIslandHiddenEntries(hidden)
+                prioritySettings.setIslandPriorityOrder(order.takeIf { it != IslandPriorityEntries.defaultOrder(providerEntries) })
+                savedRaw = order
+                savedHidden = hidden
                 reorderMode = false
             },
-            onReset = { workingOrder = IslandPriorityEntries.defaultOrder(providerEntries) },
+            onReset = { workingOrder = IslandPriorityEntries.defaultOrder(providerEntries) + IslandPriorityEntries.HIDE_LINE },
         )
 
         IslandProvidersSection(onChanged = { providerVersion++ })

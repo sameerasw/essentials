@@ -739,6 +739,7 @@ class SettingsRepository(
         const val KEY_ISLAND_NETWORK_ACTIVITY = "island_network_activity"
         const val KEY_ISLAND_SIGNAL_WIFI = "island_signal_wifi"
         const val KEY_ISLAND_PRIORITY_ORDER = "island_priority_order"
+        const val KEY_ISLAND_HIDDEN_ENTRIES = "island_hidden_entries"
         const val KEY_ISLAND_SIGNAL_LOW_ONLY = "island_signal_low_only"
         const val KEY_ISLAND_SIGNAL_NETWORK_TYPES = "island_signal_network_modes"
         const val KEY_ISLAND_SIGNAL_SHOW_MODE = "island_signal_show_mode"
@@ -4411,6 +4412,9 @@ class SettingsRepository(
     fun getIslandPriorityOrder(): List<String>? =
         getString(KEY_ISLAND_PRIORITY_ORDER, null)?.split(",")?.filter { it.isNotBlank() }?.takeIf { it.isNotEmpty() }
     fun setIslandPriorityOrder(order: List<String>?) = putString(KEY_ISLAND_PRIORITY_ORDER, order?.joinToString(","))
+    fun getIslandHiddenEntries(): Set<String> =
+        getString(KEY_ISLAND_HIDDEN_ENTRIES, null)?.split(",")?.filter { it.isNotBlank() }?.toSet().orEmpty()
+    fun setIslandHiddenEntries(ids: Set<String>) = putString(KEY_ISLAND_HIDDEN_ENTRIES, ids.joinToString(",").ifEmpty { null })
     fun isIslandSignalWifiEnabled(): Boolean = getBoolean(KEY_ISLAND_SIGNAL_WIFI, false)
     fun setIslandSignalWifiEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_SIGNAL_WIFI, enabled)
     fun isIslandShowSignalEnabled(): Boolean = getBoolean(KEY_ISLAND_SHOW_SIGNAL, false)

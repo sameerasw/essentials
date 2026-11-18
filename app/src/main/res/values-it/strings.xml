@@ -1781,6 +1781,7 @@
     <string name="duo_section_what_to_show">Cosa mostrare</string>
     <string name="island_max_items_title">Numero massimo di elementi da mostrare</string>
     <string name="island_reorder_title">Riordina</string>
+    <string name="island_reorder_hide_line">Drag below to hide</string>
     <string name="island_providers_title">App di Island</string>
     <string name="island_like_while_playing_title">Metti mi piace alla musica in riproduzione</string>
     <string name="duo_action_horizontal_slide_brightness">Luminosità</string>

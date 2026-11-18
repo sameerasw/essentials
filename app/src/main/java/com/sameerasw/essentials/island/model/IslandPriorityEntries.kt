@@ -23,6 +23,8 @@ object IslandPriorityEntries {
         Entry("alarm", setOf("alarm"), IslandPriority.ALARM),
     ).sortedBy { it.defaultPriority }
 
+    const val HIDE_LINE = "__hide_line__"
+
     const val PROVIDER_PREFIX = "provider:"
 
     fun providerId(packageName: String) = PROVIDER_PREFIX + packageName

@@ -3428,6 +3428,7 @@
     <string name="island_timers_show_screen_recorder_title">Show screen recorder</string>
     <string name="island_timers_filter_apps_title">Filter for apps</string>
     <string name="island_reorder_title">Re-order</string>
+    <string name="island_reorder_hide_line">Drag below to hide</string>
     <string name="island_show_network_title">Network</string>
     <string name="island_show_signal_title">Show mobile signal</string>
     <string name="island_signal_options_title">Network options</string>

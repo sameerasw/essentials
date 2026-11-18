@@ -2284,4 +2284,5 @@
     <string name="island_action_show">Show</string>
     <string name="island_gesture_hints_title">Show gesture hints</string>
     <string name="wallpaper_staging_not_set">Not set yet</string>
+    <string name="island_reorder_hide_line">Drag below to hide</string>
 </resources>

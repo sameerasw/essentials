@@ -2225,4 +2225,5 @@ Bu izin için sadece şunlara ihtiyaç duyulmaktadır: </string>
     <string name="watch_esim_continue">Pixel Watch\'ta devam et</string>
     <string name="watch_wireless_debugging_info_title">Saat Bağlantı Bilgileri</string>
     <string name="watch_wireless_debugging_refresh">Bilgileri Yenile</string>
+    <string name="island_reorder_hide_line">Drag below to hide</string>
 </resources>
