@@ -51,6 +51,11 @@ fun IslandStarlinkOptionsBottomSheet(
     var speedMode by remember {
         mutableStateOf(settings.getString(SettingsRepository.KEY_ISLAND_STARLINK_SPEED_MODE, null) ?: StarlinkSpeedFormat.MODE_DOWN)
     }
+    var hideArrow by remember { mutableStateOf(settings.getBoolean(SettingsRepository.KEY_ISLAND_STARLINK_HIDE_ARROW, false)) }
+    var speedUnit by remember {
+        mutableStateOf(settings.getString(SettingsRepository.KEY_ISLAND_STARLINK_SPEED_UNIT, null) ?: StarlinkSpeedFormat.UNIT_AUTO)
+    }
+    var hideUnit by remember { mutableStateOf(settings.getBoolean(SettingsRepository.KEY_ISLAND_STARLINK_HIDE_UNIT, false)) }
     EssentialsBottomSheet(onDismissRequest = onDismissRequest) {
         Column(
             modifier = Modifier
@@ -111,6 +116,62 @@ fun IslandStarlinkOptionsBottomSheet(
                         title = R.string.island_starlink_speed_mode_title,
                         modifier = Modifier.fillMaxWidth(),
                     )
+                    AnimatedVisibility(
+                        visible = speedMode == StarlinkSpeedFormat.MODE_DOWN || speedMode == StarlinkSpeedFormat.MODE_UP,
+                        enter = expandVertically() + fadeIn(),
+                        exit = shrinkVertically() + fadeOut(),
+                    ) {
+                        IconToggleItem(
+                            iconRes = R.drawable.rounded_visibility_off_24,
+                            title = stringResource(R.string.island_starlink_hide_arrow_title),
+                            isChecked = hideArrow,
+                            onCheckedChange = {
+                                HapticUtil.performVirtualKeyHaptic(view)
+                                hideArrow = it
+                                settings.putBoolean(SettingsRepository.KEY_ISLAND_STARLINK_HIDE_ARROW, it)
+                            },
+                        )
+                    }
+                }
+            }
+            AnimatedVisibility(
+                visible = showInCompact && showSpeeds,
+                enter = expandVertically() + fadeIn(),
+                exit = shrinkVertically() + fadeOut(),
+            ) {
+                RoundedCardContainer(spacing = 2.dp, cornerRadius = 24.dp) {
+                    val unitLabels = mapOf(
+                        StarlinkSpeedFormat.UNIT_MBPS to "Mbps",
+                        StarlinkSpeedFormat.UNIT_AUTO to stringResource(R.string.label_auto),
+                    )
+                    SegmentedPicker(
+                        items = unitLabels.keys.toList(),
+                        selectedItem = speedUnit,
+                        onItemSelected = {
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            speedUnit = it
+                            settings.putString(SettingsRepository.KEY_ISLAND_STARLINK_SPEED_UNIT, it)
+                        },
+                        labelProvider = { unitLabels[it].orEmpty() },
+                        title = R.string.island_starlink_unit_title,
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                    AnimatedVisibility(
+                        visible = speedUnit == StarlinkSpeedFormat.UNIT_MBPS,
+                        enter = expandVertically() + fadeIn(),
+                        exit = shrinkVertically() + fadeOut(),
+                    ) {
+                        IconToggleItem(
+                            iconRes = R.drawable.rounded_visibility_off_24,
+                            title = stringResource(R.string.island_starlink_hide_unit_title),
+                            isChecked = hideUnit,
+                            onCheckedChange = {
+                                HapticUtil.performVirtualKeyHaptic(view)
+                                hideUnit = it
+                                settings.putBoolean(SettingsRepository.KEY_ISLAND_STARLINK_HIDE_UNIT, it)
+                            },
+                        )
+                    }
                 }
             }
         }

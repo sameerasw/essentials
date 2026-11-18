@@ -54,6 +54,9 @@ class StarlinkPlugin : BaseIslandPlugin() {
         SettingsRepository.KEY_ISLAND_STARLINK_COMPACT,
         SettingsRepository.KEY_ISLAND_STARLINK_SPEEDS,
         SettingsRepository.KEY_ISLAND_STARLINK_SPEED_MODE,
+        SettingsRepository.KEY_ISLAND_STARLINK_SPEED_UNIT,
+        SettingsRepository.KEY_ISLAND_STARLINK_HIDE_UNIT,
+        SettingsRepository.KEY_ISLAND_STARLINK_HIDE_ARROW,
         SettingsRepository.KEY_ISLAND_BRIEF_ENABLED,
     )
 
@@ -124,11 +127,17 @@ class StarlinkPlugin : BaseIslandPlugin() {
             return
         }
         val connected = current.state != StarlinkState.Searching && current.state != StarlinkState.Booting
+        val fixedMbps = settings.getString(SettingsRepository.KEY_ISLAND_STARLINK_SPEED_UNIT, null) == StarlinkSpeedFormat.UNIT_MBPS
+        val hideUnit = fixedMbps && settings.getBoolean(SettingsRepository.KEY_ISLAND_STARLINK_HIDE_UNIT, false)
+        val speedMode = settings.getString(SettingsRepository.KEY_ISLAND_STARLINK_SPEED_MODE, null)
+        val hideArrow = (speedMode == StarlinkSpeedFormat.MODE_UP || speedMode == StarlinkSpeedFormat.MODE_DOWN || speedMode == null) &&
+            settings.getBoolean(SettingsRepository.KEY_ISLAND_STARLINK_HIDE_ARROW, false)
         val speed = if (compact && connected && settings.getBoolean(SettingsRepository.KEY_ISLAND_STARLINK_SPEEDS, false)) {
             StarlinkSpeedFormat.forMode(
                 settings.getString(SettingsRepository.KEY_ISLAND_STARLINK_SPEED_MODE, null),
                 current.downlinkBps,
                 current.uplinkBps,
+                fixedMbps = fixedMbps,
             )
         } else {
             null
@@ -143,7 +152,7 @@ class StarlinkPlugin : BaseIslandPlugin() {
                     CompactCell("starlink.icon") {
                         IslandIcon(R.drawable.ic_starlink_24, size = 20.dp, tint = if (warn) WARN else islandAccent())
                     },
-                ) + listOfNotNull(speed?.let { s -> CompactCell("starlink.speed") { SpeedCell(s) } }),
+                ) + listOfNotNull(speed?.let { s -> CompactCell("starlink.speed") { SpeedCell(s, hideUnit, hideArrow) } }),
                 line = LineContent(
                     icon = { IslandIcon(R.drawable.ic_starlink_24, tint = if (warn) WARN else islandAccent()) },
                     start = context.getString(R.string.island_show_starlink_title),
@@ -209,19 +218,19 @@ class StarlinkPlugin : BaseIslandPlugin() {
     }
 
     @Composable
-    private fun SpeedCell(speed: CompactSpeed) {
+    private fun SpeedCell(speed: CompactSpeed, hideUnit: Boolean, hideArrow: Boolean) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             RollingText(speed.text)
             Spacer(Modifier.width(2.dp))
             Column(horizontalAlignment = Alignment.Start) {
-                speed.direction?.let {
+                speed.direction?.takeIf { !hideArrow }?.let {
                     IslandIcon(
                         if (it == SpeedDirection.Up) R.drawable.rounded_keyboard_arrow_up_24 else R.drawable.rounded_keyboard_arrow_down_24,
-                        size = 9.dp,
+                        size = 13.dp,
                         tint = islandAccent(),
                     )
                 }
-                Text(speed.unit.label, style = IslandTextStyles.body.copy(fontSize = 7.sp, lineHeight = 8.sp))
+                if (!hideUnit) Text(speed.unit.label, style = IslandTextStyles.body.copy(fontSize = 7.sp, lineHeight = 8.sp))
             }
         }
     }

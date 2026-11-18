@@ -1829,6 +1829,9 @@
     <string name="island_starlink_speed_mode_title">Speed to show</string>
     <string name="island_starlink_speed_up">Up</string>
     <string name="island_starlink_speed_combined">Combined</string>
+    <string name="island_starlink_unit_title">Unit</string>
+    <string name="island_starlink_hide_unit_title">Hide unit</string>
+    <string name="island_starlink_hide_arrow_title">Hide arrow</string>
     <string name="island_starlink_searching">Searching</string>
     <string name="island_starlink_booting">Booting</string>
     <string name="island_starlink_obstructed">Obstructed</string>
