@@ -1959,6 +1959,7 @@
     <string name="island_provider_allow">Allow</string>
     <string name="island_provider_deny">Deny</string>
     <string name="island_provider_pair_failed">Couldn\'t connect to the app</string>
+    <string name="island_provider_pair_refused">This app doesn\'t trust this version of Essentials</string>
     <string name="app_airsync">AirSync</string>
     <string name="app_zenzero">ZenZero</string>
     <string name="app_canvas">Canvas</string>

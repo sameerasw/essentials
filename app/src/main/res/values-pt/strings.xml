@@ -1912,4 +1912,5 @@ adicionar algum app</string>
     <string name="island_starlink_alert_location">Unexpected location</string>
     <string name="island_starlink_alert_mast">Mast not vertical</string>
     <string name="island_starlink_alert_ethernet">Slow ethernet</string>
+    <string name="island_provider_pair_refused">This app doesn\'t trust this version of Essentials</string>
 </resources>

@@ -24,6 +24,7 @@ import com.sameerasw.essentials.island.remote.AirSyncLink
 import com.sameerasw.essentials.island.remote.OvercastLink
 import com.sameerasw.essentials.island.remote.ProviderDiscovery
 import com.sameerasw.essentials.island.remote.ProviderInfo
+import com.sameerasw.essentials.island.remote.PairingResult
 import com.sameerasw.essentials.island.remote.ProviderPairing
 import com.sameerasw.essentials.island.remote.ProviderTrustStore
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
@@ -105,10 +106,12 @@ fun IslandProvidersSection(onChanged: () -> Unit = {}) {
             onAllow = {
                 busy = true
                 scope.launch {
-                    if (ProviderPairing.grant(context, provider) && trust.enable(context, provider.packageName)) {
+                    val result = ProviderPairing.grant(context, provider)
+                    if (result == PairingResult.Granted && trust.enable(context, provider.packageName)) {
                         pending = null
                     } else {
-                        Toast.makeText(context, R.string.island_provider_pair_failed, Toast.LENGTH_SHORT).show()
+                        val message = if (result == PairingResult.Refused) R.string.island_provider_pair_refused else R.string.island_provider_pair_failed
+                        Toast.makeText(context, message, Toast.LENGTH_LONG).show()
                     }
                     busy = false
                     refresh++
