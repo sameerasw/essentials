@@ -179,7 +179,7 @@ The host asks for a surface with `requestSurface`. `ComposeIslandProviderService
 What to do inside it:
 
 1. **Read the layout from `hostInfoState.value`** (`HostInfo`): `cameraClearancePx` is the space to leave at the top for the camera row, `compactHeightPx` the camera row height, `outsetPx` and `expandedPaddingPx` the paddings, `cornerPx` the corner radius, `accent`, `darkTheme`, `powerSave` (turn effects off when true).
-2. **Draw your own black background and clip to `cornerPx`.** The surface is a hole in the island window, so what you do not draw shows the wallpaper behind it.
+2. **Choose your own background, or leave it transparent.** The surface is composited on top of the island, so a transparent view shows the island's own background with whatever blur and styling the user set. Draw a solid colour only if you want to cover it. Clip to `cornerPx` either way.
 3. **Let the content take its natural height** (`wrapContentHeight(unbounded = true)`) and report it with `host.resize(itemKey, px)` from `onSizeChanged`.
 4. **Add `Modifier.islandSnapshot { host.snapshot(itemKey, it) }`** above the clip and background. The host draws the last snapshot while the island animates, because a surface cannot follow the island's scale, fade and clip.
 5. Make the root clickable and call `host.openApp(itemKey)` if tapping the view should open your app.
