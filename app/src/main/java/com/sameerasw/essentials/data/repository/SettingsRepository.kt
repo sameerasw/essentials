@@ -946,6 +946,8 @@ class SettingsRepository(
         const val KEY_SIM_NAMES_APPLY_ON_BOOT = "sim_names_apply_on_boot"
         const val KEY_POWER_SAVING_APPLY_ON_BOOT = "power_saving_apply_on_boot"
         const val KEY_UNSPLASH_ACCESS_KEY = "unsplash_access_key"
+        const val KEY_WALLPAPER_STAGING_SEEN = "wallpaper_staging_seen"
+        private const val WALLPAPER_STAGING_SEEN_MAX = 300
         const val KEY_EXTERNAL_CONTROL_TOKEN = "external_control_token"
         private val CONFIG_PREF_FILES =
             listOf(
@@ -962,6 +964,18 @@ class SettingsRepository(
     fun setExternalControlToken(token: String) = putString(KEY_EXTERNAL_CONTROL_TOKEN, token.trim())
 
     fun getUnsplashAccessKey(): String? = prefs.getString(KEY_UNSPLASH_ACCESS_KEY, null)
+
+    fun getWallpaperStagingSeen(): List<String> =
+        prefs.getString(KEY_WALLPAPER_STAGING_SEEN, null)?.split(',')?.filter { it.isNotBlank() }.orEmpty()
+
+    fun markWallpaperStagingSeen(id: String) {
+        val seen = (getWallpaperStagingSeen() - id + id).takeLast(WALLPAPER_STAGING_SEEN_MAX)
+        prefs.edit().putString(KEY_WALLPAPER_STAGING_SEEN, seen.joinToString(",")).apply()
+    }
+
+    fun clearWallpaperStagingSeen() {
+        prefs.edit().remove(KEY_WALLPAPER_STAGING_SEEN).apply()
+    }
 
     fun setUnsplashAccessKey(key: String?) {
         if (key.isNullOrBlank()) {
