@@ -739,6 +739,8 @@ class SettingsRepository(
         const val KEY_ISLAND_NETWORK_ACTIVITY = "island_network_activity"
         const val KEY_ISLAND_SIGNAL_WIFI = "island_signal_wifi"
         const val KEY_ISLAND_PRIORITY_ORDER = "island_priority_order"
+        const val KEY_ISLAND_HIDDEN_ENTRIES = "island_hidden_entries"
+        val DEFAULT_ISLAND_HIDDEN_ENTRIES = setOf("starlink")
         const val KEY_ISLAND_SIGNAL_LOW_ONLY = "island_signal_low_only"
         const val KEY_ISLAND_SIGNAL_NETWORK_TYPES = "island_signal_network_modes"
         const val KEY_ISLAND_SIGNAL_SHOW_MODE = "island_signal_show_mode"
@@ -764,6 +766,14 @@ class SettingsRepository(
         const val ISLAND_NAVIGATION_ON_NEW_OFF = "off"
         const val KEY_ISLAND_NAVIGATION_EXPAND_DISTANCE = "island_navigation_expand_distance"
         const val KEY_ISLAND_SHOW_HOTSPOT = "island_show_hotspot"
+        const val KEY_ISLAND_SHOW_STARLINK = "island_show_starlink"
+        const val KEY_ISLAND_STARLINK_COMPACT = "island_starlink_compact"
+        const val KEY_ISLAND_STARLINK_SPEEDS = "island_starlink_speeds"
+        const val KEY_ISLAND_STARLINK_SPEED_MODE = "island_starlink_speed_mode"
+        const val KEY_ISLAND_STARLINK_SPEED_UNIT = "island_starlink_speed_unit"
+        const val KEY_ISLAND_STARLINK_HIDE_UNIT = "island_starlink_hide_unit"
+        const val KEY_ISLAND_STARLINK_HIDE_ARROW = "island_starlink_hide_arrow"
+        const val KEY_ISLAND_STARLINK_CHIP = "island_starlink_chip"
         const val KEY_ISLAND_BRIEF_ENABLED = "island_brief_enabled"
         const val KEY_ISLAND_BRIEF_SHOW_ALARM = "island_brief_show_alarm"
         const val KEY_ISLAND_BRIEF_TWO_LINE_HEADER = "island_brief_two_line_header"
@@ -4411,6 +4421,9 @@ class SettingsRepository(
     fun getIslandPriorityOrder(): List<String>? =
         getString(KEY_ISLAND_PRIORITY_ORDER, null)?.split(",")?.filter { it.isNotBlank() }?.takeIf { it.isNotEmpty() }
     fun setIslandPriorityOrder(order: List<String>?) = putString(KEY_ISLAND_PRIORITY_ORDER, order?.joinToString(","))
+    fun getIslandHiddenEntries(): Set<String> =
+        getString(KEY_ISLAND_HIDDEN_ENTRIES, null)?.split(",")?.filter { it.isNotBlank() }?.toSet() ?: DEFAULT_ISLAND_HIDDEN_ENTRIES
+    fun setIslandHiddenEntries(ids: Set<String>) = putString(KEY_ISLAND_HIDDEN_ENTRIES, ids.joinToString(","))
     fun isIslandSignalWifiEnabled(): Boolean = getBoolean(KEY_ISLAND_SIGNAL_WIFI, false)
     fun setIslandSignalWifiEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_SIGNAL_WIFI, enabled)
     fun isIslandShowSignalEnabled(): Boolean = getBoolean(KEY_ISLAND_SHOW_SIGNAL, false)
@@ -4468,6 +4481,8 @@ class SettingsRepository(
 
     fun isIslandShowHotspotEnabled(): Boolean = getBoolean(KEY_ISLAND_SHOW_HOTSPOT, false)
     fun setIslandShowHotspotEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_SHOW_HOTSPOT, enabled)
+    fun isIslandShowStarlinkEnabled(): Boolean = getBoolean(KEY_ISLAND_SHOW_STARLINK, false)
+    fun setIslandShowStarlinkEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_SHOW_STARLINK, enabled)
 
     fun isIslandBriefEnabled(): Boolean = getBoolean(KEY_ISLAND_BRIEF_ENABLED, false)
     fun setIslandBriefEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_BRIEF_ENABLED, enabled)

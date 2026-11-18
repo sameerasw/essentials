@@ -20,8 +20,11 @@ object IslandPriorityEntries {
         Entry("network", setOf("network", "signal"), IslandPriority.SIGNAL),
         Entry("hotspot", setOf("hotspot"), IslandPriority.HOTSPOT),
         Entry("devices", setOf("devices"), IslandPriority.DEVICES),
+        Entry("starlink", setOf("starlink"), IslandPriority.STARLINK),
         Entry("alarm", setOf("alarm"), IslandPriority.ALARM),
     ).sortedBy { it.defaultPriority }
+
+    const val HIDE_LINE = "__hide_line__"
 
     const val PROVIDER_PREFIX = "provider:"
 

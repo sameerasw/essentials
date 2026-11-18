@@ -2296,6 +2296,7 @@ Tính năng này chỉ được dùng cho trình khởi chạy và không phải
     <string name="island_providers_title">Ứng dụng Island</string>
     <string name="duo_section_actions">Hành động</string>
     <string name="island_reorder_title">Sửa</string>
+    <string name="island_reorder_hide_line">Drag below to hide</string>
     <string name="duo_section_what_to_show">Hiển thị những gì</string>
     <string name="island_hide_status_bar_info">Ẩn toàn bộ thanh trạng thái bằng cách sử dụng phần đệm vượt mức. Thao tác này cũng sẽ xóa thanh trạng thái khỏi màn hình khóa và ẩn mọi thứ, bao gồm cả nội dung cập nhật trực tiếp và trình ghi màn hình.</string>
     <string name="island_hide_status_bar_info_static">Đây không phải là một thiết lập động, vì vậy thanh trạng thái sẽ không tự động hiển thị. Cần buộc áp dụng thiết lập này.</string>
@@ -2344,4 +2345,23 @@ Tính năng này chỉ được dùng cho trình khởi chạy và không phải
     <string name="island_action_show">Show</string>
     <string name="island_gesture_hints_title">Show gesture hints</string>
     <string name="wallpaper_staging_not_set">Not set yet</string>
+    <string name="island_show_starlink_title">Starlink</string>
+    <string name="island_starlink_desc">Shows dish status while connected to a Starlink network</string>
+    <string name="island_starlink_compact_title">Show in compact island</string>
+    <string name="island_starlink_speeds_title">Show speeds in compact mode</string>
+    <string name="island_starlink_speed_mode_title">Speed to show</string>
+    <string name="island_starlink_speed_up">Up</string>
+    <string name="island_starlink_speed_combined">Combined</string>
+    <string name="island_starlink_unit_title">Unit</string>
+    <string name="island_starlink_hide_unit_title">Hide unit</string>
+    <string name="island_starlink_hide_arrow_title">Hide arrow</string>
+    <string name="island_starlink_searching">Searching</string>
+    <string name="island_starlink_booting">Booting</string>
+    <string name="island_starlink_obstructed">Obstructed</string>
+    <string name="island_starlink_alert_motors">Motors stuck</string>
+    <string name="island_starlink_alert_thermal_shutdown">Thermal shutdown</string>
+    <string name="island_starlink_alert_thermal_throttle">Thermal throttle</string>
+    <string name="island_starlink_alert_location">Unexpected location</string>
+    <string name="island_starlink_alert_mast">Mast not vertical</string>
+    <string name="island_starlink_alert_ethernet">Slow ethernet</string>
 </resources>
