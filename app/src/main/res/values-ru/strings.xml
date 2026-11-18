@@ -2308,7 +2308,7 @@
     <string name="watchface_category_clock">Часы </string>
     <string name="watchface_category_battery">Батарея и иконки </string>
     <string name="watchface_category_complications">Осложнения </string>
-    <string name="island_providers_title">Островные приложения</string>
+    <string name="island_providers_title">Плагины-приложения для Островка</string>
     <string name="duo_section_position">Положение и размеры</string>
     <string name="duo_section_style">Стиль</string>
     <string name="duo_section_behavior">Поведение</string>
