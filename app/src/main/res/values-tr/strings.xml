@@ -1373,7 +1373,7 @@ Bazı ayarların değişikliklerin yansıması için gelişmiş izinler veya bel
     <string name="msg_blur_compatibility_error">Android 15 veya daha eski sürümlere sahip Samsung cihazlarda bilinen bir ekran hatasını önlemek için bu cihazda bulanıklık devre dışı bırakıldı.</string>
     <!-- Empty State Actions -->
     <string name="msg_no_apps_frozen">Dondurulacak uygulama seçilmedi.</string>
-    <string name="action_get_started">Başlarken</string>
+    <string name="action_get_started">Başlayın</string>
     <string name="action_new_automation">Yeni Otomasyon</string>
     <string name="action_add_repository">Depo Ekle</string>
     <!-- Bug Report Enhancement -->
@@ -2247,4 +2247,30 @@ Bu izin için sadece şunlara ihtiyaç duyulmaktadır: </string>
     <string name="island_starlink_alert_mast">Mast not vertical</string>
     <string name="island_starlink_alert_ethernet">Slow ethernet</string>
     <string name="island_provider_pair_refused">This app doesn\'t trust this version of Essentials</string>
+    <string name="instruction_section_backup_title">Yedekleme &amp; Geri Yükleme</string>
+    <string name="instruction_section_genai_title">Cihaz Üzerinde GenAI (Gemini Nano)</string>
+    <string name="sound_mode_shizuku_info">AOSP sınırlamaları nedeniyle Android, sessiz modu Rahatsız Etmeyin (DND) modu olarak algılar. Ancak Shizuku ile bunu geçersiz kılabiliriz. Eğer mevcutsa Shizuku\'yu dinamik olarak kullanacak, aksi takdirde normal DND moduna geri dönecektir.</string>
+    <string name="pocket_mode_warning">Uyarı: Bazı sensörleri eksik olan cihazlarda Cep Modu\'nu etkinleştirmek derin uyku modunu bozabilir ve pil tüketimini artırabilir.</string>
+    <string name="pocket_mode_exclude_apps_desc">Cep Modunun devreye girmemesi gereken uygulamaları seçin. Cep Modu, varsayılan olarak yayın akışı veya oyun oynarken çalışmaz.</string>
+    <string name="snippets_empty_subtitle">İlk kısayolunuzu oluşturmak için aşağıdaki + işaretine dokunun</string>
+    <string name="conscious_gate_appearance_title">Bilinçli kapı ekranı görünümü</string>
+    <string name="conscious_gate_description">Özellikle sosyal medya gibi daha bilinçli kullanmayı tercih ettiğiniz uygulamaları açmadan önce kısa bir farkındalık molası eklemenizi sağlar.</string>
+    <string name="conscious_gate_close_button">Kapat</string>
+    <string name="bt_order_separator">Aşağıdaki girdiler gizlidir</string>
+    <string name="title_battery_saver_general">Genel Ayarlar</string>
+    <string name="title_battery_saver_display">Ekran &amp; Parlaklık</string>
+    <string name="title_battery_saver_power">Güç &amp; Performans</string>
+    <string name="title_battery_saver_network">Ağ &amp; Senkronizasyon</string>
+    <string name="title_battery_saver_sound_sensors">Ses &amp; Sensörler</string>
+    <string name="title_battery_saver_location">Konum &amp; GPS</string>
+    <string name="watchface_category_clock">Saat</string>
+    <string name="watchface_category_battery">Pil &amp; Simgeler</string>
+    <string name="watchface_hide_battery_title">Pili gizle</string>
+    <string name="watch_controls_long_press_hint">Düğmeleri etkinleştirmek veya devre dışı bırakmak için uzun basın</string>
+    <string name="instruction_section_battery_saver_title">Güç ve Pil ayarları nasıl çalışır?</string>
+    <string name="instruction_section_freezetags_title">Uygulamaları Dondurma &amp; Akıllı Dondurma</string>
+    <string name="setting_hidden_debugging_help_1">Android 17 QPR1\'de Google, üçüncü taraf uygulamalar için geliştirici seçenekleri ve USB hata ayıklama seçeneklerinin durumunu gizleyen ve her zaman 0 olarak bildiren bir değişiklik getirdi.</string>
+    <string name="setting_hidden_debugging_help_2">Bu, bizim de \"Sustur\" özelliğiyle karşı koyduğumuz, saçma güvenlik önlemlerine sahip çöp bankacılık ve diğer uygulamalara karşı koymaya yardımcı olur.</string>
+    <string name="setting_hidden_debugging_help_3">Ancak bu, Essentials için algılamayı da bozar. Bu durumda, hala mümkün olan durumu algılamak için Shizuku kabuğunu kullanma seçeneğini etkinleştirin. Kablosuz hata ayıklamanın dikkate alınmadığını unutmayın.</string>
+    <string name="action_got_it">Anladım</string>
 </resources>
