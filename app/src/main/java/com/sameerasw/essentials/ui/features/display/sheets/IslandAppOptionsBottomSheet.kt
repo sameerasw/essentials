@@ -41,6 +41,8 @@ fun IslandAppOptionsBottomSheet(
     var launcherOnly by remember { mutableStateOf(packageName in store.launcherOnly()) }
     var hideWhenLocked by remember { mutableStateOf(packageName in store.hideWhenLocked()) }
     var showOnUpdate by remember { mutableStateOf(packageName in store.showOnUpdate()) }
+    var chip by remember { mutableStateOf(packageName in store.chipped()) }
+    val chipsAvailable = remember { SettingsRepository(context).getBoolean(SettingsRepository.KEY_ISLAND_CHIPS, false) }
     val providerOptions by RemoteProviderOptions.options.collectAsState()
     val ownOptions = providerOptions[packageName].orEmpty()
 
@@ -90,6 +92,18 @@ fun IslandAppOptionsBottomSheet(
                         store.setShowOnUpdate(packageName, it)
                     },
                 )
+                if (chipsAvailable) {
+                    IconToggleItem(
+                        iconRes = R.drawable.rounded_palette_24,
+                        title = stringResource(R.string.island_provider_chip_title),
+                        isChecked = chip,
+                        onCheckedChange = {
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            chip = it
+                            store.setChip(packageName, it)
+                        },
+                    )
+                }
             }
 
             if (ownOptions.isNotEmpty()) {
