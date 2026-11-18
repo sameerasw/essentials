@@ -20,6 +20,7 @@ import com.sameerasw.essentials.translation.TranslatableText
 import kotlinx.coroutines.launch
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.SettingsRepository
+import com.sameerasw.essentials.island.remote.AirSyncLink
 import com.sameerasw.essentials.island.remote.OvercastLink
 import com.sameerasw.essentials.island.remote.ProviderDiscovery
 import com.sameerasw.essentials.island.remote.ProviderInfo
@@ -42,6 +43,7 @@ fun IslandProvidersSection(onChanged: () -> Unit = {}) {
     }
     val providers = remember(refresh) { ProviderDiscovery.query(context) }
     val showOvercast = providers.none { it.packageName == OvercastLink.PACKAGE }
+    val showAirSync = providers.none { it.packageName == AirSyncLink.PACKAGE }
     var pending by remember { mutableStateOf<ProviderInfo?>(null) }
     var busy by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
@@ -80,6 +82,17 @@ fun IslandProvidersSection(onChanged: () -> Unit = {}) {
                 onClick = {
                     HapticUtil.performVirtualKeyHaptic(view)
                     if (OvercastLink.isInstalled(context)) OvercastLink.openApp(context) else OvercastLink.openInstallPage(context)
+                },
+            )
+        }
+        if (showAirSync) {
+            IconToggleItem(
+                iconRes = R.drawable.rounded_laptop_mac_24,
+                title = stringResource(R.string.app_airsync),
+                showToggle = false,
+                onClick = {
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    if (AirSyncLink.isInstalled(context)) AirSyncLink.openApp(context) else AirSyncLink.openInstallPage(context)
                 },
             )
         }

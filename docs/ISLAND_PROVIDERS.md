@@ -1,6 +1,6 @@
 # Island providers
 
-Any app can put content on the Essentials island without shipping any code into Essentials. Essentials is the **host**: it owns the window, the animations, the gestures, the priority order and every piece of permission UI. A **provider** app only describes what to show and, optionally, draws its own expanded view. Overcast is the reference provider.
+Any app can put content on the Essentials island without shipping any code into Essentials. Essentials is the **host**: it owns the window, the animations, the gestures, the priority order and every piece of permission UI. A **provider** app only describes what to show and, optionally, draws its own expanded view. Overcast is the reference provider; AirSync is a second one that shows the connected Mac.
 
 For how the island itself works, see [ISLAND.md](ISLAND.md).
 
@@ -245,3 +245,4 @@ An approved provider is added automatically to the ordered list in Island settin
 - Alerts that should interrupt use `priorityOverride` plus a `peek`; remember the 10 s peek limit.
 - Test with the Essentials debug build and a provider build signed with a key you keep; a different key after pairing makes Essentials turn the provider off until the user approves it again.
 - A reference implementation is in the Overcast repository: `weather/island/WeatherIslandService.kt`, `WeatherIslandPayload.kt` and `WeatherIslandExpanded.kt`.
+- AirSync (`airsync-android`) is a smaller reference: `island/AirSyncIslandService.kt` publishes a device item (compact icon and battery, a line, an expanded view with actions) and keeps it available while disconnected so the expanded view can offer Reconnect. In the Brief, the Mac device tile opens that expanded view.
