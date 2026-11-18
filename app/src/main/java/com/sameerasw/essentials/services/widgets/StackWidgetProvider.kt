@@ -210,34 +210,86 @@ class StackWidgetProvider : AppWidgetProvider() {
             return views
         }
 
+        fun innerSizes(
+            minWidth: Int,
+            maxWidth: Int,
+            minHeight: Int,
+            maxHeight: Int,
+            reserved: Int,
+        ): Pair<Pair<Int, Int>, Pair<Int, Int>> =
+            (minWidth to (maxHeight - reserved).coerceAtLeast(0)) to
+                (maxWidth to (minHeight - reserved).coerceAtLeast(0))
+
+        fun naturalSize(
+            defaultPx: Int,
+            density: Float,
+            stackDp: Int,
+        ): Int =
+            if (density <= 0f) {
+                stackDp.coerceAtLeast(0)
+            } else {
+                (defaultPx / density).toInt().coerceAtMost(stackDp).coerceAtLeast(0)
+            }
+
+        fun naturalSize(
+            defaultWidthPx: Int,
+            defaultHeightPx: Int,
+            density: Float,
+            stackWidthDp: Int,
+            stackHeightDp: Int,
+        ): Pair<Int, Int> =
+            naturalSize(defaultWidthPx, density, stackWidthDp) to
+                naturalSize(defaultHeightPx, density, stackHeightDp)
+
         fun forwardSize(
             context: Context,
             config: WidgetStackConfig,
         ) {
             val awm = AppWidgetManager.getInstance(context)
             val options = awm.getAppWidgetOptions(config.stackWidgetId)
-            if (options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH) == 0) return
+            val minWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH)
+            if (minWidth == 0) return
 
             val reserved = if (reservesControls(config)) CONTROLS_SPACE_DP else 0
-            val portrait =
-                context.resources.configuration.orientation != Configuration.ORIENTATION_LANDSCAPE
-            val width =
-                options.getInt(
-                    if (portrait) AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH else AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH,
-                )
-            val height =
-                (
-                    options.getInt(
-                        if (portrait) AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT else AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT,
-                    ) - reserved
-                ).coerceAtLeast(0)
+            val maxWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH)
+            val minHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT)
+            val maxHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT)
+            val (portraitStack, landscapeStack) = innerSizes(minWidth, maxWidth, minHeight, maxHeight, reserved)
 
-            val forwarded = NestedWidgetSupport.sizedOptions(options, width, height)
-            val size = width to height
+            val isPortrait =
+                context.resources.configuration.orientation != Configuration.ORIENTATION_LANDSCAPE
+            val density = context.resources.displayMetrics.density
+
             config.hostedWidgetIds.forEach { hostedId ->
+                val (portraitSize, landscapeSize) =
+                    if (config.isNaturalSize(hostedId)) {
+                        val info = awm.getAppWidgetInfo(hostedId)
+                        if (info != null) {
+                            naturalSize(info.minWidth, info.minHeight, density, portraitStack.first, portraitStack.second) to
+                                naturalSize(info.minWidth, info.minHeight, density, landscapeStack.first, landscapeStack.second)
+                        } else {
+                            portraitStack to landscapeStack
+                        }
+                    } else {
+                        portraitStack to landscapeStack
+                    }
+
+                val currentSize = if (isPortrait) portraitSize else landscapeSize
+                val sizes =
+                    listOf(
+                        SizeF(portraitSize.first.toFloat(), portraitSize.second.toFloat()),
+                        SizeF(landscapeSize.first.toFloat(), landscapeSize.second.toFloat()),
+                    )
+                val forwarded =
+                    NestedWidgetSupport.sizedOptions(
+                        base = options,
+                        widthDp = currentSize.first,
+                        heightDp = currentSize.second,
+                        sizes = sizes,
+                    )
                 try {
                     awm.updateAppWidgetOptions(hostedId, forwarded)
-                    if (forwardedSizes.put(hostedId, size) != size) {
+                    if (forwardedSizes.put(hostedId, currentSize) != currentSize) {
                         StackHost.onInnerSizeChanged(context, hostedId)
                         NestedWidgetSupport.requestUpdate(context, awm, hostedId)
                     }

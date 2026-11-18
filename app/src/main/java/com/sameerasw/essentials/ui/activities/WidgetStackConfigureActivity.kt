@@ -249,7 +249,11 @@ class WidgetStackConfigureActivity : ComponentActivity() {
         StackHost.contents.remove(widgetId)
         StackHost.rawContents.remove(widgetId)
         StackHost.unsupported.remove(widgetId)
-        updateConfig(config.copy(hostedWidgetIds = config.hostedWidgetIds - widgetId))
+        updateConfig(
+            config
+                .withNaturalSize(widgetId, false)
+                .copy(hostedWidgetIds = config.hostedWidgetIds - widgetId),
+        )
     }
 
     private fun moveWidget(
@@ -349,8 +353,13 @@ class WidgetStackConfigureActivity : ComponentActivity() {
                         HostedWidgetRow(
                             widgetId = widgetId,
                             isUnsupported = widgetId in unsupported,
+                            isNaturalSize = config.isNaturalSize(widgetId),
                             canMoveUp = index > 0,
                             canMoveDown = index < config.hostedWidgetIds.lastIndex,
+                            onToggleSize = {
+                                HapticUtil.performUIHaptic(view)
+                                updateConfig(config.withNaturalSize(widgetId, !config.isNaturalSize(widgetId)))
+                            },
                             onMove = { delta ->
                                 HapticUtil.performUIHaptic(view)
                                 moveWidget(index, delta)
@@ -522,8 +531,10 @@ class WidgetStackConfigureActivity : ComponentActivity() {
     private fun HostedWidgetRow(
         widgetId: Int,
         isUnsupported: Boolean,
+        isNaturalSize: Boolean,
         canMoveUp: Boolean,
         canMoveDown: Boolean,
+        onToggleSize: () -> Unit,
         onMove: (Int) -> Unit,
         onRemove: () -> Unit,
     ) {
@@ -567,6 +578,28 @@ class WidgetStackConfigureActivity : ComponentActivity() {
             },
             trailingContent = {
                 Row {
+                    if (!isUnsupported) {
+                        IconButton(onClick = onToggleSize) {
+                            Icon(
+                                painter =
+                                    painterResource(
+                                        if (isNaturalSize) {
+                                            R.drawable.rounded_crop_portrait_24
+                                        } else {
+                                            R.drawable.rounded_fullscreen_portrait_24
+                                        },
+                                    ),
+                                contentDescription =
+                                    stringResource(
+                                        if (isNaturalSize) {
+                                            R.string.widget_stack_size_natural
+                                        } else {
+                                            R.string.widget_stack_size_fill
+                                        },
+                                    ),
+                            )
+                        }
+                    }
                     IconButton(onClick = { onMove(-1) }, enabled = canMoveUp) {
                         Icon(
                             painter = painterResource(R.drawable.rounded_keyboard_arrow_up_24),
