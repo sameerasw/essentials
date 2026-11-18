@@ -49,7 +49,13 @@ import kotlinx.coroutines.withContext
 class StarlinkPlugin : BaseIslandPlugin() {
     override val id = "starlink"
 
-    override val settingKeys = setOf(SettingsRepository.KEY_ISLAND_SHOW_STARLINK)
+    override val settingKeys = setOf(
+        SettingsRepository.KEY_ISLAND_SHOW_STARLINK,
+        SettingsRepository.KEY_ISLAND_STARLINK_COMPACT,
+        SettingsRepository.KEY_ISLAND_STARLINK_SPEEDS,
+        SettingsRepository.KEY_ISLAND_STARLINK_SPEED_MODE,
+        SettingsRepository.KEY_ISLAND_BRIEF_ENABLED,
+    )
 
     private var status: StarlinkStatus? = null
     private var misses = 0
@@ -112,7 +118,21 @@ class StarlinkPlugin : BaseIslandPlugin() {
             publish(null)
             return
         }
-        val connected = current.state == StarlinkState.Connected
+        val compact = settings.getBoolean(SettingsRepository.KEY_ISLAND_STARLINK_COMPACT, true)
+        if (!compact && !settings.isIslandBriefEnabled()) {
+            publish(null)
+            return
+        }
+        val connected = current.state != StarlinkState.Searching && current.state != StarlinkState.Booting
+        val speed = if (compact && connected && settings.getBoolean(SettingsRepository.KEY_ISLAND_STARLINK_SPEEDS, false)) {
+            StarlinkSpeedFormat.forMode(
+                settings.getString(SettingsRepository.KEY_ISLAND_STARLINK_SPEED_MODE, null),
+                current.downlinkBps,
+                current.uplinkBps,
+            )
+        } else {
+            null
+        }
         val warn = !connected || current.degraded
         publish(
             IslandItem(
@@ -123,13 +143,14 @@ class StarlinkPlugin : BaseIslandPlugin() {
                     CompactCell("starlink.icon") {
                         IslandIcon(R.drawable.ic_starlink_24, size = 20.dp, tint = if (warn) WARN else islandAccent())
                     },
-                ),
+                ) + listOfNotNull(speed?.let { s -> CompactCell("starlink.speed") { SpeedCell(s) } }),
                 line = LineContent(
                     icon = { IslandIcon(R.drawable.ic_starlink_24, tint = if (warn) WARN else islandAccent()) },
                     start = context.getString(R.string.island_show_starlink_title),
                     end = lineSummary(current),
                 ),
                 expanded = ExpandedContent { scope -> StarlinkExpanded(current, scope) },
+                compactVisible = compact,
             ),
         )
     }
@@ -183,6 +204,24 @@ class StarlinkPlugin : BaseIslandPlugin() {
                     Text(alerts, style = IslandTextStyles.body, color = WARN, modifier = Modifier.padding(horizontal = side))
                 }
                 Spacer(Modifier.height(12.dp))
+            }
+        }
+    }
+
+    @Composable
+    private fun SpeedCell(speed: CompactSpeed) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            RollingText(speed.text)
+            Spacer(Modifier.width(2.dp))
+            Column(horizontalAlignment = Alignment.Start) {
+                speed.direction?.let {
+                    IslandIcon(
+                        if (it == SpeedDirection.Up) R.drawable.rounded_keyboard_arrow_up_24 else R.drawable.rounded_keyboard_arrow_down_24,
+                        size = 9.dp,
+                        tint = islandAccent(),
+                    )
+                }
+                Text(speed.unit.label, style = IslandTextStyles.body.copy(fontSize = 7.sp, lineHeight = 8.sp))
             }
         }
     }

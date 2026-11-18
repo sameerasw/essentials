@@ -2359,6 +2359,11 @@
     <string name="island_reorder_hide_line">Drag below to hide</string>
     <string name="island_show_starlink_title">Starlink</string>
     <string name="island_starlink_desc">Shows dish status while connected to a Starlink network</string>
+    <string name="island_starlink_compact_title">Show in compact island</string>
+    <string name="island_starlink_speeds_title">Show speeds in compact mode</string>
+    <string name="island_starlink_speed_mode_title">Speed to show</string>
+    <string name="island_starlink_speed_up">Up</string>
+    <string name="island_starlink_speed_combined">Combined</string>
     <string name="island_starlink_searching">Searching</string>
     <string name="island_starlink_booting">Booting</string>
     <string name="island_starlink_obstructed">Obstructed</string>

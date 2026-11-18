@@ -96,6 +96,7 @@ import com.sameerasw.essentials.ui.features.display.sheets.IslandPulseShadowOpti
 import com.sameerasw.essentials.ui.features.display.sheets.IslandNavigationOptionsBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.IslandSoundModeOptionsBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.IslandLiveUpdatesOptionsBottomSheet
+import com.sameerasw.essentials.ui.features.display.sheets.IslandStarlinkOptionsBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.IslandTimeOptionsBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.IslandCaffeinateOptionsBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.IslandSignalOptionsBottomSheet
@@ -160,6 +161,7 @@ fun IslandSettingsUI(
     var showLiveUpdatesOptionsSheet by remember { mutableStateOf(false) }
     var showDevicesBatterySheet by remember { mutableStateOf(false) }
     var showTimeOptionsSheet by remember { mutableStateOf(false) }
+    var showStarlinkOptionsSheet by remember { mutableStateOf(false) }
     var showBatteryOptionsSheet by remember { mutableStateOf(false) }
     var showTimerOptionsSheet by remember { mutableStateOf(false) }
     var showCaffeinateOptionsSheet by remember { mutableStateOf(false) }
@@ -533,6 +535,7 @@ fun IslandSettingsUI(
                             HapticUtil.performVirtualKeyHaptic(view)
                             viewModel.setIslandShowStarlink(checked)
                         },
+                        onSettingsClick = { showStarlinkOptionsSheet = true },
                         modifier = Modifier.highlight(highlightSetting == "island_show_starlink"),
                     )
                     "devices" -> IconToggleItem(
@@ -885,6 +888,12 @@ fun IslandSettingsUI(
 
     if (showCaffeinateOptionsSheet) {
         IslandCaffeinateOptionsBottomSheet(onDismissRequest = { showCaffeinateOptionsSheet = false })
+    }
+
+    if (showStarlinkOptionsSheet) {
+        IslandStarlinkOptionsBottomSheet(
+            onDismissRequest = { showStarlinkOptionsSheet = false },
+        )
     }
 
     if (showTimeOptionsSheet) {
