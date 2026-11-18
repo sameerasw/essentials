@@ -35,6 +35,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.Density
 import androidx.compose.ui.graphics.drawOutline
 import androidx.compose.ui.geometry.Size
 import androidx.compose.foundation.shape.CornerSize
@@ -88,6 +89,16 @@ private fun ChipUnit(color: Color, spec: IslandLayoutSpec, startNeighbor: Boolea
     }
 }
 
+@Composable
+private fun ScaledCell(scale: Float, content: @Composable () -> Unit) {
+    val base = LocalDensity.current
+    if (scale == 1f) {
+        content()
+    } else {
+        CompositionLocalProvider(LocalDensity provides Density(base.density * scale, base.fontScale / scale)) { content() }
+    }
+}
+
 private fun slotChipped(i: Int, beforeSlots: Int, beforeUnits: List<SlotUnit>, afterUnits: List<SlotUnit>): Boolean {
     val unit = if (i < beforeSlots) beforeUnits.getOrNull(beforeSlots - 1 - i) else afterUnits.getOrNull(i - beforeSlots)
     return unit?.chipColor != null
@@ -118,6 +129,7 @@ fun CompactTemplate(
     onBaseWidth: (Int) -> Unit = {},
     onNeedLeft: (Int) -> Unit = {},
 ) {
+    val cellScale = (spec.cellSize / 28.dp * spec.fontScale).coerceIn(0.6f, 1.2f)
     val iconColor = LocalIslandIconColor.current
     val primary = MaterialTheme.colorScheme.primary
     val cells = buildMap {
@@ -253,7 +265,7 @@ fun CompactTemplate(
                                             },
                                         ),
                                     contentAlignment = Alignment.Center,
-                                ) { member.cell.content() }
+                                ) { ScaledCell(cellScale) { member.cell.content() } }
                             }
                         }
                     }
@@ -261,7 +273,7 @@ fun CompactTemplate(
                     Box(
                         modifier = if (unit.itemKey in multiPart) measured.height(spec.cellSize) else measured.height(spec.cellSize).defaultMinSize(minWidth = spec.cellSize),
                         contentAlignment = Alignment.Center,
-                    ) { unit.cells[0].cell.content() }
+                    ) { ScaledCell(cellScale) { unit.cells[0].cell.content() } }
                 }
             }
         }
