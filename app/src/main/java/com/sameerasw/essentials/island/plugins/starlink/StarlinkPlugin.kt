@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -37,6 +38,7 @@ import com.sameerasw.essentials.island.ui.IslandTextStyles
 import com.sameerasw.essentials.island.ui.islandTextColor
 import com.sameerasw.essentials.island.ui.components.CameraRow
 import com.sameerasw.essentials.island.ui.components.IslandIcon
+import com.sameerasw.essentials.island.ui.components.RollingText
 import com.sameerasw.essentials.island.ui.components.islandAccent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -146,11 +148,6 @@ class StarlinkPlugin : BaseIslandPlugin() {
     private fun StarlinkExpanded(s: StarlinkStatus, scope: IslandExpandedScope) {
         val spec = scope.spec
         val side = spec.expandedPadding + spec.expandedCorner * 0.35f
-        val rows = buildList {
-            s.dropRate?.let { add(stringResource(R.string.island_starlink_packet_loss) to formatPercent(it)) }
-            s.obstructionFraction?.let { add(stringResource(R.string.island_starlink_obstruction) to formatPercent(it)) }
-            s.uptimeS?.let { add(stringResource(R.string.island_starlink_uptime) to formatUptime(it)) }
-        }
         val alerts = s.alerts.map { stringResource(alertLabel(it)) }.joinToString(", ")
         Box(propagateMinConstraints = true) {
             Column(Modifier.fillMaxWidth().padding(spec.expandedOutset)) {
@@ -167,18 +164,18 @@ class StarlinkPlugin : BaseIslandPlugin() {
                 ) {
                     val down = s.downlinkBps?.let { rateParts(it) }
                     val up = s.uplinkBps?.let { rateParts(it) }
-                    StatTile(R.drawable.rounded_arrow_upward_24, 180f, stringResource(R.string.action_download), down?.first, down?.second, Modifier.weight(1f))
-                    StatTile(R.drawable.rounded_arrow_upward_24, 0f, stringResource(R.string.island_starlink_upload), up?.first, up?.second, Modifier.weight(1f))
-                    StatTile(R.drawable.rounded_timer_24, 0f, stringResource(R.string.island_starlink_latency), s.pingMs?.toInt()?.toString(), "ms", Modifier.weight(1f))
+                    StatTile(R.drawable.rounded_arrow_upward_24, 180f, down?.first, down?.second, Modifier.weight(1f))
+                    StatTile(R.drawable.rounded_arrow_upward_24, 0f, up?.first, up?.second, Modifier.weight(1f))
+                    StatTile(R.drawable.rounded_timer_24, 0f, s.pingMs?.toInt()?.toString(), "ms", Modifier.weight(1f))
                 }
-                if (rows.isNotEmpty()) Spacer(Modifier.height(8.dp))
-                rows.forEach { (label, value) ->
+                if (s.obstructionFraction != null || s.uptimeS != null) {
+                    Spacer(Modifier.height(8.dp))
                     Row(
-                        Modifier.fillMaxWidth().padding(horizontal = side, vertical = 2.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
+                        Modifier.fillMaxWidth().padding(horizontal = side),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
-                        Text(label, style = IslandTextStyles.body)
-                        Text(value, style = IslandTextStyles.compact)
+                        s.obstructionFraction?.let { InfoChip(R.drawable.rounded_visibility_off_24, formatPercent(it), Modifier.weight(1f)) }
+                        s.uptimeS?.let { InfoChip(R.drawable.rounded_schedule_24, formatUptime(it), Modifier.weight(1f)) }
                     }
                 }
                 if (alerts.isNotEmpty()) {
@@ -191,7 +188,7 @@ class StarlinkPlugin : BaseIslandPlugin() {
     }
 
     @Composable
-    private fun StatTile(icon: Int, rotation: Float, label: String, value: String?, unit: String?, modifier: Modifier) {
+    private fun StatTile(icon: Int, rotation: Float, value: String?, unit: String?, modifier: Modifier) {
         Column(
             modifier = modifier
                 .clip(RoundedCornerShape(18.dp))
@@ -201,15 +198,27 @@ class StarlinkPlugin : BaseIslandPlugin() {
         ) {
             IslandIcon(icon, size = 20.dp, tint = islandAccent(), modifier = Modifier.rotate(rotation))
             Spacer(Modifier.height(6.dp))
-            Text(
+            RollingText(
                 text = value ?: "–",
                 style = IslandTextStyles.title.copy(fontSize = 26.sp, fontFeatureSettings = "tnum"),
-                maxLines = 1,
-                softWrap = false,
             )
             Text(unit.orEmpty().ifEmpty { " " }, style = IslandTextStyles.body)
-            Spacer(Modifier.height(2.dp))
-            Text(label, style = IslandTextStyles.body.copy(fontSize = 11.sp), maxLines = 1, softWrap = false)
+        }
+    }
+
+    @Composable
+    private fun InfoChip(icon: Int, value: String, modifier: Modifier) {
+        Row(
+            modifier = modifier
+                .clip(RoundedCornerShape(50))
+                .background(islandTextColor(0.1f))
+                .padding(vertical = 8.dp, horizontal = 12.dp),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            IslandIcon(icon, size = 16.dp, tint = islandAccent())
+            Spacer(Modifier.width(6.dp))
+            RollingText(value)
         }
     }
 

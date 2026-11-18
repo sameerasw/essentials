@@ -655,7 +655,11 @@ fun IslandSettingsUI(
                 savedHidden = hidden
                 reorderMode = false
             },
-            onReset = { workingOrder = IslandPriorityEntries.defaultOrder(providerEntries) + IslandPriorityEntries.HIDE_LINE },
+            onReset = {
+                val default = IslandPriorityEntries.defaultOrder(providerEntries)
+                val hidden = SettingsRepository.DEFAULT_ISLAND_HIDDEN_ENTRIES
+                workingOrder = default.filter { it !in hidden } + IslandPriorityEntries.HIDE_LINE + default.filter { it in hidden }
+            },
         )
 
         IslandProvidersSection(onChanged = { providerVersion++ })
