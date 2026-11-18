@@ -1818,4 +1818,7 @@
     <string name="volume_steps_hint">Ogni pressione di un tasto del volume aumenta il volume multimediale di questo numero di passi. Tenendo premuto un tasto, l\'azione si ripete, a meno che la rimappatura dei pulsanti non preveda un\'azione di pressione prolungata per quel tasto, che ha la priorità.</string>
     <string name="volume_steps_per_press_title">Passi per pressione</string>
     <string name="app_volume_hint">Le app che riproducono suoni vengono visualizzate automaticamente qui. Tocca un\'app per modificarne il volume oppure rimuovila per ripristinare il volume normale.</string>
+    <string name="diy_action_location_on">Turn On Location</string>
+    <string name="diy_action_location_off">Turn Off Location</string>
+    <string name="diy_action_location_toggle">Toggle Location</string>
 </resources>

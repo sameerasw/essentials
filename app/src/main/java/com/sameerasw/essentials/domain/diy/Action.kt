@@ -647,6 +647,27 @@ sealed interface Action {
     }
 
     @Keep
+    data object TurnOnLocation : Action {
+        override val title: Int = R.string.diy_action_location_on
+        override val icon: Int = R.drawable.rounded_location_on_24
+        override val permissions: List<String> = listOf("SHIZUKU", "ROOT")
+    }
+
+    @Keep
+    data object TurnOffLocation : Action {
+        override val title: Int = R.string.diy_action_location_off
+        override val icon: Int = R.drawable.rounded_location_on_24
+        override val permissions: List<String> = listOf("SHIZUKU", "ROOT")
+    }
+
+    @Keep
+    data object ToggleLocation : Action {
+        override val title: Int = R.string.diy_action_location_toggle
+        override val icon: Int = R.drawable.rounded_location_on_24
+        override val permissions: List<String> = listOf("SHIZUKU", "ROOT")
+    }
+
+    @Keep
     data object TurnOnAutoBrightness : Action {
         override val title: Int = R.string.diy_action_auto_brightness_on
         override val icon: Int = R.drawable.rounded_brightness_auto_24

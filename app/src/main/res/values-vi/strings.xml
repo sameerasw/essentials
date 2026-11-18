@@ -1775,6 +1775,9 @@ Cần có quyền quản trị thiết bị nếu sử dụng chế độ khóa.
     <string name="diy_action_wifi_off">Tắt WiFi</string>
     <string name="diy_action_cellular_on">Bật dữ liệu di động</string>
     <string name="diy_action_cellular_off">Tắt dữ liệu đi động</string>
+    <string name="diy_action_location_on">Turn On Location</string>
+    <string name="diy_action_location_off">Turn Off Location</string>
+    <string name="diy_action_location_toggle">Toggle Location</string>
     <string name="diy_action_hotspot_on">Bật điểm phát sóng</string>
     <string name="diy_action_hotspot_off">Tắt điểm phát sóng</string>
     <string name="diy_action_hotspot_toggle">Bật/tắt điểm phát sóng</string>

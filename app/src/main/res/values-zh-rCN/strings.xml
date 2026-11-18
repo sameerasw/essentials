@@ -981,6 +981,9 @@
     <string name="diy_action_wifi_off">关闭 WiFi</string>
     <string name="diy_action_cellular_on">打开蜂窝数据</string>
     <string name="diy_action_cellular_off">关闭蜂窝数据</string>
+    <string name="diy_action_location_on">Turn On Location</string>
+    <string name="diy_action_location_off">Turn Off Location</string>
+    <string name="diy_action_location_toggle">Toggle Location</string>
     <string name="diy_action_auto_brightness_on">开启自动亮度</string>
     <string name="diy_action_auto_brightness_off">关闭自动亮度</string>
     <string name="diy_action_freeze_apps">冻结应用</string>

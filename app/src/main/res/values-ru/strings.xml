@@ -2221,6 +2221,9 @@
     <string name="diy_action_wifi_toggle">Переключить WIFI</string>
     <string name="diy_action_cellular_on">Включите сотовую связь</string>
     <string name="diy_action_cellular_off">Выключить сотовую связь</string>
+    <string name="diy_action_location_on">Turn On Location</string>
+    <string name="diy_action_location_off">Turn Off Location</string>
+    <string name="diy_action_location_toggle">Toggle Location</string>
     <string name="diy_action_cellular_toggle">Переключить сотовую связь </string>
     <string name="diy_action_hotspot_on">Включить Точку доступа</string>
     <string name="diy_action_hotspot_off">Выключить Точку доступа</string>

@@ -1761,6 +1761,9 @@ Gizlendiğinde, bildirimler ekranınızın üzerinde belirmek yerine bildirim pa
     <string name="diy_action_hotspot_toggle">Hotspot\'u Aç/Kapat</string>
     <string name="diy_action_cellular_on">Hücresel Veri\'yi Aç</string>
     <string name="diy_action_cellular_off">Hücresel Veri\'yi Kapat</string>
+    <string name="diy_action_location_on">Turn On Location</string>
+    <string name="diy_action_location_off">Turn Off Location</string>
+    <string name="diy_action_location_toggle">Toggle Location</string>
     <string name="diy_action_cellular_toggle">Hücresel Veri\'yi Aç/Kapat</string>
     <string name="diy_action_screen_off">Ekran Kapalı</string>
     <string name="diy_action_auto_brightness_on">Otomatik Parlaklığı Aç</string>

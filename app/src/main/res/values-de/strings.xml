@@ -2120,4 +2120,7 @@ Die Stufen können nur von der normalen Lautstärke abwärts, niemals darüber h
     <string name="island_action_show">Show</string>
     <string name="island_gesture_hints_title">Show gesture hints</string>
     <string name="wallpaper_staging_not_set">Not set yet</string>
+    <string name="diy_action_location_on">Turn On Location</string>
+    <string name="diy_action_location_off">Turn Off Location</string>
+    <string name="diy_action_location_toggle">Toggle Location</string>
 </resources>

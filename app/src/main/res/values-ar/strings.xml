@@ -967,6 +967,9 @@
     <string name="diy_action_wifi_off">إيقاف الواي فاي</string>
     <string name="diy_action_cellular_on">تشغيل بيانات الجوال</string>
     <string name="diy_action_cellular_off">إيقاف بيانات الجوال</string>
+    <string name="diy_action_location_on">Turn On Location</string>
+    <string name="diy_action_location_off">Turn Off Location</string>
+    <string name="diy_action_location_toggle">Toggle Location</string>
     <string name="diy_action_auto_brightness_on">تشغيل السطوع التلقائي</string>
     <string name="diy_action_auto_brightness_off">إيقاف السطوع التلقائي</string>
     <string name="diy_action_freeze_apps">تجميد التطبيقات</string>

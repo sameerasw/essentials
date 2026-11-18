@@ -1963,4 +1963,7 @@
     <string name="wallpaper_staging_not_set">Not set yet</string>
     <string name="label_notify_new_updates">通知更新資訊</string>
     <string name="app_icon_default">預設</string>
+    <string name="diy_action_location_on">Turn On Location</string>
+    <string name="diy_action_location_off">Turn Off Location</string>
+    <string name="diy_action_location_toggle">Toggle Location</string>
 </resources>

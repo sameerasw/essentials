@@ -980,6 +980,9 @@
     <string name="diy_action_wifi_off">Turn Off WiFi</string>
     <string name="diy_action_cellular_on">Turn On Cellular Data</string>
     <string name="diy_action_cellular_off">Turn Off Cellular Data</string>
+    <string name="diy_action_location_on">Turn On Location</string>
+    <string name="diy_action_location_off">Turn Off Location</string>
+    <string name="diy_action_location_toggle">Toggle Location</string>
     <string name="diy_action_auto_brightness_on">Turn On Auto Brightness</string>
     <string name="diy_action_auto_brightness_off">Turn Off Auto Brightness</string>
     <string name="diy_action_freeze_apps">Қолданбаларды тоқтату</string>
