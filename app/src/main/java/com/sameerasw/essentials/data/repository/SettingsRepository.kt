@@ -773,6 +773,7 @@ class SettingsRepository(
         const val KEY_ISLAND_STARLINK_SPEED_UNIT = "island_starlink_speed_unit"
         const val KEY_ISLAND_STARLINK_HIDE_UNIT = "island_starlink_hide_unit"
         const val KEY_ISLAND_STARLINK_HIDE_ARROW = "island_starlink_hide_arrow"
+        const val KEY_ISLAND_STARLINK_CHIP = "island_starlink_chip"
         const val KEY_ISLAND_BRIEF_ENABLED = "island_brief_enabled"
         const val KEY_ISLAND_BRIEF_SHOW_ALARM = "island_brief_show_alarm"
         const val KEY_ISLAND_BRIEF_TWO_LINE_HEADER = "island_brief_two_line_header"

@@ -1,6 +1,7 @@
 package com.sameerasw.essentials.island.plugins.starlink
 
 import android.net.ConnectivityManager
+import android.os.Build
 import android.net.NetworkCapabilities
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -57,6 +58,8 @@ class StarlinkPlugin : BaseIslandPlugin() {
         SettingsRepository.KEY_ISLAND_STARLINK_SPEED_UNIT,
         SettingsRepository.KEY_ISLAND_STARLINK_HIDE_UNIT,
         SettingsRepository.KEY_ISLAND_STARLINK_HIDE_ARROW,
+        SettingsRepository.KEY_ISLAND_STARLINK_CHIP,
+        SettingsRepository.KEY_ISLAND_CHIPS,
         SettingsRepository.KEY_ISLAND_BRIEF_ENABLED,
     )
 
@@ -143,6 +146,7 @@ class StarlinkPlugin : BaseIslandPlugin() {
             null
         }
         val warn = !connected || current.degraded
+        val chip = compact && settings.getBoolean(SettingsRepository.KEY_ISLAND_STARLINK_CHIP, false)
         publish(
             IslandItem(
                 key = KEY,
@@ -160,8 +164,17 @@ class StarlinkPlugin : BaseIslandPlugin() {
                 ),
                 expanded = ExpandedContent { scope -> StarlinkExpanded(current, scope) },
                 compactVisible = compact,
+                chip = chip,
+                accent = if (chip) chipAccent(warn) else null,
             ),
         )
+    }
+
+    // Chip ink is black, so the container always needs to be light
+    private fun chipAccent(warn: Boolean): Color = when {
+        warn -> WARN
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> Color(context.getColor(android.R.color.system_accent1_200))
+        else -> Color(0xFFB3C8FF)
     }
 
     private fun lineSummary(s: StarlinkStatus): String = when (s.state) {
@@ -225,7 +238,7 @@ class StarlinkPlugin : BaseIslandPlugin() {
             Column(horizontalAlignment = Alignment.Start) {
                 speed.direction?.takeIf { !hideArrow }?.let {
                     IslandIcon(
-                        if (it == SpeedDirection.Up) R.drawable.rounded_keyboard_arrow_up_24 else R.drawable.rounded_keyboard_arrow_down_24,
+                        if (it == SpeedDirection.Up) R.drawable.ic_chevron_up_bold_24 else R.drawable.ic_chevron_down_bold_24,
                         size = 13.dp,
                         tint = islandAccent(),
                     )

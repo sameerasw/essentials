@@ -47,6 +47,8 @@ fun IslandStarlinkOptionsBottomSheet(
     val view = LocalView.current
     val settings = remember { SettingsRepository(context) }
     var showInCompact by remember { mutableStateOf(settings.getBoolean(SettingsRepository.KEY_ISLAND_STARLINK_COMPACT, true)) }
+    var chip by remember { mutableStateOf(settings.getBoolean(SettingsRepository.KEY_ISLAND_STARLINK_CHIP, false)) }
+    val chipsAvailable = remember { settings.getBoolean(SettingsRepository.KEY_ISLAND_CHIPS, false) }
     var showSpeeds by remember { mutableStateOf(settings.getBoolean(SettingsRepository.KEY_ISLAND_STARLINK_SPEEDS, false)) }
     var speedMode by remember {
         mutableStateOf(settings.getString(SettingsRepository.KEY_ISLAND_STARLINK_SPEED_MODE, null) ?: StarlinkSpeedFormat.MODE_DOWN)
@@ -75,6 +77,22 @@ fun IslandStarlinkOptionsBottomSheet(
                         settings.putBoolean(SettingsRepository.KEY_ISLAND_STARLINK_COMPACT, it)
                     },
                 )
+                AnimatedVisibility(
+                    visible = showInCompact && chipsAvailable,
+                    enter = expandVertically() + fadeIn(),
+                    exit = shrinkVertically() + fadeOut(),
+                ) {
+                    IconToggleItem(
+                        iconRes = R.drawable.rounded_palette_24,
+                        title = stringResource(R.string.island_time_chip_title),
+                        isChecked = chip,
+                        onCheckedChange = {
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            chip = it
+                            settings.putBoolean(SettingsRepository.KEY_ISLAND_STARLINK_CHIP, it)
+                        },
+                    )
+                }
                 AnimatedVisibility(
                     visible = showInCompact,
                     enter = expandVertically() + fadeIn(),
