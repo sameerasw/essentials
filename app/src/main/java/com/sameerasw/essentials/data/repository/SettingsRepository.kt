@@ -765,6 +765,7 @@ class SettingsRepository(
         const val ISLAND_NAVIGATION_ON_NEW_OFF = "off"
         const val KEY_ISLAND_NAVIGATION_EXPAND_DISTANCE = "island_navigation_expand_distance"
         const val KEY_ISLAND_SHOW_HOTSPOT = "island_show_hotspot"
+        const val KEY_ISLAND_SHOW_STARLINK = "island_show_starlink"
         const val KEY_ISLAND_BRIEF_ENABLED = "island_brief_enabled"
         const val KEY_ISLAND_BRIEF_SHOW_ALARM = "island_brief_show_alarm"
         const val KEY_ISLAND_BRIEF_TWO_LINE_HEADER = "island_brief_two_line_header"
@@ -4472,6 +4473,8 @@ class SettingsRepository(
 
     fun isIslandShowHotspotEnabled(): Boolean = getBoolean(KEY_ISLAND_SHOW_HOTSPOT, false)
     fun setIslandShowHotspotEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_SHOW_HOTSPOT, enabled)
+    fun isIslandShowStarlinkEnabled(): Boolean = getBoolean(KEY_ISLAND_SHOW_STARLINK, false)
+    fun setIslandShowStarlinkEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_SHOW_STARLINK, enabled)
 
     fun isIslandBriefEnabled(): Boolean = getBoolean(KEY_ISLAND_BRIEF_ENABLED, false)
     fun setIslandBriefEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_BRIEF_ENABLED, enabled)

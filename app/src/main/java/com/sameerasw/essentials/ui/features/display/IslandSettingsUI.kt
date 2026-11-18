@@ -146,6 +146,7 @@ fun IslandSettingsUI(
             "alarm" -> viewModel.setIslandShowAlarm(enabled)
             "navigation" -> viewModel.setIslandShowNavigation(enabled)
             "hotspot" -> viewModel.setIslandShowHotspot(enabled)
+            "starlink" -> viewModel.setIslandShowStarlink(enabled)
             "devices" -> viewModel.setIslandShowDevices(enabled)
             else -> if (IslandPriorityEntries.isProvider(id)) {
                 ProviderTrustStore(prioritySettings).setHiddenFromIsland(IslandPriorityEntries.providerPackage(id), !enabled)
@@ -522,6 +523,17 @@ fun IslandSettingsUI(
                             }
                         },
                         modifier = Modifier.highlight(highlightSetting == "island_show_hotspot"),
+                    )
+                    "starlink" -> IconToggleItem(
+                        dragHandle = handle,
+                        iconRes = R.drawable.ic_starlink_24,
+                        title = stringResource(R.string.island_show_starlink_title),
+                        isChecked = viewModel.isIslandShowStarlink.value,
+                        onCheckedChange = { checked ->
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            viewModel.setIslandShowStarlink(checked)
+                        },
+                        modifier = Modifier.highlight(highlightSetting == "island_show_starlink"),
                     )
                     "devices" -> IconToggleItem(
                         dragHandle = handle,

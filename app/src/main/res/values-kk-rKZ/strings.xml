@@ -2196,4 +2196,20 @@
     <string name="island_gesture_hints_title">Show gesture hints</string>
     <string name="wallpaper_staging_not_set">Not set yet</string>
     <string name="island_reorder_hide_line">Drag below to hide</string>
+    <string name="island_show_starlink_title">Starlink</string>
+    <string name="island_starlink_desc">Shows dish status while connected to a Starlink network</string>
+    <string name="island_starlink_searching">Searching</string>
+    <string name="island_starlink_booting">Booting</string>
+    <string name="island_starlink_obstructed">Obstructed</string>
+    <string name="island_starlink_upload">Upload</string>
+    <string name="island_starlink_latency">Latency</string>
+    <string name="island_starlink_packet_loss">Packet loss</string>
+    <string name="island_starlink_obstruction">Obstruction</string>
+    <string name="island_starlink_uptime">Uptime</string>
+    <string name="island_starlink_alert_motors">Motors stuck</string>
+    <string name="island_starlink_alert_thermal_shutdown">Thermal shutdown</string>
+    <string name="island_starlink_alert_thermal_throttle">Thermal throttle</string>
+    <string name="island_starlink_alert_location">Unexpected location</string>
+    <string name="island_starlink_alert_mast">Mast not vertical</string>
+    <string name="island_starlink_alert_ethernet">Slow ethernet</string>
 </resources>

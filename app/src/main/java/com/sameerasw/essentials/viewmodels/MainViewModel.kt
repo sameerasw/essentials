@@ -284,6 +284,7 @@ class MainViewModel : ViewModel() {
     val isIslandNavigationPeekAfterExpand = mutableStateOf(false)
     val isIslandNavigationHideWhileDriving = mutableStateOf(false)
     val isIslandShowHotspot = mutableStateOf(false)
+    val isIslandShowStarlink = mutableStateOf(false)
     val isIslandShowDevices = mutableStateOf(true)
     val isIslandBriefEnabled = mutableStateOf(false)
     val isIslandBriefShowAlarm = mutableStateOf(true)
@@ -2628,6 +2629,7 @@ class MainViewModel : ViewModel() {
         isIslandNavigationPeekAfterExpand.value = settingsRepository.isIslandNavigationPeekAfterExpandEnabled()
         isIslandNavigationHideWhileDriving.value = settingsRepository.isIslandNavigationHideWhileDrivingEnabled()
         isIslandShowHotspot.value = settingsRepository.isIslandShowHotspotEnabled()
+        isIslandShowStarlink.value = settingsRepository.isIslandShowStarlinkEnabled()
         isIslandShowDevices.value = settingsRepository.isIslandShowDevicesEnabled()
         isIslandBriefEnabled.value = settingsRepository.isIslandBriefEnabled()
         isIslandBriefShowAlarm.value = settingsRepository.isIslandBriefShowAlarmEnabled()
@@ -5940,6 +5942,11 @@ class MainViewModel : ViewModel() {
     fun setIslandNavigationHideWhileDriving(enabled: Boolean) {
         isIslandNavigationHideWhileDriving.value = enabled
         settingsRepository.setIslandNavigationHideWhileDrivingEnabled(enabled)
+    }
+
+    fun setIslandShowStarlink(enabled: Boolean) {
+        isIslandShowStarlink.value = enabled
+        settingsRepository.setIslandShowStarlinkEnabled(enabled)
     }
 
     fun setIslandShowHotspot(enabled: Boolean) {
