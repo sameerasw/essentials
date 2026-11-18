@@ -669,7 +669,7 @@
     <string name="sentry_mode_off">OFF</string>
     <string name="sentry_mode_auto">自動</string>
     <string name="sentry_crash_toast">Essentials crashed, Report sent</string>
-    <string name="simulate_crash">クラッシュシュミレート</string>
+    <string name="simulate_crash">クラッシュシミュレート</string>
     <string name="welcome_title">Essentialsへようこそ</string>
     <string name="welcome_subtitle">Androidマニアのためのツールボックス</string>
     <string name="welcome_developer_attribution">by sameerasw.com</string>
