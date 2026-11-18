@@ -1,8 +1,12 @@
 package com.sameerasw.essentials.island.plugins.starlink
 
 import android.net.ConnectivityManager
-import android.os.Build
+import android.net.Network
 import android.net.NetworkCapabilities
+import android.net.NetworkRequest
+import android.os.Build
+import android.os.PowerManager
+import android.os.SystemClock
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -31,9 +35,13 @@ import com.sameerasw.essentials.island.model.CompactPlacement
 import com.sameerasw.essentials.island.model.ExpandedContent
 import com.sameerasw.essentials.island.model.IslandExpandedScope
 import com.sameerasw.essentials.island.model.IslandItem
+import com.sameerasw.essentials.island.model.IslandPluginContext
+import com.sameerasw.essentials.island.model.IslandStage
 import com.sameerasw.essentials.island.model.IslandPriority
 import com.sameerasw.essentials.island.model.LineContent
 import com.sameerasw.essentials.island.plugins.BaseIslandPlugin
+import com.sameerasw.essentials.island.state.IslandItemsState
+import com.sameerasw.essentials.island.state.IslandPresence
 import com.sameerasw.essentials.island.state.IslandStillness
 import com.sameerasw.essentials.island.ui.IslandTextStyles
 import com.sameerasw.essentials.island.ui.islandTextColor
@@ -43,9 +51,10 @@ import com.sameerasw.essentials.island.ui.components.RollingText
 import com.sameerasw.essentials.island.ui.components.islandAccent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeoutOrNull
 
 class StarlinkPlugin : BaseIslandPlugin() {
     override val id = "starlink"
@@ -63,20 +72,97 @@ class StarlinkPlugin : BaseIslandPlugin() {
         SettingsRepository.KEY_ISLAND_BRIEF_ENABLED,
     )
 
+    private enum class Demand { Off, Idle, Live }
+
+    private class RenderSignature(
+        val compact: Boolean,
+        val chip: Boolean,
+        val warn: Boolean,
+        val speed: String?,
+        val hideUnit: Boolean,
+        val hideArrow: Boolean,
+        val line: String?,
+        val details: StarlinkStatus?,
+    ) {
+        override fun equals(other: Any?) = other is RenderSignature && compact == other.compact && chip == other.chip &&
+            warn == other.warn && speed == other.speed && hideUnit == other.hideUnit && hideArrow == other.hideArrow &&
+            line == other.line && details == other.details
+
+        override fun hashCode() = 0
+    }
+
     private var status: StarlinkStatus? = null
     private var misses = 0
+    private var failures = 0
+    private var lastFetchAt = 0L
+    private var force = false
+    private var lastSignature: RenderSignature? = null
     private var pollJob: Job? = null
+    private var presenceJob: Job? = null
+    private val wake = Channel<Unit>(Channel.CONFLATED)
 
-    override fun refresh() {
-        syncPolling()
-        render()
+    @Volatile
+    private var wifi: Network? = null
+    private var wifiCallback: ConnectivityManager.NetworkCallback? = null
+
+    override fun onStart() {
+        registerWifi()
+        presenceJob = ctx?.scope?.launch { IslandItemsState.presence.collect { wake.trySend(Unit) } }
     }
 
     override fun onStop() {
         pollJob?.cancel()
         pollJob = null
+        presenceJob?.cancel()
+        presenceJob = null
+        unregisterWifi()
         status = null
         misses = 0
+        failures = 0
+        lastSignature = null
+    }
+
+    override fun refresh() {
+        syncPolling()
+        render()
+        wake.trySend(Unit)
+    }
+
+    override fun onScreenStateChanged() {
+        force = true
+        refresh()
+    }
+
+    private fun registerWifi() {
+        val cm = context.getSystemService(ConnectivityManager::class.java) ?: return
+        val callback = object : ConnectivityManager.NetworkCallback() {
+            override fun onAvailable(network: Network) {
+                wifi = network
+                failures = 0
+                force = true
+                wake.trySend(Unit)
+            }
+
+            override fun onLost(network: Network) {
+                if (wifi == network) wifi = null
+                wake.trySend(Unit)
+            }
+        }
+        try {
+            cm.registerNetworkCallback(NetworkRequest.Builder().addTransportType(NetworkCapabilities.TRANSPORT_WIFI).build(), callback)
+            wifiCallback = callback
+        } catch (_: Exception) {
+        }
+    }
+
+    private fun unregisterWifi() {
+        val callback = wifiCallback ?: return
+        try {
+            context.getSystemService(ConnectivityManager::class.java)?.unregisterNetworkCallback(callback)
+        } catch (_: Exception) {
+        }
+        wifiCallback = null
+        wifi = null
     }
 
     private fun syncPolling() {
@@ -86,46 +172,99 @@ class StarlinkPlugin : BaseIslandPlugin() {
             pollJob = null
             status = null
             misses = 0
+            failures = 0
             return
         }
         if (pollJob?.isActive == true) return
         pollJob = c.scope.launch { poll() }
     }
 
-    private suspend fun poll() {
-        while (true) {
-            val fetched = if (hasWifi()) withContext(Dispatchers.IO) { StarlinkClient.fetchStatus() } else null
-            if (ctx == null) return
-            if (fetched != null) {
-                misses = 0
-                status = fetched
-            } else if (++misses >= MISSES_BEFORE_HIDE) {
-                status = null
-            }
-            render()
-            delay(
-                when {
-                    status == null -> ABSENT_POLL_MS
-                    IslandStillness.isStill -> STILL_POLL_MS
-                    else -> ACTIVE_POLL_MS
-                },
-            )
+    private fun compactOn() = settings.getBoolean(SettingsRepository.KEY_ISLAND_STARLINK_COMPACT, true)
+
+    private fun speedsOn() = settings.getBoolean(SettingsRepository.KEY_ISLAND_STARLINK_SPEEDS, false)
+
+    private fun screenOn() = context.getSystemService(PowerManager::class.java)?.isInteractive != false
+
+    private fun expandedHere(c: IslandPluginContext): Boolean {
+        if (c.currentStage() != IslandStage.Expanded) return false
+        val focused = c.focusedKey()
+        return focused == KEY || focused == BRIEF_KEY
+    }
+
+    // Live data is only worth fetching while something on screen shows it
+    private fun demand(): Demand {
+        val c = ctx ?: return Demand.Off
+        if (!settings.isIslandShowStarlinkEnabled() || !screenOn() || c.isContentSuppressed()) return Demand.Off
+        val compact = compactOn()
+        val shown = IslandItemsState.presence.value[KEY] == IslandPresence.Shown
+        return when {
+            expandedHere(c) -> Demand.Live
+            compact && shown && speedsOn() -> Demand.Live
+            compact -> Demand.Idle
+            else -> Demand.Off
         }
     }
 
-    private fun hasWifi(): Boolean {
-        val cm = context.getSystemService(ConnectivityManager::class.java) ?: return false
-        return cm.allNetworks.any { cm.getNetworkCapabilities(it)?.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) == true }
+    private fun intervalFor(demand: Demand): Long {
+        val still = IslandStillness.isStill
+        return when {
+            status == null -> ABSENT_POLL_MS[failures.coerceIn(0, ABSENT_POLL_MS.lastIndex)]
+            misses > 0 -> RETRY_POLL_MS
+            demand == Demand.Live -> if (still) STILL_LIVE_POLL_MS else LIVE_POLL_MS
+            else -> if (still) STILL_IDLE_POLL_MS else IDLE_POLL_MS
+        }
+    }
+
+    private suspend fun poll() {
+        while (true) {
+            val demand = demand()
+            val network = wifi
+            if (demand == Demand.Off || network == null) {
+                if (network == null && status != null) {
+                    status = null
+                    misses = 0
+                    render()
+                }
+                wake.receive()
+                continue
+            }
+            val now = SystemClock.elapsedRealtime()
+            val due = if (force) now else lastFetchAt + intervalFor(demand)
+            if (now < due) {
+                withTimeoutOrNull(due - now) { wake.receive() }
+                continue
+            }
+            force = false
+            val fetched = withContext(Dispatchers.IO) { StarlinkClient.fetchStatus(connect = { network.openConnection(it) }) }
+            lastFetchAt = SystemClock.elapsedRealtime()
+            if (ctx == null) return
+            if (fetched != null) {
+                misses = 0
+                failures = 0
+                status = fetched
+            } else if (status != null) {
+                if (++misses >= MISSES_BEFORE_HIDE) {
+                    status = null
+                    misses = 0
+                }
+            } else {
+                failures++
+            }
+            render()
+        }
     }
 
     private fun render() {
         val current = status
-        if (ctx == null || current == null || !settings.isIslandShowStarlinkEnabled()) {
+        val c = ctx
+        if (c == null || current == null || !settings.isIslandShowStarlinkEnabled()) {
+            lastSignature = null
             publish(null)
             return
         }
-        val compact = settings.getBoolean(SettingsRepository.KEY_ISLAND_STARLINK_COMPACT, true)
+        val compact = compactOn()
         if (!compact && !settings.isIslandBriefEnabled()) {
+            lastSignature = null
             publish(null)
             return
         }
@@ -135,18 +274,23 @@ class StarlinkPlugin : BaseIslandPlugin() {
         val speedMode = settings.getString(SettingsRepository.KEY_ISLAND_STARLINK_SPEED_MODE, null)
         val hideArrow = (speedMode == StarlinkSpeedFormat.MODE_UP || speedMode == StarlinkSpeedFormat.MODE_DOWN || speedMode == null) &&
             settings.getBoolean(SettingsRepository.KEY_ISLAND_STARLINK_HIDE_ARROW, false)
-        val speed = if (compact && connected && settings.getBoolean(SettingsRepository.KEY_ISLAND_STARLINK_SPEEDS, false)) {
-            StarlinkSpeedFormat.forMode(
-                settings.getString(SettingsRepository.KEY_ISLAND_STARLINK_SPEED_MODE, null),
-                current.downlinkBps,
-                current.uplinkBps,
-                fixedMbps = fixedMbps,
-            )
+        val speed = if (compact && connected && speedsOn()) {
+            StarlinkSpeedFormat.forMode(speedMode, current.downlinkBps, current.uplinkBps, fixedMbps = fixedMbps)
         } else {
             null
         }
         val warn = !connected || current.degraded
         val chip = compact && settings.getBoolean(SettingsRepository.KEY_ISLAND_STARLINK_CHIP, false)
+        val stage = c.currentStage()
+        val lineText = if (stage == IslandStage.Line || stage == IslandStage.Expanded) lineSummary(current) else null
+        val signature = RenderSignature(
+            compact, chip, warn,
+            speed?.let { "${it.text}|${it.unit}|${it.direction}" },
+            hideUnit, hideArrow, lineText,
+            current.takeIf { expandedHere(c) },
+        )
+        if (signature == lastSignature) return
+        lastSignature = signature
         publish(
             IslandItem(
                 key = KEY,
@@ -160,7 +304,7 @@ class StarlinkPlugin : BaseIslandPlugin() {
                 line = LineContent(
                     icon = { IslandIcon(R.drawable.ic_starlink_24, tint = if (warn) WARN else islandAccent()) },
                     start = context.getString(R.string.island_show_starlink_title),
-                    end = lineSummary(current),
+                    end = lineText ?: lineSummary(current),
                 ),
                 expanded = ExpandedContent { scope -> StarlinkExpanded(current, scope) },
                 compactVisible = compact,
@@ -302,9 +446,13 @@ class StarlinkPlugin : BaseIslandPlugin() {
 
     companion object {
         const val KEY = "starlink"
-        private const val ACTIVE_POLL_MS = 2_000L
-        private const val STILL_POLL_MS = 10_000L
-        private const val ABSENT_POLL_MS = 15_000L
+        private const val BRIEF_KEY = "brief"
+        private const val LIVE_POLL_MS = 2_000L
+        private const val STILL_LIVE_POLL_MS = 5_000L
+        private const val IDLE_POLL_MS = 30_000L
+        private const val STILL_IDLE_POLL_MS = 60_000L
+        private const val RETRY_POLL_MS = 3_000L
+        private val ABSENT_POLL_MS = longArrayOf(20_000L, 60_000L, 300_000L, 600_000L)
         private const val MISSES_BEFORE_HIDE = 2
         private val WARN = Color(0xFFFFB74D)
 

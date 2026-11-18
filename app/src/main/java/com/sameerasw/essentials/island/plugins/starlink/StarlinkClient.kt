@@ -3,6 +3,7 @@ package com.sameerasw.essentials.island.plugins.starlink
 import java.io.ByteArrayOutputStream
 import java.net.HttpURLConnection
 import java.net.URL
+import java.net.URLConnection
 
 /**
  * Talks to the dish's unauthenticated local gRPC-web endpoint. No Android or app dependencies.
@@ -16,8 +17,17 @@ object StarlinkClient {
     // Request { get_status = 1004 {} } wrapped in a gRPC-web data frame
     private val GET_STATUS_FRAME = byteArrayOf(0, 0, 0, 0, 3, 0xE2.toByte(), 0x3E, 0x00)
 
-    fun fetchStatus(host: String = DEFAULT_HOST, connectTimeoutMs: Int = 1200, readTimeoutMs: Int = 2500): StarlinkStatus? {
-        val connection = (URL("http://$host:$GRPC_WEB_PORT$PATH").openConnection() as HttpURLConnection)
+    fun fetchStatus(
+        host: String = DEFAULT_HOST,
+        connectTimeoutMs: Int = 1200,
+        readTimeoutMs: Int = 2500,
+        connect: (URL) -> URLConnection = { it.openConnection() },
+    ): StarlinkStatus? {
+        val connection = try {
+            connect(URL("http://$host:$GRPC_WEB_PORT$PATH")) as HttpURLConnection
+        } catch (_: Exception) {
+            return null
+        }
         return try {
             connection.apply {
                 requestMethod = "POST"
