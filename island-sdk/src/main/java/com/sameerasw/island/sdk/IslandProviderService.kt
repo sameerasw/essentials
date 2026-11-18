@@ -20,6 +20,7 @@ abstract class IslandProviderService : Service() {
     protected open fun onHostDetached() {}
     protected open fun onHostInfoChanged(info: HostInfo) {}
     protected open fun onAction(itemKey: String, actionId: String) {}
+    protected open fun onOptionChanged(key: String, checked: Boolean) {}
     protected open fun onRequestSurface(itemKey: String, request: SurfaceRequest, deliver: (SurfaceControlViewHost.SurfacePackage?) -> Unit) = deliver(null)
     protected open fun onResizeSurface(itemKey: String, widthPx: Int, heightPx: Int) {}
     protected open fun onReleaseSurface(itemKey: String) {}
@@ -71,6 +72,14 @@ abstract class IslandProviderService : Service() {
 
         override fun onAction(itemKey: String, actionId: String) {
             if (!isCallerAllowed()) return
+            if (itemKey == IslandSchema.OPTION_ITEM) {
+                val key = actionId.substringBefore('=', "")
+                val value = actionId.substringAfter('=', "")
+                if (key.isNotEmpty() && (value == "true" || value == "false")) {
+                    this@IslandProviderService.onOptionChanged(key, value == "true")
+                }
+                return
+            }
             this@IslandProviderService.onAction(itemKey, actionId)
         }
 

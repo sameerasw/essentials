@@ -8,6 +8,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -20,9 +21,11 @@ import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.island.remote.ProviderTrustStore
+import com.sameerasw.essentials.island.remote.RemoteProviderOptions
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.sheets.EssentialsBottomSheet
+import com.sameerasw.essentials.ui.features.display.ProviderAppIcon
 import com.sameerasw.essentials.utils.HapticUtil
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -38,6 +41,8 @@ fun IslandAppOptionsBottomSheet(
     var launcherOnly by remember { mutableStateOf(packageName in store.launcherOnly()) }
     var hideWhenLocked by remember { mutableStateOf(packageName in store.hideWhenLocked()) }
     var showOnUpdate by remember { mutableStateOf(packageName in store.showOnUpdate()) }
+    val providerOptions by RemoteProviderOptions.options.collectAsState()
+    val ownOptions = providerOptions[packageName].orEmpty()
 
     EssentialsBottomSheet(onDismissRequest = onDismissRequest) {
         Column(
@@ -85,6 +90,22 @@ fun IslandAppOptionsBottomSheet(
                         store.setShowOnUpdate(packageName, it)
                     },
                 )
+            }
+
+            if (ownOptions.isNotEmpty()) {
+                RoundedCardContainer(spacing = 2.dp, cornerRadius = 24.dp) {
+                    ownOptions.forEach { option ->
+                        IconToggleItem(
+                            leadingIcon = ProviderAppIcon(packageName),
+                            title = option.title,
+                            isChecked = option.checked,
+                            onCheckedChange = {
+                                HapticUtil.performVirtualKeyHaptic(view)
+                                RemoteProviderOptions.change(packageName, option.key, it)
+                            },
+                        )
+                    }
+                }
             }
         }
     }

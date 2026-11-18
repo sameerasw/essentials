@@ -14,6 +14,8 @@ import com.sameerasw.island.sdk.IslandPayload
 object PayloadValidator {
     private const val MAX_ITEMS = 6
     private const val MAX_CARDS = 4
+    private const val MAX_OPTIONS = 12
+    private const val MAX_OPTION_TITLE = 48
     private const val MAX_ASSETS = 48
     private const val MAX_ICON_PX = 256
     private const val MAX_ASSET_BYTES = 4 * 1024 * 1024
@@ -34,7 +36,12 @@ object PayloadValidator {
             .distinctBy { it.key.take(MAX_KEY) }
             .take(MAX_CARDS)
             .map(::card)
-        return DecodedPayload(IslandPayload(decoded.payload.schema, items, cards), assets(decoded.assets))
+        val options = decoded.payload.options
+            .filter { it.key.isNotBlank() && it.title.isNotBlank() }
+            .distinctBy { it.key.take(MAX_KEY) }
+            .take(MAX_OPTIONS)
+            .map { it.copy(key = it.key.take(MAX_KEY), title = it.title.take(MAX_OPTION_TITLE)) }
+        return DecodedPayload(IslandPayload(decoded.payload.schema, items, cards, options), assets(decoded.assets))
     }
 
     private fun assets(source: Map<String, Bitmap>): Map<String, Bitmap> {
