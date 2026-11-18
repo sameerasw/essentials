@@ -181,9 +181,7 @@ class TimerPlugin : BaseIslandPlugin() {
                         Column(Modifier.padding(spec.expandedOutset)) {
                             Spacer(Modifier.height(spec.expandedTopPadding))
                             scope.CameraRow(
-                                horizontalPadding = spec.contentGap + spec.expandedCorner * 0.35f,
                                 title = if (more > 0) "$label  +$more" else label,
-                                titlePadding = side,
                                 start = {
                                     Box(Modifier.padding(horizontal = 4.dp)) { TimerGlyph(entry, icon, 20.dp, islandAccent()) }
                                 },
