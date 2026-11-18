@@ -1630,6 +1630,7 @@
     <string name="about_desc_back_gesture">Fine tune the system back gesture.\n\nAdjust the edge widths for the left and right gesture areas and set up per-app back gesture behavior. Requires secure settings permission.</string>
     <string name="island_chips_title">Island chips</string>
     <string name="island_calendar_compact_time_title">Compact time</string>
+    <string name="island_calendar_hide_now_title">Hide \"Now\"</string>
     <string name="feat_aod_wallpaper_compat_title">Modalità di compatibilità</string>
     <string name="feat_aod_wallpaper_compat_info_why">Alcuni dispositivi, soprattutto su One UI, mettono in pausa le animazioni delle app mentre il display always-on è attivo e saltano il disegno delle finestre delle app. Questo può lasciare lo sfondo AOD semitrasparente o invisibile, oppure bloccato.</string>
     <string name="feat_aod_wallpaper_compat_info_what">La modalità di compatibilità disattiva le animazioni di dissolvenza dello sfondo. Lo sfondo appare subito a piena potenza, scompare all\'istante quando lo schermo si riattiva e le modifiche all\'immagine vengono applicate senza dissolvenza incrociata. Attivalo solo se lo sfondo appare sbiadito, non viene mai visualizzato o rimane visibile anche dopo il risveglio.</string>
@@ -1817,4 +1818,7 @@
     <string name="volume_steps_hint">Ogni pressione di un tasto del volume aumenta il volume multimediale di questo numero di passi. Tenendo premuto un tasto, l\'azione si ripete, a meno che la rimappatura dei pulsanti non preveda un\'azione di pressione prolungata per quel tasto, che ha la priorità.</string>
     <string name="volume_steps_per_press_title">Passi per pressione</string>
     <string name="app_volume_hint">Le app che riproducono suoni vengono visualizzate automaticamente qui. Tocca un\'app per modificarne il volume oppure rimuovila per ripristinare il volume normale.</string>
+    <string name="diy_action_location_on">Turn On Location</string>
+    <string name="diy_action_location_off">Turn Off Location</string>
+    <string name="diy_action_location_toggle">Toggle Location</string>
 </resources>

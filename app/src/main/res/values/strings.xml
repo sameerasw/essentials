@@ -1555,6 +1555,9 @@
     <string name="diy_action_wifi_toggle">Toggle WiFi</string>
     <string name="diy_action_cellular_on">Turn On Cellular Data</string>
     <string name="diy_action_cellular_off">Turn Off Cellular Data</string>
+    <string name="diy_action_location_on">Turn On Location</string>
+    <string name="diy_action_location_off">Turn Off Location</string>
+    <string name="diy_action_location_toggle">Toggle Location</string>
     <string name="diy_action_cellular_toggle">Toggle Cellular Data</string>
     <string name="diy_action_state_unknown">%1$s: couldn\'t read the current state</string>
     <string name="diy_action_auto_brightness_on">Turn On Auto Brightness</string>
@@ -3740,6 +3743,7 @@
     <string name="island_chips_title">Island chips</string>
     <string name="island_time_chip_title">Show in chip</string>
     <string name="island_calendar_compact_time_title">Compact time</string>
+    <string name="island_calendar_hide_now_title">Hide \"Now\"</string>
     <string name="island_calendar_show_ongoing_title">Show ongoing events</string>
     <string name="icon_category_general">General</string>
     <string name="icon_category_celebrations">Celebrations</string>

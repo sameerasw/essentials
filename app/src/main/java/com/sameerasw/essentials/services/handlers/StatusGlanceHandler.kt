@@ -176,6 +176,7 @@ class StatusGlanceHandler(
                 unregisterMediaListener()
                 unregisterCalendarObserver()
                 unregisterTimeReceiver()
+        mainHandler.removeCallbacks(secondTick)
                 unregisterBatteryReceiver()
             }
         }
@@ -230,6 +231,7 @@ class StatusGlanceHandler(
     }
 
     private fun syncConfigToView() {
+        updateTime()
         if (settingsRepository.isStatusGlanceEnabled() && (!isOverlayAdded || glanceView == null)) {
             createOverlay()
         }
@@ -431,13 +433,21 @@ class StatusGlanceHandler(
         }
     }
 
+    private val secondTick = Runnable { updateTime() }
+
     private fun updateTime() {
         val is24Hour = DateFormat.is24HourFormat(service)
-        val pattern = if (is24Hour) "HH:mm" else "h:mm"
+        val seconds = settingsRepository.isStatusGlanceShowSecondsEnabled()
+        val pattern = (if (is24Hour) "HH:mm" else "h:mm") + if (seconds) ":ss" else ""
         val timeFormat = SimpleDateFormat(pattern, Locale.getDefault())
         val formattedTime = timeFormat.format(Date())
         cachedTimeString = formattedTime
         glanceView?.currentTimeString = formattedTime
+
+        mainHandler.removeCallbacks(secondTick)
+        if (seconds && !isScreenOff) {
+            mainHandler.postDelayed(secondTick, 1000L - System.currentTimeMillis() % 1000L)
+        }
     }
 
     private fun updateBatteryStatus(intent: Intent? = null) {
@@ -982,6 +992,7 @@ class StatusGlanceHandler(
     fun onScreenOff() {
         isScreenOff = true
         isLocked = true
+        mainHandler.removeCallbacks(secondTick)
         mainHandler.post {
             glanceView?.isScreenOff = true
             glanceView?.isLocked = true

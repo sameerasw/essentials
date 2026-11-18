@@ -515,9 +515,8 @@ private fun BriefOverview(
         
         Column(Modifier.fillMaxWidth().padding(spec.expandedOutset).padding(bottom = spec.expandedBottomPadding)) {
             Spacer(Modifier.height(spec.expandedTopPadding))
-            val headerPadding = spec.contentGap + spec.expandedCorner * 0.35f
+            val headerPadding = spec.expandedPadding + spec.expandedCorner * 0.35f
             scope.CameraRow(
-                horizontalPadding = headerPadding,
                 start = {
                     Text(time, style = IslandTextStyles.title.copy(fontSize = 20.sp))
                     if (!twoLineHeader) {

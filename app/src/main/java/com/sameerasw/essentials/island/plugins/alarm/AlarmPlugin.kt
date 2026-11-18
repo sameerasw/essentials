@@ -160,7 +160,6 @@ class AlarmPlugin : BaseIslandPlugin() {
             Column(Modifier.fillMaxWidth().padding(spec.expandedOutset)) {
                 Spacer(Modifier.height(spec.expandedTopPadding))
                 scope.CameraRow(
-                    horizontalPadding = spec.contentGap + spec.expandedCorner * 0.35f,
                     title = title,
                     start = {
                         IslandIcon(R.drawable.rounded_alarm_24, size = 20.dp, tint = islandAccent())

@@ -21,6 +21,8 @@ import android.media.AudioManager
 import android.media.session.MediaController
 import android.media.session.MediaSessionManager
 import android.media.session.PlaybackState
+import android.location.LocationManager
+import androidx.core.location.LocationManagerCompat
 import android.net.wifi.WifiManager
 import android.os.Build
 import android.os.Handler
@@ -952,6 +954,9 @@ object CombinedActionExecutor {
                 is Action.ToggleCellularData ->
                     isCellularDataEnabled(context)?.let { setCellularDataEnabled(context, !it) }
                         ?: showStateUnknown(context, R.string.diy_action_cellular_toggle)
+                is Action.TurnOnLocation -> setLocationEnabled(context, true)
+                is Action.TurnOffLocation -> setLocationEnabled(context, false)
+                is Action.ToggleLocation -> setLocationEnabled(context, !isLocationEnabled(context))
                 is Action.TurnOnAutoBrightness -> setAutoBrightnessEnabled(context, true)
                 is Action.TurnOffAutoBrightness -> setAutoBrightnessEnabled(context, false)
                 is Action.ToggleAutoBrightness -> setAutoBrightnessEnabled(context, !isAutoBrightnessEnabled(context))
@@ -1201,6 +1206,20 @@ object CombinedActionExecutor {
             context,
             "svc data $state",
             featureName = context.getString(if (enabled) R.string.diy_action_cellular_on else R.string.diy_action_cellular_off),
+        )
+    }
+
+    private fun isLocationEnabled(context: Context): Boolean =
+        context.getSystemService(LocationManager::class.java)?.let { LocationManagerCompat.isLocationEnabled(it) } ?: false
+
+    private fun setLocationEnabled(
+        context: Context,
+        enabled: Boolean,
+    ) {
+        ShellUtils.runCommand(
+            context,
+            "cmd location set-location-enabled $enabled",
+            featureName = context.getString(if (enabled) R.string.diy_action_location_on else R.string.diy_action_location_off),
         )
     }
 

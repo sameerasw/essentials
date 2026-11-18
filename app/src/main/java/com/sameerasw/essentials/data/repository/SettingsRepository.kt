@@ -607,6 +607,7 @@ class SettingsRepository(
         const val KEY_ISLAND_NOTIF_CONCEAL_CHAT_PICTURES = "island_notif_conceal_chat_pictures"
         const val KEY_ISLAND_CALENDAR_HIDE_LOCKED = "island_calendar_hide_locked"
         const val KEY_ISLAND_CALENDAR_COMPACT_TIME = "island_calendar_compact_time"
+        const val KEY_ISLAND_CALENDAR_HIDE_NOW = "island_calendar_hide_now"
         const val KEY_ISLAND_CALENDAR_SHOW_ONGOING = "island_calendar_show_ongoing"
         const val KEY_ISLAND_CALENDAR_HIDDEN_EVENTS = "island_calendar_hidden_events"
         const val KEY_ISLAND_TIME_HIDE_LOCKED = "island_time_hide_locked"
@@ -845,6 +846,7 @@ class SettingsRepository(
         const val KEY_STATUS_GLANCE_CALENDAR_SHOW_ALL_DAY = "status_glance_calendar_show_all_day"
         const val KEY_STATUS_GLANCE_SHOW_MEDIA = "status_glance_show_media"
         const val KEY_STATUS_GLANCE_SHOW_TIME = "status_glance_show_time"
+        const val KEY_STATUS_GLANCE_SHOW_SECONDS = "status_glance_show_seconds"
         const val KEY_STATUS_GLANCE_BACKGROUND_PILL = "status_glance_background_pill"
         const val KEY_STATUS_GLANCE_ALBUM_ART_COLORS = "status_glance_album_art_colors"
         const val KEY_STATUS_GLANCE_SHOW_BATTERY = "status_glance_show_battery"
@@ -4853,6 +4855,9 @@ class SettingsRepository(
 
     fun isStatusGlanceShowTimeEnabled(): Boolean = getBoolean(KEY_STATUS_GLANCE_SHOW_TIME, true)
     fun setStatusGlanceShowTimeEnabled(enabled: Boolean) = putBoolean(KEY_STATUS_GLANCE_SHOW_TIME, enabled)
+
+    fun isStatusGlanceShowSecondsEnabled(): Boolean = getBoolean(KEY_STATUS_GLANCE_SHOW_SECONDS, false)
+    fun setStatusGlanceShowSecondsEnabled(enabled: Boolean) = putBoolean(KEY_STATUS_GLANCE_SHOW_SECONDS, enabled)
 
     fun isStatusGlanceBackgroundPillEnabled(): Boolean = getBoolean(KEY_STATUS_GLANCE_BACKGROUND_PILL, false)
     fun setStatusGlanceBackgroundPillEnabled(enabled: Boolean) = putBoolean(KEY_STATUS_GLANCE_BACKGROUND_PILL, enabled)

@@ -348,9 +348,39 @@ class StatusGlanceView(context: Context) : View(context) {
 
     var currentTimeString: String = ""
         set(value) {
+            val old = field
             field = value
+            if (old != value && old.length == value.length && old.isNotEmpty() &&
+                activeSlot == GlanceSlot.DEFAULT && !isTransitioning && showTime
+            ) {
+                startClockRoll(old)
+            }
             reevaluateSlot()
         }
+
+    private var rollFromClock: String = ""
+    private var clockRollProgress: Float = 1f
+    private var clockRollAnimator: ValueAnimator? = null
+
+    private fun startClockRoll(from: String) {
+        rollFromClock = from
+        clockRollAnimator?.cancel()
+        clockRollAnimator = ValueAnimator.ofFloat(0f, 1f).apply {
+            duration = 380L
+            interpolator = DecelerateInterpolator(1.8f)
+            addUpdateListener {
+                clockRollProgress = it.animatedValue as Float
+                invalidate()
+            }
+            addListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator) {
+                    clockRollProgress = 1f
+                    invalidate()
+                }
+            })
+            start()
+        }
+    }
 
     // Active Slot
     var activeSlot: GlanceSlot = GlanceSlot.NONE
@@ -415,6 +445,7 @@ class StatusGlanceView(context: Context) : View(context) {
     private val textPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         textSize = 13f * density
         typeface = Typeface.create(Typeface.DEFAULT, Typeface.NORMAL)
+        fontFeatureSettings = "tnum"
     }
 
     private val batteryTextPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
@@ -1019,7 +1050,29 @@ class StatusGlanceView(context: Context) : View(context) {
             textPaint.getTextBounds(clockText, 0, clockText.length, textBounds)
             val clockY = glanceCenterY - textBounds.exactCenterY() + offsetY
             if (combinedTextAlpha > 0) {
-                canvas.drawText(clockText, cursorX, clockY, textPaint)
+                val rolling = clockRollProgress < 1f && !isTransitioning &&
+                    clockText == currentTimeString && rollFromClock.length == clockText.length
+                if (!rolling) {
+                    canvas.drawText(clockText, cursorX, clockY, textPaint)
+                } else {
+                    val travel = textPaint.textSize * 0.9f
+                    val p = clockRollProgress
+                    var x = cursorX
+                    for (i in clockText.indices) {
+                        val newCh = clockText[i].toString()
+                        val oldCh = rollFromClock[i].toString()
+                        if (newCh == oldCh) {
+                            canvas.drawText(newCh, x, clockY, textPaint)
+                        } else {
+                            textPaint.alpha = (combinedTextAlpha * (1f - p)).toInt()
+                            canvas.drawText(oldCh, x, clockY - p * travel, textPaint)
+                            textPaint.alpha = (combinedTextAlpha * p).toInt()
+                            canvas.drawText(newCh, x, clockY + (1f - p) * travel, textPaint)
+                            textPaint.alpha = combinedTextAlpha
+                        }
+                        x += textPaint.measureText(newCh)
+                    }
+                }
             }
             cursorX += textPaint.measureText(clockText) + (4f * density)
         }

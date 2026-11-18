@@ -39,6 +39,7 @@ class CalendarPlugin : BaseIslandPlugin() {
         SettingsRepository.KEY_ISLAND_CALENDAR_PRIORITY_MINUTES,
         SettingsRepository.KEY_ISLAND_CALENDAR_HIDE_LOCKED,
         SettingsRepository.KEY_ISLAND_CALENDAR_COMPACT_TIME,
+        SettingsRepository.KEY_ISLAND_CALENDAR_HIDE_NOW,
         SettingsRepository.KEY_ISLAND_CALENDAR_SHOW_ONGOING,
         SettingsRepository.KEY_ISLAND_TIME_FORMAT,
         SettingsRepository.KEY_ISLAND_TIME_LEADING_ZERO,
@@ -124,6 +125,7 @@ class CalendarPlugin : BaseIslandPlugin() {
         } else {
             CalendarEventUtil.formatRelativeTimeCompact(e.startTimeMillis, now)
         }
+        val hideNow = e.startTimeMillis <= now && settings.getBoolean(SettingsRepository.KEY_ISLAND_CALENDAR_HIDE_NOW, false)
         val showGlow = settings.isIslandShowGlowEnabled()
         val icon = settings.getIslandCalendarIcons()[e.calendarId]
         val urgent = !hidden && isUrgent(e, now)
@@ -137,7 +139,7 @@ class CalendarPlugin : BaseIslandPlugin() {
             compact = listOf(
                 CompactCell("$key.icon") { CalendarGlyph(icon, size = 18.dp, tint = islandAccent()) },
                 CompactCell("$key.time") { RollingText(short) },
-            ),
+            ).filter { !(hideNow && it.key.endsWith(".time")) },
             line = LineContent(
                 icon = { CalendarGlyph(icon, size = 20.dp, tint = islandAccent()) },
                 start = e.title,

@@ -57,12 +57,11 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun IslandExpandedScope.CameraRow(
     modifier: Modifier = Modifier,
-    horizontalPadding: Dp = spec.expandedPadding,
     title: String? = null,
-    titlePadding: Dp = spec.expandedPadding + spec.expandedCorner * 0.35f,
     start: @Composable RowScope.() -> Unit,
     end: @Composable RowScope.() -> Unit = {},
 ) {
+    val horizontalPadding = spec.expandedPadding + spec.expandedCorner * 0.35f
     Column(modifier.fillMaxWidth()) {
         Row(
             modifier = Modifier
@@ -110,7 +109,7 @@ fun IslandExpandedScope.CameraRow(
             }
         }
         if (!title.isNullOrBlank()) {
-            Box(Modifier.fillMaxWidth().padding(horizontal = titlePadding)) {
+            Box(Modifier.fillMaxWidth().padding(horizontal = horizontalPadding)) {
                 MarqueeText(
                     text = title,
                     style = IslandTextStyles.title.copy(fontSize = 17.sp),
