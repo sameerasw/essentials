@@ -3,6 +3,9 @@ package com.sameerasw.island.sdk
 object IslandSchema {
     const val VERSION = 1
 
+    // onAction itemKey carrying a toggled option, actionId is "key=true|false"
+    const val OPTION_ITEM = "@option"
+
     const val SERVICE_ACTION = "com.sameerasw.island.PROVIDER"
     const val META_LABEL = "com.sameerasw.island.provider.label"
     const val META_DESCRIPTION = "com.sameerasw.island.provider.description"

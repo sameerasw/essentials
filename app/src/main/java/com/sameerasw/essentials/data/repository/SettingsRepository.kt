@@ -727,6 +727,7 @@ class SettingsRepository(
         const val KEY_ISLAND_PROVIDERS_HIDDEN = "island_providers_hidden"
         const val KEY_ISLAND_PROVIDERS_LAUNCHER_ONLY = "island_providers_launcher_only"
         const val KEY_ISLAND_PROVIDERS_HIDE_LOCKED = "island_providers_hide_locked"
+        const val KEY_ISLAND_PROVIDERS_CHIP = "island_providers_chip"
         const val KEY_ISLAND_PROVIDERS_ON_UPDATE = "island_providers_on_update"
 
         private const val LEGACY_WEATHER_API_KEY_PREFIX = "weather_api_key"

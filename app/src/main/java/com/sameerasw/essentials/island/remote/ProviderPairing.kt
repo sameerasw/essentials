@@ -13,10 +13,17 @@ import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
 import kotlin.coroutines.resume
 
+enum class PairingResult { Granted, Refused, Unreachable }
+
 object ProviderPairing {
     private const val TIMEOUT_MS = 5_000L
 
-    suspend fun grant(context: Context, info: ProviderInfo): Boolean = call(context, info) { it.grantHost() }
+    suspend fun grant(context: Context, info: ProviderInfo): PairingResult =
+        when (call(context, info) { it.grantHost() }) {
+            true -> PairingResult.Granted
+            false -> PairingResult.Refused
+            null -> PairingResult.Unreachable
+        }
 
     suspend fun revoke(context: Context, info: ProviderInfo) {
         call(context, info) {
@@ -25,7 +32,8 @@ object ProviderPairing {
         }
     }
 
-    private suspend fun call(context: Context, info: ProviderInfo, block: (IIslandProvider) -> Boolean): Boolean {
+    // null means the provider could not be reached, false means it answered and refused
+    private suspend fun call(context: Context, info: ProviderInfo, block: (IIslandProvider) -> Boolean): Boolean? {
         val app = context.applicationContext
         var connection: ServiceConnection? = null
         return try {
@@ -56,11 +64,11 @@ object ProviderPairing {
                         try {
                             block(it)
                         } catch (_: Exception) {
-                            false
+                            null
                         }
                     }
-                } ?: false
-            } ?: false
+                }
+            }
         } finally {
             connection?.let {
                 try {

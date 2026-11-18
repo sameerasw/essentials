@@ -1941,6 +1941,7 @@ Eingeschränkt – Niedrigste Priorität (Android 12+); etwa einmal täglich geb
     <string name="island_time_show_seconds_title">Sekunden anzeigen</string>
     <string name="island_launcher_only_title">Nur im Launcher anzeigen</string>
     <string name="island_show_on_update_title">Periodically show on updates</string>
+    <string name="island_provider_chip_title">Show as a chip</string>
     <string name="island_launcher_only_desc">Ausblenden, solange eine App geöffnet ist</string>
     <string name="island_notif_show_title">Benachrichtigungen anzeigen</string>
     <string name="island_notif_filter_apps_title">Apps filtern</string>
@@ -2143,4 +2144,5 @@ Die Stufen können nur von der normalen Lautstärke abwärts, niemals darüber h
     <string name="island_starlink_alert_location">Unexpected location</string>
     <string name="island_starlink_alert_mast">Mast not vertical</string>
     <string name="island_starlink_alert_ethernet">Slow ethernet</string>
+    <string name="island_provider_pair_refused">This app doesn\'t trust this version of Essentials</string>
 </resources>

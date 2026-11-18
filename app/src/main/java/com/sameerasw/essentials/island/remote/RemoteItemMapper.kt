@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.lerp
+import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.island.model.CompactCell
 import com.sameerasw.essentials.island.model.CompactPlacement
@@ -24,6 +26,7 @@ import com.sameerasw.island.sdk.IslandPlacement
 
 interface RemoteItemHandler {
     val priorityGroup: String
+    val chip: Boolean
     fun namespaced(rawKey: String): String
     fun invoke(action: IslandAction, itemKey: String, siblings: Set<String>): Boolean
     fun surfaceSession(rawKey: String): RemoteSurfaceSession?
@@ -72,7 +75,8 @@ object RemoteItemMapper {
                     )
                 }
             },
-            accent = payload.accent?.let { Color(it) },
+            accent = payload.accent?.let { Color(it) }?.let { if (handler.chip) chipSafe(it) else it },
+            chip = handler.chip,
             dismissible = payload.dismissible,
             onOpen = interactions.onOpen?.let { action -> { handler.invoke(action, rawKey, siblings) } },
             interactions = InteractionOverrides(
@@ -84,6 +88,9 @@ object RemoteItemMapper {
             priorityGroup = handler.priorityGroup,
         )
     }
+
+    // Chip ink is black, so a dark provider accent gets lightened to stay readable
+    private fun chipSafe(color: Color): Color = if (color.luminance() < 0.5f) lerp(color, Color.White, 0.5f) else color
 
     private fun cell(cell: IslandCellPayload, assets: Map<String, Bitmap>): CompactCell =
         CompactCell(cell.key, cell.soloOnly) {

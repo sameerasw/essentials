@@ -1832,6 +1832,7 @@
     <string name="island_media_use_art_color_title">Advertise album art color</string>
     <string name="island_media_player_style_title">Player style</string>
     <string name="island_show_on_update_title">Periodically show on updates</string>
+    <string name="island_provider_chip_title">Show as a chip</string>
     <string name="debug_ui_margin_overlay_title">調試 UI 邊距疊加層</string>
     <string name="island_statusbar_ignore_notifications_title">Ignore notifications</string>
     <string name="island_statusbar_aware_width_info">This may not work on all devices. It works best on Pixels and devices with a status bar close to AOSP.</string>
@@ -1986,4 +1987,5 @@
     <string name="island_starlink_alert_location">Unexpected location</string>
     <string name="island_starlink_alert_mast">Mast not vertical</string>
     <string name="island_starlink_alert_ethernet">Slow ethernet</string>
+    <string name="island_provider_pair_refused">This app doesn\'t trust this version of Essentials</string>
 </resources>

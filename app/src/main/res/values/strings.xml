@@ -1959,6 +1959,7 @@
     <string name="island_provider_allow">Allow</string>
     <string name="island_provider_deny">Deny</string>
     <string name="island_provider_pair_failed">Couldn\'t connect to the app</string>
+    <string name="island_provider_pair_refused">This app doesn\'t trust this version of Essentials</string>
     <string name="app_airsync">AirSync</string>
     <string name="app_zenzero">ZenZero</string>
     <string name="app_canvas">Canvas</string>
@@ -3528,6 +3529,7 @@
     <string name="island_hide_when_locked_title">Hide when locked</string>
     <string name="island_launcher_only_title">Only show on launcher</string>
     <string name="island_show_on_update_title">Periodically show on updates</string>
+    <string name="island_provider_chip_title">Show as a chip</string>
     <string name="island_launcher_only_desc">Hide while an app is open</string>
     <string name="island_alarm_window_title">Show alarms within</string>
     <string name="island_alarm_window_hours">%1$d hours</string>
