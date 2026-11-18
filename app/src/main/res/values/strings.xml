@@ -3715,6 +3715,8 @@
     <string name="widget_stack_widgets_title">Widgets in this stack</string>
     <string name="widget_stack_add_widget">Add widget</string>
     <string name="widget_stack_remove_widget">Remove</string>
+    <string name="widget_stack_size_fill">Fill the stack</string>
+    <string name="widget_stack_size_natural">Natural size</string>
     <string name="widget_stack_move_up">Move up</string>
     <string name="widget_stack_move_down">Move down</string>
     <string name="widget_stack_max_reached">A stack can hold up to %1$d widgets</string>
