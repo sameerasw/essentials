@@ -221,8 +221,12 @@ fun CompactTemplate(
                 val measured = tap.clipToBounds().layout { measurable, c ->
                     val p = measurable.measure(c.copy(maxWidth = Constraints.Infinity))
                     if (live) com.sameerasw.essentials.island.state.CompactCellWidths.record(unit.cells.map { it.cell.key }, p.width)
-                    val w = p.width.coerceIn(c.minWidth, c.maxWidth)
-                    layout(w, p.height) { p.place(0, 0) }
+                    if (p.width > c.maxWidth && c.minWidth == 0) {
+                        layout(0, 0) {}
+                    } else {
+                        val w = p.width.coerceIn(c.minWidth, c.maxWidth)
+                        layout(w, p.height) { p.place(0, 0) }
+                    }
                 }
                 if (unit.chipColor != null) {
                     Box(measured) {
