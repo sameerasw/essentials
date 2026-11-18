@@ -69,6 +69,9 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
+import androidx.compose.material3.FilledTonalIconButton
+import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
@@ -133,6 +136,8 @@ import com.sameerasw.essentials.ui.modifiers.scrollMotionBlur
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
 import com.sameerasw.essentials.ui.theme.Shapes
 import com.sameerasw.essentials.utils.DeviceUtils
+import com.sameerasw.essentials.utils.AppResetHelper
+import com.sameerasw.essentials.ui.features.consciousgate.HoldToContinueButton
 import com.sameerasw.essentials.ui.core.pickers.SegmentedPicker
 import com.sameerasw.essentials.utils.AppHapticMode
 import com.sameerasw.essentials.utils.HapticUtil
@@ -213,6 +218,7 @@ fun SettingsContent(
     var showInstructionsSheet by remember { mutableStateOf(false) }
     var showShizukuHelpBottomSheet by remember { mutableStateOf(false) }
     var showHiddenDebuggingHelpSheet by remember { mutableStateOf(false) }
+    var showResetAllInfo by remember { mutableStateOf(false) }
     var showUnsupportedFeaturesSheet by remember { mutableStateOf(false) }
     var showPreReleaseConfirmSheet by remember { mutableStateOf(false) }
     var pendingPreReleaseState by remember { mutableStateOf(false) }
@@ -410,6 +416,12 @@ fun SettingsContent(
     }
 
     ShakeForHelp(viewModel = viewModel)
+
+    if (showResetAllInfo) {
+        com.sameerasw.essentials.ui.core.sheets.ResetAllInfoBottomSheet(
+            onDismissRequest = { showResetAllInfo = false },
+        )
+    }
 
     if (showHiddenDebuggingHelpSheet) {
         com.sameerasw.essentials.ui.core.sheets.HiddenDebuggingHelpBottomSheet(
@@ -1273,6 +1285,43 @@ fun SettingsContent(
                 onClick = { viewModel.restartSystemUI() },
                 iconRes = R.drawable.rounded_refresh_24,
             )
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        val resetView = LocalView.current
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(2.dp),
+        ) {
+            HoldToContinueButton(
+                waitTimeProgress = 1f,
+                onContinue = { AppResetHelper.resetAll(context) },
+                onHoldingChange = {},
+                modifier = Modifier.weight(1f),
+                holdDurationMillis = 3_000L,
+                holdLabel = stringResource(R.string.settings_reset_all_hold),
+                containerColor = MaterialTheme.colorScheme.errorContainer,
+                progressColor = MaterialTheme.colorScheme.error,
+                contentColor = MaterialTheme.colorScheme.onErrorContainer,
+                shape = RoundedCornerShape(topStart = 24.dp, bottomStart = 24.dp, topEnd = 4.dp, bottomEnd = 4.dp),
+            )
+            FilledTonalIconButton(
+                onClick = {
+                    HapticUtil.performUIHaptic(resetView)
+                    showResetAllInfo = true
+                },
+                modifier = Modifier.size(width = 58.dp, height = 58.dp),
+                shape = RoundedCornerShape(topStart = 4.dp, bottomStart = 4.dp, topEnd = 24.dp, bottomEnd = 24.dp),
+                colors = IconButtonDefaults.filledTonalIconButtonColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceBright,
+                ),
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.rounded_info_24),
+                    contentDescription = stringResource(R.string.settings_reset_all_info_title),
+                )
+            }
         }
 
         Spacer(modifier = Modifier.height(16.dp))

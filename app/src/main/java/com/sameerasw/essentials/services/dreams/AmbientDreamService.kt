@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials.services.dreams
 
+import androidx.core.content.ContextCompat
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -217,7 +218,7 @@ class AmbientDreamService : DreamService() {
 
         // Register receiver
         val filter = IntentFilter("SHOW_AMBIENT_GLANCE")
-        registerReceiver(receiver, filter, RECEIVER_EXPORTED)
+        ContextCompat.registerReceiver(this, receiver, filter, ContextCompat.RECEIVER_NOT_EXPORTED)
         isReceiverRegistered = true
 
         // Register Media Session Listener

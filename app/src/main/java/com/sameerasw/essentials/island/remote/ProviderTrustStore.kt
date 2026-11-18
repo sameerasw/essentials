@@ -47,6 +47,11 @@ class ProviderTrustStore(private val settings: SettingsRepository) {
     fun setHideWhenLocked(packageName: String, on: Boolean) =
         setPackage(SettingsRepository.KEY_ISLAND_PROVIDERS_HIDE_LOCKED, packageName, on)
 
+    fun chipped(): Set<String> = packages(SettingsRepository.KEY_ISLAND_PROVIDERS_CHIP)
+
+    fun setChip(packageName: String, on: Boolean) =
+        setPackage(SettingsRepository.KEY_ISLAND_PROVIDERS_CHIP, packageName, on)
+
     fun showOnUpdate(): Set<String> = settings.getIslandProvidersShowOnUpdate()
 
     fun setShowOnUpdate(packageName: String, on: Boolean) = settings.setIslandProviderShowOnUpdate(packageName, on)

@@ -2,6 +2,8 @@ package com.sameerasw.essentials.island.remote
 
 import android.graphics.Bitmap
 import androidx.compose.foundation.background
+import com.sameerasw.essentials.island.ui.components.islandAccent
+import com.sameerasw.essentials.island.ui.components.islandSectionBackground
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -56,7 +58,7 @@ fun RemoteBriefCardRow(card: RemoteBriefCard, onClick: () -> Unit, modifier: Mod
         modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
-            .background(Color.White.copy(alpha = 0.1f))
+            .background(islandSectionBackground(islandAccent()))
             .clickable(onClick = onClick)
             .padding(horizontal = 12.dp, vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically,

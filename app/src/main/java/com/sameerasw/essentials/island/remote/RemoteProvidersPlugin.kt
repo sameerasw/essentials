@@ -16,10 +16,13 @@ class RemoteProvidersPlugin : BaseIslandPlugin() {
         SettingsRepository.KEY_ISLAND_PROVIDERS,
         SettingsRepository.KEY_ISLAND_PROVIDERS_HIDDEN,
         SettingsRepository.KEY_ISLAND_PROVIDERS_HIDE_LOCKED,
+        SettingsRepository.KEY_ISLAND_PROVIDERS_CHIP,
+        SettingsRepository.KEY_ISLAND_CHIPS,
     )
 
     private val connections = HashMap<String, ProviderConnection>()
     private var receiver: BroadcastReceiver? = null
+    private var appliedChips: Set<String>? = null
 
     override fun onStart() {
         val receiver = object : BroadcastReceiver() {
@@ -63,6 +66,11 @@ class RemoteProvidersPlugin : BaseIslandPlugin() {
             )
             connections[pkg] = connection
             connection.connect()
+        }
+        val chips = trust.chipped() + if (settings.getBoolean(SettingsRepository.KEY_ISLAND_CHIPS, false)) setOf("*") else emptySet()
+        if (chips != appliedChips) {
+            appliedChips = chips
+            connections.values.forEach { it.remap() }
         }
         publishAll()
     }

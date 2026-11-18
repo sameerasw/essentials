@@ -1,6 +1,7 @@
 package com.sameerasw.essentials.utils.chronometer
 
 import com.sameerasw.essentials.utils.AppIconUtil
+import com.sameerasw.essentials.utils.call.CallNotificationParser
 import android.os.SystemClock
 import android.os.Build
 import android.app.Notification
@@ -113,7 +114,7 @@ object ChronometerRepository {
     fun isCandidate(sbn: StatusBarNotification): Boolean {
         val n = sbn.notification
         if (isRecorderSession(sbn)) return true
-        if (n.category == Notification.CATEGORY_CALL || n.category == Notification.CATEGORY_TRANSPORT) return false
+        if (CallNotificationParser.isCall(sbn) || n.category == Notification.CATEGORY_TRANSPORT) return false
         if (n.extras.containsKey(Notification.EXTRA_MEDIA_SESSION)) return false
         val chronometer = n.extras.getBoolean(Notification.EXTRA_SHOW_CHRONOMETER) || timeMetric(n.extras) != null
         

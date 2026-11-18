@@ -43,16 +43,26 @@ jobs:
       - name: Parse Inputs & Prepare JSON
         env:
           COMMENT_BODY: ${{ github.event.comment.body }}
+          EVENT_NAME: ${{ github.event_name }}
+          IN_TRANSLATIONS_JSON: ${{ inputs.translations_json }}
+          IN_CONTRIBUTOR: ${{ inputs.contributor }}
+          IN_CONTRIBUTOR_NAME: ${{ inputs.contributor_name }}
+          IN_CONTRIBUTOR_EMAIL: ${{ inputs.contributor_email }}
+          USER_LOGIN: ${{ github.event.comment.user.login }}
+          USER_ID: ${{ github.event.comment.user.id }}
         run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            echo '${{ inputs.translations_json }}' > /tmp/edits.json
-            echo "CONTRIBUTOR=${{ inputs.contributor }}" >> $GITHUB_ENV
-            echo "CONTRIBUTOR_NAME=${{ inputs.contributor_name || inputs.contributor }}" >> $GITHUB_ENV
-            echo "CONTRIBUTOR_EMAIL=${{ inputs.contributor_email }}" >> $GITHUB_ENV
+          if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
+            if ! printf '%s' "$IN_CONTRIBUTOR" | grep -Eq '^[A-Za-z0-9-]{1,39}$'; then
+              echo "Invalid contributor"; exit 1
+            fi
+            printf '%s' "$IN_TRANSLATIONS_JSON" > /tmp/edits.json
+            echo "CONTRIBUTOR=$IN_CONTRIBUTOR" >> $GITHUB_ENV
+            echo "CONTRIBUTOR_NAME=$IN_CONTRIBUTOR" >> $GITHUB_ENV
+            if printf '%s' "$IN_CONTRIBUTOR_EMAIL" | grep -Eq '^[A-Za-z0-9._+-]+@[A-Za-z0-9.-]+$'; then
+              echo "CONTRIBUTOR_EMAIL=$IN_CONTRIBUTOR_EMAIL" >> $GITHUB_ENV
+            fi
           else
             python3 .github/scripts/parse_comment_json.py
-            USER_LOGIN="${{ github.event.comment.user.login }}"
-            USER_ID="${{ github.event.comment.user.id }}"
             echo "CONTRIBUTOR=$USER_LOGIN" >> $GITHUB_ENV
             echo "CONTRIBUTOR_NAME=$USER_LOGIN" >> $GITHUB_ENV
             echo "CONTRIBUTOR_EMAIL=${USER_ID}+${USER_LOGIN}@users.noreply.github.com" >> $GITHUB_ENV
@@ -100,7 +110,11 @@ jobs:
               locale = edit.get('locale')
               raw_val = edit.get('value', '')
 
-              if not key or not locale:
+              if not isinstance(key, str) or not isinstance(locale, str):
+                  continue
+              if not re.fullmatch(r'[A-Za-z][A-Za-z0-9_]*', key):
+                  continue
+              if not re.fullmatch(r'[a-z]{2,3}(-r[A-Z]{2})?', locale):
                   continue
 
               val = escape_xml_val(raw_val)

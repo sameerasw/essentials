@@ -95,8 +95,9 @@ fun WallpaperStagingScreen(
     val coroutineScope = rememberCoroutineScope()
     val stagingRepository = remember { WallpaperStagingRepository(settingsRepository) }
 
+    val isOwner = remember { settingsRepository.getGitHubUser()?.login?.equals(OWNER_LOGIN, ignoreCase = true) == true }
     var accessKey by remember { mutableStateOf(settingsRepository.getUnsplashAccessKey() ?: "") }
-    var showApiKeyDialog by remember { mutableStateOf(accessKey.isBlank()) }
+    var showApiKeyDialog by remember { mutableStateOf(isOwner && accessKey.isBlank()) }
     var tempApiKey by remember { mutableStateOf(accessKey) }
 
     var isLoading by remember { mutableStateOf(true) }
@@ -126,31 +127,85 @@ fun WallpaperStagingScreen(
     var shuffledPages by remember { mutableStateOf<List<Int>>(emptyList()) }
     var nextPageIndex by remember { mutableIntStateOf(0) }
     var isFetchingMore by remember { mutableStateOf(false) }
+    var pendingAdvance by remember { mutableStateOf(false) }
+    var randomAvailable by remember { mutableStateOf(true) }
+    var recentlySeen by remember { mutableStateOf(settingsRepository.getWallpaperStagingSeen().toSet()) }
+
+    suspend fun gather(target: Int, exclude: Set<String>): List<WallpaperInfo> {
+        val found = LinkedHashMap<String, WallpaperInfo>()
+        fun accept(photos: List<WallpaperInfo>) =
+            photos.forEach { if (it.id !in historyIds && it.id !in exclude && it.id !in recentlySeen) found.putIfAbsent(it.id, it) }
+
+        var attempts = 0
+        while (randomAvailable && found.size < target && attempts < RANDOM_ATTEMPTS) {
+            attempts++
+            val batch = stagingRepository.fetchRandomCollectionPhotos(accessKey)
+            if (batch.isEmpty()) randomAvailable = false else accept(batch)
+        }
+        if (found.size < target && shuffledPages.isEmpty()) {
+            val totalPages = stagingRepository.fetchCollectionTotalPages(accessKey)
+            shuffledPages = (1..(if (totalPages > 0) totalPages else FALLBACK_PAGES)).shuffled()
+            nextPageIndex = 0
+        }
+        while (found.size < target && nextPageIndex < shuffledPages.size) {
+            val page = shuffledPages[nextPageIndex]
+            nextPageIndex++
+            accept(stagingRepository.fetchCollectionPhotos(accessKey, page))
+        }
+        return found.values.shuffled()
+    }
+
+    fun markSeen(photo: WallpaperInfo?) {
+        val id = photo?.id ?: return
+        if (id in recentlySeen) return
+        recentlySeen = recentlySeen + id
+        settingsRepository.markWallpaperStagingSeen(id)
+    }
 
     fun fetchNextBatch() {
         if (accessKey.isBlank() || isFetchingMore) return
-        if (nextPageIndex >= shuffledPages.size) return
 
         isFetchingMore = true
         coroutineScope.launch {
-            val newCandidates = mutableListOf<WallpaperInfo>()
-            while (newCandidates.size < 10 && nextPageIndex < shuffledPages.size) {
-                val pageToFetch = shuffledPages[nextPageIndex]
-                nextPageIndex++
-                val pagePhotos = stagingRepository.fetchCollectionPhotos(accessKey, pageToFetch)
-                val available = pagePhotos.filter { !historyIds.contains(it.id) }
-                val currentIds = candidatePhotos.map { it.id }.toSet()
-                val fresh = available.filter { !currentIds.contains(it.id) }
-                newCandidates.addAll(fresh)
+            var fresh = gather(10, candidatePhotos.map { it.id }.toSet())
+            if (fresh.isEmpty() && recentlySeen.isNotEmpty()) {
+                settingsRepository.clearWallpaperStagingSeen()
+                recentlySeen = emptySet()
+                randomAvailable = true
+                shuffledPages = emptyList()
+                fresh = gather(10, candidatePhotos.map { it.id }.toSet())
             }
-            if (newCandidates.isNotEmpty()) {
-                candidatePhotos = candidatePhotos + newCandidates.shuffled()
+            if (fresh.isNotEmpty()) candidatePhotos = candidatePhotos + fresh
+            if (pendingAdvance) {
+                pendingAdvance = false
+                currentIndex = if (currentIndex + 1 < candidatePhotos.size) currentIndex + 1 else 0
             }
             isFetchingMore = false
         }
     }
 
+    fun showNext() {
+        if (candidatePhotos.isEmpty()) return
+        markSeen(candidatePhotos.getOrNull(currentIndex))
+        if (currentIndex + 1 < candidatePhotos.size) {
+            currentIndex++
+            if (candidatePhotos.size - currentIndex <= 5) fetchNextBatch()
+        } else {
+            pendingAdvance = true
+            fetchNextBatch()
+        }
+    }
+
     fun loadData() {
+        if (!isOwner) {
+            isLoading = true
+            coroutineScope.launch {
+                stagedInfo = stagingRepository.fetchStagedWallpaper()
+                candidatePhotos = emptyList()
+                isLoading = false
+            }
+            return
+        }
         if (accessKey.isBlank()) {
             isLoading = false
             return
@@ -159,22 +214,21 @@ fun WallpaperStagingScreen(
         coroutineScope.launch {
             stagedInfo = stagingRepository.fetchStagedWallpaper()
             historyIds = stagingRepository.fetchMobileHistory()
-
-            val totalPages = stagingRepository.fetchCollectionTotalPages(accessKey)
-            val pages = (1..totalPages).toList().shuffled()
-            shuffledPages = pages
+            randomAvailable = true
+            shuffledPages = emptyList()
             nextPageIndex = 0
+            pendingAdvance = false
 
-            val initialCandidates = mutableListOf<WallpaperInfo>()
-            while (initialCandidates.size < 15 && nextPageIndex < pages.size) {
-                val pageToFetch = pages[nextPageIndex]
-                nextPageIndex++
-                val pagePhotos = stagingRepository.fetchCollectionPhotos(accessKey, pageToFetch)
-                val available = pagePhotos.filter { !historyIds.contains(it.id) }
-                initialCandidates.addAll(available)
+            var initial = gather(15, emptySet())
+            if (initial.isEmpty() && recentlySeen.isNotEmpty()) {
+                settingsRepository.clearWallpaperStagingSeen()
+                recentlySeen = emptySet()
+                randomAvailable = true
+                shuffledPages = emptyList()
+                initial = gather(15, emptySet())
             }
 
-            val randomized = initialCandidates.shuffled().toMutableList()
+            val randomized = initial.toMutableList()
             // If there's already a staged wallpaper, ensure it is the initial photo shown
             stagedInfo?.let { staged ->
                 randomized.removeAll { it.id == staged.id }
@@ -188,7 +242,7 @@ fun WallpaperStagingScreen(
     }
 
     LaunchedEffect(accessKey) {
-        if (accessKey.isNotBlank()) {
+        if (!isOwner || accessKey.isNotBlank()) {
             loadData()
         }
     }
@@ -331,17 +385,19 @@ fun WallpaperStagingScreen(
                         modifier = Modifier.size(56.dp),
                     )
                     TranslatableText(
-                        stringResId = R.string.wallpaper_staging_error,
+                        stringResId = if (isOwner) R.string.wallpaper_staging_error else R.string.wallpaper_staging_not_set,
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
-                    Button(
-                        onClick = {
-                            HapticUtil.performUIHaptic(view)
-                            showApiKeyDialog = true
-                        },
-                    ) {
-                        TranslatableText(R.string.wallpaper_staging_set_api_key)
+                    if (isOwner) {
+                        Button(
+                            onClick = {
+                                HapticUtil.performUIHaptic(view)
+                                showApiKeyDialog = true
+                            },
+                        ) {
+                            TranslatableText(R.string.wallpaper_staging_set_api_key)
+                        }
                     }
                 }
             }
@@ -349,7 +405,7 @@ fun WallpaperStagingScreen(
 
         
         AnimatedVisibility(
-            visible = currentPhoto != null && !isLoading,
+            visible = isOwner && currentPhoto != null && !isLoading,
             enter = fadeIn() + slideInVertically { it / 2 },
             exit = fadeOut() + slideOutVertically { it / 2 },
             modifier =
@@ -473,12 +529,7 @@ fun WallpaperStagingScreen(
                 FilledTonalButton(
                     onClick = {
                         HapticUtil.performUIHaptic(view)
-                        if (candidatePhotos.isNotEmpty()) {
-                            currentIndex = (currentIndex + 1) % candidatePhotos.size
-                            if (candidatePhotos.size - currentIndex <= 5) {
-                                fetchNextBatch()
-                            }
-                        }
+                        showNext()
                     },
                     modifier =
                         Modifier
@@ -507,12 +558,16 @@ fun WallpaperStagingScreen(
                 HapticUtil.performUIHaptic(view)
                 onBack()
             },
-            fabAction = {
-                HapticUtil.performUIHaptic(view)
-                tempApiKey = accessKey
-                showApiKeyDialog = true
+            fabAction = if (isOwner) {
+                {
+                    HapticUtil.performUIHaptic(view)
+                    tempApiKey = accessKey
+                    showApiKeyDialog = true
+                }
+            } else {
+                null
             },
-            fabIconRes = R.drawable.rounded_vpn_key_24,
+            fabIconRes = R.drawable.rounded_vpn_key_24.takeIf { isOwner },
             fabContentDescription = stringResource(R.string.wallpaper_staging_set_api_key),
             modifier =
                 Modifier
@@ -563,3 +618,7 @@ fun WallpaperStagingScreen(
         }
     }
 }
+
+private const val OWNER_LOGIN = "sameerasw"
+private const val RANDOM_ATTEMPTS = 3
+private const val FALLBACK_PAGES = 10

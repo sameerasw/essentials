@@ -429,7 +429,7 @@
     <string name="feat_app_lock_desc">Защитите приложения с помощью биометрии</string>
     <string name="app_lock_auto_lock_delay_title">Задержка автоматической блокировки</string>
     <string name="app_lock_auto_lock_delay_desc">После выхода из приложения</string>
-    <string name="app_lock_auto_lock_delay_none">Не установлено</string>
+    <string name="app_lock_auto_lock_delay_none">Нет</string>
     <string name="app_lock_auto_lock_delay_1min">1 minute</string>
     <string name="app_lock_auto_lock_delay_5min">5 minutes</string>
     <string name="app_lock_auto_lock_delay_10min">10 minutes</string>
@@ -439,7 +439,7 @@
     <string name="feat_freeze_desc">Отключите редко используемые приложения</string>
     <string name="feat_watermark_title">Водяной знак</string>
     <string name="feat_watermark_desc">Добавить EXIF данные ​​и логотипы к фотографиям</string>
-    <string name="feat_always_on_display_title">Экран всегда включён</string>
+    <string name="feat_always_on_display_title">Активный экран</string>
     <string name="feat_always_on_display_desc">Показывает информацию и время на выкл. экране (AOD)</string>
     <string name="feat_calendar_sync_title">Синхронизация календаря</string>
     <string name="feat_calendar_sync_desc">Синхронизация календаря телефона с часами</string>
@@ -717,15 +717,21 @@
     <string name="action_what_is_this">Что это?</string>
     <string name="update_available_title">Доступно обновление</string>
     <string name="about_desc_your_android">Подробно ознакомьтесь со спецификациями аппаратного и программного обеспечения вашего устройства. Эта информация взята из GSMArena и системных свойств, чтобы предоставить полный обзор вашего Android-устройства.</string>
-    <string name="about_desc_essentials_on_display">Essentials On Display shows a Now Playing overlay on your lock screen when music is playing and playback changes. \n\nIf your device does not support overlays over AOD, you can opt for the Ambience screensaver added in your Android settings as an alternative while charging.</string>
+    <string name="about_desc_essentials_on_display">Функция Essentials On Display отображает всплывающее окно «Сейчас играет» на экране блокировки, когда играет музыка и меняется воспроизведение.
+
+Если ваше устройство не поддерживает всплывающие окна поверх Always On Display, вы можете выбрать экран Ambience.</string>
     <string name="about_desc_notification_lighting">Подсветка уведомлений добавляет красивый эффект боковой подсветки при получении уведомлений.\n\nВы можете настроить стиль, цвета и поведение анимации. Он работает, даже когда экран выключен (зависит от OEM) или находится поверх текущего приложения. Выберите приложения, приоритет уведомлений или поведение, при котором оно должно запускаться, с помощью заданных элементов управления. Если ваш OEM-производитель не поддерживает наложения выше AOD, подайте в суд на опцию Ambient display, указанную ниже.</string>
     <string name="about_desc_screen_off_widget">Легко выключите экран, коснувшись прозрачного виджета с изменяемым размером, который не добавляет значков или беспорядка на главный экран.</string>
-    <string name="about_desc_statusbar_icons">Take full control over your status bar.\n\nHide individual icons like WiFi, Bluetooth, or cellular data, hide all system or notification icons at once, or only hide system icons while the device is locked. Smart visibility can hide mobile data automatically when WiFi is connected or in certain modes.\n\nYou can also show seconds in the clock, change its position or hide it, show the battery percentage, hide the camera and microphone chips, or hide the entire status bar. Some advanced flags need Shizuku or Root.\n\nThese are AOSP controls, so your device OS might not respect all of them.</string>
+    <string name="about_desc_statusbar_icons">Получите полный контроль над строкой состояния.
+
+Скройте отдельные значки, такие как Wi-Fi, Bluetooth или сотовая связь, скройте все системные значки или значки уведомлений одновременно или скройте только системные значки, когда устройство заблокировано.</string>
     <string name="about_desc_caffeinate">Режим \"Кофеина\" предотвращает автоматическое выключение экрана.
 
 Не допускайте отключения экрана в течение определенного времени или на неопределенный срок. Полезно при чтении длинных статей или ссылок на рецепты.</string>
     <string name="about_desc_maps_power_saving">Получите эксклюзивный режим энергосбережения Google Maps для серии Pixel 10 с минимальным черным фоном для отображения на экране блокировки на любом устройстве Android. Запустите сеанс навигации, выключите и снова включите экран.</string>
-    <string name="about_desc_flashlight_pulse">Pulse the flashlight when you receive a notification.\n\nOn devices with hardware support for flashlight dimming, the pulse is smoothly animated.</string>
+    <string name="about_desc_flashlight_pulse">Вспышка фонарика при получении уведомления.
+
+На устройствах с аппаратной поддержкой регулировки яркости фонарика вспышка плавно анимируется.</string>
     <string name="about_desc_snooze_notifications">Отложите постоянные раздражающие системные уведомления, которые по умолчанию нельзя отключить. \n\nПодождите, пока не придет уведомление, а затем перейдите к этой функции, где будет указан канал уведомлений. Выберите этот канал, чтобы отложить уведомление в следующий раз.\n\nЛюбое отложенное уведомление по-прежнему можно просмотреть в истории уведомлений в Android.</string>
     <string name="about_desc_quick_settings_tiles">Добавьте пользовательские плитки на панель быстрых настроек.\n\nНажмите и удерживайте любой из них, чтобы узнать, что они делают.</string>
     <string name="about_desc_button_remap">Переназначьте аппаратные кнопки для выполнения различных действий и ярлыков.\n\nНастройте то, что происходит при длительном нажатии кнопок громкости при определенных условиях. \n\nНекоторые функции, такие как триггер выключения экрана или элементы управления фонариком, могут зависеть от OEM-производителя и работать не на всех устройствах должным образом. Некоторые сценарии можно обойти, используя разрешения Shizuku, но из-за реализаций они могут не дать такого же результата.</string>
@@ -1388,8 +1394,8 @@
     <string name="feat_live_wallpaper_desc">Set custom video as live wallpaper</string>
     <string name="live_wallpaper_label">Live Wallpaper</string>
     <string name="live_wallpaper_description">A video live wallpaper that plays when unlocked.</string>
-    <string name="live_wallpaper_playback_trigger_title">Play when</string>
-    <string name="live_wallpaper_trigger_unlock">Unlock</string>
+    <string name="live_wallpaper_playback_trigger_title">Играть, когда</string>
+    <string name="live_wallpaper_trigger_unlock">Разблокирован</string>
     <string name="live_wallpaper_trigger_screen_on">Screen on</string>
     <string name="live_wallpaper_video_title">Video</string>
     <string name="btn_apply">Apply</string>
@@ -1610,6 +1616,7 @@
     <string name="duo_show_media_title">Воспроизведение медиа</string>
     <string name="duo_show_progress_title">Индикация прогресса </string>
     <string name="duo_show_flashlight_title">Фонарик</string>
+    <string name="duo_match_island_colors_title">Match island colors</string>
     <string name="duo_material_you_title">Использовать цвета  Material You</string>
     <string name="duo_action_tap_title">Касание </string>
     <string name="feat_status_glance_title">Динамичный Статус</string>
@@ -1723,20 +1730,27 @@
     <string name="island_live_updates_count_title">Live updates count</string>
     <string name="island_live_updates_expanded_title">Expanded live update</string>
     <string name="island_secondary_bubbles_count_title">Считать вторые пузыри</string>
-    <string name="island_secondary_bubble_side_title">Secondary bubble placement</string>
+    <string name="island_secondary_bubble_side_title">Размещение вторичного пузыря</string>
     <string name="island_catch_up_title">Удержание</string>
     <string name="island_catch_up_desc">Держать последнее уведомление в острове дольше</string>
     <string name="island_catch_up_timeout_title">Время удержания </string>
     <string name="island_show_timers_title">Таймеры и секундомеры </string>
     <string name="feat_conscious_gate_title">Осознанная пауза</string>
-    <string name="island_show_glow_title">Expanded accent glow</string>
+    <string name="island_show_glow_title">Расширенный акцент сияния </string>
     <string name="island_glow_intensity_title">Glow intensity</string>
+    <string name="island_glow_size_title">Glow size</string>
+    <string name="island_glow_rim_title">Rim light</string>
+    <string name="island_expanded_dark_theme_warning">Expanded dark theme is on. If the island text or colors look wrong, filter Essentials out of it in Display settings.</string>
+    <string name="island_expanded_dark_theme_action">Open display settings</string>
+    <string name="settings_reset_all_hold">Hold to reset all data</string>
+    <string name="settings_reset_all_info_title">Сброс данных Essential </string>
+    <string name="settings_reset_all_info_desc">Сбросьте все настройки и данные Essentials к новому старту. Системные настройки, разрешения и все необходимое, изменённое на вашем устройстве, например, безопасные настройки, не возвращаются. </string>
     <string name="island_prefer_still_title">Предпочитать меньше анимаций у острова</string>
     <string name="island_prefer_still_info">Stops the island\'s animations after a few seconds without interaction, so the display can drop to a low refresh rate and save battery. Media visualizers, second by second counters and other looping animations pause until you interact with the island again.</string>
     <string name="island_line_peek_desc">Кратко покажите обновления по всему острову, затем вернитесь к компактному</string>
     <string name="island_line_peek_title">Подглядывание за линией</string>
     <string name="island_hide_in_owner_app_title">Скрыть виджет внутри приложения </string>
-    <string name="island_hide_media_in_owner_app_title">Hide media player inside the app</string>
+    <string name="island_hide_media_in_owner_app_title">Скрыть медиаплеер внутри приложения</string>
     <string name="island_tap_to_open_expanded_title">Нажмите, чтобы открыться при расширении </string>
     <string name="island_dismiss_on_outside_title">Скрывать при действиях снаружи</string>
     <string name="duo_battery_percentage_only_colored_title">Только для цветных экземпляров</string>
@@ -1770,13 +1784,13 @@
     <string name="island_show_network_title">Сетевая активность</string>
     <string name="island_section_placement">Расположение</string>
     <string name="island_section_visuals">Оформление</string>
-    <string name="island_section_duration">Timing</string>
+    <string name="island_section_duration">Время</string>
     <string name="island_section_behavior">Поведение</string>
-    <string name="island_section_interactions">Interactions</string>
-    <string name="island_section_gestures">Gestures</string>
-    <string name="island_section_expanded">Expanded island</string>
-    <string name="island_section_landscape">Landscape</string>
-    <string name="island_section_experimental">Experimental</string>
+    <string name="island_section_interactions">Взаимодействия</string>
+    <string name="island_section_gestures">Жесты</string>
+    <string name="island_section_expanded">Расширенный остров</string>
+    <string name="island_section_landscape">Пейзаж</string>
+    <string name="island_section_experimental">Экспериментальные</string>
     <string name="duo_hide_when_locked_title">Скрывать когда заблокировано</string>
     <string name="island_preview_ring_title">Показывать подсказку выравнивания</string>
     <string name="diy_volume_channel_alarm">Будильник</string>
@@ -1793,6 +1807,7 @@
     <string name="status_glance_calendar_timeframe_title">Показывать предстоящие события в</string>
     <string name="island_launcher_only_title">Показывать только в лаунчере </string>
     <string name="island_show_on_update_title">Periodically show on updates</string>
+    <string name="island_provider_chip_title">Show as a chip</string>
     <string name="status_glance_calendar_show_all_day_title">Показывать события на весь день </string>
     <string name="conscious_gate_delay_title">Длительность паузы</string>
     <string name="conscious_gate_reappear_desc">Снова показывать экран паузы при непрерывном использовании приложения</string>
@@ -1899,7 +1914,7 @@
 Индикатор состояния стиля iPhone Duo, чтобы показать вашу батарею, сеть, медиа-статус и многое другое в компактном минимальном пользовательском интерфейсе вокруг вашей камеры с различными предметами для показа и жестами для взаимодействия.
 
 Для складных устройств убедитесь, что вы выключите опцию «Авто-обнаружение камеры», если она не надёжна, и вручную выровняйте Duo с вашим внутренним и внешним положением камеры, а затем Essentials запомнит ваш макет. </string>
-    <string name="label_shake_for_help">Shake for help</string>
+    <string name="label_shake_for_help">Встряхни для помощи</string>
     <string name="about_desc_island">Динамичный остров для вашего Android, вокруг выреза камеры.
 
 Он объединяет живую информацию в одном компактном расширяемом пространстве: уведомления с быстрыми ответами, медиа с оформлением альбома и элементами управления, звонки, таймеры и секундомеры, будильники, события календаря, навигацию, обновления прогресса, состояние горячей точки и сети, подключённые устройства, фонарик, звуковой режим, кофеинат, информацию о путешествиях и время и аккумулятор.
@@ -1935,6 +1950,7 @@
     <string name="about_desc_back_gesture">Fine tune the system back gesture.\n\nAdjust the edge widths for the left and right gesture areas and set up per-app back gesture behavior. Requires secure settings permission.</string>
     <string name="island_chips_title">Стиль \"островков\"</string>
     <string name="island_calendar_compact_time_title">Compact time</string>
+    <string name="island_calendar_hide_now_title">Hide \"Now\"</string>
     <string name="feat_aod_wallpaper_compat_title">Режим совместимости</string>
     <string name="feat_aod_wallpaper_compat_info_why">Some devices, especially on One UI, pause app animations while the always-on display is showing and skip drawing app windows. This can leave the AOD wallpaper half transparent or invisible, or stuck on screen after waking the device.</string>
     <string name="feat_aod_wallpaper_compat_info_what">Compatibility mode turns off the fade animations of the wallpaper. The wallpaper appears at full strength right away, disappears instantly when the screen wakes, and image changes are applied without a crossfade. Turn it on only if the wallpaper looks faded, never shows, or stays after waking.</string>
@@ -1947,7 +1963,7 @@
     <string name="diy_cts_method_shizuku">Shizuku / Root</string>
     <string name="island_dynamic_hide_status_bar_title">Динамично скрывать элементы статус-бара</string>
     <string name="island_suppress_system_heads_up_title">Скрыть системные напоминания </string>
-    <string name="island_hide_live_updates_title">Скрыыать live updates Динамично</string>
+    <string name="island_hide_live_updates_title">Скрыать обновления в режиме реального времени динамично</string>
     <string name="island_hide_icons_title">Динамично скрывать иконки статус-бара</string>
     <string name="feat_app_volume_title">Громкость приложений</string>
     <string name="feat_app_volume_desc">Поставьте отдельную громкость для разных приложений</string>
@@ -2021,6 +2037,7 @@
     <string name="battery_separate_channels_desc">Отдельные LR-каналы </string>
     <string name="batteries_notification_title">Уведомление о батареях </string>
     <string name="island_navigation_peek_after_expand_title">Keep showing in peek</string>
+    <string name="island_navigation_hide_while_driving_title">Hide while driving</string>
     <string name="island_navigation_expand_title">Расширьте перед поворотом </string>
     <string name="island_navigation_on_new_title">Новая инструкция </string>
     <string name="island_notif_hub_title">Центр уведомлений </string>
@@ -2054,7 +2071,7 @@
     <string name="app_overcast">Погода</string>
     <string name="island_media_use_art_color_title">Advertise album art color</string>
     <string name="island_media_player_style_title">Player style</string>
-    <string name="debug_ui_margin_overlay_title">Debug UI margin overlay</string>
+    <string name="debug_ui_margin_overlay_title">Отладочное наложение полей пользовательского интерфейса</string>
     <string name="island_statusbar_ignore_notifications_title">Ignore notifications</string>
     <string name="app_volume_apps_section">Приложения </string>
     <string name="label_battery_charging_policy">Политика зарядки</string>
@@ -2113,7 +2130,7 @@
     <string name="button_remap_power_camera_flip_title">Перевернуть камеру при двойном нажатии</string>
     <string name="island_statusbar_aware_width_info">This may not work on all devices. It works best on Pixels and devices with a status bar close to AOSP.</string>
     <string name="island_statusbar_aware_width_info_tip">Even on those devices, try reducing the number of visible status bar icons to give the island more space.</string>
-    <string name="island_dismiss_direction_title">Dismiss swipe</string>
+    <string name="island_dismiss_direction_title">Отклонить свайп</string>
     <string name="island_dismiss_direction_horizontal">Горизонтально</string>
     <string name="island_dismiss_direction_down">Вниз</string>
     <string name="island_media_bubble_title">Show as a bubble</string>
@@ -2121,14 +2138,14 @@
     <string name="island_media_bubble_fill_art_title">Fill album art</string>
     <string name="island_transparency_title">Прозрачность острова </string>
     <string name="island_transparency_intensity_title">Transparency intensity</string>
-    <string name="island_backdrop_blur_title">Backdrop blur</string>
+    <string name="island_backdrop_blur_title">Фонарное размытие </string>
     <string name="island_backdrop_blur_unavailable_os">Backdrop blur needs Android 12 or newer. This device runs an older version, so the system can\'t blur what is behind the island.</string>
-    <string name="island_backdrop_blur_unavailable_disabled">Your system currently has window blur turned off. This usually happens when Battery Saver is on, when \"Disable window blurs\" is enabled in Developer options, or when the device doesn\'t support it. This option unlocks automatically once window blur is back on.</string>
+    <string name="island_backdrop_blur_unavailable_disabled">В настоящее время в вашей системе отключено размытие окон. Обычно это происходит, когда Battery Saver включён, когда в опциях для разработчиков включено \"Отключить размытие окна\" или когда устройство его не поддерживает. Эта опция автоматически разблокируется, как только снова включается размытие окна. </string>
     <string name="island_backdrop_blur_unavailable_api">This device\'s system doesn\'t expose the blur feature the island needs for backdrop blur, so it can\'t be enabled here.</string>
     <string name="island_backdrop_blur_available_title">Blur is reported as supported on this device</string>
     <string name="island_backdrop_blur_available_note">It may still not work on some devices. Battery Saver, system settings such as \"Disable window blurs\" in Developer options, and manufacturer limits can turn window blur off at any time.</string>
     <string name="island_backdrop_blur_radius_title">Blur amount</string>
-    <string name="what_is_this">What is this?</string>
+    <string name="what_is_this">Что это?</string>
     <string name="label_feature_designed_by">Designed by</string>
     <string name="label_how_to_use">How to use</string>
     <string name="shut_up_how_to_use">1. Grant Write secure settings and Usage access from the permissions prompt. Shizuku is needed for freezing apps.\n\n2. Tap Select Apps and pick the apps that refuse to run with developer options, debugging or accessibility turned on, such as banking or payment apps.\n\n3. Tap an app to choose what gets hidden for it: Developer Options, USB Debugging, Wireless Debugging and Accessibility Services. You can also turn on Auto Freeze to freeze the app after you leave it, and Restore keyboard to switch back to your keyboard afterwards.\n\n4. Tap Create shortcut for each app and add it to your home screen. Always open the app from this shortcut, never from its normal icon, so the settings are turned off before the app starts and can check them.\n\n5. When you leave the app, Shut-Up! waits for the Restoration Delay and then shows a notification. Tap it to turn everything back on. Set Restore mode to Auto if you would rather have the settings restored on their own.\n\nTips: if wireless debugging was turned off, Shizuku may stop working, so enable Attempt Shizuku restart. Use the Keyboard option to pick the keyboard to restore, or leave it on Skip. With Auto Freeze, a notification counts down and lets you freeze now or abort.</string>
@@ -2136,4 +2153,229 @@
     <string name="island_animation_speed_title">Скорость анимации </string>
     <string name="app_icon_gta">6</string>
     <string name="island_notif_lock_hidden_title">Hidden</string>
+    <string name="text_snippets_how_to_use">1. Turn on Text Snippets and grant the Accessibility permission so shortcuts can expand in any app.\n\n2. Pick a Trigger Prefix: ; : @@ or a space.\n\n3. Tap the + button to add a snippet. Enter a keyword without spaces and the text it should expand into.\n\n4. Type the prefix followed by the keyword, for example ;brb, to expand it. With the space prefix, type the keyword and press space.\n\nTips: keywords only expand at the start of a word, so URLs and times are left alone. Password fields are always ignored. Some apps do not allow text replacement and will not expand snippets.</string>
+    <string name="duo_section_what_to_show">Что показать</string>
+    <string name="island_progressive_blur_title">Прогрессивная анимация размытия </string>
+    <string name="instruction_section_freezetags_title">Замораживание приложений и умное замораживание </string>
+    <string name="instruction_section_diy_title">DIY Автоматизация</string>
+    <string name="instruction_section_backup_title">Резервное копирование и восстановление </string>
+    <string name="instruction_section_backup_desc">Защитите и перенесите свою пользовательскую настройку на устройства.
+
+• Экспортная конфиг: создайте резервную копию JSON ваших автоматизаций DIY, тегов приложений, конфигураций плитки и пользовательских предпочтений.
+• Импорт Config: легко восстанавливайте сохранённый файл установки без перенастройки отдельных настроек. </string>
+    <string name="instruction_section_diy_desc">Создавайте мощные пользовательские процедуры, адаптированные к вашему ежедневному использованию.
+
+• Триггерная автоматизация: управляемые событиями правила, которые запускают определённые действия после того, как происходит событие (например, когда зарядное устройство отключено, запускают тактическую вибрацию).
+• Автоматизация состояния: управляемые условиями правила, которые запускают действия входа при вхождении в состояние (например. Зарядка или временное окно) и действия выхода при выходе из него.
+• Автоматизация приложений: автоматически применяет профили или теги замораживания / размораживания при запуске или выходе из определённых приложений. </string>
+    <string name="instruction_section_freezetags_desc">Организуйте и пакетную заморозку фоновых приложений с помощью пользовательских тегов приложений.
+
+• Пользовательские теги: создайте пользовательские теги с пользовательскими цветами (например. Социальные игры, игры, работа).
+• Правила цели: назначайте защиту \"Никогда не замораживайте\" критическим приложениям, чтобы они оставались активными.
+• Интеграция автоматизации: запускайте действия по замораживанию или размораживанию по всему тегу автоматически на основе триггеров устройств, временных окон или запуска приложений. </string>
+    <string name="instruction_section_genai_title">ИИ на устройстве GenAI (Gemini Nano) </string>
+    <string name="instruction_section_genai_desc">Работает локально от Google Gemini Nano через системный сервис Android AICore. Выполняет базовые модели на устройстве для улучшения конфиденциальности пользователей без отправки данных на удалённые серверы.
+
+• Требования и AICore: использует API ML Kit GenAI Prompt на поддерживаемых устройствах (таких как Pixel 9/10 серия, Galaxy S25/S26 и т.д.) под управлением Android AICore.
+• Ограничение переднего плана приложения: вывод API GenAI разрешён только тогда, когда приложение находится на верхнем переднем плане.
+• Квота и исполнение: при условии соблюдения квот батареи AICore на приложение и квот вывода. Функции работают полностью в автономном режиме после завершения загрузки модели AICore.
+• Автоматизация контекста: карты подсказывают запросы на триггеры, состояния, теги приложений и глубокие настройки локально на устройстве. </string>
+    <string name="instruction_section_safe_volume_desc">Для защиты слуха правила ЕС предписывают всплывающее предупреждение, когда объем превышает 85 дБ. Поскольку это всплывающее окно срабатывает один раз после каждой загрузки или после 20 совокупных часов аудиовыхода, оно может нарушить воспроизведение мультимедиа. Включение этого навсегда обходит ограничение, написав в настройку audio_safe_volume_state Global. </string>
+    <string name="instruction_section_safe_volume_title">Зачем отключать предупреждения о безопасной громкости? </string>
+    <string name="instruction_section_notification_snoozing_title">Как использовать Notification Snoozing? </string>
+    <string name="instruction_section_notification_snoozing_desc">После включения проведите вниз или слегка натяните уведомление, чтобы открыть значок повтора (часов) / или долго нажмите или нажмите кнопку повтора, если она уже видна. Нажмите его, чтобы перенести. Доступную продолжительность и время повтора по умолчанию можно настроить в меню настроек. Пишет для безопасных настроек и глобальных свойств настроек. </string>
+    <string name="instruction_section_battery_saver_title">Как работают настройки питания и батареи? </string>
+    <string name="instruction_section_battery_saver_desc">Эти настройки напрямую перекрывают внутренние константы политики Android Battery Saver (в частности, свойство глобальной таблицы настроек: battery_saver_constants).
+
+Когда Android активирует режим экономии батареи, он читает эти клавиши, чтобы определить, какие системные функции следует ограничить (например, снижение яркости экрана, отключение AOD, ограничение доступа к местоположению GPS или перевод приложений в спящий режим).
+
+Если вы измените эти значения, ваша пользовательская политика экономии батареи вступит в силу в следующий раз, когда будет включён Battery Saver. Вы можете сбросить до дефолта в любое время, используя кнопку в нижней части экрана. Для написания этих конфигураций системы требуется разрешение WRITE_SECURE_SETTINGS. </string>
+    <string name="privileged_mode_auto">Авто</string>
+    <string name="privileged_mode_root">Рут</string>
+    <string name="privileged_mode_porter">Портер </string>
+    <string name="shizuku_auth_token_label">Токен авторизации Shizuku</string>
+    <string name="shizuku_auth_token_help">В сидзуку, в разделе «Контролирование Сидзуку с приложениями автоматизации», откройте «Просмотр интенсивно», скопируйте и вставьте токен авторства из раздела «Дополнительные услуги».
+
+Это позволяет Essentials автоматизировать и перезапускать Сидзуку по требованию в таких функциях, как Shut-Up </string>
+    <string name="shizuku_auth_token_title">Токен Shizuku</string>
+    <string name="external_control_token_title">Токен внешнего управления</string>
+    <string name="btn_import_config">Импортировать Конфиг </string>
+    <string name="btn_export_config">Экспортировать Конфиг </string>
+    <string name="settings_translations_section">Переводы</string>
+    <string name="translation_logged_in_as">Вход в систему как %1$s</string>
+    <string name="subreddit_description">Это место для обсуждения Essentials и других моих приложений. Присоединяйтесь к сообществу, вносите свой вклад в проекты, получайте помощь и узнавайте что-нибудь новое. ( ´ ▽ ` )ﾉ</string>
+    <string name="label_top_contributors">Лучшие авторы</string>
+    <string name="label_notify_new_updates">Уведомлять о новых обновлениях </string>
+    <string name="settings_section_customizations">Кастомизация</string>
+    <string name="settings_section_permissions">Разрешения </string>
+    <string name="settings_section_more">Более</string>
+    <string name="diy_no_automations">Автоматизаций пока нет </string>
+    <string name="diy_type_accessibility_shortcut">Ярлык Специальных возможностей</string>
+    <string name="diy_type_action_shortcut">Ярлык действия</string>
+    <string name="diy_type_trigger">Триггер </string>
+    <string name="diy_type_state">Состояние</string>
+    <string name="diy_type_app">Приложение </string>
+    <string name="button_remap_add_action">Добавить действие </string>
+    <string name="diy_action_wifi_on">Включить WIFI</string>
+    <string name="diy_category_connectivity">Связь и сеть </string>
+    <string name="diy_action_wifi_off">Выключить Wi-Fi </string>
+    <string name="diy_action_wifi_toggle">Переключить WIFI</string>
+    <string name="diy_action_cellular_on">Включите сотовую связь</string>
+    <string name="diy_action_cellular_off">Выключить сотовую связь</string>
+    <string name="diy_action_location_on">Turn On Location</string>
+    <string name="diy_action_location_off">Turn Off Location</string>
+    <string name="diy_action_location_toggle">Toggle Location</string>
+    <string name="diy_action_cellular_toggle">Переключить сотовую связь </string>
+    <string name="diy_action_hotspot_on">Включить Точку доступа</string>
+    <string name="diy_action_hotspot_off">Выключить Точку доступа</string>
+    <string name="diy_action_hotspot_toggle">Переключить точку доступа</string>
+    <string name="diy_category_display">Дисплей и экран </string>
+    <string name="diy_action_auto_brightness_on">Включите авто яркость </string>
+    <string name="diy_action_auto_brightness_off">Выключить авто яркость</string>
+    <string name="diy_action_auto_brightness_toggle">Переключение автояркости</string>
+    <string name="diy_action_caffeinate_on">Включить режим \"Кофеина\"</string>
+    <string name="diy_action_caffeinate_off">Выключить режим \"Кофеина\"</string>
+    <string name="diy_action_screen_off">Отключение экрана </string>
+    <string name="diy_action_open_app">Открыть приложение </string>
+    <string name="diy_action_open_activity">Открыть активность</string>
+    <string name="diy_action_ai_assistant">ИИ Ассистент</string>
+    <string name="diy_action_freeze_apps">Заморозить приложения </string>
+    <string name="diy_action_unfreeze_apps">Разморозить приложения </string>
+    <string name="diy_action_freeze_tag">Замораживание по тегам </string>
+    <string name="diy_action_split_screen">Включить разделенный экран</string>
+    <string name="diy_set_keyboard_title">Поставить клавиатуру</string>
+    <string name="diy_action_open_camera">Открыть камеру </string>
+    <string name="diy_action_open_video_camera">Открыть видеокамеру </string>
+    <string name="diy_action_open_qr_scanner">Откройте сканер QR-кода </string>
+    <string name="diy_action_set_charging_mode">Установите режим зарядки </string>
+    <string name="diy_action_custom_settings">Пользовательские настройки </string>
+    <string name="diy_action_wait">Подождать</string>
+    <string name="diy_action_send_notification">Отправить уведомление </string>
+    <string name="pixel_search_tab_all">Все </string>
+    <string name="pixel_search_tab_apps">Приложения </string>
+    <string name="pixel_search_tab_contacts">Контакты </string>
+    <string name="pixel_search_tab_settings">Настройки </string>
+    <string name="pixel_search_tab_web">Веб </string>
+    <string name="diy_action_circle_to_search">Обвести и найти</string>
+    <string name="diy_action_back_gesture_off">Отключите жест назад </string>
+    <string name="diy_action_back_gesture_on">Включите жест назад </string>
+    <string name="diy_action_take_screenshot">Сделайте скриншот </string>
+    <string name="diy_category_sound_media">Звук и медиа </string>
+    <string name="diy_action_cycle_sound_modes">Режимы звука цикла </string>
+    <string name="diy_action_toggle_mute">Включить беззвучный </string>
+    <string name="diy_action_toggle_dnd">Переключение не беспокоить </string>
+    <string name="diy_action_set_mode">Установить режим </string>
+    <string name="diy_action_toggle_vibrate">Переключение вибрации </string>
+    <string name="diy_action_toggle_media_volume">Переключение громкости Медиа</string>
+    <string name="diy_action_set_volume">Установить уровень громкости</string>
+    <string name="diy_action_media_play_pause">Медиа Проигрывание/Пауза </string>
+    <string name="diy_action_media_next">Медиа следующее</string>
+    <string name="diy_action_media_previous">Медиа прошлое</string>
+    <string name="diy_action_like_current_song">Лайк текущей песне</string>
+    <string name="diy_action_open_now_playing_app">Откройте играющее приложение сейчас </string>
+    <string name="diy_category_essentials">Твики Essentials</string>
+    <string name="diy_action_sometimes_essentials">Иногда Essential</string>
+    <string name="diy_action_notification_lighting">Триггерное освещение уведомлений </string>
+    <string name="diy_action_overlay_control">Наложения </string>
+    <string name="essential_search_label">Поиск Essentials</string>
+    <string name="button_remap_sequence_hint">Действия проходят в порядке сверху вниз. Перетащите, чтобы переупорядочить. </string>
+    <string name="diy_category_battery_power">Аккумулятор и мощность </string>
+    <string name="diy_category_system_screen">Система и экран </string>
+    <string name="freeze_tags_empty">Теги ещё не созданы </string>
+    <string name="freeze_tags_section_title">Теги </string>
+    <string name="freeze_tag_name_hint">Название тега </string>
+    <string name="freeze_tag_color_picker_label">Выберите цвет </string>
+    <string name="freeze_tag_icon_picker_label">Выберите иконку</string>
+    <string name="feature_reset_info_title">Сбросить эту функцию</string>
+    <string name="feature_reset_info_desc">Сбрасывает все настройки Essentials для этой функции до значений по умолчанию. Системные настройки и разрешения не изменяются.</string>
+    <string name="device_api_patch">API %1$s • Патч: %2$s</string>
+    <string name="device_build">Билд: %1$s</string>
+    <string name="label_battery_state_of_health">Состояние здоровья </string>
+    <string name="charge_opt_long_press_desc">Выберите, между какими режимами зарядки переключаться при нажатии на плитку \"Быстрые настройки\". </string>
+    <string name="charge_opt_long_press_title">Переключение опций </string>
+    <string name="label_reset_battery_stats_title">Сброс статистики батареи </string>
+    <string name="label_reset_battery_stats_desc">Сброс статистики батареи системы (dumpsys batterystat - сброс). Это очищает историческое использование батареи и данные о расходе приложений, поэтому он начинает отслеживать свежий текущий заряд. </string>
+    <string name="action_reset_battery_stats">Сброс статистики </string>
+    <string name="setting_privileged_mode_title">Привилегированный доступ</string>
+    <string name="settings_permissions_all">Все разрешения </string>
+    <string name="bug_report_issue_details">Подробности проблемы</string>
+    <string name="about_desc_networks">Настройте ограничения скорости загрузки в сеть, постоянно держите мобильные данные активными даже при подключении к Wi-Fi и включите настройки сертификации беспроводного дисплея. </string>
+    <string name="watch_update_required_desc">Для ваших часов доступна новая версия Essentials Wear. Обновление для обеспечения полной совместимости. </string>
+    <string name="watch_update_required_title">Обновить Essentials Wear на часах</string>
+    <string name="cat_sync">Синхронизация </string>
+    <string name="watch_adb_permissions_title">Смотрите разрешения ADB</string>
+    <string name="watchface_promo_step3_desc">Откройте Play Store прямо на своих часах для установки </string>
+    <string name="watchface_category_clock">Часы </string>
+    <string name="watchface_category_battery">Батарея и иконки </string>
+    <string name="watchface_category_complications">Осложнения </string>
+    <string name="island_providers_title">Островные приложения</string>
+    <string name="duo_section_position">Положение и размеры</string>
+    <string name="duo_section_style">Стиль</string>
+    <string name="duo_section_behavior">Поведение</string>
+    <string name="duo_section_actions">Действия</string>
+    <string name="about_desc_status_glance">Взгляд на состояние показывает приоритетный окружающий чип рядом с отверстием для передней камеры. Он динамически отображает активный фонарик, предстоящие события календаря, воспроизводящиеся в настоящее время медиа и текущее время. </string>
+    <string name="title_snooze_durations">Продолжительность отложенного будильника</string>
+    <string name="notification_lighting_dash_adjustment_section">Регулировка приборной панели</string>
+    <string name="sound_mode_shizuku_info">Из-за ограничений AOSP Android рассматривает бесшумный режим как режим «Не беспокоить». Но с помощью Shizuku мы можем это обойти. Он будет динамически использовать Shizuku, если он доступен, или переключаться на обычный режим «Не беспокоить».</string>
+    <string name="app_volume_hint">Приложения, воспроизводящие звук, отображаются здесь автоматически. Коснитесь приложения, чтобы изменить громкость, или удалите его, чтобы вернуться к обычной громкости.</string>
+    <string name="volume_steps_hint">Каждое нажатие клавиши регулировки громкости изменяет громкость мультимедиа на указанное количество шагов. Удержание клавиши повторяет это действие, если только функция переназначения кнопок не имеет действия длительного нажатия для этой клавиши, которое имеет приоритет.</string>
+    <string name="label_wallpaper_apply">Добавить обои</string>
+    <string name="wallpaper_current_photo_credits">Текущие авторы фотографий:</string>
+    <string name="wallpaper_view_collection">Посмотреть коллекцию Самиры</string>
+    <string name="wallpaper_staging_set_api_key">Установить ключ доступа Unsplash</string>
+    <string name="wallpaper_staging_api_key_desc">Введите свой ключ доступа разработчика Unsplash, чтобы загрузить фотографии из коллекции.</string>
+    <string name="wallpaper_staging_api_key_hint">Ключ доступа</string>
+    <string name="feat_wallpaper_staging_title">Следующие обои</string>
+    <string name="label_wallpaper_auto_update">Автоматическое обновление</string>
+    <string name="wallpaper_lock_screen">Экран блокировки</string>
+    <string name="wallpaper_home_screen">Главный экран</string>
+    <string name="feat_aod_wallpaper_media_section_title">Медия</string>
+    <string name="feat_aod_wallpaper_extended_section_title">Расширенная информация</string>
+    <string name="about_desc_aod_wallpaper">Отображает ваши обои за часами на постоянно включенном дисплее с помощью наложения, с регулируемой прозрачностью, размытием, виньетированием и порогом черного цвета. Вы также можете выбрать собственное изображение или отобразить обложку альбома. </string>
+    <string name="stb_hide_entire_status_bar_title">Скрыть всю строку состояния</string>
+    <string name="duo_aod_burn_in_protection_desc">Параметры Ambient/AOD заблокированы, чтобы предотвратить выгорание экрана. Включите параметр «Включить неподдерживаемые функции» в настройках, чтобы настроить параметры под себя.</string>
+    <string name="island_auto_align_camera">Автоматически построить островок под камеру</string>
+    <string name="island_expanded_offset_y_title">Расширенное вертикальное смещение</string>
+    <string name="island_section_hiding">Скрыть</string>
+    <string name="island_section_statusbar">Строка состояния</string>
+    <string name="island_brief_options_title">Краткие варианты</string>
+    <string name="status_glance_section_position">Позиция</string>
+    <string name="status_glance_section_what_to_show">Что показать</string>
+    <string name="action_licenses_and_credits">Лицензии</string>
+    <string name="label_developer_options">Параметры разработчика</string>
+    <string name="btn_grant_all_permissions">Предоставить все разрешения</string>
+    <string name="btn_reset_onboarding">Сбросить регистрацию</string>
+    <string name="label_haptics_title">Тактильные ощущения</string>
+    <string name="btn_reset_update_note">Сбросить примечание об обновлении</string>
+    <string name="btn_clear_search_history">Очистить историю поиска</string>
+    <string name="island_action_open_label">Open Island</string>
+    <string name="tile_accessibility">Accessibility</string>
+    <string name="tile_accessibility_on">Services on</string>
+    <string name="tile_accessibility_off">Services off</string>
+    <string name="about_desc_accessibility_tile">Turn off all accessibility services with one tap and bring them back with another.\n\nUseful for apps that refuse to work while accessibility services are enabled.</string>
+    <string name="island_action_show">Show</string>
+    <string name="island_gesture_hints_title">Show gesture hints</string>
+    <string name="wallpaper_staging_not_set">Not set yet</string>
+    <string name="action_got_it">Понял</string>
+    <string name="island_reorder_hide_line">Drag below to hide</string>
+    <string name="island_show_starlink_title">Starlink</string>
+    <string name="island_starlink_desc">Shows dish status while connected to a Starlink network</string>
+    <string name="island_starlink_compact_title">Show in compact island</string>
+    <string name="island_starlink_speeds_title">Show speeds in compact mode</string>
+    <string name="island_starlink_speed_mode_title">Speed to show</string>
+    <string name="island_starlink_speed_up">Up</string>
+    <string name="island_starlink_speed_combined">Combined</string>
+    <string name="island_starlink_unit_title">Unit</string>
+    <string name="island_starlink_hide_unit_title">Hide unit</string>
+    <string name="island_starlink_hide_arrow_title">Hide arrow</string>
+    <string name="island_starlink_searching">Searching</string>
+    <string name="island_starlink_booting">Booting</string>
+    <string name="island_starlink_obstructed">Obstructed</string>
+    <string name="island_starlink_alert_motors">Motors stuck</string>
+    <string name="island_starlink_alert_thermal_shutdown">Thermal shutdown</string>
+    <string name="island_starlink_alert_thermal_throttle">Thermal throttle</string>
+    <string name="island_starlink_alert_location">Unexpected location</string>
+    <string name="island_starlink_alert_mast">Mast not vertical</string>
+    <string name="island_starlink_alert_ethernet">Slow ethernet</string>
+    <string name="island_provider_pair_refused">This app doesn\'t trust this version of Essentials</string>
 </resources>

@@ -57,12 +57,11 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun IslandExpandedScope.CameraRow(
     modifier: Modifier = Modifier,
-    horizontalPadding: Dp = spec.expandedPadding,
     title: String? = null,
-    titlePadding: Dp = spec.expandedPadding + spec.expandedCorner * 0.35f,
     start: @Composable RowScope.() -> Unit,
     end: @Composable RowScope.() -> Unit = {},
 ) {
+    val horizontalPadding = spec.expandedPadding + spec.expandedCorner * 0.35f
     Column(modifier.fillMaxWidth()) {
         Row(
             modifier = Modifier
@@ -110,7 +109,7 @@ fun IslandExpandedScope.CameraRow(
             }
         }
         if (!title.isNullOrBlank()) {
-            Box(Modifier.fillMaxWidth().padding(horizontal = titlePadding)) {
+            Box(Modifier.fillMaxWidth().padding(horizontal = horizontalPadding)) {
                 MarqueeText(
                     text = title,
                     style = IslandTextStyles.title.copy(fontSize = 17.sp),
@@ -124,15 +123,15 @@ fun IslandExpandedScope.CameraRow(
 val IslandExpandedScope.cameraClearance: Dp
     get() = spec.expandedOutset + spec.expandedTopPadding + spec.compactHeight + 8.dp
 
-fun Modifier.accentGlow(color: Color, enabled: Boolean, clearTop: Dp): Modifier =
-    if (!enabled) this else drawBehind {
+fun Modifier.accentGlow(color: Color, enabled: Boolean, clearTop: Dp, intensity: Float = 1f): Modifier =
+    if (!enabled || intensity <= 0f) this else drawBehind {
         val top = clearTop.toPx().coerceAtMost(size.height)
         if (size.height - top <= 0f) return@drawBehind
         drawRect(
             brush = Brush.verticalGradient(
                 0f to Color.Transparent,
-                0.55f to color.copy(alpha = 0.25f),
-                1f to color.copy(alpha = 0.51f),
+                0.55f to color.copy(alpha = (0.25f * intensity).coerceAtMost(1f)),
+                1f to color.copy(alpha = (0.51f * intensity).coerceAtMost(1f)),
                 startY = top,
                 endY = size.height,
             ),

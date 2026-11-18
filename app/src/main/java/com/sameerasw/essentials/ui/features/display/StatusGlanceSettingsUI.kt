@@ -381,6 +381,17 @@ fun StatusGlanceSettingsUI(
                     )
 
                     IconToggleItem(
+                        title = stringResource(R.string.island_time_show_seconds_title),
+                        iconRes = R.drawable.rounded_schedule_24,
+                        isChecked = viewModel.isStatusGlanceShowSeconds.value,
+                        onCheckedChange = {
+                            HapticUtil.performUIHaptic(view)
+                            viewModel.setStatusGlanceShowSeconds(it)
+                        },
+                        modifier = Modifier.highlight(highlightSetting == "status_glance_show_seconds"),
+                    )
+
+                    IconToggleItem(
                         title = stringResource(R.string.status_glance_show_battery_title),
                         iconRes = R.drawable.battery_android_frame_full_24px,
                         isChecked = viewModel.isStatusGlanceShowBattery.value,

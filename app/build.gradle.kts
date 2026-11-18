@@ -115,8 +115,8 @@ android {
         applicationId = "com.sameerasw.essentials"
         minSdk = 26
         targetSdk = 37
-        versionCode = 74
-        versionName = "21.3-beta.1"
+        versionCode = 75
+        versionName = "21.3"
 
         val whatsNewCounter = 8
         buildConfigField("int", "WHATS_NEW_COUNTER", whatsNewCounter.toString())
@@ -210,7 +210,7 @@ dependencies {
     // Shizuku
     implementation(libs.shizuku.api)
     implementation(libs.shizuku.provider)
-    implementation("com.github.d4rken-org.porter-api:shizuku-bridge:+")
+    implementation("com.github.d4rken-org.porter-api:shizuku-bridge:0.9.0")
     implementation(libs.androidx.car.app)
 
     // Hidden API Bypass

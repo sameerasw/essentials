@@ -849,6 +849,11 @@ object FeatureRegistry {
                             "island_show_hotspot",
                         ),
                         SearchSetting(
+                            R.string.island_show_starlink_title,
+                            R.string.island_starlink_desc,
+                            "island_show_starlink",
+                        ),
+                        SearchSetting(
                             R.string.feat_caffeinate_title,
                             R.string.caffeinate_notification_desc,
                             "island_show_caffeinate",
@@ -1097,6 +1102,11 @@ object FeatureRegistry {
                             R.string.island_dismiss_on_outside_title,
                             R.string.island_section_interactions,
                             "island_dismiss_on_outside",
+                        ),
+                        SearchSetting(
+                            R.string.island_gesture_hints_title,
+                            R.string.island_section_interactions,
+                            "island_gesture_hints",
                         ),
                     ),
             ) {
@@ -2461,6 +2471,29 @@ object FeatureRegistry {
                     context: Context,
                     enabled: Boolean,
                 ) {}
+            },
+            object : Feature(
+                id = "Text Snippets",
+                title = R.string.feat_text_snippets_title,
+                iconRes = R.drawable.rounded_edit_note_24,
+                category = R.string.cat_interaction,
+                description = R.string.feat_text_snippets_desc,
+                aboutDescription = R.string.about_desc_text_snippets,
+                howToUse = R.string.text_snippets_how_to_use,
+                contributors = listOf("Balajitechlabs"),
+                permissionKeys = listOf("ACCESSIBILITY"),
+                hasMoreSettings = true,
+                parentFeatureId = "Input",
+            ) {
+                override fun isEnabled(viewModel: MainViewModel) = viewModel.isTextSnippetsEnabled.value && viewModel.isAccessibilityEnabled.value
+
+                override fun onToggle(
+                    viewModel: MainViewModel,
+                    context: Context,
+                    enabled: Boolean,
+                ) {
+                    viewModel.setTextSnippetsEnabled(enabled)
+                }
             },
             object : Feature(
                 id = "Batteries",

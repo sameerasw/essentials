@@ -1,5 +1,7 @@
 package com.sameerasw.essentials.island.state
 
+import kotlin.math.abs
+
 data class CompactEntry(
     val itemKey: String,
     val priority: Int,
@@ -9,7 +11,7 @@ data class CompactEntry(
     val soloCellKeys: List<String> = emptyList(),
     val needsCompany: Boolean = false,
     val companionOnly: Boolean = false,
-    val keepTogether: Boolean = false,
+    val chip: Boolean = false,
 )
 
 // `before` / `after` are camera-relative and ordered inner (next to camera) → outer.
@@ -26,10 +28,9 @@ data class CompactArrangement(
 object CompactLayoutEngine {
     const val MAX_CELLS = 4
 
-    // A bubble this wide is worth moving pinned cells across the camera for
-    private const val WIDE_BUBBLE_CELLS = 2
-    private const val WIDTH_EPSILON = 0.25f
-    private const val STICKY_WIDTH = 1f
+    private const val MAX_SEARCH = 8
+    private const val WIDTH_EPSILON = 0.01f
+    private const val STICKY_WIDTH = 0.5f
 
     fun arrange(
         entries: List<CompactEntry>,
@@ -43,7 +44,7 @@ object CompactLayoutEngine {
         previous: CompactArrangement = CompactArrangement.Empty,
     ): CompactArrangement {
         fun attempt(pool: List<CompactEntry>): CompactArrangement? {
-            val result = arrangeOnce(pool, anchor, maxCells, leftExtra, balance, cellWidth, leftExtraWidth, previous)
+            val result = arrangeOnce(pool, anchor, maxCells, balance, cellWidth, leftExtraWidth, previous)
             if (fits == null || fits(result.before, result.after) != null) return result
             if (anchor != CameraAnchor.Center) return null
             val selected = pool.filter { it.itemKey in result.visibleItems }
@@ -59,7 +60,7 @@ object CompactLayoutEngine {
                 result = fitted
                 break
             }
-            val shown = arrangeOnce(pool, anchor, maxCells, leftExtra, balance, cellWidth, leftExtraWidth, previous)
+            val shown = arrangeOnce(pool, anchor, maxCells, balance, cellWidth, leftExtraWidth, previous)
             if (shown.visibleItems.size <= 1) return shown
             val drop = pool.filter { it.itemKey in shown.visibleItems }.maxByOrNull { it.priority } ?: return shown
             pool = pool - drop
@@ -96,24 +97,30 @@ object CompactLayoutEngine {
         base: CompactArrangement,
         fits: (List<String>, List<String>) -> Int?,
     ): CompactArrangement? {
-        val pinnedCells = selected.filter { it.pinned }.flatMap { it.cellKeys }.toSet()
-        val dynamic = selected.filterNot { it.pinned }.sortedBy { it.priority }
-        if (dynamic.isEmpty() || dynamic.size > 6) return null
-        val pinnedBefore = base.before.filter { it in pinnedCells }
-        val pinnedAfter = base.after.filter { it in pinnedCells }
+        val baseBefore = selected.filter { e -> e.cellKeys.isNotEmpty() && e.cellKeys.all { it in base.before } }.map { it.itemKey }.toSet()
+        val pinned = selected.filter { it.pinned }.map { it.itemKey }.toSet()
+        return splitSearch(selected, base.visibleItems, fits) { key -> if (key in pinned) key in baseBefore else null }
+            ?: splitSearch(selected, base.visibleItems, fits) { null }
+    }
+
+    private fun splitSearch(
+        entries: List<CompactEntry>,
+        visible: Set<String>,
+        fits: (List<String>, List<String>) -> Int?,
+        fixedSide: (String) -> Boolean?,
+    ): CompactArrangement? {
+        val movable = entries.filter { fixedSide(it.itemKey) == null }
+        if (movable.isEmpty() || movable.size > MAX_SEARCH) return null
+        val fixedBefore = entries.filter { fixedSide(it.itemKey) == true }.map { it.itemKey }
         var best: CompactArrangement? = null
         var bestScore = Int.MAX_VALUE
-        for (mask in 0 until (1 shl dynamic.size)) {
-            val before = pinnedBefore.toMutableList()
-            val after = pinnedAfter.toMutableList()
-            dynamic.forEachIndexed { i, entry ->
-                val cells = if (entry.cellKeys.size == 2) entry.cellKeys.reversed() else entry.cellKeys
-                if ((mask shr i) and 1 == 1) before += cells else after += cells
-            }
-            val score = fits(before, after) ?: continue
+        for (mask in 0 until (1 shl movable.size)) {
+            val before = fixedBefore + movable.filterIndexed { i, _ -> (mask shr i) and 1 == 1 }.map { it.itemKey }
+            val candidate = ordered(entries, before.toSet(), visible)
+            val score = fits(candidate.before, candidate.after) ?: continue
             if (score < bestScore) {
                 bestScore = score
-                best = CompactArrangement(before, after, base.visibleItems)
+                best = candidate
             }
         }
         return best
@@ -123,7 +130,6 @@ object CompactLayoutEngine {
         entries: List<CompactEntry>,
         anchor: CameraAnchor,
         maxCells: Int,
-        leftExtra: Int,
         balance: Boolean,
         cellWidth: (String) -> Float,
         leftExtraWidth: Float,
@@ -152,106 +158,122 @@ object CompactLayoutEngine {
             }
         }
 
-        val before = mutableListOf<String>()
-        val after = mutableListOf<String>()
-        fun width(cells: List<String>) = cells.sumOf { cellWidth(it).toDouble() }.toFloat()
-        fun left() = width(before) + leftExtraWidth
-        fun right() = width(after)
-        val twoCell = dynamic.filter { it.cellKeys.size == 2 }
-        val oneCell = dynamic.filter { it.cellKeys.size == 1 }
-
-        val movable = mutableListOf<CompactEntry>()
-        if (twoCell.isNotEmpty()) {
-            after += twoCell[0].cellKeys.reversed()
-            pinned.forEach { before += it.cellKeys }
-            twoCell.drop(1).forEach {
-                before += it.cellKeys.reversed()
-                movable += it
-            }
-            oneCell.forEach {
-                if (left() <= right()) {
-                    before += it.cellKeys
-                    movable += it
-                } else {
-                    after += it.cellKeys
-                }
-            }
-        } else {
-            pinned.getOrNull(0)?.let { before += it.cellKeys }
-            pinned.getOrNull(1)?.let { after += it.cellKeys }
-            oneCell.forEach {
-                if (right() <= left()) {
-                    after += it.cellKeys
-                } else {
-                    before += it.cellKeys
-                    movable += it
-                }
-            }
-        }
-
-        if (balance && leftExtraWidth > 0f) {
-            for (entry in movable.sortedByDescending { it.priority }) {
-                val size = entry.cellKeys.size
-                val w = width(entry.cellKeys)
-                val left = left()
-                val right = right()
-                val gap = kotlin.math.abs(left - right)
-                val movedGap = kotlin.math.abs((left - w) - (right + w))
-                if (movedGap > gap + WIDTH_EPSILON || (movedGap >= gap - WIDTH_EPSILON && left <= right)) break
-                before.removeAll(entry.cellKeys.toSet())
-                after.addAll(0, if (size == 2) entry.cellKeys.reversed() else entry.cellKeys)
-            }
-        }
-
-        if (balance && leftExtraWidth >= WIDE_BUBBLE_CELLS) {
-            for (entry in pinned.filter { e -> e.cellKeys.all { it in before } }.sortedByDescending { it.priority }) {
-                val size = entry.cellKeys.size
-                val w = width(entry.cellKeys)
-                val left = left()
-                val right = right()
-                val gap = kotlin.math.abs(left - right)
-                val movedGap = kotlin.math.abs((left - w) - (right + w))
-                if (movedGap >= gap - WIDTH_EPSILON) break
-                before.removeAll(entry.cellKeys.toSet())
-                after.addAll(0, if (size == 2) entry.cellKeys.reversed() else entry.cellKeys)
-            }
-        }
-
-        if (balance && (previous.before.isNotEmpty() || previous.after.isNotEmpty())) {
-            val wasBefore = previous.before.toSet()
-            val wasAfter = previous.after.toSet()
-            for (entry in dynamic) {
-                val cells = if (entry.cellKeys.size == 2) entry.cellKeys.reversed() else entry.cellKeys
-                val nowBefore = entry.cellKeys.all { it in before }
-                val stickBefore = entry.cellKeys.all { it in wasBefore }
-                val stickAfter = entry.cellKeys.all { it in wasAfter }
-                if (!(nowBefore && stickAfter) && !(!nowBefore && stickBefore)) continue
-                val w = width(entry.cellKeys)
-                val gap = kotlin.math.abs(left() - right())
-                val sign = if (nowBefore) -1 else 1
-                val revertedGap = kotlin.math.abs((left() + sign * w) - (right() - sign * w))
-                if (revertedGap > gap + STICKY_WIDTH) continue
-                if (nowBefore) {
-                    before.removeAll(entry.cellKeys.toSet())
-                    after.addAll(0, cells)
-                } else {
-                    after.removeAll(entry.cellKeys.toSet())
-                    before += cells
-                }
-            }
-        }
-
         val solo = selected.singleOrNull()
         if (solo != null && solo.soloCellKeys.isNotEmpty() && solo.cellKeys.size == 1) {
-            if (solo.keepTogether) return CompactArrangement(emptyList(), solo.soloCellKeys + solo.cellKeys, visible)
+            if (solo.chip) return CompactArrangement(emptyList(), solo.soloCellKeys + solo.cellKeys, visible)
             return CompactArrangement(solo.soloCellKeys, solo.cellKeys, visible)
         }
-
-        if (before.isEmpty() && selected.size == 1 && after.size == 2 && selected.first().cellKeys.size == 2) {
-            val item = selected.first()
-            return CompactArrangement(listOf(item.cellKeys[0]), listOf(item.cellKeys[1]), visible)
+        if (solo != null && !solo.pinned && solo.cellKeys.size == 2) {
+            return CompactArrangement(listOf(solo.cellKeys[0]), listOf(solo.cellKeys[1]), visible)
         }
-        return CompactArrangement(before, after, visible)
+
+        val width = { e: CompactEntry -> e.cellKeys.sumOf { cellWidth(it).toDouble() }.toFloat() }
+        val defaultBefore = defaultBefore(pinned, dynamic, width, leftExtraWidth)
+        val before = if (balance) balancedBefore(selected, defaultBefore, previous, width, leftExtraWidth) else defaultBefore
+        return ordered(selected, before, visible)
+    }
+
+    private fun defaultBefore(
+        pinned: List<CompactEntry>,
+        dynamic: List<CompactEntry>,
+        width: (CompactEntry) -> Float,
+        extra: Float,
+    ): Set<String> {
+        val before = mutableSetOf<String>()
+        var left = extra
+        var right = 0f
+        fun put(entry: CompactEntry, toBefore: Boolean) {
+            if (toBefore) {
+                before += entry.itemKey
+                left += width(entry)
+            } else {
+                right += width(entry)
+            }
+        }
+        val multi = dynamic.filter { it.cellKeys.size > 1 }
+        val single = dynamic.filter { it.cellKeys.size <= 1 }
+        if (multi.isNotEmpty()) {
+            put(multi[0], false)
+            pinned.forEach { put(it, true) }
+            multi.drop(1).forEach { put(it, true) }
+            single.forEach { put(it, left <= right) }
+        } else {
+            pinned.forEachIndexed { i, entry -> put(entry, i != 1) }
+            single.forEach { put(it, right > left) }
+        }
+        return before
+    }
+
+    private fun balancedBefore(
+        entries: List<CompactEntry>,
+        fallback: Set<String>,
+        previous: CompactArrangement,
+        width: (CompactEntry) -> Float,
+        extra: Float,
+    ): Set<String> {
+        if (entries.size > MAX_SEARCH) return fallback
+        val wasBefore = previous.before.toSet()
+        val wasAfter = previous.after.toSet()
+        val previousSide = entries.map { e ->
+            when {
+                e.cellKeys.isEmpty() -> null
+                e.cellKeys.all { it in wasBefore } -> true
+                e.cellKeys.all { it in wasAfter } -> false
+                else -> null
+            }
+        }
+        val reference = entries.mapIndexed { i, e -> previousSide[i] ?: (e.itemKey in fallback) }
+        val referenceMask = reference.foldIndexed(0) { i, acc, b -> if (b) acc or (1 shl i) else acc }
+        val widths = entries.map(width)
+        val importance = entries.sortedByDescending { it.priority }.withIndex().associate { (i, e) -> e.itemKey to i + 1 }
+        val weights = entries.map { importance.getValue(it.itemKey) }
+
+        var bestMask = referenceMask
+        var bestGap = Float.MAX_VALUE
+        var bestHeavy = true
+        var bestCost = Int.MAX_VALUE
+        var referenceGap = Float.MAX_VALUE
+        for (mask in 0 until (1 shl entries.size)) {
+            var left = extra
+            var right = 0f
+            var cost = 0
+            for (i in entries.indices) {
+                val isBefore = (mask shr i) and 1 == 1
+                if (isBefore) left += widths[i] else right += widths[i]
+                if (isBefore != reference[i]) cost += weights[i]
+            }
+            val gap = abs(left - right)
+            if (mask == referenceMask) referenceGap = gap
+            val heavy = extra > 0f && left > right + WIDTH_EPSILON
+            val better = when {
+                gap < bestGap - WIDTH_EPSILON -> true
+                gap > bestGap + WIDTH_EPSILON -> false
+                heavy != bestHeavy -> !heavy
+                else -> cost < bestCost
+            }
+            if (better) {
+                bestMask = mask
+                bestGap = gap
+                bestHeavy = heavy
+                bestCost = cost
+            }
+        }
+        val mask = if (previousSide.all { it != null } && referenceGap <= bestGap + STICKY_WIDTH) referenceMask else bestMask
+        return entries.filterIndexed { i, _ -> (mask shr i) and 1 == 1 }.map { it.itemKey }.toSet()
+    }
+
+    private fun ordered(
+        entries: List<CompactEntry>,
+        before: Set<String>,
+        visible: Set<String>,
+    ): CompactArrangement {
+        val sorted = entries.sortedWith(compareBy<CompactEntry>({ it.chip }, { !it.pinned }, { it.priority }))
+        fun cells(entry: CompactEntry) = if (entry.pinned) entry.cellKeys else entry.cellKeys.reversed()
+        return CompactArrangement(
+            sorted.filter { it.itemKey in before }.flatMap(::cells),
+            sorted.filterNot { it.itemKey in before }.flatMap(::cells),
+            visible,
+        )
     }
 
     private fun select(entries: List<CompactEntry>, maxCells: Int): List<CompactEntry> {

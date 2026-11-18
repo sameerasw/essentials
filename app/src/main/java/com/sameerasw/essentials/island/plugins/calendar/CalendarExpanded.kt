@@ -63,11 +63,14 @@ fun CalendarExpanded(
     scope: IslandExpandedScope,
     icon: String? = null,
     drawBackground: Boolean = true,
+    hidden: Boolean? = null,
+    onToggleHidden: () -> Unit = {},
 ) {
     val spec = scope.spec
     val context = LocalContext.current
     val sidePadding = spec.expandedPadding + spec.expandedCorner * 0.35f
     val calendarColor = event.calendarColor?.let { Color(soften(it)) } ?: islandAccent()
+    val glowColor = spec.glowColor ?: calendarColor
     IslandSurfaceAccent(calendarColor)
     val timeSettings = remember { SettingsRepository(context) }
     val timeText = { millis: Long -> IslandTimeFormat.format(context, timeSettings, millis) }
@@ -81,8 +84,8 @@ fun CalendarExpanded(
     val detailStyle = IslandTextStyles.body.copy(color = islandTextColor(), fontSize = 15.sp, lineHeight = 20.sp)
 
     Box(propagateMinConstraints = true) {
-        if (drawBackground && !SurfaceBackdrop { Box(Modifier.fillMaxSize().accentGlow(calendarColor, showGlow, scope.cameraClearance)) }) {
-            Box(Modifier.matchParentSize().accentGlow(calendarColor, showGlow, scope.cameraClearance))
+        if (drawBackground && !SurfaceBackdrop { Box(Modifier.fillMaxSize().accentGlow(glowColor, showGlow, scope.cameraClearance, spec.glowIntensity)) }) {
+            Box(Modifier.matchParentSize().accentGlow(glowColor, showGlow, scope.cameraClearance, spec.glowIntensity))
         }
         Column(
             modifier = Modifier.fillMaxWidth().resizableCard(resize).padding(spec.expandedOutset),
@@ -91,7 +94,6 @@ fun CalendarExpanded(
             Column(Modifier.weight(1f, fill = false)) {
                 Spacer(Modifier.height(spec.expandedTopPadding))
                 scope.CameraRow(
-                    horizontalPadding = spec.contentGap + spec.expandedCorner * 0.35f,
                     title = event.title,
                     start = {
                         Box(Modifier.size(spec.cellSize), contentAlignment = Alignment.Center) {
@@ -124,7 +126,14 @@ fun CalendarExpanded(
                     height = 36.dp,
                     modifier = Modifier.padding(horizontal = sidePadding),
                     container = Color.White.copy(alpha = 0.2f),
-                    items = listOf(ConnectedItem(onView) { ConnectedTextLabel(stringResource(R.string.island_calendar_view_event)) }),
+                    items = listOfNotNull(
+                        ConnectedItem(onView) { ConnectedTextLabel(stringResource(R.string.island_calendar_view_event)) },
+                        hidden?.let {
+                            ConnectedItem(onToggleHidden) {
+                                ConnectedTextLabel(stringResource(if (it) R.string.island_action_show else R.string.island_action_hide))
+                            }
+                        },
+                    ),
                 )
                 ResizeHandle(resize, spec.expandedBottomPadding.coerceAtLeast(18.dp))
             }

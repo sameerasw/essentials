@@ -93,11 +93,7 @@ class EssentialsApp : Application() {
                 addAction(Intent.ACTION_USER_PRESENT)
             }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            registerReceiver(securityReceiver, intentFilter, RECEIVER_EXPORTED)
-        } else {
-            registerReceiver(securityReceiver, intentFilter)
-        }
+        ContextCompat.registerReceiver(this, securityReceiver, intentFilter, ContextCompat.RECEIVER_EXPORTED)
 
         ContextCompat.registerReceiver(
             this,

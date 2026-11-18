@@ -43,6 +43,18 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import com.sameerasw.essentials.ui.core.cards.LocalIconToggleStatus
+import com.sameerasw.essentials.island.state.IslandPresence
+import com.sameerasw.essentials.island.state.IslandItemsState
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.layout.Box
+import androidx.compose.ui.draw.alpha
+import androidx.compose.material3.Text
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.border
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -84,6 +96,7 @@ import com.sameerasw.essentials.ui.features.display.sheets.IslandPulseShadowOpti
 import com.sameerasw.essentials.ui.features.display.sheets.IslandNavigationOptionsBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.IslandSoundModeOptionsBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.IslandLiveUpdatesOptionsBottomSheet
+import com.sameerasw.essentials.ui.features.display.sheets.IslandStarlinkOptionsBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.IslandTimeOptionsBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.IslandCaffeinateOptionsBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.IslandSignalOptionsBottomSheet
@@ -115,12 +128,40 @@ fun IslandSettingsUI(
     var savedRaw by remember { mutableStateOf(prioritySettings.getIslandPriorityOrder().orEmpty()) }
     val savedOrder = remember(savedRaw, providerEntries) { IslandPriorityEntries.normalize(savedRaw, providerEntries) }
     var workingOrder by remember { mutableStateOf(savedOrder) }
+    var savedHidden by remember { mutableStateOf(prioritySettings.getIslandHiddenEntries()) }
+    val setEntryEnabled: (String, Boolean) -> Unit = { id, enabled ->
+        when (id) {
+            "live_updates" -> viewModel.setIslandNotifKeepProgress(enabled)
+            "notifications" -> viewModel.setIslandShowNotifications(enabled)
+            "time" -> viewModel.setIslandShowTimeBattery(enabled)
+            "battery" -> viewModel.setIslandShowBattery(enabled)
+            "flashlight" -> viewModel.setIslandShowFlashlight(enabled)
+            "timer" -> viewModel.setIslandShowTimers(enabled)
+            "media" -> viewModel.setIslandShowMedia(enabled)
+            "conscious_gate" -> viewModel.setIslandShowConsciousGate(enabled)
+            "caffeinate" -> viewModel.setIslandShowCaffeinate(enabled)
+            "travel" -> viewModel.setIslandShowTravel(enabled)
+            "calendar" -> viewModel.setIslandShowCalendar(enabled)
+            "sound_mode" -> viewModel.setIslandShowSoundMode(enabled)
+            "network" -> viewModel.setIslandShowNetwork(enabled)
+            "alarm" -> viewModel.setIslandShowAlarm(enabled)
+            "navigation" -> viewModel.setIslandShowNavigation(enabled)
+            "hotspot" -> viewModel.setIslandShowHotspot(enabled)
+            "starlink" -> viewModel.setIslandShowStarlink(enabled)
+            "devices" -> viewModel.setIslandShowDevices(enabled)
+            else -> if (IslandPriorityEntries.isProvider(id)) {
+                ProviderTrustStore(prioritySettings).setHiddenFromIsland(IslandPriorityEntries.providerPackage(id), !enabled)
+                providerVersion++
+            }
+        }
+    }
     var showMediaAppSelectionSheet by remember { mutableStateOf(false) }
     var showCalendarOptionsSheet by remember { mutableStateOf(false) }
     var showSoundModeOptionsSheet by remember { mutableStateOf(false) }
     var showLiveUpdatesOptionsSheet by remember { mutableStateOf(false) }
     var showDevicesBatterySheet by remember { mutableStateOf(false) }
     var showTimeOptionsSheet by remember { mutableStateOf(false) }
+    var showStarlinkOptionsSheet by remember { mutableStateOf(false) }
     var showBatteryOptionsSheet by remember { mutableStateOf(false) }
     var showTimerOptionsSheet by remember { mutableStateOf(false) }
     var showCaffeinateOptionsSheet by remember { mutableStateOf(false) }
@@ -256,7 +297,7 @@ fun IslandSettingsUI(
             spacing = 2.dp,
             cornerRadius = 24.dp,
         ) {
-            val renderEntry: @Composable (String, (@Composable () -> Unit)?) -> Unit = { entryId, handle ->
+            val renderEntryBody: @Composable (String, (@Composable () -> Unit)?) -> Unit = { entryId, handle ->
                 when (entryId) {
                     "calls" -> IconToggleItem(
                         dragHandle = handle,
@@ -485,6 +526,18 @@ fun IslandSettingsUI(
                         },
                         modifier = Modifier.highlight(highlightSetting == "island_show_hotspot"),
                     )
+                    "starlink" -> IconToggleItem(
+                        dragHandle = handle,
+                        iconRes = R.drawable.ic_starlink_24,
+                        title = stringResource(R.string.island_show_starlink_title),
+                        isChecked = viewModel.isIslandShowStarlink.value,
+                        onCheckedChange = { checked ->
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            viewModel.setIslandShowStarlink(checked)
+                        },
+                        onSettingsClick = { showStarlinkOptionsSheet = true },
+                        modifier = Modifier.highlight(highlightSetting == "island_show_starlink"),
+                    )
                     "devices" -> IconToggleItem(
                         dragHandle = handle,
                         iconRes = R.drawable.rounded_bluetooth_24,
@@ -522,16 +575,43 @@ fun IslandSettingsUI(
                     }
                 }
             }
+            val presenceMap by IslandItemsState.presence.collectAsState()
+            val renderEntry: @Composable (String, (@Composable () -> Unit)?) -> Unit = { entryId, handle ->
+                val groups = if (entryId == "calls") setOf("call") else IslandPriorityEntries.entries(providerEntries).firstOrNull { it.id == entryId }?.pluginIds.orEmpty()
+                val presence = groups.mapNotNull { presenceMap[it] }.let { found ->
+                    found.firstOrNull { it == IslandPresence.Shown } ?: found.firstOrNull()
+                }
+                CompositionLocalProvider(LocalIconToggleStatus provides { IslandPresenceDot(presence) }) { renderEntryBody(entryId, handle) }
+            }
             renderEntry("calls", null)
-            renderEntry("time", null)
             ReorderableColumn(
-                list = if (reorderMode) workingOrder else savedOrder,
+                list = if (reorderMode) workingOrder else savedOrder.filter { it !in savedHidden },
                 onSettle = { from, to -> workingOrder = workingOrder.toMutableList().apply { add(to, removeAt(from)) } },
                 verticalArrangement = Arrangement.spacedBy(2.dp),
                 onMove = { HapticUtil.performVirtualKeyHaptic(view) },
-            ) { _, entryId, _ ->
+            ) { index, entryId, _ ->
                 key(entryId) {
                     ReorderableItem {
+                        if (entryId == IslandPriorityEntries.HIDE_LINE) {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 8.dp, horizontal = 8.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                            ) {
+                                HorizontalDivider(modifier = Modifier.weight(1f))
+                                Text(
+                                    text = stringResource(R.string.island_reorder_hide_line),
+                                    style = MaterialTheme.typography.labelMedium,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                )
+                                HorizontalDivider(modifier = Modifier.weight(1f))
+                            }
+                            return@ReorderableItem
+                        }
+                        val belowLine = reorderMode && index > workingOrder.indexOf(IslandPriorityEntries.HIDE_LINE)
+                        Box(modifier = Modifier.alpha(if (belowLine) 0.45f else 1f)) {
                         renderEntry(
                             entryId,
                             if (reorderMode) {
@@ -552,6 +632,7 @@ fun IslandSettingsUI(
                                 null
                             },
                         )
+                        }
                     }
                 }
             }
@@ -560,15 +641,28 @@ fun IslandSettingsUI(
         IslandPriorityActions(
             editing = reorderMode,
             onStart = {
-                workingOrder = savedOrder
+                workingOrder = savedOrder.filter { it !in savedHidden } +
+                    IslandPriorityEntries.HIDE_LINE +
+                    savedOrder.filter { it in savedHidden }
                 reorderMode = true
             },
             onSave = {
-                prioritySettings.setIslandPriorityOrder(workingOrder.takeIf { it != IslandPriorityEntries.defaultOrder(providerEntries) })
-                savedRaw = workingOrder
+                val lineIndex = workingOrder.indexOf(IslandPriorityEntries.HIDE_LINE)
+                val order = workingOrder - IslandPriorityEntries.HIDE_LINE
+                val hidden = workingOrder.drop(lineIndex + 1).toSet()
+                (hidden - savedHidden).forEach { setEntryEnabled(it, false) }
+                (savedHidden - hidden).forEach { setEntryEnabled(it, true) }
+                prioritySettings.setIslandHiddenEntries(hidden)
+                prioritySettings.setIslandPriorityOrder(order.takeIf { it != IslandPriorityEntries.defaultOrder(providerEntries) })
+                savedRaw = order
+                savedHidden = hidden
                 reorderMode = false
             },
-            onReset = { workingOrder = IslandPriorityEntries.defaultOrder(providerEntries) },
+            onReset = {
+                val default = IslandPriorityEntries.defaultOrder(providerEntries)
+                val hidden = SettingsRepository.DEFAULT_ISLAND_HIDDEN_ENTRIES
+                workingOrder = default.filter { it !in hidden } + IslandPriorityEntries.HIDE_LINE + default.filter { it in hidden }
+            },
         )
 
         IslandProvidersSection(onChanged = { providerVersion++ })
@@ -796,6 +890,12 @@ fun IslandSettingsUI(
         IslandCaffeinateOptionsBottomSheet(onDismissRequest = { showCaffeinateOptionsSheet = false })
     }
 
+    if (showStarlinkOptionsSheet) {
+        IslandStarlinkOptionsBottomSheet(
+            onDismissRequest = { showStarlinkOptionsSheet = false },
+        )
+    }
+
     if (showTimeOptionsSheet) {
         IslandTimeOptionsBottomSheet(
             onDismissRequest = { showTimeOptionsSheet = false },
@@ -822,5 +922,17 @@ fun IslandSettingsUI(
             onDismissRequest = { showCalendarOptionsSheet = false },
             allowIconEdit = true,
         )
+    }
+}
+
+@Composable
+private fun IslandPresenceDot(presence: IslandPresence?) {
+    val color = MaterialTheme.colorScheme.primary
+    Box(Modifier.size(10.dp), contentAlignment = Alignment.Center) {
+        when (presence) {
+            IslandPresence.Shown -> Box(Modifier.size(8.dp).background(color, CircleShape))
+            IslandPresence.Hidden -> Box(Modifier.size(8.dp).border(1.5.dp, color, CircleShape))
+            null -> Unit
+        }
     }
 }

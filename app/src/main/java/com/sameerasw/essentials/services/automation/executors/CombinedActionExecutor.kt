@@ -21,6 +21,8 @@ import android.media.AudioManager
 import android.media.session.MediaController
 import android.media.session.MediaSessionManager
 import android.media.session.PlaybackState
+import android.location.LocationManager
+import androidx.core.location.LocationManagerCompat
 import android.net.wifi.WifiManager
 import android.os.Build
 import android.os.Handler
@@ -773,7 +775,8 @@ object CombinedActionExecutor {
 
                     if (action.changeLockScreenClock) {
                         val key = "lock_screen_custom_clock_face"
-                        val value = "{\"clockId\":\"${action.lockScreenClockStyle}\"}"
+                        val clockId = action.lockScreenClockStyle.filter { it.isLetterOrDigit() || it == '_' || it == '-' || it == '.' }
+                        val value = "{\"clockId\":\"$clockId\"}"
                         val success =
                             try {
                                 android.provider.Settings.Secure.putString(
@@ -785,7 +788,7 @@ object CombinedActionExecutor {
                                 false
                             }
                         if (!success) {
-                            val command = "settings put secure $key $value"
+                            val command = "settings put secure $key '$value'"
                             com.sameerasw.essentials.utils.ShellUtils
                                 .runCommand(context, command)
                         }
@@ -951,6 +954,9 @@ object CombinedActionExecutor {
                 is Action.ToggleCellularData ->
                     isCellularDataEnabled(context)?.let { setCellularDataEnabled(context, !it) }
                         ?: showStateUnknown(context, R.string.diy_action_cellular_toggle)
+                is Action.TurnOnLocation -> setLocationEnabled(context, true)
+                is Action.TurnOffLocation -> setLocationEnabled(context, false)
+                is Action.ToggleLocation -> setLocationEnabled(context, !isLocationEnabled(context))
                 is Action.TurnOnAutoBrightness -> setAutoBrightnessEnabled(context, true)
                 is Action.TurnOffAutoBrightness -> setAutoBrightnessEnabled(context, false)
                 is Action.ToggleAutoBrightness -> setAutoBrightnessEnabled(context, !isAutoBrightnessEnabled(context))
@@ -1203,6 +1209,20 @@ object CombinedActionExecutor {
         )
     }
 
+    private fun isLocationEnabled(context: Context): Boolean =
+        context.getSystemService(LocationManager::class.java)?.let { LocationManagerCompat.isLocationEnabled(it) } ?: false
+
+    private fun setLocationEnabled(
+        context: Context,
+        enabled: Boolean,
+    ) {
+        ShellUtils.runCommand(
+            context,
+            "cmd location set-location-enabled $enabled",
+            featureName = context.getString(if (enabled) R.string.diy_action_location_on else R.string.diy_action_location_off),
+        )
+    }
+
     private fun isAutoBrightnessEnabled(context: Context): Boolean =
         android.provider.Settings.System.getInt(
             context.contentResolver,
@@ -1264,7 +1284,8 @@ object CombinedActionExecutor {
         context: Context,
         action: Action.OpenActivity,
     ) {
-        if (action.packageName.isBlank() || action.className.isBlank()) return
+        val identifier = Regex("[A-Za-z0-9_.$]+")
+        if (!identifier.matches(action.packageName) || !identifier.matches(action.className)) return
         val component = ComponentName(action.packageName, action.className)
         // Single quotes keep the shell from expanding the $ in nested class names
         val startCommand = "am start -n '${component.flattenToShortString()}'"

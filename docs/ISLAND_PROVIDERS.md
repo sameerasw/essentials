@@ -1,6 +1,6 @@
 # Island providers
 
-Any app can put content on the Essentials island without shipping any code into Essentials. Essentials is the **host**: it owns the window, the animations, the gestures, the priority order and every piece of permission UI. A **provider** app only describes what to show and, optionally, draws its own expanded view. Overcast is the reference provider.
+Any app can put content on the Essentials island without shipping any code into Essentials. Essentials is the **host**: it owns the window, the animations, the gestures, the priority order and every piece of permission UI. A **provider** app only describes what to show and, optionally, draws its own expanded view. Overcast is the reference provider; AirSync is a second one that shows the connected Mac.
 
 For how the island itself works, see [ISLAND.md](ISLAND.md).
 
@@ -179,7 +179,7 @@ The host asks for a surface with `requestSurface`. `ComposeIslandProviderService
 What to do inside it:
 
 1. **Read the layout from `hostInfoState.value`** (`HostInfo`): `cameraClearancePx` is the space to leave at the top for the camera row, `compactHeightPx` the camera row height, `outsetPx` and `expandedPaddingPx` the paddings, `cornerPx` the corner radius, `accent`, `darkTheme`, `powerSave` (turn effects off when true).
-2. **Draw your own black background and clip to `cornerPx`.** The surface is a hole in the island window, so what you do not draw shows the wallpaper behind it.
+2. **Choose your own background, or leave it transparent.** The surface is composited on top of the island, so a transparent view shows the island's own background with whatever blur and styling the user set. Draw a solid colour only if you want to cover it. Clip to `cornerPx` either way.
 3. **Let the content take its natural height** (`wrapContentHeight(unbounded = true)`) and report it with `host.resize(itemKey, px)` from `onSizeChanged`.
 4. **Add `Modifier.islandSnapshot { host.snapshot(itemKey, it) }`** above the clip and background. The host draws the last snapshot while the island animates, because a surface cannot follow the island's scale, fade and clip.
 5. Make the root clickable and call `host.openApp(itemKey)` if tapping the view should open your app.
@@ -245,3 +245,4 @@ An approved provider is added automatically to the ordered list in Island settin
 - Alerts that should interrupt use `priorityOverride` plus a `peek`; remember the 10 s peek limit.
 - Test with the Essentials debug build and a provider build signed with a key you keep; a different key after pairing makes Essentials turn the provider off until the user approves it again.
 - A reference implementation is in the Overcast repository: `weather/island/WeatherIslandService.kt`, `WeatherIslandPayload.kt` and `WeatherIslandExpanded.kt`.
+- AirSync (`airsync-android`) is a smaller reference: `island/AirSyncIslandService.kt` publishes a device item (compact icon and battery, a line, an expanded view with actions) and keeps it available while disconnected so the expanded view can offer Reconnect. In the Brief, the Mac device tile opens that expanded view.

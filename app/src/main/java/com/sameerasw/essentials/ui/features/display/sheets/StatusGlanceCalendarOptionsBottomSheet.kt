@@ -186,6 +186,11 @@ fun StatusGlanceCalendarOptionsBottomSheet(
                         iconRes = R.drawable.rounded_calendar_today_24,
                         title = stringResource(R.string.island_calendar_show_ongoing_title),
                     )
+                    IslandPrefToggle(
+                        settingKey = SettingsRepository.KEY_ISLAND_CALENDAR_HIDE_NOW,
+                        iconRes = R.drawable.rounded_visibility_off_24,
+                        title = stringResource(R.string.island_calendar_hide_now_title),
+                    )
                 }
             }
 

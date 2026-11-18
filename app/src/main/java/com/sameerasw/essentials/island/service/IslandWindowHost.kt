@@ -64,6 +64,7 @@ class IslandWindowHost(
         }
         val compose = ComposeView(context).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnDetachedFromWindow)
+            com.sameerasw.essentials.utils.ForceInvertUtils.optOut(this)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
                 requestedFrameRate = View.REQUESTED_FRAME_RATE_CATEGORY_HIGH
             }
@@ -135,7 +136,7 @@ class IslandWindowHost(
         removeTouchWindow()
         removeGestureWindow()
         alwaysGestures = false
-        SharedOverlayWindow.detach(SharedOverlayWindow.Layer.Island)
+        SharedOverlayWindow.detach(SharedOverlayWindow.Layer.Island, composeView)
         composeView = null
         drawRect = null
         targetBounds = null

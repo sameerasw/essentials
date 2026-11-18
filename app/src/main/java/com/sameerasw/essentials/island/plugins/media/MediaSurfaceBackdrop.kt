@@ -4,6 +4,7 @@ import android.graphics.BlurMaskFilter
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.graphics.luminance
 import kotlin.math.abs
 import android.graphics.Matrix
 import android.graphics.Paint
@@ -91,6 +92,8 @@ fun MediaSurface(
     transparencyIntensity: Float = 1f,
     progressiveBlur: Boolean = true,
     glowIntensity: Float = 1f,
+    glowSize: Float = 1f,
+    glowRim: Boolean = true,
 ) {
     val accentState = rememberUpdatedState(accent)
     var viewportHeight by remember { mutableIntStateOf(1) }
@@ -178,8 +181,14 @@ fun MediaSurface(
                         cardPath.rewind()
                         cardPath.addRoundRect(RoundRect(rect, CornerRadius(cornerPx)))
                         clipPath(cardPath) {
-                            innerGlow(softGlow, rect, cornerPx, accentState.value.copy(alpha = (0.6f * glowIntensity).coerceAtMost(1f)), 40.dp.toPx() * glowIntensity.coerceAtLeast(1f), 4.dp.toPx(), (-14).dp.toPx())
-                            innerGlow(rimGlow, rect, cornerPx, accentState.value.copy(alpha = (0.5f * glowIntensity).coerceAtMost(1f)), 3.dp.toPx(), 0f, 0f)
+                            val accentColor = accentState.value
+                            val tame = if (accentColor.luminance() > 0.8f) 0.4f else 1f
+                            val radius = (40.dp.toPx() * glowSize).coerceAtMost(rect.height * 0.4f * glowSize.coerceAtLeast(1f))
+                            val dy = (-14).dp.toPx() * glowSize.coerceAtMost(1f)
+                            innerGlow(softGlow, rect, cornerPx, accentColor.copy(alpha = (0.6f * glowIntensity * tame).coerceAtMost(1f)), radius, 4.dp.toPx(), dy)
+                            if (glowRim) {
+                                innerGlow(rimGlow, rect, cornerPx, accentColor.copy(alpha = (0.5f * glowIntensity * tame).coerceAtMost(1f)), 3.dp.toPx(), 0f, 0f)
+                            }
                         }
                     },
             )

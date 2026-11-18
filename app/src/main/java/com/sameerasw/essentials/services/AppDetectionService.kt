@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials.services
 
+import androidx.core.content.ContextCompat
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -97,11 +98,7 @@ class AppDetectionService : Service() {
                 addAction("CONSCIOUS_GATE_CLOSED")
                 addAction(Intent.ACTION_SCREEN_OFF)
             }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            registerReceiver(authReceiver, filter, RECEIVER_EXPORTED)
-        } else {
-            registerReceiver(authReceiver, filter)
-        }
+        ContextCompat.registerReceiver(this, authReceiver, filter, ContextCompat.RECEIVER_NOT_EXPORTED)
     }
 
     override fun onStartCommand(

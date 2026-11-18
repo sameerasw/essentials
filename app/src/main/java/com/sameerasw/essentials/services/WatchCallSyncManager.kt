@@ -58,7 +58,7 @@ object WatchCallSyncManager {
                 put("timestamp", System.currentTimeMillis())
             }
 
-        Log.d(TAG, "Sending call state to watch: state=$stateStr, number=$phoneNumber, name=$contactName")
+        Log.d(TAG, "Sending call state to watch: state=$stateStr")
         sendMessageToWatch(context, PATH_WATCH_CALL_STATE, json.toString().toByteArray())
     }
 

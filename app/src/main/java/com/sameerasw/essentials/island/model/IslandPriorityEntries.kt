@@ -4,6 +4,7 @@ object IslandPriorityEntries {
     class Entry(val id: String, val pluginIds: Set<String>, val defaultPriority: Int)
 
     val all = listOf(
+        Entry("time", setOf("time"), IslandPriority.TIME),
         Entry("battery", setOf("battery"), IslandPriority.BATTERY_ALERT),
         Entry("live_updates", setOf("progress"), IslandPriority.PROGRESS),
         Entry("notifications", setOf("notifications"), IslandPriority.NOTIFICATION),
@@ -19,8 +20,11 @@ object IslandPriorityEntries {
         Entry("network", setOf("network", "signal"), IslandPriority.SIGNAL),
         Entry("hotspot", setOf("hotspot"), IslandPriority.HOTSPOT),
         Entry("devices", setOf("devices"), IslandPriority.DEVICES),
+        Entry("starlink", setOf("starlink"), IslandPriority.STARLINK),
         Entry("alarm", setOf("alarm"), IslandPriority.ALARM),
     ).sortedBy { it.defaultPriority }
+
+    const val HIDE_LINE = "__hide_line__"
 
     const val PROVIDER_PREFIX = "provider:"
 

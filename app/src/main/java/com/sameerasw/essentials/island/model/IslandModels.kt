@@ -37,6 +37,7 @@ object IslandPriority {
     const val NETWORK = 60
     const val HOTSPOT = 61
     const val DEVICES = 62
+    const val STARLINK = 63
     const val ALARM = 90
     const val DEFAULT = 100
 }
@@ -163,6 +164,8 @@ class IslandItem(
     val shake: IslandShake? = null,
     val dismissible: Boolean = false,
     val onDismiss: (() -> Unit)? = null,
+    val onClearAll: (() -> Unit)? = null,
+    val onSnoozeAll: ((Int) -> Unit)? = null,
     val onOpen: (() -> Unit)? = null,
     val interactions: InteractionOverrides = InteractionOverrides.Default,
     val queue: QueueInfo? = null,
