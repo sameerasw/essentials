@@ -136,7 +136,6 @@ class FlashlightPlugin : BaseIslandPlugin() {
                 expanded = ExpandedContent { scope ->
                     Column(Modifier.padding(scope.spec.expandedOutset).padding(top = scope.spec.expandedTopPadding, bottom = scope.spec.expandedBottomPadding)) {
                         scope.CameraRow(
-                            horizontalPadding = 20.dp,
                             start = {},
                             end = { RollingText(percentText) },
                         )

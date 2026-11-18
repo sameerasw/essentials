@@ -200,14 +200,31 @@ class ProviderConnection(
         pending.value = null
         _items.value = emptyList()
         RemoteBriefCards.set(info.packageName, emptyList())
+        RemoteProviderOptions.clear(info.packageName)
+        lastDecoded = null
         onItemsChanged()
     }
 
+    private var lastDecoded: DecodedPayload? = null
+
+    fun remap() {
+        lastDecoded?.let(::apply)
+    }
+
     private fun apply(decoded: DecodedPayload) {
+        lastDecoded = decoded
         val siblings = decoded.payload.items.map { it.key }.toSet()
         _items.value = decoded.payload.items.mapNotNull { RemoteItemMapper.map(it, decoded.assets, siblings, this) }
         RemoteBriefCards.set(info.packageName, decoded.payload.briefCards.map { RemoteBriefCard(info.packageName, it, decoded.assets, this) })
+        RemoteProviderOptions.set(info.packageName, decoded.payload.options, ::setOption)
         onItemsChanged()
+    }
+
+    private fun setOption(key: String, checked: Boolean) {
+        try {
+            provider?.onAction(IslandSchema.OPTION_ITEM, "$key=$checked")
+        } catch (_: Exception) {
+        }
     }
 
     private fun hostInfo(): HostInfo {
@@ -268,6 +285,8 @@ class ProviderConnection(
     }
 
     override val priorityGroup: String = IslandPriorityEntries.providerId(info.packageName)
+
+    override val chip: Boolean get() = info.packageName in ProviderTrustStore(settings).chipped()
 
     override fun namespaced(rawKey: String): String = "${info.packageName}:$rawKey"
 

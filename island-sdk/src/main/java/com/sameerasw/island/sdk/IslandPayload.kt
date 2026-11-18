@@ -4,6 +4,13 @@ data class IslandPayload(
     val schema: Int = IslandSchema.VERSION,
     val items: List<IslandItemPayload> = emptyList(),
     val briefCards: List<BriefCardPayload> = emptyList(),
+    val options: List<IslandOptionPayload> = emptyList(),
+)
+
+data class IslandOptionPayload(
+    val key: String = "",
+    val title: String = "",
+    val checked: Boolean = false,
 )
 
 data class BriefCardPayload(

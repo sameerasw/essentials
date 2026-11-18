@@ -607,6 +607,7 @@ class SettingsRepository(
         const val KEY_ISLAND_NOTIF_CONCEAL_CHAT_PICTURES = "island_notif_conceal_chat_pictures"
         const val KEY_ISLAND_CALENDAR_HIDE_LOCKED = "island_calendar_hide_locked"
         const val KEY_ISLAND_CALENDAR_COMPACT_TIME = "island_calendar_compact_time"
+        const val KEY_ISLAND_CALENDAR_HIDE_NOW = "island_calendar_hide_now"
         const val KEY_ISLAND_CALENDAR_SHOW_ONGOING = "island_calendar_show_ongoing"
         const val KEY_ISLAND_CALENDAR_HIDDEN_EVENTS = "island_calendar_hidden_events"
         const val KEY_ISLAND_TIME_HIDE_LOCKED = "island_time_hide_locked"
@@ -726,6 +727,7 @@ class SettingsRepository(
         const val KEY_ISLAND_PROVIDERS_HIDDEN = "island_providers_hidden"
         const val KEY_ISLAND_PROVIDERS_LAUNCHER_ONLY = "island_providers_launcher_only"
         const val KEY_ISLAND_PROVIDERS_HIDE_LOCKED = "island_providers_hide_locked"
+        const val KEY_ISLAND_PROVIDERS_CHIP = "island_providers_chip"
         const val KEY_ISLAND_PROVIDERS_ON_UPDATE = "island_providers_on_update"
 
         private const val LEGACY_WEATHER_API_KEY_PREFIX = "weather_api_key"
@@ -738,6 +740,8 @@ class SettingsRepository(
         const val KEY_ISLAND_NETWORK_ACTIVITY = "island_network_activity"
         const val KEY_ISLAND_SIGNAL_WIFI = "island_signal_wifi"
         const val KEY_ISLAND_PRIORITY_ORDER = "island_priority_order"
+        const val KEY_ISLAND_HIDDEN_ENTRIES = "island_hidden_entries"
+        val DEFAULT_ISLAND_HIDDEN_ENTRIES = setOf("starlink")
         const val KEY_ISLAND_SIGNAL_LOW_ONLY = "island_signal_low_only"
         const val KEY_ISLAND_SIGNAL_NETWORK_TYPES = "island_signal_network_modes"
         const val KEY_ISLAND_SIGNAL_SHOW_MODE = "island_signal_show_mode"
@@ -763,6 +767,14 @@ class SettingsRepository(
         const val ISLAND_NAVIGATION_ON_NEW_OFF = "off"
         const val KEY_ISLAND_NAVIGATION_EXPAND_DISTANCE = "island_navigation_expand_distance"
         const val KEY_ISLAND_SHOW_HOTSPOT = "island_show_hotspot"
+        const val KEY_ISLAND_SHOW_STARLINK = "island_show_starlink"
+        const val KEY_ISLAND_STARLINK_COMPACT = "island_starlink_compact"
+        const val KEY_ISLAND_STARLINK_SPEEDS = "island_starlink_speeds"
+        const val KEY_ISLAND_STARLINK_SPEED_MODE = "island_starlink_speed_mode"
+        const val KEY_ISLAND_STARLINK_SPEED_UNIT = "island_starlink_speed_unit"
+        const val KEY_ISLAND_STARLINK_HIDE_UNIT = "island_starlink_hide_unit"
+        const val KEY_ISLAND_STARLINK_HIDE_ARROW = "island_starlink_hide_arrow"
+        const val KEY_ISLAND_STARLINK_CHIP = "island_starlink_chip"
         const val KEY_ISLAND_BRIEF_ENABLED = "island_brief_enabled"
         const val KEY_ISLAND_BRIEF_SHOW_ALARM = "island_brief_show_alarm"
         const val KEY_ISLAND_BRIEF_TWO_LINE_HEADER = "island_brief_two_line_header"
@@ -845,6 +857,7 @@ class SettingsRepository(
         const val KEY_STATUS_GLANCE_CALENDAR_SHOW_ALL_DAY = "status_glance_calendar_show_all_day"
         const val KEY_STATUS_GLANCE_SHOW_MEDIA = "status_glance_show_media"
         const val KEY_STATUS_GLANCE_SHOW_TIME = "status_glance_show_time"
+        const val KEY_STATUS_GLANCE_SHOW_SECONDS = "status_glance_show_seconds"
         const val KEY_STATUS_GLANCE_BACKGROUND_PILL = "status_glance_background_pill"
         const val KEY_STATUS_GLANCE_ALBUM_ART_COLORS = "status_glance_album_art_colors"
         const val KEY_STATUS_GLANCE_SHOW_BATTERY = "status_glance_show_battery"
@@ -4409,6 +4422,9 @@ class SettingsRepository(
     fun getIslandPriorityOrder(): List<String>? =
         getString(KEY_ISLAND_PRIORITY_ORDER, null)?.split(",")?.filter { it.isNotBlank() }?.takeIf { it.isNotEmpty() }
     fun setIslandPriorityOrder(order: List<String>?) = putString(KEY_ISLAND_PRIORITY_ORDER, order?.joinToString(","))
+    fun getIslandHiddenEntries(): Set<String> =
+        getString(KEY_ISLAND_HIDDEN_ENTRIES, null)?.split(",")?.filter { it.isNotBlank() }?.toSet() ?: DEFAULT_ISLAND_HIDDEN_ENTRIES
+    fun setIslandHiddenEntries(ids: Set<String>) = putString(KEY_ISLAND_HIDDEN_ENTRIES, ids.joinToString(","))
     fun isIslandSignalWifiEnabled(): Boolean = getBoolean(KEY_ISLAND_SIGNAL_WIFI, false)
     fun setIslandSignalWifiEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_SIGNAL_WIFI, enabled)
     fun isIslandShowSignalEnabled(): Boolean = getBoolean(KEY_ISLAND_SHOW_SIGNAL, false)
@@ -4466,6 +4482,8 @@ class SettingsRepository(
 
     fun isIslandShowHotspotEnabled(): Boolean = getBoolean(KEY_ISLAND_SHOW_HOTSPOT, false)
     fun setIslandShowHotspotEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_SHOW_HOTSPOT, enabled)
+    fun isIslandShowStarlinkEnabled(): Boolean = getBoolean(KEY_ISLAND_SHOW_STARLINK, false)
+    fun setIslandShowStarlinkEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_SHOW_STARLINK, enabled)
 
     fun isIslandBriefEnabled(): Boolean = getBoolean(KEY_ISLAND_BRIEF_ENABLED, false)
     fun setIslandBriefEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_BRIEF_ENABLED, enabled)
@@ -4853,6 +4871,9 @@ class SettingsRepository(
 
     fun isStatusGlanceShowTimeEnabled(): Boolean = getBoolean(KEY_STATUS_GLANCE_SHOW_TIME, true)
     fun setStatusGlanceShowTimeEnabled(enabled: Boolean) = putBoolean(KEY_STATUS_GLANCE_SHOW_TIME, enabled)
+
+    fun isStatusGlanceShowSecondsEnabled(): Boolean = getBoolean(KEY_STATUS_GLANCE_SHOW_SECONDS, false)
+    fun setStatusGlanceShowSecondsEnabled(enabled: Boolean) = putBoolean(KEY_STATUS_GLANCE_SHOW_SECONDS, enabled)
 
     fun isStatusGlanceBackgroundPillEnabled(): Boolean = getBoolean(KEY_STATUS_GLANCE_BACKGROUND_PILL, false)
     fun setStatusGlanceBackgroundPillEnabled(enabled: Boolean) = putBoolean(KEY_STATUS_GLANCE_BACKGROUND_PILL, enabled)

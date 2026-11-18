@@ -1555,6 +1555,9 @@
     <string name="diy_action_wifi_toggle">Toggle WiFi</string>
     <string name="diy_action_cellular_on">Turn On Cellular Data</string>
     <string name="diy_action_cellular_off">Turn Off Cellular Data</string>
+    <string name="diy_action_location_on">Turn On Location</string>
+    <string name="diy_action_location_off">Turn Off Location</string>
+    <string name="diy_action_location_toggle">Toggle Location</string>
     <string name="diy_action_cellular_toggle">Toggle Cellular Data</string>
     <string name="diy_action_state_unknown">%1$s: couldn\'t read the current state</string>
     <string name="diy_action_auto_brightness_on">Turn On Auto Brightness</string>
@@ -1956,6 +1959,7 @@
     <string name="island_provider_allow">Allow</string>
     <string name="island_provider_deny">Deny</string>
     <string name="island_provider_pair_failed">Couldn\'t connect to the app</string>
+    <string name="island_provider_pair_refused">This app doesn\'t trust this version of Essentials</string>
     <string name="app_airsync">AirSync</string>
     <string name="app_zenzero">ZenZero</string>
     <string name="app_canvas">Canvas</string>
@@ -3425,6 +3429,7 @@
     <string name="island_timers_show_screen_recorder_title">Show screen recorder</string>
     <string name="island_timers_filter_apps_title">Filter for apps</string>
     <string name="island_reorder_title">Re-order</string>
+    <string name="island_reorder_hide_line">Drag below to hide</string>
     <string name="island_show_network_title">Network</string>
     <string name="island_show_signal_title">Show mobile signal</string>
     <string name="island_signal_options_title">Network options</string>
@@ -3462,6 +3467,25 @@
     <string name="island_navigation_hide_while_driving_title">Hide while driving</string>
     <string name="island_show_hotspot_title">Hotspot</string>
     <string name="island_hotspot_desc">Shows while your hotspot is on, with connected devices and data shared</string>
+    <string name="island_show_starlink_title">Starlink</string>
+    <string name="island_starlink_desc">Shows dish status while connected to a Starlink network</string>
+    <string name="island_starlink_compact_title">Show in compact island</string>
+    <string name="island_starlink_speeds_title">Show speeds in compact mode</string>
+    <string name="island_starlink_speed_mode_title">Speed to show</string>
+    <string name="island_starlink_speed_up">Up</string>
+    <string name="island_starlink_speed_combined">Combined</string>
+    <string name="island_starlink_unit_title">Unit</string>
+    <string name="island_starlink_hide_unit_title">Hide unit</string>
+    <string name="island_starlink_hide_arrow_title">Hide arrow</string>
+    <string name="island_starlink_searching">Searching</string>
+    <string name="island_starlink_booting">Booting</string>
+    <string name="island_starlink_obstructed">Obstructed</string>
+    <string name="island_starlink_alert_motors">Motors stuck</string>
+    <string name="island_starlink_alert_thermal_shutdown">Thermal shutdown</string>
+    <string name="island_starlink_alert_thermal_throttle">Thermal throttle</string>
+    <string name="island_starlink_alert_location">Unexpected location</string>
+    <string name="island_starlink_alert_mast">Mast not vertical</string>
+    <string name="island_starlink_alert_ethernet">Slow ethernet</string>
     <plurals name="island_hotspot_clients">
         <item quantity="one">%d device</item>
         <item quantity="other">%d devices</item>
@@ -3505,6 +3529,7 @@
     <string name="island_hide_when_locked_title">Hide when locked</string>
     <string name="island_launcher_only_title">Only show on launcher</string>
     <string name="island_show_on_update_title">Periodically show on updates</string>
+    <string name="island_provider_chip_title">Show as a chip</string>
     <string name="island_launcher_only_desc">Hide while an app is open</string>
     <string name="island_alarm_window_title">Show alarms within</string>
     <string name="island_alarm_window_hours">%1$d hours</string>
@@ -3740,6 +3765,7 @@
     <string name="island_chips_title">Island chips</string>
     <string name="island_time_chip_title">Show in chip</string>
     <string name="island_calendar_compact_time_title">Compact time</string>
+    <string name="island_calendar_hide_now_title">Hide \"Now\"</string>
     <string name="island_calendar_show_ongoing_title">Show ongoing events</string>
     <string name="icon_category_general">General</string>
     <string name="icon_category_celebrations">Celebrations</string>

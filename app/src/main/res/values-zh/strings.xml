@@ -832,8 +832,8 @@
     <string name="diy_effect_dim_wallpaper">调暗壁纸</string>
     <string name="diy_effect_night_mode">夜间模式</string>
     <string name="diy_device_effects_android_15_warning">此功能需要Android 15或更高版本。</string>
-    <string name="diy_device_effects_enabled">啟用</string>
-    <string name="diy_device_effects_disabled">停用</string>
+    <string name="diy_device_effects_enabled">已啟用</string>
+    <string name="diy_device_effects_disabled">已停用</string>
     <string name="diy_action_sound_mode">声音模式</string>
     <string name="diy_sound_mode_desc">此操作允许根据触发器在声音、振动和静音模式之间切换。需要勿扰权限。</string>
     <!-- About Section -->
@@ -1353,11 +1353,11 @@
     <string name="feat_aod_force_turn_off_desc">无通知时强制关闭AOD。需要无障碍权限。</string>
     <string name="feat_auto_accessibility_title">自動無障礙</string>
     <string name="feat_auto_accessibility_desc">在應用程式啟動時如果缺少無障礙權限，使用WRITE_SECURE_SETTINGS自動授予權限。</string>
-    <string name="label_help_guide">協助與指南</string>
+    <string name="label_help_guide">幫助與指南</string>
     <string name="tab_your_android">您的Android</string>
     <string name="label_device_storage">儲存空間</string>
     <string name="label_device_ram">記憶體</string>
-    <string name="label_use_blur">使用模糊</string>
+    <string name="label_use_blur">使用模糊效果</string>
     <string name="desc_use_blur">启用界面中的渐进模糊元素</string>
     <string name="msg_blur_compatibility_error">此设备上已禁用模糊，以防止在Android 15或更低版本的三星设备上出现已知的显示错误。</string>
     <!-- Empty State Actions -->
@@ -1467,13 +1467,13 @@
     <string name="whats_new_apps_desc">The Apps tab is now fully integrated into the Your Android feature, making it easier to manage all your app updates in one cohesive hub.</string>
     <string name="settings_translate_mode_desc">长按任何文本即可翻译并为社区贡献内容</string>
     <string name="settings_translate_mode">翻译模块</string>
-    <string name="setting_enable_unsupported_features_title">启用不支援的功能</string>
-    <string name="setting_enable_unsupported_features_desc">顯示預設隱藏的 OEM 特有功能或多餘功能</string>
-    <string name="setting_swipe_tabs_title">在導覽列之間滑動</string>
+    <string name="setting_enable_unsupported_features_title">啟用此裝置不支援的功能</string>
+    <string name="setting_enable_unsupported_features_desc">顯示預設情況下隱藏的OEM特定功能以及多餘功能</string>
+    <string name="setting_swipe_tabs_title">在分頁之間滑動</string>
     <string name="setting_swipe_tabs_desc">在主屏幕上</string>
     <string name="feat_safe_volume_title">停用音量安全警告</string>
     <string name="about_desc_notification_snoozing">启用通知暂缓按钮，并配置自定义间隔选项和默认持续时间，以便稍后查看通知</string>
-    <string name="feat_notification_snoozing_title">延遲通知</string>
+    <string name="feat_notification_snoozing_title">通知暫緩</string>
     <string name="notification_lighting_sweep_select_shapes_title">选择形状</string>
     <string name="notification_lighting_sweep_select_shapes_desc">选择扫描动画中使用的形状</string>
     <string name="feat_flashlight_title">手电筒</string>
@@ -1573,7 +1573,7 @@
     <string name="label_auto_reset_battery_stats_desc">当电池电量在90%以上且未充电时自动重置电池状态</string>
     <string name="label_ripple_animation">漣漪效果</string>
     <string name="setting_app_icon_title">應用程式圖示</string>
-    <string name="setting_app_icon_desc">自訂在首頁啟動器上的圖示</string>
+    <string name="setting_app_icon_desc">自訂在主畫面上的圖示</string>
     <string name="feat_power_saving_title">電量節約</string>
     <string name="feat_smart_pixels_desc">熄掉部分像素來節約耗電量</string>
     <string name="smart_pixels_intensity_title">強度</string>
@@ -1587,7 +1587,7 @@
     <string name="perm_bubbles_instructions">在应用通知设置中设置气泡在所有会话中均可出现，或通过Shizuku/Root授权</string>
     <string name="feat_sim_names_title">SIM 名稱</string>
     <string name="feat_sim_names_desc">更換使用中的 SIM 卡電信業者顯示名稱</string>
-    <string name="label_online_help_media">線上協助媒體</string>
+    <string name="label_online_help_media">線上支援媒體</string>
     <string name="label_motion_blur">動態模糊</string>
     <string name="label_charging_mode_title">充电模式</string>
     <string name="conscious_gate_reappear_off">关闭</string>
@@ -1646,7 +1646,7 @@
     <string name="duo_action_horizontal_slide_volume">音量</string>
     <string name="duo_action_horizontal_slide_track">切换曲目</string>
     <string name="duo_action_horizontal_slide_track_desc">仅在播放时起效</string>
-    <string name="setting_hidden_debugging_title">隱藏偵錯選項</string>
+    <string name="setting_hidden_debugging_title">隱藏除錯設定選項</string>
     <string name="duo_enable_title">启用 Duo</string>
     <string name="duo_enable_desc">不能折叠，但是看起来挺酷的，不是吗？</string>
     <string name="duo_auto_detect_title">自动检测摄像头</string>
@@ -1780,7 +1780,7 @@
     <string name="lockscreen_shortcuts_enable_title">启用锁屏界面快捷方式</string>
     <string name="batteries_notification_title">电量通知</string>
     <string name="about_desc_duo">This doesn\'t fold\n\nAn iPhone Duo style status indicator to show your battery, network, media status and more in a compact, minimal UI ideally around your camera with various items to show and gestures to interact with.\n\nFor foldable devices, Ensure to turn off \'Auto-detect camera\' option if it\'s not reliable and manually align Duo with your inside and outside camera positions and then Essentials will remember your layout.</string>
-    <string name="label_shake_for_help">搖晃手機尋求協助</string>
+    <string name="label_shake_for_help">晃動裝置以顯示幫助文件</string>
     <string name="about_desc_island">A dynamic island for your Android, around your camera cutout.\n\nIt brings live info together in one compact, expandable space: notifications with quick replies, media with album art and controls, calls, timers and stopwatches, alarms, calendar events, navigation, progress updates, hotspot and network status, connected devices, flashlight, sound mode, caffeinate, travel info and time and battery.\n\nThird party apps can pair with the island to show their own live content, and you choose which ones are allowed.\n\nInteract with simple gestures like tapping, swiping up and sliding along the island for volume, brightness and more, and assign your own tap actions.\n\nCustomize almost everything, including camera position and size with auto detect, width, placement, visuals like glow, outlines and pulse shadows, expanded size and roundness, display durations, what shows and when, hiding system heads up and status bar icons, and privacy options for locked screens.\n\nIt can also be combined with Duo for a single unified camera area.</string>
     <string name="about_desc_pocket_mode">Prevents accidental touches while your phone is in your pocket or bag.\n\nWhen the proximity sensor is covered, Pocket mode shows a blocking screen so stray touches do nothing. Press any volume key to dismiss it. You can also use the light sensor along with proximity for better accuracy, add a trigger delay, and choose to only trigger while the device is locked.\n\nExclude apps where it should not trigger. It does not work while streaming or gaming by default.\n\nAccessibility permission is required. On some devices with missing sensors, enabling it may break deep sleep and cause higher battery drain.</string>
     <string name="about_desc_flashlight">Get more control over your flashlight.\n\nAdjust the brightness, fade it in and out smoothly, and use the volume keys to change the intensity. Show the brightness as a live update in the status bar.\n\nTurn it off automatically when your phone is in a pocket, lower the brightness during long use to prevent overheating, or always turn it off, even while the display is on.\n\nBrightness control needs hardware support that some devices lack.</string>
@@ -1806,6 +1806,7 @@
     <string name="about_desc_back_gesture">Fine tune the system back gesture.\n\nAdjust the edge widths for the left and right gesture areas and set up per-app back gesture behavior. Requires secure settings permission.</string>
     <string name="island_chips_title">Island chips</string>
     <string name="island_calendar_compact_time_title">Compact time</string>
+    <string name="island_calendar_hide_now_title">Hide \"Now\"</string>
     <string name="feat_aod_wallpaper_compat_title">Compatibility mode</string>
     <string name="feat_aod_wallpaper_compat_info_why">Some devices, especially on One UI, pause app animations while the always-on display is showing and skip drawing app windows. This can leave the AOD wallpaper half transparent or invisible, or stuck on screen after waking the device.</string>
     <string name="feat_aod_wallpaper_compat_info_what">Compatibility mode turns off the fade animations of the wallpaper. The wallpaper appears at full strength right away, disappears instantly when the screen wakes, and image changes are applied without a crossfade. Turn it on only if the wallpaper looks faded, never shows, or stays after waking.</string>
@@ -1831,6 +1832,7 @@
     <string name="island_media_use_art_color_title">Advertise album art color</string>
     <string name="island_media_player_style_title">Player style</string>
     <string name="island_show_on_update_title">Periodically show on updates</string>
+    <string name="island_provider_chip_title">Show as a chip</string>
     <string name="debug_ui_margin_overlay_title">調試 UI 邊距疊加層</string>
     <string name="island_statusbar_ignore_notifications_title">Ignore notifications</string>
     <string name="island_statusbar_aware_width_info">This may not work on all devices. It works best on Pixels and devices with a status bar close to AOSP.</string>
@@ -1891,15 +1893,15 @@
  • 自訂標籤：使用自訂顏色建立自訂標籤（例如社交、遊戲、工作）。
  • 目標規則：為關鍵應用程式分配「禁止自動凍結」保護，使其保持活躍。
  • 自動化整合：根據裝置觸發器、時間視窗或應用程式啟動自動觸發整個標籤的凍結或解凍操作。</string>
-    <string name="haptic_mode_stronger">強調</string>
-    <string name="label_haptics_title">觸覺</string>
+    <string name="haptic_mode_stronger">更強烈</string>
+    <string name="label_haptics_title">觸控震動</string>
     <string name="label_motion_blur_amount">強度</string>
     <string name="settings_permissions_all">所有權限</string>
     <string name="settings_section_permissions">權限</string>
     <string name="setting_privileged_mode_title">特殊權限</string>
     <string name="privileged_mode_auto">自動</string>
-    <string name="shizuku_auth_token_label">Shizuku 授權令牌</string>
-    <string name="external_control_token_title">外部控制令牌</string>
+    <string name="shizuku_auth_token_label">Shizuku 驗證 token</string>
+    <string name="external_control_token_title">外部控制 token</string>
     <string name="setting_hidden_debugging_help_1">在 Android 17 QPR1 中，Google引入了一項更改，即對第三方應用程式隱藏開發者選項和 USB 偵錯選項狀態，並且始終報告 0。</string>
     <string name="setting_hidden_debugging_help_2">這有助於對抗垃圾銀行和其他採用虛假安全措施的應用程式，而我們也透過「閉嘴」功能來對抗這些應用程式。</string>
     <string name="setting_hidden_debugging_help_3">但這樣做也會破壞 Essentials 的偵測。在這種情況下，啟用此選項即可使用 Shizuku shell 來檢測狀態，這仍然可行。請注意，無線偵錯功能不包含在內。</string>
@@ -1923,7 +1925,7 @@
     <string name="unsupported_cap_search_desc">裝置上隱藏的功能會顯示在搜尋結果中，並且可以開啟。</string>
     <string name="btn_export_config">匯出配置</string>
     <string name="btn_import_config">匯入配置</string>
-    <string name="translation_logged_in_as">以 %1$s 登入</string>
+    <string name="translation_logged_in_as">以 %1$s 身份登入</string>
     <string name="subreddit_description">這裡是討論 Essentials 和我開發的其他應用的地方。加入社區，為專案貢獻，獲取幫助，還能學到一些東西。 ( ´ ▽ ` )ﾉ</string>
     <string name="label_developer_options">開發人員選項</string>
     <string name="auto_backup_title">自動備份配置</string>
@@ -1960,4 +1962,30 @@
     <string name="island_action_show">Show</string>
     <string name="island_gesture_hints_title">Show gesture hints</string>
     <string name="wallpaper_staging_not_set">Not set yet</string>
+    <string name="label_notify_new_updates">通知更新資訊</string>
+    <string name="app_icon_default">預設</string>
+    <string name="diy_action_location_on">Turn On Location</string>
+    <string name="diy_action_location_off">Turn Off Location</string>
+    <string name="diy_action_location_toggle">Toggle Location</string>
+    <string name="island_reorder_hide_line">Drag below to hide</string>
+    <string name="island_show_starlink_title">Starlink</string>
+    <string name="island_starlink_desc">Shows dish status while connected to a Starlink network</string>
+    <string name="island_starlink_compact_title">Show in compact island</string>
+    <string name="island_starlink_speeds_title">Show speeds in compact mode</string>
+    <string name="island_starlink_speed_mode_title">Speed to show</string>
+    <string name="island_starlink_speed_up">Up</string>
+    <string name="island_starlink_speed_combined">Combined</string>
+    <string name="island_starlink_unit_title">Unit</string>
+    <string name="island_starlink_hide_unit_title">Hide unit</string>
+    <string name="island_starlink_hide_arrow_title">Hide arrow</string>
+    <string name="island_starlink_searching">Searching</string>
+    <string name="island_starlink_booting">Booting</string>
+    <string name="island_starlink_obstructed">Obstructed</string>
+    <string name="island_starlink_alert_motors">Motors stuck</string>
+    <string name="island_starlink_alert_thermal_shutdown">Thermal shutdown</string>
+    <string name="island_starlink_alert_thermal_throttle">Thermal throttle</string>
+    <string name="island_starlink_alert_location">Unexpected location</string>
+    <string name="island_starlink_alert_mast">Mast not vertical</string>
+    <string name="island_starlink_alert_ethernet">Slow ethernet</string>
+    <string name="island_provider_pair_refused">This app doesn\'t trust this version of Essentials</string>
 </resources>

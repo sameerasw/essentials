@@ -11,6 +11,7 @@ import com.sameerasw.essentials.island.IslandTimeFormat
 import com.sameerasw.essentials.island.ui.components.LocalIslandIconColor
 import com.sameerasw.essentials.island.plugins.alarm.NextAlarm
 import androidx.compose.foundation.layout.fillMaxSize
+import com.sameerasw.essentials.island.remote.AirSyncLink
 import com.sameerasw.essentials.island.remote.RemoteBriefCardRow
 import com.sameerasw.essentials.island.remote.RemoteBriefCards
 import com.sameerasw.essentials.island.remote.LocalRemotePaused
@@ -515,9 +516,8 @@ private fun BriefOverview(
         
         Column(Modifier.fillMaxWidth().padding(spec.expandedOutset).padding(bottom = spec.expandedBottomPadding)) {
             Spacer(Modifier.height(spec.expandedTopPadding))
-            val headerPadding = spec.contentGap + spec.expandedCorner * 0.35f
+            val headerPadding = spec.expandedPadding + spec.expandedCorner * 0.35f
             scope.CameraRow(
-                horizontalPadding = headerPadding,
                 start = {
                     Text(time, style = IslandTextStyles.title.copy(fontSize = 20.sp))
                     if (!twoLineHeader) {
@@ -553,12 +553,15 @@ private fun BriefOverview(
             }
 
             val blockPadding = sidePadding
-            val carouselItems = itemEntries.map { entry ->
+            val macEntry = allItemEntries.firstOrNull { it.item.key == AirSyncLink.DEVICE_ITEM_KEY }
+            val hasMacTile = devices.any { it.key == BluetoothDeviceOrder.MAC }
+            val carouselItems = itemEntries.filter { !(hasMacTile && it.item.key == AirSyncLink.DEVICE_ITEM_KEY) }.map { entry ->
                 BriefCarouselItem(entry.item.key, { onItemClick(entry) }, entry.item.accent ?: accent) {
                     entry.item.compact.forEach { it.content() }
                 }
             } + devices.map { device ->
-                BriefCarouselItem(device.key, null) {
+                val open = macEntry?.takeIf { device.key == BluetoothDeviceOrder.MAC }?.let { entry -> { onItemClick(entry) } }
+                BriefCarouselItem(device.key, open) {
                     IslandIcon(device.iconRes, tint = accent, size = 18.dp)
                     Spacer(Modifier.width(6.dp))
                     if (devicesIconStyle) {

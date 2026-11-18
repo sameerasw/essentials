@@ -1736,15 +1736,15 @@
     <string name="island_catch_up_timeout_title">Время удержания </string>
     <string name="island_show_timers_title">Таймеры и секундомеры </string>
     <string name="feat_conscious_gate_title">Осознанная пауза</string>
-    <string name="island_show_glow_title">Expanded accent glow</string>
+    <string name="island_show_glow_title">Расширенный акцент сияния </string>
     <string name="island_glow_intensity_title">Glow intensity</string>
     <string name="island_glow_size_title">Glow size</string>
     <string name="island_glow_rim_title">Rim light</string>
     <string name="island_expanded_dark_theme_warning">Expanded dark theme is on. If the island text or colors look wrong, filter Essentials out of it in Display settings.</string>
     <string name="island_expanded_dark_theme_action">Open display settings</string>
     <string name="settings_reset_all_hold">Hold to reset all data</string>
-    <string name="settings_reset_all_info_title">Reset Essentials data</string>
-    <string name="settings_reset_all_info_desc">Resets all Essentials settings and data to a fresh start. System settings, permissions and anything Essentials changed on your device, such as secure settings, are not reverted.</string>
+    <string name="settings_reset_all_info_title">Сброс данных Essential </string>
+    <string name="settings_reset_all_info_desc">Сбросьте все настройки и данные Essentials к новому старту. Системные настройки, разрешения и все необходимое, изменённое на вашем устройстве, например, безопасные настройки, не возвращаются. </string>
     <string name="island_prefer_still_title">Предпочитать меньше анимаций у острова</string>
     <string name="island_prefer_still_info">Stops the island\'s animations after a few seconds without interaction, so the display can drop to a low refresh rate and save battery. Media visualizers, second by second counters and other looping animations pause until you interact with the island again.</string>
     <string name="island_line_peek_desc">Кратко покажите обновления по всему острову, затем вернитесь к компактному</string>
@@ -1807,6 +1807,7 @@
     <string name="status_glance_calendar_timeframe_title">Показывать предстоящие события в</string>
     <string name="island_launcher_only_title">Показывать только в лаунчере </string>
     <string name="island_show_on_update_title">Periodically show on updates</string>
+    <string name="island_provider_chip_title">Show as a chip</string>
     <string name="status_glance_calendar_show_all_day_title">Показывать события на весь день </string>
     <string name="conscious_gate_delay_title">Длительность паузы</string>
     <string name="conscious_gate_reappear_desc">Снова показывать экран паузы при непрерывном использовании приложения</string>
@@ -1913,7 +1914,7 @@
 Индикатор состояния стиля iPhone Duo, чтобы показать вашу батарею, сеть, медиа-статус и многое другое в компактном минимальном пользовательском интерфейсе вокруг вашей камеры с различными предметами для показа и жестами для взаимодействия.
 
 Для складных устройств убедитесь, что вы выключите опцию «Авто-обнаружение камеры», если она не надёжна, и вручную выровняйте Duo с вашим внутренним и внешним положением камеры, а затем Essentials запомнит ваш макет. </string>
-    <string name="label_shake_for_help">Shake for help</string>
+    <string name="label_shake_for_help">Встряхни для помощи</string>
     <string name="about_desc_island">Динамичный остров для вашего Android, вокруг выреза камеры.
 
 Он объединяет живую информацию в одном компактном расширяемом пространстве: уведомления с быстрыми ответами, медиа с оформлением альбома и элементами управления, звонки, таймеры и секундомеры, будильники, события календаря, навигацию, обновления прогресса, состояние горячей точки и сети, подключённые устройства, фонарик, звуковой режим, кофеинат, информацию о путешествиях и время и аккумулятор.
@@ -1949,6 +1950,7 @@
     <string name="about_desc_back_gesture">Fine tune the system back gesture.\n\nAdjust the edge widths for the left and right gesture areas and set up per-app back gesture behavior. Requires secure settings permission.</string>
     <string name="island_chips_title">Стиль \"островков\"</string>
     <string name="island_calendar_compact_time_title">Compact time</string>
+    <string name="island_calendar_hide_now_title">Hide \"Now\"</string>
     <string name="feat_aod_wallpaper_compat_title">Режим совместимости</string>
     <string name="feat_aod_wallpaper_compat_info_why">Some devices, especially on One UI, pause app animations while the always-on display is showing and skip drawing app windows. This can leave the AOD wallpaper half transparent or invisible, or stuck on screen after waking the device.</string>
     <string name="feat_aod_wallpaper_compat_info_what">Compatibility mode turns off the fade animations of the wallpaper. The wallpaper appears at full strength right away, disappears instantly when the screen wakes, and image changes are applied without a crossfade. Turn it on only if the wallpaper looks faded, never shows, or stays after waking.</string>
@@ -2136,9 +2138,9 @@
     <string name="island_media_bubble_fill_art_title">Fill album art</string>
     <string name="island_transparency_title">Прозрачность острова </string>
     <string name="island_transparency_intensity_title">Transparency intensity</string>
-    <string name="island_backdrop_blur_title">Backdrop blur</string>
+    <string name="island_backdrop_blur_title">Фонарное размытие </string>
     <string name="island_backdrop_blur_unavailable_os">Backdrop blur needs Android 12 or newer. This device runs an older version, so the system can\'t blur what is behind the island.</string>
-    <string name="island_backdrop_blur_unavailable_disabled">Your system currently has window blur turned off. This usually happens when Battery Saver is on, when \"Disable window blurs\" is enabled in Developer options, or when the device doesn\'t support it. This option unlocks automatically once window blur is back on.</string>
+    <string name="island_backdrop_blur_unavailable_disabled">В настоящее время в вашей системе отключено размытие окон. Обычно это происходит, когда Battery Saver включён, когда в опциях для разработчиков включено \"Отключить размытие окна\" или когда устройство его не поддерживает. Эта опция автоматически разблокируется, как только снова включается размытие окна. </string>
     <string name="island_backdrop_blur_unavailable_api">This device\'s system doesn\'t expose the blur feature the island needs for backdrop blur, so it can\'t be enabled here.</string>
     <string name="island_backdrop_blur_available_title">Blur is reported as supported on this device</string>
     <string name="island_backdrop_blur_available_note">It may still not work on some devices. Battery Saver, system settings such as \"Disable window blurs\" in Developer options, and manufacturer limits can turn window blur off at any time.</string>
@@ -2220,6 +2222,9 @@
     <string name="diy_action_wifi_toggle">Переключить WIFI</string>
     <string name="diy_action_cellular_on">Включите сотовую связь</string>
     <string name="diy_action_cellular_off">Выключить сотовую связь</string>
+    <string name="diy_action_location_on">Turn On Location</string>
+    <string name="diy_action_location_off">Turn Off Location</string>
+    <string name="diy_action_location_toggle">Toggle Location</string>
     <string name="diy_action_cellular_toggle">Переключить сотовую связь </string>
     <string name="diy_action_hotspot_on">Включить Точку доступа</string>
     <string name="diy_action_hotspot_off">Выключить Точку доступа</string>
@@ -2351,4 +2356,26 @@
     <string name="island_action_show">Show</string>
     <string name="island_gesture_hints_title">Show gesture hints</string>
     <string name="wallpaper_staging_not_set">Not set yet</string>
+    <string name="action_got_it">Понял</string>
+    <string name="island_reorder_hide_line">Drag below to hide</string>
+    <string name="island_show_starlink_title">Starlink</string>
+    <string name="island_starlink_desc">Shows dish status while connected to a Starlink network</string>
+    <string name="island_starlink_compact_title">Show in compact island</string>
+    <string name="island_starlink_speeds_title">Show speeds in compact mode</string>
+    <string name="island_starlink_speed_mode_title">Speed to show</string>
+    <string name="island_starlink_speed_up">Up</string>
+    <string name="island_starlink_speed_combined">Combined</string>
+    <string name="island_starlink_unit_title">Unit</string>
+    <string name="island_starlink_hide_unit_title">Hide unit</string>
+    <string name="island_starlink_hide_arrow_title">Hide arrow</string>
+    <string name="island_starlink_searching">Searching</string>
+    <string name="island_starlink_booting">Booting</string>
+    <string name="island_starlink_obstructed">Obstructed</string>
+    <string name="island_starlink_alert_motors">Motors stuck</string>
+    <string name="island_starlink_alert_thermal_shutdown">Thermal shutdown</string>
+    <string name="island_starlink_alert_thermal_throttle">Thermal throttle</string>
+    <string name="island_starlink_alert_location">Unexpected location</string>
+    <string name="island_starlink_alert_mast">Mast not vertical</string>
+    <string name="island_starlink_alert_ethernet">Slow ethernet</string>
+    <string name="island_provider_pair_refused">This app doesn\'t trust this version of Essentials</string>
 </resources>

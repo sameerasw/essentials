@@ -284,6 +284,7 @@ class MainViewModel : ViewModel() {
     val isIslandNavigationPeekAfterExpand = mutableStateOf(false)
     val isIslandNavigationHideWhileDriving = mutableStateOf(false)
     val isIslandShowHotspot = mutableStateOf(false)
+    val isIslandShowStarlink = mutableStateOf(false)
     val isIslandShowDevices = mutableStateOf(true)
     val isIslandBriefEnabled = mutableStateOf(false)
     val isIslandBriefShowAlarm = mutableStateOf(true)
@@ -383,6 +384,7 @@ class MainViewModel : ViewModel() {
     val islandCalendarIcons = mutableStateOf<Map<Long, String>>(emptyMap())
     val isStatusGlanceShowMedia = mutableStateOf(true)
     val isStatusGlanceShowTime = mutableStateOf(true)
+    val isStatusGlanceShowSeconds = mutableStateOf(false)
     val isStatusGlanceBackgroundPill = mutableStateOf(false)
     val isStatusGlanceAlbumArtColors = mutableStateOf(true)
     val isStatusGlanceHideWhenFullscreen = mutableStateOf(true)
@@ -1124,6 +1126,9 @@ class MainViewModel : ViewModel() {
 
                     SettingsRepository.KEY_STATUS_GLANCE_SHOW_TIME ->
                         isStatusGlanceShowTime.value = settingsRepository.isStatusGlanceShowTimeEnabled()
+
+                    SettingsRepository.KEY_STATUS_GLANCE_SHOW_SECONDS ->
+                        isStatusGlanceShowSeconds.value = settingsRepository.isStatusGlanceShowSecondsEnabled()
 
                     SettingsRepository.KEY_STATUS_GLANCE_BACKGROUND_PILL ->
                         isStatusGlanceBackgroundPill.value = settingsRepository.isStatusGlanceBackgroundPillEnabled()
@@ -2162,7 +2167,7 @@ class MainViewModel : ViewModel() {
         isUsageStatsPermissionGranted.value = PermissionUtils.hasUsageStatsPermission(context)
 
         isBluetoothPermissionGranted.value = PermissionUtils.hasBluetoothPermission(context)
-        isStoragePermissionGranted.value = PermissionUtils.hasStoragePermission(context)
+        isStoragePermissionGranted.value = PermissionUtils.hasManageExternalStoragePermission(context)
 
         context.contentResolver.registerContentObserver(
             Settings.System.getUriFor(Settings.System.FONT_SCALE),
@@ -2624,6 +2629,7 @@ class MainViewModel : ViewModel() {
         isIslandNavigationPeekAfterExpand.value = settingsRepository.isIslandNavigationPeekAfterExpandEnabled()
         isIslandNavigationHideWhileDriving.value = settingsRepository.isIslandNavigationHideWhileDrivingEnabled()
         isIslandShowHotspot.value = settingsRepository.isIslandShowHotspotEnabled()
+        isIslandShowStarlink.value = settingsRepository.isIslandShowStarlinkEnabled()
         isIslandShowDevices.value = settingsRepository.isIslandShowDevicesEnabled()
         isIslandBriefEnabled.value = settingsRepository.isIslandBriefEnabled()
         isIslandBriefShowAlarm.value = settingsRepository.isIslandBriefShowAlarmEnabled()
@@ -2726,6 +2732,7 @@ class MainViewModel : ViewModel() {
         statusGlanceSelectedCalendarIds.value = settingsRepository.getStatusGlanceCalendarSelectedCalendars()
         isStatusGlanceShowMedia.value = settingsRepository.isStatusGlanceShowMediaEnabled()
         isStatusGlanceShowTime.value = settingsRepository.isStatusGlanceShowTimeEnabled()
+        isStatusGlanceShowSeconds.value = settingsRepository.isStatusGlanceShowSecondsEnabled()
         isStatusGlanceBackgroundPill.value = settingsRepository.isStatusGlanceBackgroundPillEnabled()
         isStatusGlanceAlbumArtColors.value = settingsRepository.isStatusGlanceAlbumArtColorsEnabled()
         isStatusGlanceHideWhenFullscreen.value = settingsRepository.isStatusGlanceHideWhenFullscreenEnabled()
@@ -5937,6 +5944,11 @@ class MainViewModel : ViewModel() {
         settingsRepository.setIslandNavigationHideWhileDrivingEnabled(enabled)
     }
 
+    fun setIslandShowStarlink(enabled: Boolean) {
+        isIslandShowStarlink.value = enabled
+        settingsRepository.setIslandShowStarlinkEnabled(enabled)
+    }
+
     fun setIslandShowHotspot(enabled: Boolean) {
         isIslandShowHotspot.value = enabled
         settingsRepository.setIslandShowHotspotEnabled(enabled)
@@ -6841,6 +6853,11 @@ class MainViewModel : ViewModel() {
     fun setStatusGlanceShowTime(enabled: Boolean) {
         isStatusGlanceShowTime.value = enabled
         settingsRepository.setStatusGlanceShowTimeEnabled(enabled)
+    }
+
+    fun setStatusGlanceShowSeconds(enabled: Boolean) {
+        isStatusGlanceShowSeconds.value = enabled
+        settingsRepository.setStatusGlanceShowSecondsEnabled(enabled)
     }
 
     fun setStatusGlanceBackgroundPill(enabled: Boolean) {

@@ -849,6 +849,11 @@ object FeatureRegistry {
                             "island_show_hotspot",
                         ),
                         SearchSetting(
+                            R.string.island_show_starlink_title,
+                            R.string.island_starlink_desc,
+                            "island_show_starlink",
+                        ),
+                        SearchSetting(
                             R.string.feat_caffeinate_title,
                             R.string.caffeinate_notification_desc,
                             "island_show_caffeinate",

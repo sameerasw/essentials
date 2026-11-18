@@ -35,6 +35,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.Density
 import androidx.compose.ui.graphics.drawOutline
 import androidx.compose.ui.geometry.Size
 import androidx.compose.foundation.shape.CornerSize
@@ -88,6 +89,16 @@ private fun ChipUnit(color: Color, spec: IslandLayoutSpec, startNeighbor: Boolea
     }
 }
 
+@Composable
+private fun ScaledCell(scale: Float, content: @Composable () -> Unit) {
+    val base = LocalDensity.current
+    if (scale == 1f) {
+        content()
+    } else {
+        CompositionLocalProvider(LocalDensity provides Density(base.density * scale, base.fontScale / scale)) { content() }
+    }
+}
+
 private fun slotChipped(i: Int, beforeSlots: Int, beforeUnits: List<SlotUnit>, afterUnits: List<SlotUnit>): Boolean {
     val unit = if (i < beforeSlots) beforeUnits.getOrNull(beforeSlots - 1 - i) else afterUnits.getOrNull(i - beforeSlots)
     return unit?.chipColor != null
@@ -118,6 +129,7 @@ fun CompactTemplate(
     onBaseWidth: (Int) -> Unit = {},
     onNeedLeft: (Int) -> Unit = {},
 ) {
+    val cellScale = (spec.cellSize / 28.dp * spec.fontScale).coerceIn(0.6f, 1.2f)
     val iconColor = LocalIslandIconColor.current
     val primary = MaterialTheme.colorScheme.primary
     val cells = buildMap {
@@ -150,6 +162,8 @@ fun CompactTemplate(
 
     val known = remember { HashMap<String, SlotUnit>() }
     (beforeUnits + afterUnits).forEach { known[it.key] = it }
+    val multiPart = (beforeUnits + afterUnits).flatMap { u -> u.cells.map { u.itemKey } }
+        .groupingBy { it }.eachCount().filterValues { it > 1 }.keys
     val settled = remember { booleanArrayOf(false) }
     val lingerBefore = remember { intArrayOf(0) }
     val lingerAfter = remember { intArrayOf(0) }
@@ -221,8 +235,12 @@ fun CompactTemplate(
                 val measured = tap.clipToBounds().layout { measurable, c ->
                     val p = measurable.measure(c.copy(maxWidth = Constraints.Infinity))
                     if (live) com.sameerasw.essentials.island.state.CompactCellWidths.record(unit.cells.map { it.cell.key }, p.width)
-                    val w = p.width.coerceIn(c.minWidth, c.maxWidth)
-                    layout(w, p.height) { p.place(0, 0) }
+                    if (p.width > c.maxWidth && c.minWidth == 0) {
+                        layout(0, 0) {}
+                    } else {
+                        val w = p.width.coerceIn(c.minWidth, c.maxWidth)
+                        layout(w, p.height) { p.place(0, 0) }
+                    }
                 }
                 if (unit.chipColor != null) {
                     Box(measured) {
@@ -230,27 +248,32 @@ fun CompactTemplate(
                         val innerNeighbor = at > 0 && units[at - 1].chipColor != null
                         val outerNeighbor = at >= 0 && units.getOrNull(at + 1)?.chipColor != null
                         ChipUnit(unit.chipColor, spec, startNeighbor = if (before) outerNeighbor else innerNeighbor, endNeighbor = if (before) innerNeighbor else outerNeighbor) {
-                            unit.cells.forEach { member ->
+                            unit.cells.forEachIndexed { memberIndex, member ->
                                 Box(
                                     modifier = Modifier
                                         .height(spec.cellSize)
                                         .then(
                                             if (member.cell.key.endsWith(".art") || member.cell.key.endsWith(".avatar")) {
                                                 Modifier
+                                            } else if (unit.itemKey in multiPart || unit.cells.size > 1) {
+                                                Modifier.padding(
+                                                    start = if (memberIndex == 0) spec.contentGap * 2 / 3 else 0.dp,
+                                                    end = if (memberIndex == unit.cells.lastIndex) spec.contentGap * 2 / 3 else 0.dp,
+                                                )
                                             } else {
                                                 Modifier.defaultMinSize(minWidth = spec.cellSize).padding(horizontal = spec.contentGap * 2 / 3)
                                             },
                                         ),
                                     contentAlignment = Alignment.Center,
-                                ) { member.cell.content() }
+                                ) { ScaledCell(cellScale) { member.cell.content() } }
                             }
                         }
                     }
                 } else {
                     Box(
-                        modifier = measured.height(spec.cellSize).defaultMinSize(minWidth = spec.cellSize),
+                        modifier = if (unit.itemKey in multiPart) measured.height(spec.cellSize) else measured.height(spec.cellSize).defaultMinSize(minWidth = spec.cellSize),
                         contentAlignment = Alignment.Center,
-                    ) { unit.cells[0].cell.content() }
+                    ) { ScaledCell(cellScale) { unit.cells[0].cell.content() } }
                 }
             }
         }
@@ -305,14 +328,25 @@ fun CompactTemplate(
         val left = placeables.take(beforeCount).filter { it.width > 0 }
         val right = placeables.drop(beforeCount).filter { it.width > 0 }
         val chipGap = 2.dp.roundToPx()
-        fun gapAfter(list: List<Placeable>, i: Int) =
-            if (i < list.lastIndex && list[i] in chipPlaceables && list[i + 1] in chipPlaceables) chipGap else spacing
+        val itemOf = HashMap<Placeable, String>()
+        placeables.forEachIndexed { i, p ->
+            val unit = if (i < beforeSlots) beforeUnits.getOrNull(beforeSlots - 1 - i) else afterUnits.getOrNull(i - beforeSlots)
+            if (unit != null) itemOf[p] = unit.itemKey
+        }
+        val siblingGap = spacing / 2
+        fun gapAfter(list: List<Placeable>, i: Int) = when {
+            i >= list.lastIndex -> spacing
+            list[i] in chipPlaceables && list[i + 1] in chipPlaceables -> chipGap
+            itemOf[list[i]] != null && itemOf[list[i]] == itemOf[list[i + 1]] -> siblingGap
+            else -> spacing
+        }
         fun content(list: List<Placeable>) = if (list.isEmpty()) 0 else list.sumOf { it.width } + list.indices.sumOf { if (it < list.lastIndex) gapAfter(list, it) else 0 }
         val height = spec.compactHeight.roundToPx()
         
         val squareCell = spec.cellSize.roundToPx()
         val opticalInset = spec.edgeInset.roundToPx()
-        fun edgeInset(outer: Placeable?) = if (outer != null && outer.width > squareCell && outer !in chipPlaceables) opticalInset else 0
+        fun edgeInset(outer: Placeable?) =
+            if (outer != null && outer !in chipPlaceables && (outer.width > squareCell || itemOf[outer] in multiPart)) opticalInset else 0
         if (cameraSlot == 0) {
             val cells = left + right
             onSlack(if (spec.balanceCompact) bubbleExtent().coerceAtLeast(0) else 0)
