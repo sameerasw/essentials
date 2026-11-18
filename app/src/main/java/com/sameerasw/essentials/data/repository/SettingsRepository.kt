@@ -846,6 +846,7 @@ class SettingsRepository(
         const val KEY_STATUS_GLANCE_CALENDAR_SHOW_ALL_DAY = "status_glance_calendar_show_all_day"
         const val KEY_STATUS_GLANCE_SHOW_MEDIA = "status_glance_show_media"
         const val KEY_STATUS_GLANCE_SHOW_TIME = "status_glance_show_time"
+        const val KEY_STATUS_GLANCE_SHOW_SECONDS = "status_glance_show_seconds"
         const val KEY_STATUS_GLANCE_BACKGROUND_PILL = "status_glance_background_pill"
         const val KEY_STATUS_GLANCE_ALBUM_ART_COLORS = "status_glance_album_art_colors"
         const val KEY_STATUS_GLANCE_SHOW_BATTERY = "status_glance_show_battery"
@@ -4854,6 +4855,9 @@ class SettingsRepository(
 
     fun isStatusGlanceShowTimeEnabled(): Boolean = getBoolean(KEY_STATUS_GLANCE_SHOW_TIME, true)
     fun setStatusGlanceShowTimeEnabled(enabled: Boolean) = putBoolean(KEY_STATUS_GLANCE_SHOW_TIME, enabled)
+
+    fun isStatusGlanceShowSecondsEnabled(): Boolean = getBoolean(KEY_STATUS_GLANCE_SHOW_SECONDS, false)
+    fun setStatusGlanceShowSecondsEnabled(enabled: Boolean) = putBoolean(KEY_STATUS_GLANCE_SHOW_SECONDS, enabled)
 
     fun isStatusGlanceBackgroundPillEnabled(): Boolean = getBoolean(KEY_STATUS_GLANCE_BACKGROUND_PILL, false)
     fun setStatusGlanceBackgroundPillEnabled(enabled: Boolean) = putBoolean(KEY_STATUS_GLANCE_BACKGROUND_PILL, enabled)
