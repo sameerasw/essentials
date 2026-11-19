@@ -9,6 +9,10 @@ object ConfigShareRegistry {
     const val SECTION_INTERACTIONS = "interactions"
     const val SECTION_TIMING = "timing"
     const val SECTION_DEVICE = "device"
+    const val SECTION_ICONS = "icons"
+    const val SECTION_SMART = "smart"
+    const val SECTION_CLOCK_BATTERY = "clock_battery"
+    const val SECTION_HIDING = "hiding"
 
     private val islandBlocked =
         setOf(
@@ -112,6 +116,21 @@ object ConfigShareRegistry {
         }
     }
 
+    private val statusBarSmart = setOf("smart_wifi_enabled", "smart_data_enabled", "selected_network_types")
+    private val statusBarClockBattery = setOf("battery_percent_mode", "clock_position")
+    private val statusBarHiding =
+        setOf("hide_system_icons", "hide_system_icons_locked_only", "hide_clock", "hide_notification_icons")
+    private val statusBarIconKey = Regex("^icon_[a-z0-9_]+_visible$")
+
+    private fun statusBarSectionOf(key: String): String? =
+        when {
+            statusBarIconKey.matches(key) -> SECTION_ICONS
+            key in statusBarSmart -> SECTION_SMART
+            key in statusBarClockBattery -> SECTION_CLOCK_BATTERY
+            key in statusBarHiding -> SECTION_HIDING
+            else -> null
+        }
+
     private val descriptors: Map<String, ConfigShareDescriptor> =
         mapOf(
             "Island" to
@@ -142,6 +161,19 @@ object ConfigShareRegistry {
                             ConfigSection(SECTION_DEVICE, R.string.config_share_section_device, defaultSelected = false),
                         ),
                     sectionOf = ::duoSectionOf,
+                ),
+            "Statusbar icons" to
+                ConfigShareDescriptor(
+                    featureId = "Statusbar icons",
+                    prefixes = listOf("icon_", "smart_", "selected_network_types", "battery_percent_mode", "clock_position", "hide_"),
+                    sections =
+                        listOf(
+                            ConfigSection(SECTION_ICONS, R.string.config_share_section_icons),
+                            ConfigSection(SECTION_SMART, R.string.config_share_section_smart),
+                            ConfigSection(SECTION_CLOCK_BATTERY, R.string.config_share_section_clock_battery),
+                            ConfigSection(SECTION_HIDING, R.string.config_share_section_hiding),
+                        ),
+                    sectionOf = ::statusBarSectionOf,
                 ),
         )
 

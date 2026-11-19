@@ -2178,4 +2178,8 @@ Die Stufen können nur von der normalen Lautstärke abwärts, niemals darüber h
     <string name="config_import_error_wrong_feature">This config is for a different feature</string>
     <string name="config_import_error_newer_schema">This config needs a newer version of the app</string>
     <string name="config_import_error_empty">Nothing in this file can be imported</string>
+    <string name="config_share_section_icons">Icons</string>
+    <string name="config_share_section_smart">Smart switching</string>
+    <string name="config_share_section_clock_battery">Clock and battery</string>
+    <string name="config_share_section_hiding">Hiding</string>
 </resources>

@@ -85,6 +85,7 @@ import com.sameerasw.essentials.utils.ColorUtil
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.utils.PermissionUIHelper
 import com.sameerasw.essentials.viewmodels.MainViewModel
+import com.sameerasw.essentials.viewmodels.StatusBarIconViewModel
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class, ExperimentalLayoutApi::class)
 @Composable
@@ -94,6 +95,7 @@ fun FeatureHelpBottomSheet(
     viewModel: MainViewModel = viewModel(),
 ) {
     val context = LocalContext.current
+    val statusBarIconViewModel: StatusBarIconViewModel = viewModel()
     val scrollState = rememberScrollState()
     val view = LocalView.current
     val isUnsupported = !feature.isDeviceSupported(context)
@@ -382,6 +384,13 @@ fun FeatureHelpBottomSheet(
                     onApplied = {
                         SettingsRepository(context).syncSystemSettingsWithSaved()
                         viewModel.check(context)
+                        if (feature.id == "Statusbar icons") {
+                            statusBarIconViewModel.check(context)
+                            statusBarIconViewModel.setBatteryPercentageMode(
+                                statusBarIconViewModel.batteryPercentageMode.value,
+                                context,
+                            )
+                        }
                     },
                 )
             }
