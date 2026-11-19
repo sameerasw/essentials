@@ -29,6 +29,7 @@ import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.TextButton
 import com.sameerasw.essentials.data.repository.SettingsRepository
+import com.sameerasw.essentials.domain.configshare.ConfigShareRegistry
 import com.sameerasw.essentials.domain.registry.FeatureResetRegistry
 import com.sameerasw.essentials.ui.features.consciousgate.HoldToContinueButton
 import androidx.compose.foundation.background
@@ -375,6 +376,15 @@ fun FeatureHelpBottomSheet(
             }
 
             val resetPrefixes = FeatureResetRegistry.prefixesFor(feature.id)
+            ConfigShareRegistry.descriptorFor(feature.id)?.let { descriptor ->
+                ConfigShareRow(
+                    descriptor = descriptor,
+                    onApplied = {
+                        SettingsRepository(context).syncSystemSettingsWithSaved()
+                        viewModel.check(context)
+                    },
+                )
+            }
             if (feature.id == "Lock screen clock") {
                 HoldToContinueButton(
                     waitTimeProgress = 1f,
