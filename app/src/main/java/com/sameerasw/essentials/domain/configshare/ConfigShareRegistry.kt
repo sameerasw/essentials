@@ -77,6 +77,41 @@ object ConfigShareRegistry {
         }
     }
 
+    private val duoBlocked = setOf("enabled", "known_display_profiles")
+
+    private val duoPlacement =
+        setOf(
+            "use_auto_detect", "camera_offset_x", "camera_offset_y", "camera_size",
+            "orientation_profiles", "hide_portrait", "hide_landscape", "island_combined",
+        )
+
+    private val duoInteractions =
+        setOf(
+            "tap_for_brief", "tap_action", "double_tap_action", "long_press_action", "swipe_down_action",
+            "slide_mode", "slide_track", "slide_invert_direction", "hide_on_shade", "keep_in_fullscreen",
+            "disable_interactions_in_fullscreen", "hide_when_screen_off", "hide_when_screen_off_only_idle",
+            "hide_when_locked",
+        )
+
+    private val duoVisuals =
+        setOf(
+            "arc_thickness", "dot_size", "ring_radius", "time_text_scale", "use_material_you",
+            "match_island_colors", "custom_color", "rotate_album_art", "differentiate_wifi",
+        )
+
+    private fun duoSectionOf(key: String): String? {
+        if (!key.startsWith("duo_")) return null
+        val base = key.removePrefix("duo_").substringBefore('@')
+        if (base in duoBlocked || base.endsWith("_reset_v1")) return null
+        if (key.contains("@")) return SECTION_DEVICE
+        return when {
+            base in duoPlacement -> SECTION_PLACEMENT
+            base in duoInteractions -> SECTION_INTERACTIONS
+            base in duoVisuals || base.contains("color") -> SECTION_VISUALS
+            else -> SECTION_PLUGINS
+        }
+    }
+
     private val descriptors: Map<String, ConfigShareDescriptor> =
         mapOf(
             "Island" to
@@ -93,6 +128,20 @@ object ConfigShareRegistry {
                             ConfigSection(SECTION_DEVICE, R.string.config_share_section_device, defaultSelected = false),
                         ),
                     sectionOf = ::islandSectionOf,
+                ),
+            "Duo" to
+                ConfigShareDescriptor(
+                    featureId = "Duo",
+                    prefixes = listOf("duo_"),
+                    sections =
+                        listOf(
+                            ConfigSection(SECTION_PLACEMENT, R.string.config_share_section_placement),
+                            ConfigSection(SECTION_VISUALS, R.string.config_share_section_visuals),
+                            ConfigSection(SECTION_PLUGINS, R.string.config_share_section_plugins),
+                            ConfigSection(SECTION_INTERACTIONS, R.string.config_share_section_interactions),
+                            ConfigSection(SECTION_DEVICE, R.string.config_share_section_device, defaultSelected = false),
+                        ),
+                    sectionOf = ::duoSectionOf,
                 ),
         )
 
