@@ -1,6 +1,7 @@
 package com.sameerasw.essentials.island.state
 
 import kotlin.math.abs
+import kotlin.math.ceil
 
 data class CompactEntry(
     val itemKey: String,
@@ -38,16 +39,19 @@ object CompactLayoutEngine {
         maxCells: Int = MAX_CELLS,
         leftExtra: Int = 0,
         balance: Boolean = false,
+        persistentOrder: Boolean = false,
+        highFirst: Boolean = false,
         fits: ((before: List<String>, after: List<String>) -> Int?)? = null,
         cellWidth: (String) -> Float = { 1f },
         leftExtraWidth: Float = leftExtra.toFloat(),
         previous: CompactArrangement = CompactArrangement.Empty,
     ): CompactArrangement {
         fun attempt(pool: List<CompactEntry>): CompactArrangement? {
-            val result = arrangeOnce(pool, anchor, maxCells, balance, cellWidth, leftExtraWidth, previous)
+            val result = arrangeOnce(pool, anchor, maxCells, balance, cellWidth, leftExtraWidth, previous, persistentOrder, highFirst)
             if (fits == null || fits(result.before, result.after) != null) return result
             if (anchor != CameraAnchor.Center) return null
             val selected = pool.filter { it.itemKey in result.visibleItems }
+            if (persistentOrder) return persistentFitting(selected, result.visibleItems, highFirst, fits)
             return bestSplit(selected, result, fits)
         }
 
@@ -60,7 +64,7 @@ object CompactLayoutEngine {
                 result = fitted
                 break
             }
-            val shown = arrangeOnce(pool, anchor, maxCells, balance, cellWidth, leftExtraWidth, previous)
+            val shown = arrangeOnce(pool, anchor, maxCells, balance, cellWidth, leftExtraWidth, previous, persistentOrder, highFirst)
             if (shown.visibleItems.size <= 1) return shown
             val drop = pool.filter { it.itemKey in shown.visibleItems }.maxByOrNull { it.priority } ?: return shown
             pool = pool - drop
@@ -134,6 +138,8 @@ object CompactLayoutEngine {
         cellWidth: (String) -> Float,
         leftExtraWidth: Float,
         previous: CompactArrangement,
+        persistentOrder: Boolean,
+        highFirst: Boolean,
     ): CompactArrangement {
         val base = entries.filterNot { it.companionOnly }
         val companions = entries.filter { it.companionOnly }
@@ -148,6 +154,17 @@ object CompactLayoutEngine {
         val pinned = selected.filter { it.pinned }
         val dynamic = selected.filterNot { it.pinned }
         val visible = selected.map { it.itemKey }.toSet()
+
+        if (anchor != CameraAnchor.Center && persistentOrder) {
+            val byImportance = selected.sortedWith(compareBy({ it.priority }, { it.itemKey }))
+            val sorted = if (anchor == CameraAnchor.Start) byImportance.reversed() else byImportance
+            val cells = sorted.flatMap(::cellsOf)
+            return if (anchor == CameraAnchor.Start) {
+                CompactArrangement(emptyList(), cells, visible)
+            } else {
+                CompactArrangement(cells, emptyList(), visible)
+            }
+        }
 
         if (anchor != CameraAnchor.Center) {
             val cells = pinned.flatMap { it.cellKeys } + dynamic.flatMap { it.cellKeys.reversed() }
@@ -168,10 +185,84 @@ object CompactLayoutEngine {
         }
 
         val width = { e: CompactEntry -> e.cellKeys.sumOf { cellWidth(it).toDouble() }.toFloat() }
+        if (persistentOrder) {
+            val sequence = persistentSequence(selected, highFirst)
+            val unit = { entry: CompactEntry -> if (balance) width(entry) else entry.cellKeys.size.toFloat() }
+            val extra = if (balance) leftExtraWidth else ceil(leftExtraWidth.toDouble()).toFloat()
+            return splitAt(sequence, persistentSplit(sequence, unit, extra), visible)
+        }
         val defaultBefore = defaultBefore(pinned, dynamic, width, leftExtraWidth)
         val before = if (balance) balancedBefore(selected, defaultBefore, previous, width, leftExtraWidth) else defaultBefore
         return ordered(selected, before, visible)
     }
+
+    private fun persistentSequence(
+        entries: List<CompactEntry>,
+        highFirst: Boolean,
+    ): List<CompactEntry> {
+        val byImportance = entries.sortedWith(compareBy({ it.priority }, { it.itemKey }))
+        return if (highFirst) byImportance else byImportance.reversed()
+    }
+
+    private fun persistentSplit(
+        sequence: List<CompactEntry>,
+        width: (CompactEntry) -> Float,
+        extra: Float,
+    ): Int {
+        var bestK = 0
+        var bestGap = Float.MAX_VALUE
+        var bestHeavy = true
+        for (k in 0..sequence.size) {
+            val left = extra + sequence.take(k).sumOf { width(it).toDouble() }.toFloat()
+            val right = sequence.drop(k).sumOf { width(it).toDouble() }.toFloat()
+            val gap = abs(left - right)
+            val heavy = extra > 0f && left > right + WIDTH_EPSILON
+            val better = when {
+                gap < bestGap - WIDTH_EPSILON -> true
+                gap > bestGap + WIDTH_EPSILON -> false
+                else -> bestHeavy && !heavy
+            }
+            if (better) {
+                bestK = k
+                bestGap = gap
+                bestHeavy = heavy
+            }
+        }
+        return bestK
+    }
+
+    private fun persistentFitting(
+        selected: List<CompactEntry>,
+        visible: Set<String>,
+        highFirst: Boolean,
+        fits: (List<String>, List<String>) -> Int?,
+    ): CompactArrangement? {
+        val sequence = persistentSequence(selected, highFirst)
+        var best: CompactArrangement? = null
+        var bestScore = Int.MAX_VALUE
+        for (k in 0..sequence.size) {
+            val candidate = splitAt(sequence, k, visible)
+            val score = fits(candidate.before, candidate.after) ?: continue
+            if (score < bestScore) {
+                bestScore = score
+                best = candidate
+            }
+        }
+        return best
+    }
+
+    private fun splitAt(
+        sequence: List<CompactEntry>,
+        k: Int,
+        visible: Set<String>,
+    ): CompactArrangement =
+        CompactArrangement(
+            sequence.take(k).reversed().flatMap(::cellsOf),
+            sequence.drop(k).flatMap(::cellsOf),
+            visible,
+        )
+
+    private fun cellsOf(entry: CompactEntry): List<String> = if (entry.pinned) entry.cellKeys else entry.cellKeys.reversed()
 
     private fun defaultBefore(
         pinned: List<CompactEntry>,

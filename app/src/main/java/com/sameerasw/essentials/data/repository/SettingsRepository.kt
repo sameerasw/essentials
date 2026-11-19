@@ -688,6 +688,7 @@ class SettingsRepository(
         const val KEY_ISLAND_LANDSCAPE_TOP_SPACING = "island_landscape_top_spacing"
         const val KEY_ISLAND_BOND_EDGE = "island_bond_edge"
         const val KEY_ISLAND_BALANCE_COMPACT = "island_balance_compact"
+        const val KEY_ISLAND_PERSISTENT_ORDER = "island_persistent_order"
         const val KEY_ISLAND_NEURAL_EXPRESSIVE = "island_neural_expressive"
         const val KEY_ISLAND_NEURAL_EXPRESSIVE_ALWAYS = "island_neural_expressive_always"
         const val KEY_ISLAND_TRANSPARENCY = "island_transparency"
@@ -4561,6 +4562,10 @@ class SettingsRepository(
     fun isIslandBalanceCompactEnabled(): Boolean = getBoolean(KEY_ISLAND_BALANCE_COMPACT, true)
 
     fun setIslandBalanceCompactEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_BALANCE_COMPACT, enabled)
+
+    fun isIslandPersistentOrderEnabled(): Boolean = getBoolean(KEY_ISLAND_PERSISTENT_ORDER, false)
+
+    fun setIslandPersistentOrderEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_PERSISTENT_ORDER, enabled)
 
     fun isIslandNeuralExpressiveEnabled(): Boolean = getBoolean(KEY_ISLAND_NEURAL_EXPRESSIVE, false)
 

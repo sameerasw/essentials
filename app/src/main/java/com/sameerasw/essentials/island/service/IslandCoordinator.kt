@@ -887,6 +887,7 @@ class IslandCoordinator(
         compactMaxWidthPx = (lineWidth * density).toInt()
         applyStatusBarAwareWidth()
         controller.balanceCompact = settings.isIslandBalanceCompactEnabled()
+        controller.persistentOrder = settings.isIslandPersistentOrderEnabled()
         controller.chipsEnabled = settings.getBoolean(SettingsRepository.KEY_ISLAND_CHIPS, false)
         controller.secondaryBubbleEnabled = settings.isIslandSecondaryBubbleEnabled()
         controller.secondaryBubbleMax = settings.getIslandNotifHubIcons()
@@ -1147,6 +1148,7 @@ class IslandCoordinator(
             SettingsRepository.KEY_ISLAND_LANDSCAPE_TOP_SPACING,
             SettingsRepository.KEY_ISLAND_BOND_EDGE,
             SettingsRepository.KEY_ISLAND_BALANCE_COMPACT,
+            SettingsRepository.KEY_ISLAND_PERSISTENT_ORDER,
             SettingsRepository.KEY_ISLAND_DISMISS_DIRECTION,
             SettingsRepository.KEY_ISLAND_GESTURE_HINTS,
             SettingsRepository.KEY_ISLAND_NEURAL_EXPRESSIVE,

@@ -4043,4 +4043,6 @@
     <string name="tile_accessibility_on">Services on</string>
     <string name="tile_accessibility_off">Services off</string>
     <string name="about_desc_accessibility_tile">Turn off all accessibility services with one tap and bring them back with another.\n\nUseful for apps that refuse to work while accessibility services are enabled.</string>
+    <string name="island_persistent_order_title">Persistent ordering</string>
+    <string name="island_persistent_order_info">This mode prioritizes the ordering of the island items rather than moving them around for best balance. This may lead to unexpected spacing.</string>
 </resources>

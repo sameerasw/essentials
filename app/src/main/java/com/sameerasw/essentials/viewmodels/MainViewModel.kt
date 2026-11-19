@@ -246,6 +246,7 @@ class MainViewModel : ViewModel() {
     val isIslandDisableInteractionsInFullscreen = mutableStateOf(false)
     val isIslandBondEdge = mutableStateOf(false)
     val isIslandBalanceCompact = mutableStateOf(true)
+    val isIslandPersistentOrder = mutableStateOf(false)
     val isIslandNeuralExpressive = mutableStateOf(false)
     val isIslandNeuralExpressiveAlways = mutableStateOf(false)
     val isIslandTransparency = mutableStateOf(true)
@@ -2586,6 +2587,7 @@ class MainViewModel : ViewModel() {
         isIslandDisableInteractionsInFullscreen.value = settingsRepository.isIslandDisableInteractionsInFullscreenEnabled()
         isIslandBondEdge.value = settingsRepository.isIslandBondEdgeEnabled()
         isIslandBalanceCompact.value = settingsRepository.isIslandBalanceCompactEnabled()
+        isIslandPersistentOrder.value = settingsRepository.isIslandPersistentOrderEnabled()
         isIslandNeuralExpressive.value = settingsRepository.isIslandNeuralExpressiveEnabled()
         isIslandNeuralExpressiveAlways.value = settingsRepository.isIslandNeuralExpressiveAlwaysEnabled()
         isIslandTransparency.value = settingsRepository.isIslandTransparencyEnabled()
@@ -6099,6 +6101,11 @@ class MainViewModel : ViewModel() {
     fun setIslandSecondaryBubble(enabled: Boolean) {
         isIslandSecondaryBubble.value = enabled
         settingsRepository.setIslandSecondaryBubbleEnabled(enabled)
+    }
+
+    fun setIslandPersistentOrder(enabled: Boolean) {
+        isIslandPersistentOrder.value = enabled
+        settingsRepository.setIslandPersistentOrderEnabled(enabled)
     }
 
     fun setIslandBalanceCompact(enabled: Boolean) {
