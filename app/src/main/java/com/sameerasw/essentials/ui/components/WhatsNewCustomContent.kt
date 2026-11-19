@@ -78,22 +78,22 @@ fun WhatsNewCustomContent(
         modifier = Modifier.fillMaxWidth(),
     ) {
         WhatsNewSectionCard(
-            title = "Overcast is now on Play Store",
-            summary = "Get the weather island provider from Google Play",
+            title = stringResource(R.string.whats_new_overcast_title),
+            summary = stringResource(R.string.whats_new_overcast_summary),
             expanded = expandedSection == 0,
             onToggle = { toggle(0) },
             icon = { SectionIcon(R.drawable.overcast_logo, tinted = false) },
         ) {
             Text(
-                text = "Overcast brings live weather to your island as an external provider. It is now available on Google Play, so you can install it and keep it up to date like any other app.",
+                text = stringResource(R.string.whats_new_overcast_desc),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
             StackedActionCard(
                 iconRes = R.drawable.rounded_cloud_24,
                 title = "Overcast",
-                description = if (overcastInstalled) "Installed and ready to use" else "Not installed yet",
-                actionLabel = if (overcastInstalled) "Open" else "Get it on Google Play",
+                description = if (overcastInstalled) stringResource(R.string.whats_new_overcast_installed) else stringResource(R.string.label_not_installed),
+                actionLabel = if (overcastInstalled) stringResource(R.string.label_open_with) else stringResource(R.string.whats_new_overcast_get),
                 actionIconRes = if (overcastInstalled) R.drawable.rounded_open_in_new_24 else R.drawable.rounded_download_24,
                 isPrimaryAction = !overcastInstalled,
                 onAction = {
@@ -103,43 +103,43 @@ fun WhatsNewCustomContent(
         }
 
         WhatsNewSectionCard(
-            title = "Hello foldables",
-            summary = "Layouts built for bigger and wider screens",
+            title = stringResource(R.string.whats_new_foldables_title),
+            summary = stringResource(R.string.whats_new_foldables_summary),
             expanded = expandedSection == 3,
             onToggle = { toggle(3) },
             icon = { SectionIcon(R.drawable.rounded_tablet_android_24) },
         ) {
             Text(
-                text = "Essentials now uses Navigation3 for adaptive layouts. On foldables and tablets, screens make better use of the extra space with side-by-side panes, and phones in landscape get layouts that fit the wider screen instead of stretching a portrait one.",
+                text = stringResource(R.string.whats_new_foldables_desc),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
             Text(
-                text = "Unfold your device or rotate your phone to see it in action.",
+                text = stringResource(R.string.whats_new_foldables_try),
                 style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
                 color = MaterialTheme.colorScheme.primary,
             )
         }
 
         WhatsNewSectionCard(
-            title = "Island feels new",
-            summary = "A fresh look with smoother animations",
+            title = stringResource(R.string.whats_new_island_title),
+            summary = stringResource(R.string.whats_new_island_summary),
             expanded = expandedSection == 4,
             onToggle = { toggle(4) },
             icon = { SectionIcon(R.drawable.rounded_auto_awesome_24) },
         ) {
             Text(
-                text = "Expanded views have a new translucent design with a soft glow that follows the colors of what you are viewing, from notifications to your music.",
+                text = stringResource(R.string.whats_new_island_desc),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
             Text(
-                text = "Swipe sideways to move between notifications and media players in carousel order, or switch Dismissals to Down to swipe down to dismiss. Media can also live in a secondary bubble or a wide pill, and colors now change smoothly as the island collapses.",
+                text = stringResource(R.string.whats_new_island_gestures),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
             Text(
-                text = "Plus many refinements to animations, gestures and stability. Prefer something lighter? Turn off Island transparency for an efficient mode that keeps just the color glow.",
+                text = stringResource(R.string.whats_new_island_refinements),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -183,14 +183,14 @@ fun ShakeForHelpCard(
 ) {
     val context = LocalContext.current
     WhatsNewSectionCard(
-        title = "Shake to get help",
-        summary = "Shake your phone for instant help",
+        title = stringResource(R.string.label_shake_for_help),
+        summary = stringResource(R.string.whats_new_shake_summary),
         expanded = expanded,
         onToggle = onToggle,
         icon = { SectionIcon(R.drawable.rounded_mobile_vibrate_24) },
     ) {
         Text(
-            text = "Shake your phone anywhere in Essentials to open help for the screen you are on. Inside a feature you get that feature's guide, and everywhere else you get the general Help and Guides.",
+            text = stringResource(R.string.whats_new_shake_desc),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
@@ -205,7 +205,7 @@ fun ShakeForHelpCard(
         }
 
         Text(
-            text = "Give your phone a shake now to try it!",
+            text = stringResource(R.string.whats_new_shake_try),
             style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
             color = MaterialTheme.colorScheme.primary,
         )

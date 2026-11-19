@@ -2112,13 +2112,12 @@
     <string name="feat_system_keyboard_desc">Customize layout and behavior</string>
     <string name="search_keyboard_height_title">Keyboard Height</string>
     <string name="search_keyboard_height_desc">Adjust the total vertical size of the keyboard</string>
-    >
     <string name="search_keyboard_padding_title">Bottom Padding</string>
     <string name="search_keyboard_padding_desc">Add space below the keyboard</string>
     <string name="search_keyboard_haptics_title">Haptic Feedback</string>
     <string name="search_keyboard_haptics_desc">Vibrate on key press</string>
     <string name="test_keyboard_hint">Test the keyboard</string>
-    <string name="label_keyboard_height">Keyboard Height</string>>
+    <string name="label_keyboard_height">Keyboard Height</string>
     <string name="label_keyboard_bottom_padding">Bottom Padding</string>
     <string name="label_keyboard_haptics">Haptic Feedback</string>
     <string name="label_keyboard_roundness">Key Roundness</string>
@@ -2981,15 +2980,15 @@
     <string name="feat_aod_wallpaper_opacity">Opacity</string>
     <string name="feat_aod_wallpaper_timeout">Wallpaper timeout</string>
     <string name="feat_aod_wallpaper_timeout_never">Never</string>
-    <string name="feat_aod_wallpaper_timeout_5s" translatable="false">5 sec</string>
-    <string name="feat_aod_wallpaper_timeout_15s" translatable="false">15 sec</string>
-    <string name="feat_aod_wallpaper_timeout_30s" translatable="false">30 sec</string>
+    <string name="feat_aod_wallpaper_timeout_5s">5 sec</string>
+    <string name="feat_aod_wallpaper_timeout_15s">15 sec</string>
+    <string name="feat_aod_wallpaper_timeout_30s">30 sec</string>
     <string name="feat_aod_wallpaper_timeout_1m">1 min</string>
     <string name="feat_aod_wallpaper_timeout_3m">3 min</string>
     <string name="feat_aod_wallpaper_timeout_5m">5 min</string>
     <string name="feat_aod_wallpaper_timeout_10m">10 min</string>
-    <string name="feat_aod_wallpaper_timeout_custom" translatable="false">Custom</string>
-    <string name="feat_aod_wallpaper_custom_timeout_slider" translatable="false">Custom duration</string>
+    <string name="feat_aod_wallpaper_timeout_custom">Custom</string>
+    <string name="feat_aod_wallpaper_custom_timeout_slider">Custom duration</string>
     <string name="feat_aod_wallpaper_blur">Blur</string>
     <string name="feat_aod_wallpaper_vignette">Vignette</string>
     <string name="feat_aod_wallpaper_black_threshold">Black threshold</string>
@@ -4095,4 +4094,21 @@
     <string name="diy_import_needs_setup">Personal details like locations, devices, networks, calendars or tags aren\'t shared. It will be imported disabled, set them up first.</string>
     <string name="diy_import_risky">This automation changes system settings. Only import it if you trust the source.</string>
     <string name="diy_import_error_conflict">You already have this kind of shortcut or all its slots are used</string>
+    <string name="whats_new_overcast_title">Overcast is now on Play Store</string>
+    <string name="whats_new_overcast_summary">Get the weather island provider from Google Play</string>
+    <string name="whats_new_overcast_desc">Overcast brings live weather to your island as an external provider. It is now available on Google Play, so you can install it and keep it up to date like any other app.</string>
+    <string name="whats_new_overcast_installed">Installed and ready to use</string>
+    <string name="whats_new_overcast_get">Get it on Google Play</string>
+    <string name="whats_new_foldables_title">Hello foldables</string>
+    <string name="whats_new_foldables_summary">Layouts built for bigger and wider screens</string>
+    <string name="whats_new_foldables_desc">Essentials now uses Navigation3 for adaptive layouts. On foldables and tablets, screens make better use of the extra space with side-by-side panes, and phones in landscape get layouts that fit the wider screen instead of stretching a portrait one.</string>
+    <string name="whats_new_foldables_try">Unfold your device or rotate your phone to see it in action.</string>
+    <string name="whats_new_island_title">Island feels new</string>
+    <string name="whats_new_island_summary">A fresh look with smoother animations</string>
+    <string name="whats_new_island_desc">Expanded views have a new translucent design with a soft glow that follows the colors of what you are viewing, from notifications to your music.</string>
+    <string name="whats_new_island_gestures">Swipe sideways to move between notifications and media players in carousel order, or switch Dismissals to Down to swipe down to dismiss. Media can also live in a secondary bubble or a wide pill, and colors now change smoothly as the island collapses.</string>
+    <string name="whats_new_island_refinements">Plus many refinements to animations, gestures and stability. Prefer something lighter? Turn off Island transparency for an efficient mode that keeps just the color glow.</string>
+    <string name="whats_new_shake_summary">Shake your phone for instant help</string>
+    <string name="whats_new_shake_desc">Shake your phone anywhere in Essentials to open help for the screen you are on. Inside a feature you get that feature\'s guide, and everywhere else you get the general Help and Guides.</string>
+    <string name="whats_new_shake_try">Give your phone a shake now to try it!</string>
 </resources>
