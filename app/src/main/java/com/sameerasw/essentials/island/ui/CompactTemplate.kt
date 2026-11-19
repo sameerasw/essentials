@@ -150,7 +150,7 @@ fun CompactTemplate(
     onBaseWidth: (Int) -> Unit = {},
     onNeedLeft: (Int) -> Unit = {},
 ) {
-    val cellScale = (spec.cellSize / 28.dp * spec.fontScale).coerceIn(0.6f, 1.2f)
+    val cellScale = spec.fontScale.coerceIn(0.8f, 1.3f)
     val iconColor = LocalIslandIconColor.current
     val primary = MaterialTheme.colorScheme.primary
     val cells = buildMap {
