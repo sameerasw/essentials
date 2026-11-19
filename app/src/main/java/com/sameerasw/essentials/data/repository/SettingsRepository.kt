@@ -4556,7 +4556,7 @@ class SettingsRepository(
 
     fun setIslandAlwaysGesturesEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_ALWAYS_GESTURES, enabled)
 
-    fun getIslandMaxItems(): Int = getDisplayInt(KEY_ISLAND_MAX_ITEMS, 2).coerceIn(1, 4)
+    fun getIslandMaxItems(): Int = getDisplayInt(KEY_ISLAND_MAX_ITEMS, 2).coerceIn(1, 6)
 
     fun setIslandMaxItems(value: Int) = putDisplayInt(KEY_ISLAND_MAX_ITEMS, value)
 

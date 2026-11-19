@@ -29,7 +29,7 @@ data class CompactArrangement(
 object CompactLayoutEngine {
     const val MAX_CELLS = 4
 
-    private const val MAX_SEARCH = 8
+    private const val MAX_SEARCH = 10
     private const val WIDTH_EPSILON = 0.01f
     private const val STICKY_WIDTH = 0.5f
 

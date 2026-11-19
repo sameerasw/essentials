@@ -280,7 +280,7 @@ fun IslandSettingsUI(
                     modifier = Modifier.padding(horizontal = 16.dp),
                 )
                 SegmentedPicker(
-                    items = listOf(1, 2, 3, 4),
+                    items = listOf(1, 2, 3, 4, 5, 6),
                     selectedItem = viewModel.islandMaxItems.value,
                     onItemSelected = {
                         HapticUtil.performVirtualKeyHaptic(view)
