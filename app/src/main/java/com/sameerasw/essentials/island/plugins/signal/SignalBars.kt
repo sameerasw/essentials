@@ -10,6 +10,7 @@ import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -46,7 +47,8 @@ fun SignalBars(level: Int, color: Color, label: String?, modifier: Modifier = Mo
         fontWeight = FontWeight.Bold,
         platformStyle = PlatformTextStyle(includeFontPadding = false),
     )
-    Canvas(modifier.size(width = 16.dp, height = 14.dp)) {
+    val labelRoom = if (label != null) Modifier.padding(start = 16.dp * LABEL_SHIFT_X, top = 14.dp * LABEL_SHIFT_Y) else Modifier
+    Canvas(modifier.then(labelRoom).size(width = 16.dp, height = 14.dp)) {
         val bars = 4
         val gap = 2.dp.toPx()
         val barWidth = (size.width - gap * (bars - 1)) / bars
