@@ -1833,4 +1833,5 @@
     <string name="island_persistent_order_title">Persistent ordering</string>
     <string name="island_persistent_order_info">This mode prioritizes the ordering of the island items rather than moving them around for best balance. This may lead to unexpected spacing.</string>
     <string name="island_timeout_after_marquee_title">Wait for scrolling text to finish</string>
+    <string name="island_calendar_icon_only_title">Icon only</string>
 </resources>
