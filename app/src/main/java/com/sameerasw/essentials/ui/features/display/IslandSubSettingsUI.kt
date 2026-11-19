@@ -999,6 +999,16 @@ fun IslandDurationSettingsUI(
                 valueFormatter = { "%.1fs".format(it) },
             )
 
+            IconToggleItem(
+                iconRes = R.drawable.rounded_timer_24,
+                title = stringResource(R.string.island_timeout_after_marquee_title),
+                isChecked = viewModel.isIslandTimeoutAfterMarquee.value,
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    viewModel.setIslandTimeoutAfterMarquee(checked)
+                },
+            )
+
             val infinityText = stringResource(R.string.island_timeout_infinity)
             ConfigSliderItem(
                 title = stringResource(R.string.island_expanded_timeout_title),

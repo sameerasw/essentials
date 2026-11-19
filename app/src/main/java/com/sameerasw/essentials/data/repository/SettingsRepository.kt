@@ -613,6 +613,7 @@ class SettingsRepository(
         const val KEY_ISLAND_TIME_HIDE_LOCKED = "island_time_hide_locked"
         const val KEY_ISLAND_BATTERY_HIDE_LOCKED = "island_battery_hide_locked"
         const val KEY_ISLAND_TIMEOUT_MS = "island_timeout_ms"
+        const val KEY_ISLAND_TIMEOUT_AFTER_MARQUEE = "island_timeout_after_marquee"
         const val KEY_ISLAND_SHOW_GLOW = "island_show_glow"
         const val KEY_ISLAND_GLOW_INTENSITY = "island_glow_intensity"
         const val KEY_ISLAND_GLOW_SIZE = "island_glow_size"
@@ -4223,6 +4224,10 @@ class SettingsRepository(
 
     fun getIslandTimeoutMs(): Long = getLong(KEY_ISLAND_TIMEOUT_MS, 4500L)
     fun setIslandTimeoutMs(value: Long) = putLong(KEY_ISLAND_TIMEOUT_MS, value)
+
+    fun isIslandTimeoutAfterMarqueeEnabled(): Boolean = getBoolean(KEY_ISLAND_TIMEOUT_AFTER_MARQUEE, false)
+
+    fun setIslandTimeoutAfterMarqueeEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_TIMEOUT_AFTER_MARQUEE, enabled)
 
     fun isIslandBorderOutlineEnabled(): Boolean = getBoolean(KEY_ISLAND_BORDER_OUTLINE_ENABLED, false)
     fun setIslandBorderOutlineEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_BORDER_OUTLINE_ENABLED, enabled)
