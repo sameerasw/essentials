@@ -2343,4 +2343,19 @@
     <string name="config_share_section_smart">Smart switching</string>
     <string name="config_share_section_clock_battery">Clock and battery</string>
     <string name="config_share_section_hiding">Hiding</string>
+    <string name="diy_action_share">Share</string>
+    <string name="diy_share_sheet_title">Share automation</string>
+    <string name="diy_share_sheet_desc">Locations, devices, networks, calendars and tags are never included.</string>
+    <string name="diy_share_copy">Copy</string>
+    <string name="diy_share_copied">Copied to clipboard</string>
+    <string name="diy_import_paste">Paste from clipboard</string>
+    <string name="diy_import_clipboard_empty">Clipboard is empty</string>
+    <string name="diy_import_sheet_title">Import automation</string>
+    <string name="diy_import_action">Import</string>
+    <string name="diy_import_done">Automation imported</string>
+    <string name="diy_import_grant">Grant permissions</string>
+    <string name="diy_import_missing_permissions">Missing permissions: %1$s. It will be imported disabled until you grant them.</string>
+    <string name="diy_import_needs_setup">Personal details like locations, devices, networks, calendars or tags aren\'t shared. It will be imported disabled, set them up first.</string>
+    <string name="diy_import_risky">This automation changes system settings. Only import it if you trust the source.</string>
+    <string name="diy_import_error_conflict">You already have this kind of shortcut or all its slots are used</string>
 </resources>
