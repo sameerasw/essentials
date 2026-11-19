@@ -85,6 +85,7 @@ fun StatusGlanceCalendarOptionsBottomSheet(
         else -> Int.MAX_VALUE
     }
     val settings = remember { SettingsRepository(context) }
+    var iconOnly by remember { mutableStateOf(settings.getBoolean(SettingsRepository.KEY_ISLAND_CALENDAR_ICON_ONLY, false)) }
     var priorityMinutes by remember { mutableIntStateOf(settings.getIslandCalendarPriorityMinutes()) }
     val priorityOptions = listOf(0, 5, 10, 15, 30, 60, 120).filter { it < timeframeMinutes }
     val disabledLabel = stringResource(R.string.island_calendar_priority_disabled)
@@ -117,9 +118,16 @@ fun StatusGlanceCalendarOptionsBottomSheet(
             if (allowIconEdit) {
                 RoundedCardContainer(spacing = 2.dp, cornerRadius = 24.dp) {
                     IslandPrefToggle(
+                        settingKey = SettingsRepository.KEY_ISLAND_CALENDAR_ICON_ONLY,
+                        iconRes = R.drawable.rounded_visibility_off_24,
+                        title = stringResource(R.string.island_calendar_icon_only_title),
+                        onChanged = { iconOnly = it },
+                    )
+                    IslandPrefToggle(
                         settingKey = SettingsRepository.KEY_ISLAND_CALENDAR_COMPACT_TIME,
                         iconRes = R.drawable.rounded_schedule_24,
                         title = stringResource(R.string.island_calendar_compact_time_title),
+                        enabled = !iconOnly,
                     )
                 }
                 IslandLauncherOnlyToggle(SettingsRepository.KEY_ISLAND_CALENDAR_LAUNCHER_ONLY)
@@ -190,6 +198,7 @@ fun StatusGlanceCalendarOptionsBottomSheet(
                         settingKey = SettingsRepository.KEY_ISLAND_CALENDAR_HIDE_NOW,
                         iconRes = R.drawable.rounded_visibility_off_24,
                         title = stringResource(R.string.island_calendar_hide_now_title),
+                        enabled = !iconOnly,
                     )
                 }
             }

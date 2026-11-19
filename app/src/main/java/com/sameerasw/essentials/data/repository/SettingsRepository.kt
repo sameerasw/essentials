@@ -607,12 +607,14 @@ class SettingsRepository(
         const val KEY_ISLAND_NOTIF_CONCEAL_CHAT_PICTURES = "island_notif_conceal_chat_pictures"
         const val KEY_ISLAND_CALENDAR_HIDE_LOCKED = "island_calendar_hide_locked"
         const val KEY_ISLAND_CALENDAR_COMPACT_TIME = "island_calendar_compact_time"
+        const val KEY_ISLAND_CALENDAR_ICON_ONLY = "island_calendar_icon_only"
         const val KEY_ISLAND_CALENDAR_HIDE_NOW = "island_calendar_hide_now"
         const val KEY_ISLAND_CALENDAR_SHOW_ONGOING = "island_calendar_show_ongoing"
         const val KEY_ISLAND_CALENDAR_HIDDEN_EVENTS = "island_calendar_hidden_events"
         const val KEY_ISLAND_TIME_HIDE_LOCKED = "island_time_hide_locked"
         const val KEY_ISLAND_BATTERY_HIDE_LOCKED = "island_battery_hide_locked"
         const val KEY_ISLAND_TIMEOUT_MS = "island_timeout_ms"
+        const val KEY_ISLAND_TIMEOUT_AFTER_MARQUEE = "island_timeout_after_marquee"
         const val KEY_ISLAND_SHOW_GLOW = "island_show_glow"
         const val KEY_ISLAND_GLOW_INTENSITY = "island_glow_intensity"
         const val KEY_ISLAND_GLOW_SIZE = "island_glow_size"
@@ -688,6 +690,7 @@ class SettingsRepository(
         const val KEY_ISLAND_LANDSCAPE_TOP_SPACING = "island_landscape_top_spacing"
         const val KEY_ISLAND_BOND_EDGE = "island_bond_edge"
         const val KEY_ISLAND_BALANCE_COMPACT = "island_balance_compact"
+        const val KEY_ISLAND_PERSISTENT_ORDER = "island_persistent_order"
         const val KEY_ISLAND_NEURAL_EXPRESSIVE = "island_neural_expressive"
         const val KEY_ISLAND_NEURAL_EXPRESSIVE_ALWAYS = "island_neural_expressive_always"
         const val KEY_ISLAND_TRANSPARENCY = "island_transparency"
@@ -4223,6 +4226,10 @@ class SettingsRepository(
     fun getIslandTimeoutMs(): Long = getLong(KEY_ISLAND_TIMEOUT_MS, 4500L)
     fun setIslandTimeoutMs(value: Long) = putLong(KEY_ISLAND_TIMEOUT_MS, value)
 
+    fun isIslandTimeoutAfterMarqueeEnabled(): Boolean = getBoolean(KEY_ISLAND_TIMEOUT_AFTER_MARQUEE, false)
+
+    fun setIslandTimeoutAfterMarqueeEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_TIMEOUT_AFTER_MARQUEE, enabled)
+
     fun isIslandBorderOutlineEnabled(): Boolean = getBoolean(KEY_ISLAND_BORDER_OUTLINE_ENABLED, false)
     fun setIslandBorderOutlineEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_BORDER_OUTLINE_ENABLED, enabled)
 
@@ -4550,7 +4557,7 @@ class SettingsRepository(
 
     fun setIslandAlwaysGesturesEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_ALWAYS_GESTURES, enabled)
 
-    fun getIslandMaxItems(): Int = getDisplayInt(KEY_ISLAND_MAX_ITEMS, 2).coerceIn(1, 4)
+    fun getIslandMaxItems(): Int = getDisplayInt(KEY_ISLAND_MAX_ITEMS, 2).coerceIn(1, 6)
 
     fun setIslandMaxItems(value: Int) = putDisplayInt(KEY_ISLAND_MAX_ITEMS, value)
 
@@ -4561,6 +4568,10 @@ class SettingsRepository(
     fun isIslandBalanceCompactEnabled(): Boolean = getBoolean(KEY_ISLAND_BALANCE_COMPACT, true)
 
     fun setIslandBalanceCompactEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_BALANCE_COMPACT, enabled)
+
+    fun isIslandPersistentOrderEnabled(): Boolean = getBoolean(KEY_ISLAND_PERSISTENT_ORDER, false)
+
+    fun setIslandPersistentOrderEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_PERSISTENT_ORDER, enabled)
 
     fun isIslandNeuralExpressiveEnabled(): Boolean = getBoolean(KEY_ISLAND_NEURAL_EXPRESSIVE, false)
 

@@ -109,6 +109,7 @@ fun LineTemplate(
                     style = IslandTextStyles.line,
                     textAlign = TextAlign.Start,
                     modifier = Modifier.weight(1f).morphTag(IslandMorph.TITLE),
+                    reportProgress = true,
                 )
                 endSlot()
             }
@@ -141,7 +142,7 @@ private fun CondensedLine(line: LineContent, spec: IslandLayoutSpec, startInset:
         Box(Modifier.squareFit(spec.cellSize).morphTag(IslandMorph.ICON), contentAlignment = Alignment.Center) { line.icon() }
     }
     val title: @Composable (Dp) -> Unit = { width ->
-        MarqueeText(text = line.start, style = style, textAlign = TextAlign.Start, modifier = Modifier.width(width).morphTag(IslandMorph.TITLE))
+        MarqueeText(text = line.start, style = style, textAlign = TextAlign.Start, modifier = Modifier.width(width).morphTag(IslandMorph.TITLE), reportProgress = true)
     }
     val leadingSlot: @Composable () -> Unit = { LeadingSlot(leading, spec) }
     val leadingWidth = leading?.let { it.width + spec.cellSpacing } ?: 0.dp
@@ -223,7 +224,7 @@ private fun mergedLineText(line: LineContent): AnnotatedString = buildAnnotatedS
 
 @Composable
 private fun LineText(text: String, align: TextAlign, weight: FontWeight, modifier: Modifier) {
-    MarqueeText(text = text, style = IslandTextStyles.line.copy(fontWeight = weight), textAlign = align, modifier = modifier)
+    MarqueeText(text = text, style = IslandTextStyles.line.copy(fontWeight = weight), textAlign = align, modifier = modifier, reportProgress = true)
 }
 
 @OptIn(ExperimentalTextApi::class)

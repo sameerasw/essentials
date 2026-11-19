@@ -39,6 +39,7 @@ class CalendarPlugin : BaseIslandPlugin() {
         SettingsRepository.KEY_ISLAND_CALENDAR_PRIORITY_MINUTES,
         SettingsRepository.KEY_ISLAND_CALENDAR_HIDE_LOCKED,
         SettingsRepository.KEY_ISLAND_CALENDAR_COMPACT_TIME,
+        SettingsRepository.KEY_ISLAND_CALENDAR_ICON_ONLY,
         SettingsRepository.KEY_ISLAND_CALENDAR_HIDE_NOW,
         SettingsRepository.KEY_ISLAND_CALENDAR_SHOW_ONGOING,
         SettingsRepository.KEY_ISLAND_TIME_FORMAT,
@@ -125,7 +126,8 @@ class CalendarPlugin : BaseIslandPlugin() {
         } else {
             CalendarEventUtil.formatRelativeTimeCompact(e.startTimeMillis, now)
         }
-        val hideNow = e.startTimeMillis <= now && settings.getBoolean(SettingsRepository.KEY_ISLAND_CALENDAR_HIDE_NOW, false)
+        val iconOnly = settings.getBoolean(SettingsRepository.KEY_ISLAND_CALENDAR_ICON_ONLY, false)
+        val hideNow = iconOnly || (e.startTimeMillis <= now && settings.getBoolean(SettingsRepository.KEY_ISLAND_CALENDAR_HIDE_NOW, false))
         val showGlow = settings.isIslandShowGlowEnabled()
         val icon = settings.getIslandCalendarIcons()[e.calendarId]
         val urgent = !hidden && isUrgent(e, now)

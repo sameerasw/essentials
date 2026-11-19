@@ -47,6 +47,7 @@ class IslandController(
     var compactCellWidth: (String) -> Float = { 1f }
     var compactBubbleWidth: (Int) -> Float = { it.toFloat() }
     var balanceCompact: Boolean = true
+    var persistentOrder: Boolean = false
     var chipsEnabled: Boolean = false
     var secondaryBubbleEnabled: Boolean = true
     var secondaryBubbleMax: Int = 0
@@ -394,6 +395,8 @@ class IslandController(
             maxCells = maxCells,
             leftExtra = hubCells,
             balance = balanceCompact,
+            persistentOrder = persistentOrder,
+            highFirst = hub != null || mirrored,
             cellWidth = compactCellWidth,
             leftExtraWidth = hub?.cells?.coerceAtLeast(1)?.let(compactBubbleWidth) ?: 0f,
             previous = _state.value.arrangement.flipped(),

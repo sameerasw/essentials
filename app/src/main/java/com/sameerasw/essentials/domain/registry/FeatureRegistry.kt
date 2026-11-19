@@ -1013,6 +1013,11 @@ object FeatureRegistry {
                             R.string.island_section_visuals,
                             "island_balance_compact",
                         ),
+                        SearchSetting(
+                            R.string.island_persistent_order_title,
+                            R.string.island_section_visuals,
+                            "island_persistent_order",
+                        ),
                     ),
             ) {
                 override fun isEnabled(viewModel: MainViewModel) = true

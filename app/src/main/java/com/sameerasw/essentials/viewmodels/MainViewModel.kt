@@ -246,6 +246,7 @@ class MainViewModel : ViewModel() {
     val isIslandDisableInteractionsInFullscreen = mutableStateOf(false)
     val isIslandBondEdge = mutableStateOf(false)
     val isIslandBalanceCompact = mutableStateOf(true)
+    val isIslandPersistentOrder = mutableStateOf(false)
     val isIslandNeuralExpressive = mutableStateOf(false)
     val isIslandNeuralExpressiveAlways = mutableStateOf(false)
     val isIslandTransparency = mutableStateOf(true)
@@ -299,6 +300,7 @@ class MainViewModel : ViewModel() {
     val isIslandCompactHideStatusBar = mutableStateOf(false)
     val isIslandHideWhenScreenOff = mutableStateOf(true)
     val islandTimeoutMs = mutableLongStateOf(4500L)
+    val isIslandTimeoutAfterMarquee = mutableStateOf(false)
     val isIslandLineStageEnabled = mutableStateOf(false)
     val isIslandMediaPeekSongChange = mutableStateOf(true)
     val isIslandMediaKeepWhenPaused = mutableStateOf(true)
@@ -2586,6 +2588,7 @@ class MainViewModel : ViewModel() {
         isIslandDisableInteractionsInFullscreen.value = settingsRepository.isIslandDisableInteractionsInFullscreenEnabled()
         isIslandBondEdge.value = settingsRepository.isIslandBondEdgeEnabled()
         isIslandBalanceCompact.value = settingsRepository.isIslandBalanceCompactEnabled()
+        isIslandPersistentOrder.value = settingsRepository.isIslandPersistentOrderEnabled()
         isIslandNeuralExpressive.value = settingsRepository.isIslandNeuralExpressiveEnabled()
         isIslandNeuralExpressiveAlways.value = settingsRepository.isIslandNeuralExpressiveAlwaysEnabled()
         isIslandTransparency.value = settingsRepository.isIslandTransparencyEnabled()
@@ -2652,6 +2655,7 @@ class MainViewModel : ViewModel() {
             )
         isIslandHideWhenScreenOff.value = settingsRepository.isIslandHideWhenScreenOffEnabled()
         islandTimeoutMs.longValue = settingsRepository.getIslandTimeoutMs()
+        isIslandTimeoutAfterMarquee.value = settingsRepository.isIslandTimeoutAfterMarqueeEnabled()
         isIslandLineStageEnabled.value = settingsRepository.isIslandLineStageEnabled()
         isIslandMediaPeekSongChange.value = settingsRepository.isIslandMediaPeekSongChangeEnabled()
         isIslandMediaKeepWhenPaused.value = settingsRepository.isIslandMediaKeepWhenPausedEnabled()
@@ -6101,6 +6105,11 @@ class MainViewModel : ViewModel() {
         settingsRepository.setIslandSecondaryBubbleEnabled(enabled)
     }
 
+    fun setIslandPersistentOrder(enabled: Boolean) {
+        isIslandPersistentOrder.value = enabled
+        settingsRepository.setIslandPersistentOrderEnabled(enabled)
+    }
+
     fun setIslandBalanceCompact(enabled: Boolean) {
         isIslandBalanceCompact.value = enabled
         settingsRepository.setIslandBalanceCompactEnabled(enabled)
@@ -6249,6 +6258,11 @@ class MainViewModel : ViewModel() {
     fun setIslandHideWhenScreenOff(enabled: Boolean) {
         isIslandHideWhenScreenOff.value = enabled
         settingsRepository.setIslandHideWhenScreenOffEnabled(enabled)
+    }
+
+    fun setIslandTimeoutAfterMarquee(enabled: Boolean) {
+        isIslandTimeoutAfterMarquee.value = enabled
+        settingsRepository.setIslandTimeoutAfterMarqueeEnabled(enabled)
     }
 
     fun setIslandTimeoutMs(value: Long) {

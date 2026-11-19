@@ -47,6 +47,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.luminance
+import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.island.ui.components.LocalIslandChipInk
@@ -92,12 +93,32 @@ private fun ChipUnit(color: Color, spec: IslandLayoutSpec, startNeighbor: Boolea
 @Composable
 private fun ScaledCell(scale: Float, content: @Composable () -> Unit) {
     val base = LocalDensity.current
-    if (scale == 1f) {
-        content()
-    } else {
-        CompositionLocalProvider(LocalDensity provides Density(base.density * scale, base.fontScale / scale)) { content() }
+    Box(Modifier.fitHeight()) {
+        if (scale == 1f) {
+            content()
+        } else {
+            CompositionLocalProvider(LocalDensity provides Density(base.density * scale, base.fontScale / scale)) { content() }
+        }
     }
 }
+
+private fun Modifier.fitHeight(): Modifier =
+    layout { measurable, c ->
+        val placeable = measurable.measure(c.copy(minHeight = 0, maxHeight = Constraints.Infinity))
+        val limit = c.maxHeight
+        val factor = if (limit != Constraints.Infinity && placeable.height > limit) limit.toFloat() / placeable.height else 1f
+        val width = (placeable.width * factor).roundToInt().coerceIn(c.minWidth, c.maxWidth)
+        val height = (placeable.height * factor).roundToInt().coerceIn(c.minHeight, c.maxHeight)
+        layout(width, height) {
+            val x = (width - placeable.width * factor) / 2f
+            val y = (height - placeable.height * factor) / 2f
+            placeable.placeWithLayer(x.roundToInt(), y.roundToInt()) {
+                scaleX = factor
+                scaleY = factor
+                transformOrigin = TransformOrigin(0f, 0f)
+            }
+        }
+    }
 
 private fun slotChipped(i: Int, beforeSlots: Int, beforeUnits: List<SlotUnit>, afterUnits: List<SlotUnit>): Boolean {
     val unit = if (i < beforeSlots) beforeUnits.getOrNull(beforeSlots - 1 - i) else afterUnits.getOrNull(i - beforeSlots)
@@ -129,7 +150,7 @@ fun CompactTemplate(
     onBaseWidth: (Int) -> Unit = {},
     onNeedLeft: (Int) -> Unit = {},
 ) {
-    val cellScale = (spec.cellSize / 28.dp * spec.fontScale).coerceIn(0.6f, 1.2f)
+    val cellScale = spec.fontScale.coerceIn(0.8f, 1.3f)
     val iconColor = LocalIslandIconColor.current
     val primary = MaterialTheme.colorScheme.primary
     val cells = buildMap {

@@ -84,6 +84,7 @@ import com.sameerasw.essentials.utils.PermissionUIHelper
 import com.sameerasw.essentials.utils.PermissionUtils
 import com.sameerasw.essentials.ui.core.sheets.HideStatusBarInfoBottomSheet
 import com.sameerasw.essentials.ui.core.sheets.StatusBarAwareWidthInfoBottomSheet
+import com.sameerasw.essentials.ui.core.sheets.PersistentOrderInfoBottomSheet
 import com.sameerasw.essentials.ui.core.sheets.PreferStillIslandInfoBottomSheet
 import com.sameerasw.essentials.ui.core.sheets.BackdropBlurUnavailableBottomSheet
 import com.sameerasw.essentials.utils.ShellUtils
@@ -582,6 +583,12 @@ fun IslandVisualsSettingsUI(
         BackdropBlurUnavailableBottomSheet(status = backdropBlurStatus, onDismissRequest = { showBackdropBlurInfo = false })
     }
 
+    var showPersistentOrderInfo by remember { mutableStateOf(false) }
+
+    if (showPersistentOrderInfo) {
+        PersistentOrderInfoBottomSheet(onDismissRequest = { showPersistentOrderInfo = false })
+    }
+
     var showPreferStillInfo by remember { mutableStateOf(false) }
 
     if (showPreferStillInfo) {
@@ -639,6 +646,18 @@ fun IslandVisualsSettingsUI(
                     viewModel.setIslandBalanceCompact(checked)
                 },
                 modifier = Modifier.highlight(highlightSetting == "island_balance_compact"),
+            )
+
+            IconToggleItem(
+                iconRes = R.drawable.rounded_swap_vert_24,
+                title = stringResource(R.string.island_persistent_order_title),
+                isChecked = viewModel.isIslandPersistentOrder.value,
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    viewModel.setIslandPersistentOrder(checked)
+                },
+                onInfoClick = { showPersistentOrderInfo = true },
+                modifier = Modifier.highlight(highlightSetting == "island_persistent_order"),
             )
 
         }
@@ -978,6 +997,16 @@ fun IslandDurationSettingsUI(
                 increment = 0.5f,
                 iconRes = R.drawable.rounded_timer_24,
                 valueFormatter = { "%.1fs".format(it) },
+            )
+
+            IconToggleItem(
+                iconRes = R.drawable.rounded_timer_24,
+                title = stringResource(R.string.island_timeout_after_marquee_title),
+                isChecked = viewModel.isIslandTimeoutAfterMarquee.value,
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    viewModel.setIslandTimeoutAfterMarquee(checked)
+                },
             )
 
             val infinityText = stringResource(R.string.island_timeout_infinity)

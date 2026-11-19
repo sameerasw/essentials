@@ -246,3 +246,17 @@ An approved provider is added automatically to the ordered list in Island settin
 - Test with the Essentials debug build and a provider build signed with a key you keep; a different key after pairing makes Essentials turn the provider off until the user approves it again.
 - A reference implementation is in the Overcast repository: `weather/island/WeatherIslandService.kt`, `WeatherIslandPayload.kt` and `WeatherIslandExpanded.kt`.
 - AirSync (`airsync-android`) is a smaller reference: `island/AirSyncIslandService.kt` publishes a device item (compact icon and battery, a line, an expanded view with actions) and keeps it available while disconnected so the expanded view can offer Reconnect. In the Brief, the Mac device tile opens that expanded view.
+
+---
+
+## Getting listed in Essentials
+
+Island settings shows a row for every app in `KnownProviders` that is not installed yet, so users can discover it and jump to the Play Store. Installed providers appear in the normal list instead.
+
+To be listed, open a [Feature Request](https://github.com/sameerasw/essentials/issues/new?template=feature_request.yml) titled `[Provider]: <app name>` with:
+
+- The package name and a public install link.
+- A build that pairs and publishes against the current SDK, tested with the Essentials debug build.
+- Confirmation that the app only publishes what the user can see in its own UI and keeps its signing key stable.
+
+Once the issue is `approved` and assigned, add one `KnownProvider` entry (package, name string, icon drawable, install URL) to `island/remote/KnownProviders.kt` and send a PR.
