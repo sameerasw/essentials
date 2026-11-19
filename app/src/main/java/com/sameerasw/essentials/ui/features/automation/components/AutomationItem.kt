@@ -82,6 +82,7 @@ fun AutomationItem(
     onDelete: () -> Unit = {},
     onToggle: () -> Unit = {},
     onTest: () -> Unit = {},
+    onShare: () -> Unit = {},
     selectionMode: Boolean = false,
     selected: Boolean = false,
     onSelectedChange: (Boolean) -> Unit = {},
@@ -165,6 +166,19 @@ fun AutomationItem(
                     leadingIcon = {
                         Icon(
                             painter = painterResource(R.drawable.rounded_edit_24),
+                            contentDescription = null,
+                        )
+                    },
+                )
+                SegmentedDropdownMenuItem(
+                    text = { TranslatableText(R.string.diy_action_share) },
+                    onClick = {
+                        showMenu = false
+                        onShare()
+                    },
+                    leadingIcon = {
+                        Icon(
+                            painter = painterResource(R.drawable.rounded_share_24),
                             contentDescription = null,
                         )
                     },

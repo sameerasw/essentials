@@ -29,6 +29,7 @@ import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.TextButton
 import com.sameerasw.essentials.data.repository.SettingsRepository
+import com.sameerasw.essentials.domain.configshare.ConfigShareRegistry
 import com.sameerasw.essentials.domain.registry.FeatureResetRegistry
 import com.sameerasw.essentials.ui.features.consciousgate.HoldToContinueButton
 import androidx.compose.foundation.background
@@ -84,6 +85,7 @@ import com.sameerasw.essentials.utils.ColorUtil
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.utils.PermissionUIHelper
 import com.sameerasw.essentials.viewmodels.MainViewModel
+import com.sameerasw.essentials.viewmodels.StatusBarIconViewModel
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class, ExperimentalLayoutApi::class)
 @Composable
@@ -93,6 +95,7 @@ fun FeatureHelpBottomSheet(
     viewModel: MainViewModel = viewModel(),
 ) {
     val context = LocalContext.current
+    val statusBarIconViewModel: StatusBarIconViewModel = viewModel()
     val scrollState = rememberScrollState()
     val view = LocalView.current
     val isUnsupported = !feature.isDeviceSupported(context)
@@ -375,6 +378,22 @@ fun FeatureHelpBottomSheet(
             }
 
             val resetPrefixes = FeatureResetRegistry.prefixesFor(feature.id)
+            ConfigShareRegistry.descriptorFor(feature.id)?.let { descriptor ->
+                ConfigShareRow(
+                    descriptor = descriptor,
+                    onApplied = {
+                        SettingsRepository(context).syncSystemSettingsWithSaved()
+                        viewModel.check(context)
+                        if (feature.id == "Statusbar icons") {
+                            statusBarIconViewModel.check(context)
+                            statusBarIconViewModel.setBatteryPercentageMode(
+                                statusBarIconViewModel.batteryPercentageMode.value,
+                                context,
+                            )
+                        }
+                    },
+                )
+            }
             if (feature.id == "Lock screen clock") {
                 HoldToContinueButton(
                     waitTimeProgress = 1f,

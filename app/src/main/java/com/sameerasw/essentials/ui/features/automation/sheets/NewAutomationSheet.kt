@@ -9,6 +9,8 @@
 
 package com.sameerasw.essentials.ui.core.sheets
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -22,7 +24,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedIconButton
+import androidx.compose.material3.FilledIconButton
+import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -43,6 +46,7 @@ import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.domain.diy.Automation
 import com.sameerasw.essentials.domain.diy.DIYRepository
+import com.sameerasw.essentials.domain.diy.ParsedAutomation
 import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.utils.HapticUtil
@@ -117,6 +121,30 @@ fun NewAutomationSheet(
             }
         }
 
+    var importParsed by remember { mutableStateOf<ParsedAutomation?>(null) }
+    val importLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+            if (uri == null) return@rememberLauncherForActivityResult
+            val text =
+                try {
+                    context.contentResolver.openInputStream(uri)?.use { it.bufferedReader().readText() }
+                } catch (e: Exception) {
+                    null
+                }
+            parseAutomationOrToast(context, text)?.let { importParsed = it }
+        }
+
+    importParsed?.let { parsed ->
+        AutomationImportSheet(
+            parsed = parsed,
+            onDismissRequest = { importParsed = null },
+            onImported = {
+                importParsed = null
+                onDismiss()
+            },
+        )
+    }
+
     EssentialsBottomSheet(
         onDismissRequest = onDismiss,
     ) {
@@ -141,14 +169,33 @@ fun NewAutomationSheet(
                     modifier = Modifier.weight(1f),
                 )
 
-                OutlinedIconButton(
-                    onClick = { /* TODO: Implement import */ },
-                    enabled = false,
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.rounded_download_24),
-                        contentDescription = stringResource(R.string.diy_import_automation),
-                    )
+                Row(horizontalArrangement = Arrangement.spacedBy(2.dp)) {
+                    FilledTonalIconButton(
+                        onClick = {
+                            HapticUtil.performUIHaptic(view)
+                            parseAutomationOrToast(context, readClipboardText(context))?.let { importParsed = it }
+                        },
+                        modifier = Modifier.size(width = 58.dp, height = 48.dp),
+                        shape = RoundedCornerShape(topStart = 24.dp, bottomStart = 24.dp, topEnd = 4.dp, bottomEnd = 4.dp),
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.rounded_content_paste_24),
+                            contentDescription = stringResource(R.string.diy_import_paste),
+                        )
+                    }
+                    FilledIconButton(
+                        onClick = {
+                            HapticUtil.performUIHaptic(view)
+                            importLauncher.launch(arrayOf("*/*"))
+                        },
+                        modifier = Modifier.size(width = 58.dp, height = 48.dp),
+                        shape = RoundedCornerShape(topStart = 4.dp, bottomStart = 4.dp, topEnd = 24.dp, bottomEnd = 24.dp),
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.rounded_vertical_align_bottom_24),
+                            contentDescription = stringResource(R.string.diy_import_automation),
+                        )
+                    }
                 }
             }
 
