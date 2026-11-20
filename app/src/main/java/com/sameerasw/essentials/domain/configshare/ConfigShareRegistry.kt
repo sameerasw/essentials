@@ -33,7 +33,7 @@ object ConfigShareRegistry {
             "use_auto_detect", "camera_offset_x", "camera_offset_y", "camera_size", "max_width",
             "cutout_gap", "padding_around", "landscape_top_spacing", "camera_position",
             "orientation_profiles", "hide_portrait", "hide_landscape", "keep_on_landscape",
-            "bond_edge", "balance_compact", "secondary_bubble", "secondary_bubble_side",
+            "bond_edge", "bond_scale", "balance_compact", "secondary_bubble", "secondary_bubble_side",
             "statusbar_aware_width", "statusbar_ignore_notifications", "max_items",
             "hide_status_bar_insets", "persistent_order",
         )

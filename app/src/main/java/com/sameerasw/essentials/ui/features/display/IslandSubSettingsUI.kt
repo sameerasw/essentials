@@ -506,6 +506,21 @@ fun IslandPlacementSettingsUI(
                             },
                             modifier = Modifier.highlight(highlightSetting == "island_bond_edge"),
                         )
+
+                        ConfigSliderItem(
+                            title = stringResource(R.string.island_bond_scale_title),
+                            value = viewModel.islandBondScale.floatValue,
+                            onValueChange = {
+                                HapticUtil.performUIHaptic(view)
+                                viewModel.setIslandBondScale(it)
+                            },
+                            valueRange = 0.3f..1.5f,
+                            increment = 0.05f,
+                            iconRes = R.drawable.rounded_arrows_outward_24,
+                            valueFormatter = { "%.2fx".format(it) },
+                            allowDecimals = true,
+                            modifier = Modifier.highlight(highlightSetting == "island_bond_scale"),
+                        )
                     }
                 }
             }

@@ -26,6 +26,7 @@ data class IslandLayoutSpec(
     val maxExpandedHeight: Dp = Dp.Unspecified,
     val cameraPresence: Float = 1f,
     val bondEdge: Boolean = false,
+    val bondScale: Float = 0.7f,
     val balanceCompact: Boolean = true,
     val dismissDown: Boolean = false,
     val gestureHints: Boolean = true,

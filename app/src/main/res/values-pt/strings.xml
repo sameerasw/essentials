@@ -1712,6 +1712,7 @@
     <string name="face_unlock_light_tint_title">Tonalidade clara</string>
     <string name="island_landscape_top_spacing_title">Espaçamento superior da paisagem</string>
     <string name="island_bond_edge_title">Conecte com o entalhe quando inativo</string>
+    <string name="island_bond_scale_title">Bonded island scale</string>
     <string name="island_expanded_timeout_title">Tempo limite expandido</string>
     <string name="island_expanded_timeout_desc">Duração antes de retornar ao estado de comprimido colapsado (0 para infinito)</string>
     <string name="island_preview_ring_title">Mostrar fica de alinhamento</string>

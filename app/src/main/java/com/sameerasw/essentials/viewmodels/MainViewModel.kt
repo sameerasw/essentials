@@ -245,6 +245,7 @@ class MainViewModel : ViewModel() {
     val isIslandKeepInFullscreen = mutableStateOf(false)
     val isIslandDisableInteractionsInFullscreen = mutableStateOf(false)
     val isIslandBondEdge = mutableStateOf(false)
+    val islandBondScale = mutableFloatStateOf(0.7f)
     val isIslandBalanceCompact = mutableStateOf(true)
     val isIslandPersistentOrder = mutableStateOf(false)
     val isIslandNeuralExpressive = mutableStateOf(false)
@@ -2588,6 +2589,7 @@ class MainViewModel : ViewModel() {
         isIslandKeepInFullscreen.value = settingsRepository.isIslandKeepInFullscreenEnabled()
         isIslandDisableInteractionsInFullscreen.value = settingsRepository.isIslandDisableInteractionsInFullscreenEnabled()
         isIslandBondEdge.value = settingsRepository.isIslandBondEdgeEnabled()
+        islandBondScale.floatValue = settingsRepository.getIslandBondScale()
         isIslandBalanceCompact.value = settingsRepository.isIslandBalanceCompactEnabled()
         isIslandPersistentOrder.value = settingsRepository.isIslandPersistentOrderEnabled()
         isIslandNeuralExpressive.value = settingsRepository.isIslandNeuralExpressiveEnabled()
@@ -5619,6 +5621,7 @@ class MainViewModel : ViewModel() {
         islandBorderOutlineThickness.floatValue = settingsRepository.getIslandBorderOutlineThickness()
         islandMaxItems.value = settingsRepository.getIslandMaxItems()
         isIslandBondEdge.value = settingsRepository.isIslandBondEdgeEnabled()
+        islandBondScale.floatValue = settingsRepository.getIslandBondScale()
         isIslandStatusBarAwareWidth.value = settingsRepository.isIslandStatusBarAwareWidthEnabled()
         isIslandKeepOnLandscape.value = settingsRepository.isIslandKeepOnLandscapeEnabled()
     }
@@ -6166,6 +6169,11 @@ class MainViewModel : ViewModel() {
     fun setIslandStatusBarAwareWidth(enabled: Boolean) {
         isIslandStatusBarAwareWidth.value = enabled
         settingsRepository.setIslandStatusBarAwareWidthEnabled(enabled)
+    }
+
+    fun setIslandBondScale(value: Float) {
+        islandBondScale.floatValue = value
+        settingsRepository.setIslandBondScale(value)
     }
 
     fun setIslandBondEdge(enabled: Boolean) {

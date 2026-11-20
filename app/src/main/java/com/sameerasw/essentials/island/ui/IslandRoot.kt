@@ -238,7 +238,7 @@ private fun IslandRootContent(
     } else {
         targetSpec.copy(
             cameraPresence = presence,
-            cameraDiameter = targetSpec.cameraDiameter * (1f - 0.3f * bond),
+            cameraDiameter = targetSpec.cameraDiameter * (1f + (targetSpec.bondScale - 1f) * bond),
             verticalGap = targetSpec.verticalGap + (3.5.dp - targetSpec.verticalGap) * bond,
             cameraGap = targetSpec.cameraGap * (1f - 0.2f * bond),
             contentGap = targetSpec.contentGap * (1f - 0.2f * bond),

@@ -2004,6 +2004,7 @@ Cần có quyền truy cập trợ năng để hiển thị lớp phủ và cầ
     <string name="essential_search_label">Tìm kiếm Essential</string>
     <string name="island_landscape_top_spacing_title">Khoảng cách phía trên ở chế độ ngang</string>
     <string name="island_bond_edge_title">Liên kết với tai thỏ khi không hoạt động</string>
+    <string name="island_bond_scale_title">Bonded island scale</string>
     <string name="feat_widget_stack_title">Chồng tiện ích</string>
     <string name="feat_widget_stack_desc">Xếp chồng các tiện ích và chuyển đổi qua lại giữa chúng</string>
     <string name="feat_activity_launcher_title">Trình khởi chạy hoạt động</string>
