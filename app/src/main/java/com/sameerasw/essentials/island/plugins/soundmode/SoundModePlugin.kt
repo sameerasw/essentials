@@ -181,7 +181,7 @@ class SoundModePlugin : BaseIslandPlugin() {
                 placement = CompactPlacement.Dynamic,
                 shake = IslandShake.Once.takeIf {
                     announcing && !zenActive && mode == AudioManager.RINGER_MODE_VIBRATE &&
-                    settings.getBoolean(SettingsRepository.KEY_ISLAND_SOUND_MODE_VIBRATE_SHAKE, true)
+                    settings.getBoolean(SettingsRepository.KEY_ISLAND_SOUND_MODE_VIBRATE_SHAKE, false)
                 },
                 compact = listOf(
                     CompactCell("sound_mode.icon") { IslandIcon(icon, size = 18.dp, tint = islandAccent()) },

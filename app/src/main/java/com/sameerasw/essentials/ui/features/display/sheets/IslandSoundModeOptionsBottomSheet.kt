@@ -72,7 +72,7 @@ fun IslandSoundModeOptionsBottomSheet(
                     settingKey = SettingsRepository.KEY_ISLAND_SOUND_MODE_VIBRATE_SHAKE,
                     iconRes = R.drawable.rounded_mobile_vibrate_24,
                     title = stringResource(R.string.island_sound_mode_vibrate_shake_title),
-                    defaultValue = true,
+                    defaultValue = false,
                 )
             }
         }

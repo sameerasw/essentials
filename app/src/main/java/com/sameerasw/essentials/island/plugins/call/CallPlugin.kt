@@ -162,7 +162,7 @@ class CallPlugin : BaseIslandPlugin() {
                 key = ITEM_KEY,
                 priority = IslandPriority.CALL,
                 placement = CompactPlacement.Dynamic,
-                shake = IslandShake.Ringing.takeIf { ringing && settings.getBoolean(SettingsRepository.KEY_ISLAND_CALL_RING_SHAKE, true) },
+                shake = IslandShake.Ringing.takeIf { ringing && settings.getBoolean(SettingsRepository.KEY_ISLAND_CALL_RING_SHAKE, false) },
                 compact = listOf(
                     CompactCell("call.avatar") { IslandBitmap(badge, 22.dp, circle = appIcon == null, fallbackRes = R.drawable.rounded_call_24) },
                     if (ringing) {

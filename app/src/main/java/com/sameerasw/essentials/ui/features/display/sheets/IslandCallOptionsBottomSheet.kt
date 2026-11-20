@@ -107,7 +107,7 @@ fun IslandCallOptionsBottomSheet(onDismissRequest: () -> Unit) {
                     settingKey = SettingsRepository.KEY_ISLAND_CALL_RING_SHAKE,
                     iconRes = R.drawable.rounded_mobile_vibrate_24,
                     title = stringResource(R.string.island_call_ring_shake_title),
-                    defaultValue = true,
+                    defaultValue = false,
                 )
             }
         }

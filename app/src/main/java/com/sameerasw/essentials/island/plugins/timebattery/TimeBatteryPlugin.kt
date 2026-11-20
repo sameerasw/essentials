@@ -114,7 +114,7 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
                     val previousSeverity = severity()
                     readBattery(intent)
                     if ((charging || shielded) && !wasPlugged && level >= 0) {
-                        if (settings.getBoolean(SettingsRepository.KEY_ISLAND_BATTERY_CHARGING_ANIM, true)) {
+                        if (settings.getBoolean(SettingsRepository.KEY_ISLAND_BATTERY_CHARGING_ANIM, false)) {
                             playEffect(OutlineEffect(chargingOutlineColor(settings), OutlineEffect.Style.Trace, shadow = true))
                         }
                         render()
@@ -124,7 +124,7 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
                     val plugged = charging || shielded
                     val severity = severity()
                     if (!plugged && level >= 0 && severity > previousSeverity) {
-                        if (severity == 2 && settings.getBoolean(SettingsRepository.KEY_ISLAND_BATTERY_CRITICAL_ANIM, true)) {
+                        if (severity == 2 && settings.getBoolean(SettingsRepository.KEY_ISLAND_BATTERY_CRITICAL_ANIM, false)) {
                             playEffect(OutlineEffect(criticalOutlineColor(settings), OutlineEffect.Style.Pulse, shadow = true))
                         }
                         render()
