@@ -72,7 +72,10 @@ object FreezeManager {
     /**
      * Freeze all selected apps from settings that have auto-freeze ENABLED.
      */
-    fun freezeAll(context: Context) {
+    fun freezeAll(
+        context: Context,
+        packageFilter: Set<String>? = null,
+    ) {
         val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
         val json = prefs.getString("freeze_selected_apps", null)
         val excludedJson = prefs.getString("freeze_auto_excluded_apps", null)
@@ -94,7 +97,7 @@ object FreezeManager {
                         emptySet()
                     }
 
-                apps.forEach { app ->
+                apps.filter { packageFilter == null || it.packageName in packageFilter }.forEach { app ->
                     // Freezing happens if it's in the list AND not excluded
                     if (!excludedSet.contains(app.packageName)) {
                         if (!dontFreezeActive || !isAppActive(context, app.packageName)) {
@@ -206,7 +209,10 @@ object FreezeManager {
     /**
      * Freeze EVERY app in the selection list immediately.
      */
-    fun freezeAllManual(context: Context) {
+    fun freezeAllManual(
+        context: Context,
+        packageFilter: Set<String>? = null,
+    ) {
         val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
         val json = prefs.getString("freeze_selected_apps", null)
         if (json != null) {
@@ -218,7 +224,7 @@ object FreezeManager {
                             json,
                             Array<com.sameerasw.essentials.domain.model.AppSelection>::class.java,
                         ).toList()
-                apps.forEach { app ->
+                apps.filter { packageFilter == null || it.packageName in packageFilter }.forEach { app ->
                     freezeApp(context, app.packageName)
                 }
             } catch (e: Exception) {
@@ -230,7 +236,10 @@ object FreezeManager {
     /**
      * Unfreeze all picked apps from settings that have auto-freeze ENABLED.
      */
-    fun unfreezeAll(context: Context) {
+    fun unfreezeAll(
+        context: Context,
+        packageFilter: Set<String>? = null,
+    ) {
         val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
         val json = prefs.getString("freeze_selected_apps", null)
         val excludedJson = prefs.getString("freeze_auto_excluded_apps", null)
@@ -251,7 +260,7 @@ object FreezeManager {
                         emptySet()
                     }
 
-                apps.forEach { app ->
+                apps.filter { packageFilter == null || it.packageName in packageFilter }.forEach { app ->
                     if (!excludedSet.contains(app.packageName)) {
                         unfreezeApp(context, app.packageName)
                     }
@@ -265,7 +274,10 @@ object FreezeManager {
     /**
      * Unfreeze all picked apps in settings, ignoring the auto-freeze toggle.
      */
-    fun unfreezeAllManual(context: Context) {
+    fun unfreezeAllManual(
+        context: Context,
+        packageFilter: Set<String>? = null,
+    ) {
         val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
         val json = prefs.getString("freeze_selected_apps", null)
         if (json != null) {
@@ -277,7 +289,7 @@ object FreezeManager {
                             json,
                             Array<com.sameerasw.essentials.domain.model.AppSelection>::class.java,
                         ).toList()
-                apps.forEach { app ->
+                apps.filter { packageFilter == null || it.packageName in packageFilter }.forEach { app ->
                     unfreezeApp(context, app.packageName)
                 }
             } catch (e: Exception) {

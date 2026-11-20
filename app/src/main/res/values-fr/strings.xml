@@ -1779,6 +1779,7 @@ Les effets de la LED HiLight peuvent être aussi utilisés comme une action dans
     <string name="island_battery_idle_color_title">En veille</string>
     <string name="battery_show_percentage_title">Montrer le pourcentage</string>
     <string name="island_battery_percentage_conditional_title">% o seulement pour les conditions en dessous</string>
+    <string name="island_battery_status_icon_title">Show status icon</string>
     <string name="island_battery_icon_conditional_title">Afficher l\'icône pour les conditions d\'en dessous </string>
     <string name="island_battery_style_title">Style de la batterie</string>
     <string name="island_battery_only_low_title">Montrer uniquement quand la batterie est faible</string>
@@ -1930,4 +1931,10 @@ Les effets de la LED HiLight peuvent être aussi utilisés comme une action dans
     <string name="diy_import_needs_setup">Personal details like locations, devices, networks, calendars or tags aren\'t shared. It will be imported disabled, set them up first.</string>
     <string name="diy_import_risky">This automation changes system settings. Only import it if you trust the source.</string>
     <string name="diy_import_error_conflict">You already have this kind of shortcut or all its slots are used</string>
+    <string name="diy_action_dark_theme_on">Turn On Dark Theme</string>
+    <string name="diy_action_dark_theme_off">Turn Off Dark Theme</string>
+    <string name="diy_action_dark_theme_toggle">Toggle Dark Theme</string>
+    <string name="diy_action_show_taps_on">Turn On Show Taps</string>
+    <string name="diy_action_show_taps_off">Turn Off Show Taps</string>
+    <string name="diy_action_show_taps_toggle">Toggle Show Taps</string>
 </resources>

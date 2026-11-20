@@ -207,7 +207,7 @@ class AppVolumeOverlayHandler(
     private fun show(panel: Rect) {
         val current = params ?: return
         val view = button ?: return
-        val x = (panel.centerX() - dp(WINDOW_WIDTH_DP) / 2).coerceAtLeast(0)
+        val x = (panel.right - dp(WINDOW_WIDTH_DP)).coerceAtLeast(0)
         val y = panel.bottom + dp(PANEL_GAP_DP)
         val flags = current.flags and WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE.inv()
         if (current.x != x || current.y != y || current.flags != flags) {
@@ -311,7 +311,7 @@ class AppVolumeOverlayHandler(
         private val icons = LinkedHashMap<String, ImageView>()
 
         init {
-            circle.layoutParams = LayoutParams(dp(BUTTON_SIZE_DP), dp(BUTTON_SIZE_DP), Gravity.TOP or Gravity.CENTER_HORIZONTAL)
+            circle.layoutParams = LayoutParams(dp(BUTTON_SIZE_DP), dp(BUTTON_SIZE_DP), Gravity.TOP or Gravity.END)
             circle.background =
                 GradientDrawable().apply {
                     shape = GradientDrawable.OVAL

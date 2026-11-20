@@ -1961,6 +1961,7 @@
     <string name="island_provider_pair_failed">Couldn\'t connect to the app</string>
     <string name="island_provider_pair_refused">This app doesn\'t trust this version of Essentials</string>
     <string name="app_airsync">AirSync</string>
+    <string name="app_minus">Minus</string>
     <string name="app_zenzero">ZenZero</string>
     <string name="app_canvas">Canvas</string>
     <string name="app_tasks">Tasks</string>
@@ -3261,6 +3262,9 @@
     <string name="island_keep_on_landscape_title">Keep on landscape</string>
     <string name="island_landscape_top_spacing_title">Landscape top spacing</string>
     <string name="island_bond_edge_title">Bond with notch when inactive</string>
+    <string name="island_bond_scale_title">Bonded island scale</string>
+    <string name="island_always_bond_title">Always bond with notch</string>
+    <string name="island_bond_keep_gap_title">Keep camera gap</string>
     <string name="island_section_hiding">Hiding</string>
     <string name="island_section_statusbar">Statusbar</string>
     <string name="island_hide_in_fullscreen_title">Hide in full screen</string>
@@ -3334,6 +3338,7 @@
     <string name="island_gesture_visuals_hint">Turn on Time &amp; battery to see volume, brightness and sound mode changes on the island.</string>
     <string name="island_battery_percentage_title">Show percentage</string>
     <string name="island_battery_percentage_conditional_title">% only for below conditions</string>
+    <string name="island_battery_status_icon_title">Show status icon</string>
     <string name="island_battery_icon_conditional_title">Icon only for below conditions</string>
     <string name="island_tap_action_desc">Choose what tap and long press do</string>
     <string name="island_tap_action_open">Open</string>
@@ -3408,6 +3413,10 @@
     <string name="island_call_show_peek">Peek</string>
     <string name="island_call_show_compact">Compact</string>
     <string name="island_call_sticky_title">Do not auto collapse</string>
+    <string name="island_call_ring_shake_title">Shake while ringing</string>
+    <string name="island_sound_mode_vibrate_shake_title">Shake when switching to vibrate</string>
+    <string name="island_battery_charging_anim_title">Animate outline when charging</string>
+    <string name="island_battery_critical_anim_title">Pulse outline at critical battery</string>
     <string name="duo_hide_when_locked_title">Hide when locked</string>
     <string name="island_brief_two_line_header_title">2 line header</string>
     <string name="island_preview_ring_title">Show alignment hint</string>
@@ -4095,4 +4104,10 @@
     <string name="diy_import_needs_setup">Personal details like locations, devices, networks, calendars or tags aren\'t shared. It will be imported disabled, set them up first.</string>
     <string name="diy_import_risky">This automation changes system settings. Only import it if you trust the source.</string>
     <string name="diy_import_error_conflict">You already have this kind of shortcut or all its slots are used</string>
+    <string name="diy_action_dark_theme_on">Turn On Dark Theme</string>
+    <string name="diy_action_dark_theme_off">Turn Off Dark Theme</string>
+    <string name="diy_action_dark_theme_toggle">Toggle Dark Theme</string>
+    <string name="diy_action_show_taps_on">Turn On Show Taps</string>
+    <string name="diy_action_show_taps_off">Turn Off Show Taps</string>
+    <string name="diy_action_show_taps_toggle">Toggle Show Taps</string>
 </resources>

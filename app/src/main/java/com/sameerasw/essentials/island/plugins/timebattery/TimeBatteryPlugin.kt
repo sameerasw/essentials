@@ -31,6 +31,7 @@ import com.sameerasw.essentials.island.model.InteractionOverrides
 import com.sameerasw.essentials.island.model.IslandItem
 import com.sameerasw.essentials.island.model.IslandPriority
 import com.sameerasw.essentials.island.model.LineContent
+import com.sameerasw.essentials.island.model.OutlineEffect
 import com.sameerasw.essentials.island.model.PluginRequest
 import com.sameerasw.essentials.island.plugins.BaseIslandPlugin
 import com.sameerasw.essentials.island.ui.components.BatteryGlyph
@@ -59,6 +60,7 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
         SettingsRepository.KEY_ISLAND_BATTERY_STYLE,
         SettingsRepository.KEY_ISLAND_BATTERY_PERCENTAGE,
         SettingsRepository.KEY_ISLAND_BATTERY_PERCENTAGE_CONDITIONAL,
+        SettingsRepository.KEY_ISLAND_BATTERY_STATUS_ICON,
         SettingsRepository.KEY_ISLAND_BATTERY_ONLY_LOW,
         SettingsRepository.KEY_ISLAND_BATTERY_ICON_CONDITIONAL,
         SettingsRepository.KEY_ISLAND_BATTERY_PEEK_ALERTS,
@@ -89,6 +91,11 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
         peekReason = null
         render()
     }
+    private var effect: OutlineEffect? = null
+    private val endEffect = Runnable {
+        effect = null
+        render()
+    }
 
     private enum class PeekReason { Charging, Saver, Low, Critical }
     private val clockTick = object : Runnable {
@@ -107,6 +114,9 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
                     val previousSeverity = severity()
                     readBattery(intent)
                     if ((charging || shielded) && !wasPlugged && level >= 0) {
+                        if (settings.getBoolean(SettingsRepository.KEY_ISLAND_BATTERY_CHARGING_ANIM, false)) {
+                            playEffect(OutlineEffect(chargingOutlineColor(settings), OutlineEffect.Style.Trace, shadow = true))
+                        }
                         render()
                         peek(PeekReason.Charging)
                         return
@@ -114,6 +124,9 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
                     val plugged = charging || shielded
                     val severity = severity()
                     if (!plugged && level >= 0 && severity > previousSeverity) {
+                        if (severity == 2 && settings.getBoolean(SettingsRepository.KEY_ISLAND_BATTERY_CRITICAL_ANIM, false)) {
+                            playEffect(OutlineEffect(criticalOutlineColor(settings), OutlineEffect.Style.Pulse, shadow = true))
+                        }
                         render()
                         peek(if (severity == 2) PeekReason.Critical else PeekReason.Low)
                         return
@@ -162,6 +175,8 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
 
     override fun onStop() {
         ctx?.mainHandler?.removeCallbacks(endPeek)
+        ctx?.mainHandler?.removeCallbacks(endEffect)
+        effect = null
         ctx?.mainHandler?.removeCallbacks(clockTick)
         if (registered) {
             try {
@@ -214,6 +229,19 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
         else -> 0
     }
 
+    private fun playEffect(next: OutlineEffect) {
+        val handler = ctx?.mainHandler ?: return
+        effect = next
+        handler.removeCallbacks(endEffect)
+        val peeks = settings.isIslandShowBatteryEnabled() && settings.isIslandBatteryPeekAlertsEnabled()
+        val duration = if (peeks) {
+            settings.getIslandPeekDurationMs()
+        } else {
+            EFFECT_MIN_MS + settings.getIslandPulseShadowDurationMs().coerceIn(300f, 4000f).toLong()
+        }
+        handler.postDelayed(endEffect, duration)
+    }
+
     private fun peek(reason: PeekReason) {
         val c = ctx ?: return
         if (!settings.isIslandShowBatteryEnabled() || !settings.isIslandBatteryPeekAlertsEnabled()) return
@@ -252,6 +280,7 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
         val isLimited = shielded
         val stateColor = stateColor()
         val displayColor = stateColor ?: idleColor()
+        val statusIcon = settings.isIslandBatteryStatusIconEnabled()
         val iconStyle = settings.getIslandBatteryStyle() == SettingsRepository.ISLAND_BATTERY_STYLE_ICON
         val showLevel = settings.isIslandBatteryPercentageEnabled() &&
             (!settings.isIslandBatteryPercentageConditional() || stateColor != null)
@@ -295,12 +324,13 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
             priorityGroup = "battery",
             placement = CompactPlacement.Pinned,
             outlineAccent = displayColor,
+            outlineEffect = effect,
             companionOnly = settings.isIslandBatteryIconConditional() && stateColor == null && System.currentTimeMillis() >= peekUntil,
             compact = listOf(
                 CompactCell("battery") {
                     when {
-                        iconStyle -> BatteryGlyph(batteryLevel, displayColor ?: islandAccent(), showLevel = showLevel, charging = isCharging, powerSave = isSaving, limited = isLimited)
-                        else -> BatteryRing(batteryLevel, displayColor ?: islandAccent(), showLevel = showLevel, charging = isCharging, powerSave = isSaving, limited = isLimited)
+                        iconStyle -> BatteryGlyph(batteryLevel, displayColor ?: islandAccent(), showLevel = showLevel, charging = isCharging && statusIcon, powerSave = isSaving && statusIcon, limited = isLimited && statusIcon)
+                        else -> BatteryRing(batteryLevel, displayColor ?: islandAccent(), showLevel = showLevel, charging = isCharging && statusIcon, powerSave = isSaving && statusIcon, limited = isLimited && statusIcon)
                     }
                 },
             ),
@@ -344,5 +374,6 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
 
     private companion object {
         const val BATTERY_KEY = "battery"
+        const val EFFECT_MIN_MS = 3400L
     }
 }

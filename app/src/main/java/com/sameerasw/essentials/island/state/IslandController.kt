@@ -392,7 +392,7 @@ class IslandController(
                 )
             },
             anchor,
-            maxCells = maxCells,
+            maxCells = if (hub != null) (maxCells - 1).coerceAtLeast(1) else maxCells,
             leftExtra = hubCells,
             balance = balanceCompact,
             persistentOrder = persistentOrder,
