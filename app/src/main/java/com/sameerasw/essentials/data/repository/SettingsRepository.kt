@@ -672,6 +672,7 @@ class SettingsRepository(
         const val KEY_ISLAND_LIKE_WHILE_PLAYING = "island_like_while_playing"
         const val KEY_ISLAND_SLIDE_INVERT_DIRECTION = "island_slide_invert_direction"
         const val KEY_ISLAND_BATTERY_PERCENTAGE_CONDITIONAL = "island_battery_percentage_conditional"
+        const val KEY_ISLAND_BATTERY_STATUS_ICON = "island_battery_status_icon"
         const val KEY_ISLAND_BATTERY_ICON_CONDITIONAL = "island_battery_icon_conditional"
         const val KEY_ISLAND_BATTERY_ONLY_LOW = "island_battery_only_low"
         const val KEY_ISLAND_BATTERY_PEEK_ALERTS = "island_battery_peek_alerts"
@@ -689,6 +690,9 @@ class SettingsRepository(
         const val KEY_ISLAND_DISABLE_INTERACTIONS_IN_FULLSCREEN = "island_disable_interactions_in_fullscreen"
         const val KEY_ISLAND_LANDSCAPE_TOP_SPACING = "island_landscape_top_spacing"
         const val KEY_ISLAND_BOND_EDGE = "island_bond_edge"
+        const val KEY_ISLAND_BOND_SCALE = "island_bond_scale"
+        const val KEY_ISLAND_ALWAYS_BOND = "island_always_bond"
+        const val KEY_ISLAND_BOND_KEEP_GAP = "island_bond_keep_gap"
         const val KEY_ISLAND_BALANCE_COMPACT = "island_balance_compact"
         const val KEY_ISLAND_PERSISTENT_ORDER = "island_persistent_order"
         const val KEY_ISLAND_NEURAL_EXPRESSIVE = "island_neural_expressive"
@@ -722,6 +726,10 @@ class SettingsRepository(
         const val KEY_ISLAND_SHOW_CALLS = "island_show_calls"
         const val KEY_ISLAND_CALL_SHOW_MODE = "island_call_show_mode"
         const val KEY_ISLAND_CALL_STICKY = "island_call_sticky"
+        const val KEY_ISLAND_CALL_RING_SHAKE = "island_call_ring_shake"
+        const val KEY_ISLAND_SOUND_MODE_VIBRATE_SHAKE = "island_sound_mode_vibrate_shake"
+        const val KEY_ISLAND_BATTERY_CHARGING_ANIM = "island_battery_charging_anim"
+        const val KEY_ISLAND_BATTERY_CRITICAL_ANIM = "island_battery_critical_anim"
         const val ISLAND_CALL_SHOW_EXPANDED = "expanded"
         const val ISLAND_CALL_SHOW_PEEK = "peek"
         const val ISLAND_CALL_SHOW_COMPACT = "compact"
@@ -4377,6 +4385,8 @@ class SettingsRepository(
 
     fun isIslandBatteryIconConditional(): Boolean = getBoolean(KEY_ISLAND_BATTERY_ICON_CONDITIONAL, false)
     fun setIslandBatteryIconConditional(enabled: Boolean) = putBoolean(KEY_ISLAND_BATTERY_ICON_CONDITIONAL, enabled)
+    fun isIslandBatteryStatusIconEnabled(): Boolean = getBoolean(KEY_ISLAND_BATTERY_STATUS_ICON, false)
+    fun setIslandBatteryStatusIconEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_BATTERY_STATUS_ICON, enabled)
     fun isIslandBatteryPercentageConditional(): Boolean = getBoolean(KEY_ISLAND_BATTERY_PERCENTAGE_CONDITIONAL, false)
 
     fun isIslandBatteryOnlyLowEnabled(): Boolean = getBoolean(KEY_ISLAND_BATTERY_ONLY_LOW, false)
@@ -4564,6 +4574,18 @@ class SettingsRepository(
     fun isIslandBondEdgeEnabled(): Boolean = getDisplayBoolean(KEY_ISLAND_BOND_EDGE, false)
 
     fun setIslandBondEdgeEnabled(enabled: Boolean) = putDisplayBoolean(KEY_ISLAND_BOND_EDGE, enabled)
+
+    fun isIslandAlwaysBondEnabled(): Boolean = getDisplayBoolean(KEY_ISLAND_ALWAYS_BOND, false)
+
+    fun setIslandAlwaysBondEnabled(enabled: Boolean) = putDisplayBoolean(KEY_ISLAND_ALWAYS_BOND, enabled)
+
+    fun isIslandBondKeepGapEnabled(): Boolean = getDisplayBoolean(KEY_ISLAND_BOND_KEEP_GAP, false)
+
+    fun setIslandBondKeepGapEnabled(enabled: Boolean) = putDisplayBoolean(KEY_ISLAND_BOND_KEEP_GAP, enabled)
+
+    fun getIslandBondScale(): Float = getDisplayFloat(KEY_ISLAND_BOND_SCALE, 0.7f).coerceIn(0.1f, 3f)
+
+    fun setIslandBondScale(value: Float) = putDisplayFloat(KEY_ISLAND_BOND_SCALE, value)
 
     fun isIslandBalanceCompactEnabled(): Boolean = getBoolean(KEY_ISLAND_BALANCE_COMPACT, true)
 

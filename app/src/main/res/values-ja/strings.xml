@@ -1915,6 +1915,7 @@ Wi-Fi、Bluetooth、モバイルデータなどの個々のアイコンを非表
     <string name="island_battery_style_title">バッテリースタイル</string>
     <string name="island_battery_percentage_title">パーセントを表示</string>
     <string name="island_battery_percentage_conditional_title">以下の条件のみ</string>
+    <string name="island_battery_status_icon_title">Show status icon</string>
     <string name="island_battery_idle_color_title">アイドル時の色</string>
     <string name="island_launcher_only_title">ランチャーにいるときのみ表示</string>
     <string name="island_show_on_update_title">Periodically show on updates</string>
@@ -1934,6 +1935,9 @@ Wi-Fi、Bluetooth、モバイルデータなどの個々のアイコンを非表
     <string name="island_keep_on_landscape_title">横向きでも表示</string>
     <string name="island_landscape_top_spacing_title">横向き時の上部のスペース</string>
     <string name="island_bond_edge_title">非アクティブ時にノッチでボンディング</string>
+    <string name="island_bond_scale_title">Bonded island scale</string>
+    <string name="island_always_bond_title">Always bond with notch</string>
+    <string name="island_bond_keep_gap_title">Keep camera gap</string>
     <string name="island_max_items_title">表示する最大アイテム数</string>
     <string name="island_show_signal_title">モバイルデータの電波強度を表示</string>
     <string name="island_signal_wifi_title">Wi-Fiの電波強度を表示</string>
@@ -2775,4 +2779,10 @@ Android がバッテリーセーバーモードを有効にすると、これら
     <string name="diy_import_needs_setup">Personal details like locations, devices, networks, calendars or tags aren\'t shared. It will be imported disabled, set them up first.</string>
     <string name="diy_import_risky">This automation changes system settings. Only import it if you trust the source.</string>
     <string name="diy_import_error_conflict">You already have this kind of shortcut or all its slots are used</string>
+    <string name="diy_action_dark_theme_on">Turn On Dark Theme</string>
+    <string name="diy_action_dark_theme_off">Turn Off Dark Theme</string>
+    <string name="diy_action_dark_theme_toggle">Toggle Dark Theme</string>
+    <string name="diy_action_show_taps_on">Turn On Show Taps</string>
+    <string name="diy_action_show_taps_off">Turn Off Show Taps</string>
+    <string name="diy_action_show_taps_toggle">Toggle Show Taps</string>
 </resources>

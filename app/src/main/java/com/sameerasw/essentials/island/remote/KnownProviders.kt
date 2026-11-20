@@ -48,5 +48,11 @@ object KnownProviders {
                 iconRes = R.drawable.rounded_laptop_mac_24,
                 installUrl = "https://play.google.com/store/apps/details?id=${AirSyncLink.PACKAGE}",
             ),
+            KnownProvider(
+                packageName = "com.serranoie.app.minus",
+                nameRes = R.string.app_minus,
+                iconRes = R.drawable.ic_minus,
+                installUrl = "https://play.google.com/store/apps/details?id=com.serranoie.app.minus",
+            ),
         )
 }

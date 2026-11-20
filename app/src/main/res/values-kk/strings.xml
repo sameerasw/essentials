@@ -1222,26 +1222,6 @@
     <string name="btn_wallpaper_desktop">Жұмыс үстелі</string>
     <string name="btn_wallpaper_both">Екеуі де</string>
     <string name="btn_wallpaper_mobile">Ұялы</string>
-    <string name="welcome_title">Essentials қолданбасына қош келдіңіз</string>
-    <string name="welcome_subtitle">Android жанкүйерлеріне арналған құралдар жинағы</string>
-    <string name="welcome_developer_attribution">sameerasw.com жасаған</string>
-    <string name="action_lets_begin">Бастайық</string>
-    <string name="acknowledgement_title">Растау</string>
-    <string name="acknowledgement_desc">Бұл қолданба құрылғыңыздың жүйесімен терең әрекеттесе алатын утилиталар жиынтығы болып табылады. Кейбір мүмкіндіктер күтпеген нәтижелерге әкелуі мүмкін.
-
-Қолданбаға пайдаланатын таңдалған мүмкіндіктер үшін қажетті рұқсаттарды ғана беру керек, бұл қолданбаны ең жоғары тұрақтылықты және толық басқаруды қамтамасыз етеді.
-
-Сонымен қатар, қолданба сіздің жеке деректеріңізді қадағаламайды немесе сақтамайды, маған бұл қажет емес... Өзіңізді күтіңіз. Қосымша ақпарат алу үшін бастапқы кодқа жүгінуге болады.
-
-Бұл қолданба толығымен ашық бастапқы код және әрқашан тегін болады. Оны белгісіз көздерден сатып алмаңыз немесе орнатпаңыз.</string>
-    <string name="acknowledgement_warning">ЕСКЕРТУ: Тәуекелді өзіңізге байланысты пайдаланыңыз. Әзірлеуші ​​жүйенің тұрақсыздығына, деректердің жоғалуына және қолданбаны пайдалану кезіндегі басқа қателерге жауапты емес. Жалғастыру арқылы сіз осы тәуекелдерге келісесіз.</string>
-    <string name="acknowledgement_footer">Сіз тіпті оны оқымағаныңызды білемін, бірақ сізге көмек керек болса, әзірлеушіге және қауымдастыққа хабарласудан тартынбаңыз.</string>
-    <string name="action_i_understand">Мен түсінемін</string>
-    <string name="feature_intro_desc">Мүмкіндіктің немесе жылдам баптау тақтасының не істейтінін және қандай рұқсаттар қажет екенін білу үшін оны басып тұрып, «Бұл не?» тармағын таңдаңыз.</string>
-    <string name="feature_intro_footer">Кез келген уақытта қате туралы хабарлауға немесе қолданба параметрлерінен пайдалы оқулықтарды табуға болады.</string>
-    <string name="action_let_me_in">Жүр, маған кіруге рұқсат ет</string>
-    <string name="preferences_title">Қасиеттер</string>
-    <string name="preferences_desc">Бастау үшін кейбір негізгі параметрлерді таңдаңыз.</string>
     <string name="label_app_settings">Қолданба параметрлері</string>
     <string name="label_app_language">Тіл</string>
     <string name="label_haptic_feedback">Тактильді кері байланыс</string>
@@ -1252,9 +1232,7 @@
     <string name="label_updates">Жаңартулар</string>
     <string name="label_auto_check_updates">Жаңартуларды автоматты түрде тексеріңіз</string>
     <string name="desc_auto_check_updates">Қолданбаны іске қосқан кезде жаңартуларды тексеріңіз</string>
-    <string name="action_all_set">Барлығын белгілеңіз</string>
     <string name="action_check_whats_new">Жаңалықтарды тексеру</string>
-    <string name="welcome_back_title">Essentials қолданбасына қош келдіңіз</string>
     <string name="action_see_whats_new">Жаңалықтарды көру</string>
     <string name="label_mode_default">Әдепкі</string>
     <string name="label_mode_glove">«Қолғаппен»</string>
@@ -2616,10 +2594,6 @@ c ❤\uFE0F ішінен \uD83C\uDDF1\uD83C\uDDF0</string>
     <string name="color_purple">Күлгін</string>
     <string name="color_pink">Қызғылт</string>
     <string name="color_teal">Қызғылт</string>
-    <string name="whats_new_specs_title">Құрылғының сипаттамалары өшірілді</string>
-    <string name="whats_new_specs_desc">Құрылғы түсініктерін таза, жылдам және толық сенімді сақтау үшін GSMArena-мен жұмыс істейтін дәл емес сипаттамалар жойылды.</string>
-    <string name="whats_new_apps_title">Қолданба жаңартулары тасымалданды</string>
-    <string name="whats_new_apps_desc">Қолданбалар қойындысы енді сіздің Android мүмкіндігіңізге толығымен біріктірілген, бұл барлық қолданба жаңартуларын бір біріктірілген хабта басқаруды жеңілдетеді.</string>
     <string name="favorites_widget_name">Таңдаулы мүмкіндіктер</string>
     <string name="favorites_widget_description">Таңдаулы мүмкіндіктерді бір қарағанда көріңіз және іске қосыңыз.</string>
     <string name="favorites_widget_empty_state">Таңдаулы мүмкіндіктер әлі бекітілмеген. Бекіту үшін функцияны ұзақ басып тұрыңыз!!</string>
@@ -3563,14 +3537,9 @@ c ❤\uFE0F ішінен \uD83C\uDDF1\uD83C\uDDF0</string>
     <string name="action_expand_notifications">Хабарландыруларды кеңейту</string>
     <string name="action_expand_settings">Параметрлерді кеңейтіңіз</string>
     <string name="action_collapse_status_bar">Күй жолағын жию</string>
-    <string name="whats_new_watchface_title">Essentials сағат циферблаты</string>
-    <string name="whats_new_watchface_desc">Essentials сағат бетін Wear OS сағатына тікелей Google Play дүкенінен орнатыңыз.</string>
-    <string name="whats_new_watchface_summary">Wear OS нұсқасы Google Play дүкенінде қолжетімді</string>
     <string name="watchface_promo_step3_title">Сағатқа орнату</string>
     <string name="watchface_promo_step3_desc">Орнату үшін Play Store тізімін тікелей сағатыңыздан ашыңыз</string>
     <string name="watchface_promo_step3_action">Watch қолданбасында ашыңыз</string>
-    <string name="whats_new_previous_updates">Алдыңғы жаңартулардан</string>
-    <string name="whats_new_feature_tags_title">Жаңа: мүмкіндік тегтері және олар нені білдіреді</string>
     <string name="island_media_show_like_title">Жолды ұнату түймешігін көрсету</string>
     <string name="island_media_use_art_color_title">Альбом мұқабасының түсін бөлісу</string>
     <string name="island_media_player_style_title">Ойнатқыш стилі</string>
@@ -4017,26 +3986,24 @@ SIM карталарын ажырату немесе сізге ұнамайты
     <string name="diy_import_needs_setup">Орындар, құрылғылар, желілер, күнтізбелер және белгілер секілді жеке деректер бөлісілмейді. Автоматтандыру өшірулі күйде импортталады. Алдымен осы деректерді баптаңыз.</string>
     <string name="diy_import_risky">Бұл автоматтандыру жүйе баптауларын өзгертеді. Оны дереккөзге сенсеңіз ғана импорттаңыз.</string>
     <string name="diy_import_error_conflict">Осындай жарлық бар немесе оған арналған орындардың бәрі бос емес</string>
-    <string name="whats_new_overcast_title">Overcast енді Play Store дүкенінде</string>
-    <string name="whats_new_overcast_summary">Аралға арналған ауа райы қолданбасын Google Play дүкенінен жүктеп алыңыз</string>
-    <string name="whats_new_overcast_desc">Overcast аралда ауа райын көрсетеді. Оны Google Play дүкенінен орнатып, басқа қолданбалар сияқты жаңарта аласыз.</string>
-    <string name="whats_new_overcast_installed">Орнатылған, пайдалануға дайын</string>
-    <string name="whats_new_overcast_get">Google Play дүкенінен жүктеп алу</string>
-    <string name="whats_new_foldables_title">Бүктемелі құрылғыларға бейімделді</string>
-    <string name="whats_new_foldables_summary">Үлкен әрі кең экрандарға арналған орналасу</string>
-    <string name="whats_new_foldables_desc">Essentials енді бейімделетін орналасу үшін Navigation3 қолданады. Бүктемелі құрылғылар мен планшеттерде панельдер қатар орналасады. Телефон көлденең тұрғанда интерфейс кең экранға бейімделеді.</string>
-    <string name="whats_new_foldables_try">Өзгерісті көру үшін құрылғыны ашыңыз немесе телефонды бұрыңыз.</string>
-    <string name="whats_new_island_title">Арал жаңарды</string>
-    <string name="whats_new_island_summary">Жаңа көрініс және бірқалыпты анимациялар</string>
-    <string name="whats_new_island_desc">Аралдың кеңейтілген көрінісі енді жартылай мөлдір. Оның жұмсақ жарқылы хабарландырудың немесе ойнатылып жатқан музыканың түсіне бейімделеді.</string>
-    <string name="whats_new_island_gestures">Хабарландырулар мен ойнатқыштарды кезекпен көру үшін бүйірге сырғытыңыз. Жасыру бағытын «Төмен» деп орнатсаңыз, аралды төмен сырғытып жасырасыз. Ойнатқышты қосымша көпіршік немесе кең сопақша түрінде көрсетуге болады. Арал жиналғанда түстер бірқалыпты өзгереді.</string>
-    <string name="whats_new_island_refinements">Анимациялар, қимылдар және тұрақтылық жақсарды. Жеңілдеу режим қажет болса, аралдың мөлдірлігін өшіріңіз. Түсті жарқыл сақталады.</string>
-    <string name="whats_new_shake_summary">Көмекті бірден ашу үшін телефонды сілкіңіз</string>
-    <string name="whats_new_shake_desc">Essentials қолданбасында тұрған экранның көмегін ашу үшін телефонды сілкіңіз. Мүмкіндік экранында сол мүмкіндіктің нұсқаулығы, басқа жерде жалпы анықтама ашылады.</string>
-    <string name="whats_new_shake_try">Байқап көру үшін телефонды қазір сілкіңіз!</string>
     <string name="feat_aod_wallpaper_timeout_5s">5 сек</string>
     <string name="feat_aod_wallpaper_timeout_15s">15 сек</string>
     <string name="feat_aod_wallpaper_timeout_30s">30 сек</string>
     <string name="feat_aod_wallpaper_timeout_custom">Таңдамалы</string>
     <string name="feat_aod_wallpaper_custom_timeout_slider">Таңдамалы ұзақтық</string>
+    <string name="app_minus">Minus</string>
+    <string name="island_bond_scale_title">Камера ойығына жалғасқан арал өлшемі</string>
+    <string name="island_always_bond_title">Камера ойығымен үнемі біріктіру</string>
+    <string name="island_bond_keep_gap_title">Камера ойығының айналасындағы аралықты сақтау</string>
+    <string name="island_battery_status_icon_title">Күй белгішесін көрсету</string>
+    <string name="island_call_ring_shake_title">Қоңырау соғылғанда шайқау</string>
+    <string name="island_sound_mode_vibrate_shake_title">Діріл режиміне ауысқанда шайқау</string>
+    <string name="island_battery_charging_anim_title">Қуаттау кезінде жиекті жандандыру</string>
+    <string name="island_battery_critical_anim_title">Батарея заряды тым төмендегенде жиекті жыпылықтату</string>
+    <string name="diy_action_dark_theme_on">Қою тақырыпты қосу</string>
+    <string name="diy_action_dark_theme_off">Қою тақырыпты өшіру</string>
+    <string name="diy_action_dark_theme_toggle">Қою тақырыпты ауыстыру</string>
+    <string name="diy_action_show_taps_on">Түртулерді көрсетуді қосу</string>
+    <string name="diy_action_show_taps_off">Түртулерді көрсетуді өшіру</string>
+    <string name="diy_action_show_taps_toggle">Түртулерді көрсетуді ауыстыру</string>
 </resources>

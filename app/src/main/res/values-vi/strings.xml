@@ -1953,6 +1953,7 @@ Nút Tiếp tục sẽ bị vô hiệu hóa trong vài giây để bạn có th�
     <string name="duo_slide_mirror_direction_title">Hướng phản chiếu</string>
     <string name="island_calendar_priority_title">Ưu tiên khi ở gần</string>
     <string name="island_battery_percentage_conditional_title">Chỉ áp dụng trong các điều kiện dưới đây</string>
+    <string name="island_battery_status_icon_title">Show status icon</string>
     <string name="island_call_sticky_title">Không tự động thu gọn</string>
     <string name="island_call_show_mode_title">Cách xem</string>
     <string name="island_media_show_previous_title">Hiển thị nút bài hát trước</string>
@@ -2003,6 +2004,9 @@ Cần có quyền truy cập trợ năng để hiển thị lớp phủ và cầ
     <string name="essential_search_label">Tìm kiếm Essential</string>
     <string name="island_landscape_top_spacing_title">Khoảng cách phía trên ở chế độ ngang</string>
     <string name="island_bond_edge_title">Liên kết với tai thỏ khi không hoạt động</string>
+    <string name="island_bond_scale_title">Bonded island scale</string>
+    <string name="island_always_bond_title">Always bond with notch</string>
+    <string name="island_bond_keep_gap_title">Keep camera gap</string>
     <string name="feat_widget_stack_title">Chồng tiện ích</string>
     <string name="feat_widget_stack_desc">Xếp chồng các tiện ích và chuyển đổi qua lại giữa chúng</string>
     <string name="feat_activity_launcher_title">Trình khởi chạy hoạt động</string>
@@ -2418,4 +2422,10 @@ Tính năng này chỉ được dùng cho trình khởi chạy và không phải
     <string name="diy_import_needs_setup">Personal details like locations, devices, networks, calendars or tags aren\'t shared. It will be imported disabled, set them up first.</string>
     <string name="diy_import_risky">This automation changes system settings. Only import it if you trust the source.</string>
     <string name="diy_import_error_conflict">You already have this kind of shortcut or all its slots are used</string>
+    <string name="diy_action_dark_theme_on">Turn On Dark Theme</string>
+    <string name="diy_action_dark_theme_off">Turn Off Dark Theme</string>
+    <string name="diy_action_dark_theme_toggle">Toggle Dark Theme</string>
+    <string name="diy_action_show_taps_on">Turn On Show Taps</string>
+    <string name="diy_action_show_taps_off">Turn Off Show Taps</string>
+    <string name="diy_action_show_taps_toggle">Toggle Show Taps</string>
 </resources>

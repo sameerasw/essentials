@@ -1895,6 +1895,9 @@ Zugriff auf die Barrierefreiheit ist erforderlich, um die Überlagerung zu zeich
     <string name="island_keep_on_landscape_title">Im Querformat behalten</string>
     <string name="island_landscape_top_spacing_title">Oberer Abstand im Querformat</string>
     <string name="island_bond_edge_title">Mit Display-Aussparung verbinden, wenn inaktiv</string>
+    <string name="island_bond_scale_title">Bonded island scale</string>
+    <string name="island_always_bond_title">Always bond with notch</string>
+    <string name="island_bond_keep_gap_title">Keep camera gap</string>
     <string name="island_max_items_title">Maximale Anzahl anzuzeigender Elemente</string>
     <string name="island_section_notifications">Benachrichtigungen</string>
     <string name="island_always_gestures_title">Immer verfügbare Gesten</string>
@@ -1937,6 +1940,7 @@ Eingeschränkt – Niedrigste Priorität (Android 12+); etwa einmal täglich geb
     <string name="island_battery_icon_conditional_title">Symbol nur unter folgenden Bedingungen</string>
     <string name="battery_show_percentage_title">Prozent anzeigen</string>
     <string name="island_battery_percentage_conditional_title">% nur unter folgenden Bedingungen</string>
+    <string name="island_battery_status_icon_title">Show status icon</string>
     <string name="island_battery_idle_color_title">Leerlauffarbe</string>
     <string name="island_time_show_seconds_title">Sekunden anzeigen</string>
     <string name="island_launcher_only_title">Nur im Launcher anzeigen</string>
@@ -2197,4 +2201,10 @@ Die Stufen können nur von der normalen Lautstärke abwärts, niemals darüber h
     <string name="diy_import_needs_setup">Personal details like locations, devices, networks, calendars or tags aren\'t shared. It will be imported disabled, set them up first.</string>
     <string name="diy_import_risky">This automation changes system settings. Only import it if you trust the source.</string>
     <string name="diy_import_error_conflict">You already have this kind of shortcut or all its slots are used</string>
+    <string name="diy_action_dark_theme_on">Turn On Dark Theme</string>
+    <string name="diy_action_dark_theme_off">Turn Off Dark Theme</string>
+    <string name="diy_action_dark_theme_toggle">Toggle Dark Theme</string>
+    <string name="diy_action_show_taps_on">Turn On Show Taps</string>
+    <string name="diy_action_show_taps_off">Turn Off Show Taps</string>
+    <string name="diy_action_show_taps_toggle">Toggle Show Taps</string>
 </resources>

@@ -49,6 +49,7 @@
         android:name="android.permission.INTERACT_ACROSS_USERS_FULL"
         tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="moe.shizuku.manager.permission.API_V23" />
+    <uses-permission android:name="com.hamondev.shevery.permission.PRIVILEGED_API" />
     <uses-permission android:name="moe.shizuku.privileged.api.permission.BIND_SHIZUKU_SERVICE" />
     <uses-permission
         android:name="android.permission.BLUETOOTH"
@@ -106,6 +107,7 @@
     <queries>
         <package android:name="com.sameerasw.overcast" />
         <package android:name="com.sameerasw.airsync" />
+        <package android:name="com.serranoie.app.minus" />
         <package android:name="eu.darken.porter" />
         <package android:name="com.google.android.apps.wear.companion" />
         <intent>

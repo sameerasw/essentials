@@ -48,6 +48,12 @@ object ActionRegistry {
 
         val displayActions =
             buildList {
+                add(Action.TurnOnDarkTheme)
+                add(Action.TurnOffDarkTheme)
+                add(Action.ToggleDarkTheme)
+                add(Action.TurnOnShowTaps)
+                add(Action.TurnOffShowTaps)
+                add(Action.ToggleShowTaps)
                 add(Action.TurnOnAutoBrightness)
                 add(Action.TurnOffAutoBrightness)
                 add(Action.ToggleAutoBrightness)

@@ -266,6 +266,17 @@ fun IslandBatteryOptions(
                     },
                 )
             }
+            if (!devices) {
+                IconToggleItem(
+                    iconRes = R.drawable.rounded_battery_charging_60_24,
+                    title = stringResource(R.string.island_battery_status_icon_title),
+                    isChecked = viewModel.isIslandBatteryStatusIcon.value,
+                    onCheckedChange = { checked ->
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        viewModel.setIslandBatteryStatusIcon(checked)
+                    },
+                )
+            }
         }
 
         BatteryColorOptions(viewModel, showIdleColor = true, showLevels = true)

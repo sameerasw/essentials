@@ -132,6 +132,18 @@ object IslandChips {
     )
 }
 
+data class OutlineEffect(val color: Color, val style: Style, val shadow: Boolean = false) {
+    enum class Style {
+        Trace,
+        Pulse,
+    }
+}
+
+enum class IslandShake {
+    Once,
+    Ringing,
+}
+
 class QueueInfo(
     val next: IslandItem,
     val onAdvance: () -> Unit,
@@ -148,6 +160,8 @@ class IslandItem(
     val expanded: ExpandedContent? = null,
     val accent: Color? = null,
     val outlineAccent: Color? = null,
+    val outlineEffect: OutlineEffect? = null,
+    val shake: IslandShake? = null,
     val dismissible: Boolean = false,
     val onDismiss: (() -> Unit)? = null,
     val onClearAll: (() -> Unit)? = null,
@@ -191,6 +205,8 @@ class IslandItem(
         expanded = expanded,
         accent = accent,
         outlineAccent = outlineAccent,
+        outlineEffect = outlineEffect,
+        shake = shake,
         dismissible = dismissible,
         onDismiss = onDismiss,
         onOpen = onOpen,
