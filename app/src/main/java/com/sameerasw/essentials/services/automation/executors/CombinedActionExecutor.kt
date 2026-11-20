@@ -844,7 +844,7 @@ object CombinedActionExecutor {
                         val interfaceClassName =
                             if (useActivityTask) "android.app.IActivityTaskManager" else "android.app.IActivityManager"
 
-                        val binder = SystemServiceHelper.getSystemService(serviceName)
+                        val binder = requireNotNull(SystemServiceHelper.getSystemService(serviceName)) { "$serviceName service unavailable" }
                         val stubClass = Class.forName(stubClassName)
                         val interfaceClass = Class.forName(interfaceClassName)
 

@@ -1,7 +1,6 @@
 [versions]
 aboutlibraries = "15.2.0"
 agp = "9.3.1"
-api = "13.1.5"
 autoupdater = "1.0.1"
 biometric = "1.2.0-alpha05"
 carApp = "1.7.0"
@@ -32,7 +31,7 @@ materialIconsExtended = "1.7.8"
 palette = "1.0.0"
 playServicesWearableVersion = "20.0.1"
 reorderable = "3.1.0"
-shizuku = "13.1.5"
+shevery = "14.6.4"
 appcompat = "1.7.1"
 hiddenapibypass = "6.1"
 foundationLayout = "1.13.0-alpha03"
@@ -76,7 +75,6 @@ androidx-glance-appwidget = { module = "androidx.glance:glance-appwidget", versi
 androidx-glance-material3 = { module = "androidx.glance:glance-material3", version.ref = "glanceMaterial3" }
 androidx-palette = { module = "androidx.palette:palette", version.ref = "palette" }
 androidx-wear-remote-interactions-v110alpha02 = { module = "androidx.wear:wear-remote-interactions", version.ref = "wearRemoteInteractionsVersion" }
-api-v1315 = { module = "dev.rikka.shizuku:api", version.ref = "api" }
 autoupdater = { module = "com.github.CSAbhiOnline:AutoUpdater", version.ref = "autoupdater" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilGif" }
 coil-gif = { module = "io.coil-kt:coil-gif", version.ref = "coilGif" }
@@ -103,8 +101,8 @@ kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutine
 lottie-compose = { module = "com.airbnb.android:lottie-compose", version.ref = "lottieCompose" }
 play-services-wearable-v1900 = { module = "com.google.android.gms:play-services-wearable", version.ref = "playServicesWearableVersion" }
 reorderable = { module = "sh.calvin.reorderable:reorderable", version.ref = "reorderable" }
-shizuku-api = { group = "dev.rikka.shizuku", name = "api", version.ref = "shizuku" }
-shizuku-provider = { group = "dev.rikka.shizuku", name = "provider", version.ref = "shizuku" }
+shevery-api = { group = "com.hamondev.shevery.api", name = "api", version.ref = "shevery" }
+shevery-provider = { group = "com.hamondev.shevery.api", name = "provider", version.ref = "shevery" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 hiddenapibypass = { group = "org.lsposed.hiddenapibypass", name = "hiddenapibypass", version.ref = "hiddenapibypass" }
 androidx-compose-foundation-layout = { group = "androidx.compose.foundation", name = "foundation-layout", version.ref = "foundationLayout" }
