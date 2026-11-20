@@ -691,6 +691,8 @@ class SettingsRepository(
         const val KEY_ISLAND_LANDSCAPE_TOP_SPACING = "island_landscape_top_spacing"
         const val KEY_ISLAND_BOND_EDGE = "island_bond_edge"
         const val KEY_ISLAND_BOND_SCALE = "island_bond_scale"
+        const val KEY_ISLAND_ALWAYS_BOND = "island_always_bond"
+        const val KEY_ISLAND_BOND_KEEP_GAP = "island_bond_keep_gap"
         const val KEY_ISLAND_BALANCE_COMPACT = "island_balance_compact"
         const val KEY_ISLAND_PERSISTENT_ORDER = "island_persistent_order"
         const val KEY_ISLAND_NEURAL_EXPRESSIVE = "island_neural_expressive"
@@ -4569,7 +4571,15 @@ class SettingsRepository(
 
     fun setIslandBondEdgeEnabled(enabled: Boolean) = putDisplayBoolean(KEY_ISLAND_BOND_EDGE, enabled)
 
-    fun getIslandBondScale(): Float = getDisplayFloat(KEY_ISLAND_BOND_SCALE, 0.7f).coerceIn(0.3f, 1.5f)
+    fun isIslandAlwaysBondEnabled(): Boolean = getDisplayBoolean(KEY_ISLAND_ALWAYS_BOND, false)
+
+    fun setIslandAlwaysBondEnabled(enabled: Boolean) = putDisplayBoolean(KEY_ISLAND_ALWAYS_BOND, enabled)
+
+    fun isIslandBondKeepGapEnabled(): Boolean = getDisplayBoolean(KEY_ISLAND_BOND_KEEP_GAP, false)
+
+    fun setIslandBondKeepGapEnabled(enabled: Boolean) = putDisplayBoolean(KEY_ISLAND_BOND_KEEP_GAP, enabled)
+
+    fun getIslandBondScale(): Float = getDisplayFloat(KEY_ISLAND_BOND_SCALE, 0.7f).coerceIn(0.1f, 3f)
 
     fun setIslandBondScale(value: Float) = putDisplayFloat(KEY_ISLAND_BOND_SCALE, value)
 

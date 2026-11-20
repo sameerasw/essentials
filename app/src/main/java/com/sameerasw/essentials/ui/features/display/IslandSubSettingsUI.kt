@@ -506,22 +506,50 @@ fun IslandPlacementSettingsUI(
                             },
                             modifier = Modifier.highlight(highlightSetting == "island_bond_edge"),
                         )
-
-                        ConfigSliderItem(
-                            title = stringResource(R.string.island_bond_scale_title),
-                            value = viewModel.islandBondScale.floatValue,
-                            onValueChange = {
-                                HapticUtil.performUIHaptic(view)
-                                viewModel.setIslandBondScale(it)
-                            },
-                            valueRange = 0.3f..1.5f,
-                            increment = 0.05f,
-                            iconRes = R.drawable.rounded_arrows_outward_24,
-                            valueFormatter = { "%.2fx".format(it) },
-                            allowDecimals = true,
-                            modifier = Modifier.highlight(highlightSetting == "island_bond_scale"),
-                        )
                     }
+                }
+
+                ConfigSliderItem(
+                    title = stringResource(R.string.island_bond_scale_title),
+                    value = viewModel.islandBondScale.floatValue,
+                    onValueChange = {
+                        HapticUtil.performUIHaptic(view)
+                        viewModel.setIslandBondScale(it)
+                    },
+                    valueRange = 0.1f..3f,
+                    increment = 0.05f,
+                    iconRes = R.drawable.rounded_arrows_outward_24,
+                    valueFormatter = { "%.2fx".format(it) },
+                    allowDecimals = true,
+                    modifier = Modifier.highlight(highlightSetting == "island_bond_scale"),
+                )
+
+                IconToggleItem(
+                    iconRes = R.drawable.rounded_vertical_align_top_24,
+                    title = stringResource(R.string.island_always_bond_title),
+                    isChecked = viewModel.isIslandAlwaysBond.value,
+                    onCheckedChange = { checked ->
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        viewModel.setIslandAlwaysBond(checked)
+                    },
+                    modifier = Modifier.highlight(highlightSetting == "island_always_bond"),
+                )
+
+                AnimatedVisibility(
+                    visible = viewModel.isIslandAlwaysBond.value,
+                    enter = expandVertically() + fadeIn(),
+                    exit = shrinkVertically() + fadeOut(),
+                ) {
+                    IconToggleItem(
+                        iconRes = R.drawable.rounded_arrows_outward_24,
+                        title = stringResource(R.string.island_bond_keep_gap_title),
+                        isChecked = viewModel.isIslandBondKeepGap.value,
+                        onCheckedChange = { checked ->
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            viewModel.setIslandBondKeepGap(checked)
+                        },
+                        modifier = Modifier.highlight(highlightSetting == "island_bond_keep_gap"),
+                    )
                 }
             }
         }

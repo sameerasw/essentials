@@ -246,6 +246,8 @@ class MainViewModel : ViewModel() {
     val isIslandDisableInteractionsInFullscreen = mutableStateOf(false)
     val isIslandBondEdge = mutableStateOf(false)
     val islandBondScale = mutableFloatStateOf(0.7f)
+    val isIslandAlwaysBond = mutableStateOf(false)
+    val isIslandBondKeepGap = mutableStateOf(false)
     val isIslandBalanceCompact = mutableStateOf(true)
     val isIslandPersistentOrder = mutableStateOf(false)
     val isIslandNeuralExpressive = mutableStateOf(false)
@@ -2590,6 +2592,8 @@ class MainViewModel : ViewModel() {
         isIslandDisableInteractionsInFullscreen.value = settingsRepository.isIslandDisableInteractionsInFullscreenEnabled()
         isIslandBondEdge.value = settingsRepository.isIslandBondEdgeEnabled()
         islandBondScale.floatValue = settingsRepository.getIslandBondScale()
+        isIslandAlwaysBond.value = settingsRepository.isIslandAlwaysBondEnabled()
+        isIslandBondKeepGap.value = settingsRepository.isIslandBondKeepGapEnabled()
         isIslandBalanceCompact.value = settingsRepository.isIslandBalanceCompactEnabled()
         isIslandPersistentOrder.value = settingsRepository.isIslandPersistentOrderEnabled()
         isIslandNeuralExpressive.value = settingsRepository.isIslandNeuralExpressiveEnabled()
@@ -5622,6 +5626,8 @@ class MainViewModel : ViewModel() {
         islandMaxItems.value = settingsRepository.getIslandMaxItems()
         isIslandBondEdge.value = settingsRepository.isIslandBondEdgeEnabled()
         islandBondScale.floatValue = settingsRepository.getIslandBondScale()
+        isIslandAlwaysBond.value = settingsRepository.isIslandAlwaysBondEnabled()
+        isIslandBondKeepGap.value = settingsRepository.isIslandBondKeepGapEnabled()
         isIslandStatusBarAwareWidth.value = settingsRepository.isIslandStatusBarAwareWidthEnabled()
         isIslandKeepOnLandscape.value = settingsRepository.isIslandKeepOnLandscapeEnabled()
     }
@@ -6169,6 +6175,16 @@ class MainViewModel : ViewModel() {
     fun setIslandStatusBarAwareWidth(enabled: Boolean) {
         isIslandStatusBarAwareWidth.value = enabled
         settingsRepository.setIslandStatusBarAwareWidthEnabled(enabled)
+    }
+
+    fun setIslandAlwaysBond(enabled: Boolean) {
+        isIslandAlwaysBond.value = enabled
+        settingsRepository.setIslandAlwaysBondEnabled(enabled)
+    }
+
+    fun setIslandBondKeepGap(enabled: Boolean) {
+        isIslandBondKeepGap.value = enabled
+        settingsRepository.setIslandBondKeepGapEnabled(enabled)
     }
 
     fun setIslandBondScale(value: Float) {

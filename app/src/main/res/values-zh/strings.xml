@@ -1823,6 +1823,8 @@
     <string name="island_hide_icons_title">动态隐藏状态栏图标</string>
     <string name="island_bond_edge_title">置顶并已刘海屏显示</string>
     <string name="island_bond_scale_title">Bonded island scale</string>
+    <string name="island_always_bond_title">Always bond with notch</string>
+    <string name="island_bond_keep_gap_title">Keep camera gap</string>
     <string name="island_call_options_title">電話</string>
     <string name="tile_lockdown_mode">鎖定</string>
     <string name="feat_screenshots_title">截图清理</string>

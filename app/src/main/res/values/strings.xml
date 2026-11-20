@@ -3263,6 +3263,8 @@
     <string name="island_landscape_top_spacing_title">Landscape top spacing</string>
     <string name="island_bond_edge_title">Bond with notch when inactive</string>
     <string name="island_bond_scale_title">Bonded island scale</string>
+    <string name="island_always_bond_title">Always bond with notch</string>
+    <string name="island_bond_keep_gap_title">Keep camera gap</string>
     <string name="island_section_hiding">Hiding</string>
     <string name="island_section_statusbar">Statusbar</string>
     <string name="island_hide_in_fullscreen_title">Hide in full screen</string>

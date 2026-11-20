@@ -1938,6 +1938,8 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="watch_esim_install_desc">En regiones insoportadas</string>
     <string name="island_bond_edge_title">Union con la Isla si esta inactuva</string>
     <string name="island_bond_scale_title">Bonded island scale</string>
+    <string name="island_always_bond_title">Always bond with notch</string>
+    <string name="island_bond_keep_gap_title">Keep camera gap</string>
     <string name="island_navigation_on_new_title">Nueva instrucción</string>
     <string name="feat_screenshots_title">Limpieza de capturas de pantalla</string>
     <string name="feat_screenshots_desc">Limpiar capturas de pantallas compartidas y viejas</string>

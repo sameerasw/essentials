@@ -2017,6 +2017,8 @@
     <string name="island_landscape_top_spacing_title">Расстояние от верха</string>
     <string name="island_bond_edge_title">Склеивание с выемкой в неактивном состоянии</string>
     <string name="island_bond_scale_title">Bonded island scale</string>
+    <string name="island_always_bond_title">Always bond with notch</string>
+    <string name="island_bond_keep_gap_title">Keep camera gap</string>
     <string name="island_hide_status_bar_title">Скрыть строку состояния</string>
     <string name="island_themed_text_title">Тематический цвет текста</string>
     <string name="island_section_icon_color">Цвет иконок</string>

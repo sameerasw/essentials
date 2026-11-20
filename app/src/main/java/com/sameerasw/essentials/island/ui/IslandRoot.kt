@@ -237,10 +237,14 @@ private fun IslandRootContent(
         targetSpec
     } else {
         targetSpec.copy(
-            cameraPresence = presence,
+            cameraPresence = if (targetSpec.bondRemoveGap) presence * (1f - bond) else presence,
             cameraDiameter = targetSpec.cameraDiameter * (1f + (targetSpec.bondScale - 1f) * bond),
             verticalGap = targetSpec.verticalGap + (3.5.dp - targetSpec.verticalGap) * bond,
-            cameraGap = targetSpec.cameraGap * (1f - 0.2f * bond),
+            cameraGap = when {
+                targetSpec.bondKeepGap -> targetSpec.cameraGap
+                targetSpec.bondRemoveGap -> targetSpec.cameraGap * (1f - bond)
+                else -> targetSpec.cameraGap * (1f - 0.2f * bond)
+            },
             contentGap = targetSpec.contentGap * (1f - 0.2f * bond),
         )
     }
@@ -1779,7 +1783,7 @@ private fun IslandRootContent(
                             }
                             val m = contentMotion.value - if (previewing) collapse.value.coerceIn(0f, 1f) else 0f
                             // Only shrink (growing entry, drag preview); rising in from below keeps its size.
-                            val scale = 1f + contentScaleFor(key.stage, spec.bondEdge) * m.coerceAtMost(0f)
+                            val scale = 1f + contentScaleFor(key.stage, spec.bondFlatExpanded) * m.coerceAtMost(0f)
                             scaleX = scale
                             scaleY = scale
                             translationY = contentShiftPx * m + edgeCorrection(key.stage) + dropOffset.value
@@ -1813,7 +1817,7 @@ private fun IslandRootContent(
                         .graphicsLayer {
                             val m = if (pending) contentMotion.value else outgoingMotion.value
                             alpha = if (pending) contentAlpha.value else minOf(outgoingAlpha.value, leaveGate(0.35f))
-                            val scale = 1f + contentScaleFor(layerKey.stage, spec.bondEdge) * m
+                            val scale = 1f + contentScaleFor(layerKey.stage, spec.bondFlatExpanded) * m
                             scaleX = scale
                             scaleY = scale
                             translationY = contentShiftPx * m + edgeCorrection(layerKey.stage)
