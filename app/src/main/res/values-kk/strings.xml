@@ -192,7 +192,6 @@
     <string name="flashlight_options_title">Қолшам баптаулары</string>
     <string name="flashlight_options_desc">Біртіндеп сөну мен басқа параметрлерді реттеу</string>
     <string name="setting_pitch_black_theme_title">Толық қара тақырып</string>
-    <string name="setting_pitch_black_theme_desc">Қараңғы режимде таза қара фонды қолдану</string>
     <string name="settings_section_haptic">Тактильді кері байланыс</string>
     <string name="button_remap_section_long_press">Ұзақ басуды қайта тағайындау</string>
     <string name="screen_off">Экран өшірулі</string>
@@ -1222,7 +1221,6 @@
     <string name="btn_wallpaper_desktop">Жұмыс үстелі</string>
     <string name="btn_wallpaper_both">Екеуі де</string>
     <string name="btn_wallpaper_mobile">Ұялы</string>
-    <string name="label_app_settings">Қолданба параметрлері</string>
     <string name="label_app_language">Тіл</string>
     <string name="label_haptic_feedback">Тактильді кері байланыс</string>
     <string name="label_haptics_title">Гаптика</string>
@@ -1232,8 +1230,6 @@
     <string name="label_updates">Жаңартулар</string>
     <string name="label_auto_check_updates">Жаңартуларды автоматты түрде тексеріңіз</string>
     <string name="desc_auto_check_updates">Қолданбаны іске қосқан кезде жаңартуларды тексеріңіз</string>
-    <string name="action_check_whats_new">Жаңалықтарды тексеру</string>
-    <string name="action_see_whats_new">Жаңалықтарды көру</string>
     <string name="label_mode_default">Әдепкі</string>
     <string name="label_mode_glove">«Қолғаппен»</string>
     <string name="tile_scale_animations">«Қолғаппен»</string>
@@ -1252,8 +1248,6 @@
     <string name="tile_restart_systemui">SystemUI қайта іске қосыңыз</string>
     <string name="tile_restart_systemui_subtitle_restart">Қазір</string>
     <string name="about_desc_restart_systemui_tile">SystemUI қолданбасын жылдам параметрлер тақтасынан оңай қайта іске қосыңыз. Күй жолағындағы ақауларды жылдам шешуге немесе жүйе интерфейсінің өзгерістерін дереу қолдануға көмектеседі. Түбірлік немесе Shizuku рұқсатын қажет етеді.</string>
-    <string name="msg_error_load_release_notes">Шығарылым ескертпесі жүктелмеді</string>
-    <string name="action_view_on_web">Браузерде ашыңыз</string>
     <string name="action_done">Дайын</string>
     <string name="action_preview">Көру</string>
     <string name="action_help_guide">Гид</string>
@@ -2404,7 +2398,6 @@ c ❤\uFE0F ішінен \uD83C\uDDF1\uD83C\uDDF0</string>
     <string name="label_usage_data">Пайдалану деректері</string>
     <string name="label_no_data">Деректер жоқ</string>
     <string name="label_use_blur">Бұлыңғырлықты пайдаланыңыз</string>
-    <string name="desc_use_blur">Пайдаланушы интерфейсінде прогрессивті бұлыңғырлау элементтерін қосыңыз</string>
     <string name="label_ripple_animation">Риппель эффектісі</string>
     <string name="desc_ripple_animation">Пайдаланушы интерфейсінде сұйық толқынды анимацияларды қосыңыз</string>
     <string name="label_motion_blur">Айналдыру кезінде бұлыңғыр</string>
