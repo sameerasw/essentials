@@ -21,6 +21,12 @@ dependencyResolutionManagement {
                 includeGroup("com.github.CSAbhiOnline")
             }
         }
+        exclusiveContent {
+            forRepository {
+                maven { url = uri("https://raw.githubusercontent.com/HmnDev-Tech/Shevery-API/maven") }
+            }
+            filter { includeGroup("com.hamondev.shevery.api") }
+        }
     }
 }
 

@@ -13,6 +13,8 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.IBinder
 import android.os.RemoteException
+import com.hamondev.shevery.api.SheveryApiConstants
+import com.hamondev.shevery.api.SheveryProvider
 import moe.shizuku.server.IShizukuService
 import rikka.shizuku.Shizuku
 import rikka.shizuku.ShizukuProvider
@@ -25,7 +27,11 @@ object ShizukuUtils {
             context.packageManager.getPermissionInfo(ShizukuProvider.PERMISSION, 0)
         }.getOrNull()
 
-    fun isShizukuInstalled(context: Context): Boolean = shizukuPermissionInfo(context) != null
+    fun isShizukuInstalled(context: Context): Boolean =
+        shizukuPermissionInfo(context) != null || runCatching {
+            context.packageManager.getPermissionInfo(SheveryProvider.PERMISSION, 0).packageName ==
+                SheveryApiConstants.MANAGER_APPLICATION_ID
+        }.getOrDefault(false)
 
     private const val DHIZUKU_PACKAGE = "com.rosan.dhizuku"
     private const val PORTER_PACKAGE = "eu.darken.porter"
@@ -97,8 +103,8 @@ object ShizukuUtils {
         }
 
     fun initialize() {
-        Shizuku.addBinderReceivedListener(binderReceivedListener)
         Shizuku.addBinderDeadListener(binderDeadListener)
+        Shizuku.addBinderReceivedListenerSticky(binderReceivedListener)
     }
 
     fun hasPermission(): Boolean {
@@ -115,7 +121,6 @@ object ShizukuUtils {
     fun isShizukuAvailable(): Boolean =
         try {
             Shizuku.pingBinder()
-            true
         } catch (
             @Suppress("UNUSED_PARAMETER") e: Exception,
         ) {
