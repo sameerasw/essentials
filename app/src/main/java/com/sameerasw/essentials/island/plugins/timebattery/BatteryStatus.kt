@@ -37,21 +37,30 @@ fun readBatteryStatus(context: Context, intent: Intent? = null): BatteryStatus? 
     )
 }
 
-fun batteryStateColor(settings: SettingsRepository, status: BatteryStatus): Color? {
-    fun parse(hex: String, fallback: Int) = try {
-        AndroidColor.parseColor(hex)
-    } catch (_: Exception) {
-        fallback
-    }
+private fun parse(hex: String, fallback: Int) = try {
+    AndroidColor.parseColor(hex)
+} catch (_: Exception) {
+    fallback
+}
+
+private fun chargingRaw(settings: SettingsRepository): Int {
     val charge = settings.getDuoBatteryChargingColor()
+    return if (charge.equals("auto", ignoreCase = true)) AUTO_CHARGING else parse(charge, AUTO_CHARGING)
+}
+
+private fun criticalRaw(settings: SettingsRepository) = parse(settings.getDuoBatteryCriticalColor(), AndroidColor.rgb(244, 67, 54))
+
+fun chargingOutlineColor(settings: SettingsRepository) = Color(soften(chargingRaw(settings)))
+
+fun criticalOutlineColor(settings: SettingsRepository) = Color(soften(criticalRaw(settings)))
+
+fun batteryStateColor(settings: SettingsRepository, status: BatteryStatus): Color? {
     val level = status.level
     val raw = when {
-        status.charging && settings.isDuoBatteryChargingColorEnabled() ->
-            if (charge.equals("auto", ignoreCase = true)) AUTO_CHARGING else parse(charge, AUTO_CHARGING)
+        status.charging && settings.isDuoBatteryChargingColorEnabled() -> chargingRaw(settings)
         status.powerSave && settings.isDuoBatteryPowerSaveColorEnabled() ->
             parse(settings.getDuoBatteryPowerSaveColor(), AndroidColor.rgb(255, 152, 0))
-        level in 0..settings.getDuoBatteryCriticalLevel() && settings.isDuoBatteryCriticalColorEnabled() ->
-            parse(settings.getDuoBatteryCriticalColor(), AndroidColor.rgb(244, 67, 54))
+        level in 0..settings.getDuoBatteryCriticalLevel() && settings.isDuoBatteryCriticalColorEnabled() -> criticalRaw(settings)
         level in 0..settings.getDuoBatteryLowLevel() && settings.isDuoBatteryLowColorEnabled() ->
             parse(settings.getDuoBatteryLowColor(), AndroidColor.rgb(255, 235, 59))
         else -> return null
