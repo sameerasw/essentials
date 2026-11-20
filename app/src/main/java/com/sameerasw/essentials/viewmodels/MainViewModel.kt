@@ -9266,10 +9266,13 @@ class MainViewModel : ViewModel() {
      *
      * @param context [Context] Target context.
      */
-    fun freezeAllAuto(context: Context) {
+    fun freezeAllAuto(
+        context: Context,
+        packageFilter: Set<String>? = null,
+    ) {
         viewModelScope.launch(Dispatchers.IO) {
             com.sameerasw.essentials.utils.FreezeManager
-                .freezeAll(context)
+                .freezeAll(context, packageFilter)
         }
     }
 
@@ -9278,10 +9281,13 @@ class MainViewModel : ViewModel() {
      *
      * @param context [Context] Target context.
      */
-    fun unfreezeAllAuto(context: Context) {
+    fun unfreezeAllAuto(
+        context: Context,
+        packageFilter: Set<String>? = null,
+    ) {
         viewModelScope.launch(Dispatchers.IO) {
             com.sameerasw.essentials.utils.FreezeManager
-                .unfreezeAll(context)
+                .unfreezeAll(context, packageFilter)
         }
     }
 
@@ -9290,10 +9296,13 @@ class MainViewModel : ViewModel() {
      *
      * @param context [Context] Target context.
      */
-    fun freezeAllManual(context: Context) {
+    fun freezeAllManual(
+        context: Context,
+        packageFilter: Set<String>? = null,
+    ) {
         viewModelScope.launch(Dispatchers.IO) {
             com.sameerasw.essentials.utils.FreezeManager
-                .freezeAllManual(context)
+                .freezeAllManual(context, packageFilter)
         }
     }
 
@@ -9302,10 +9311,13 @@ class MainViewModel : ViewModel() {
      *
      * @param context [Context] Target context.
      */
-    fun unfreezeAllManual(context: Context) {
+    fun unfreezeAllManual(
+        context: Context,
+        packageFilter: Set<String>? = null,
+    ) {
         viewModelScope.launch(Dispatchers.IO) {
             com.sameerasw.essentials.utils.FreezeManager
-                .unfreezeAllManual(context)
+                .unfreezeAllManual(context, packageFilter)
         }
     }
 
