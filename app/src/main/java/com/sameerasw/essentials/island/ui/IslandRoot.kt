@@ -649,7 +649,6 @@ private fun IslandRootContent(
     val bubbleMaxIcons = lastCatchUp?.maxIcons?.let { chosen ->
         val gap = with(density) { spec.contentGap.toPx() }
         val needLeft = compactNeedLeft.intValue
-        val iconCount = lastCatchUp?.icons?.size ?: 0
         val sideRoom = if (windowWidth > 0 && !spec.balanceCompact) {
             (windowWidth - cameraSlotPx) / 2f - with(density) { HUB_SCREEN_MARGIN.toPx() }
         } else {
@@ -668,7 +667,7 @@ private fun IslandRootContent(
         }
         val lowest = if (icons.size > 1) 2 else 1
         val fit = remember(icons, overflow, room, spec.compactHeight, density) { (8 downTo lowest).firstOrNull { drawnPx(it) <= room } ?: 0 }
-        val cap = if (chosen > 0) chosen + if (iconCount > chosen) 1 else 0 else fit
+        val cap = if (chosen > 0) chosen else fit
         minOf(cap, fit)
     } ?: OVERLAP_MAX
     val sideBubbleWidth = lastCatchUp
