@@ -107,6 +107,7 @@
     <queries>
         <package android:name="com.sameerasw.overcast" />
         <package android:name="com.sameerasw.airsync" />
+        <package android:name="com.serranoie.app.minus" />
         <package android:name="eu.darken.porter" />
         <package android:name="com.google.android.apps.wear.companion" />
         <intent>
