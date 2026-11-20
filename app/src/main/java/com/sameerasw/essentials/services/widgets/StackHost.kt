@@ -66,7 +66,6 @@ object StackHost {
 
     val positions = ConcurrentHashMap<Int, Int>()
     val rawContents = ConcurrentHashMap<Int, RemoteViews>()
-    private val checkedLayouts = ConcurrentHashMap<Int, Int>()
 
     private val handler = Handler(Looper.getMainLooper())
     private lateinit var appContext: Context
@@ -91,7 +90,6 @@ object StackHost {
                 rawContents.remove(id)
                 contents.remove(id)
                 unsupported.remove(id)
-                checkedLayouts.remove(id)
             } else {
                 rawContents[id] = remoteViews
                 accept(context, id, remoteViews)
@@ -249,7 +247,6 @@ object StackHost {
         contents.clear()
         rawContents.clear()
         unsupported.clear()
-        checkedLayouts.clear()
         try {
             appContext.unregisterReceiver(screenReceiver)
         } catch (_: Exception) {
@@ -281,7 +278,6 @@ object StackHost {
             contents.remove(id)
             rawContents.remove(id)
             unsupported.remove(id)
-            checkedLayouts.remove(id)
         }
 
         for (id in wanted) {
@@ -335,12 +331,10 @@ object StackHost {
         raw: RemoteViews,
     ) {
         val resolved = NestedWidgetSupport.resolveSized(context, raw, StackWidgetProvider.innerSize(id))
-        if (checkedLayouts[id] == resolved.layoutId || NestedWidgetSupport.canRender(context, resolved)) {
-            checkedLayouts[id] = resolved.layoutId
+        if (NestedWidgetSupport.canRender(context, resolved)) {
             contents[id] = resolved
             unsupported.remove(id)
         } else {
-            checkedLayouts.remove(id)
             contents.remove(id)
             unsupported.add(id)
         }

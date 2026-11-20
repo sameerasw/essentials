@@ -607,12 +607,14 @@ class SettingsRepository(
         const val KEY_ISLAND_NOTIF_CONCEAL_CHAT_PICTURES = "island_notif_conceal_chat_pictures"
         const val KEY_ISLAND_CALENDAR_HIDE_LOCKED = "island_calendar_hide_locked"
         const val KEY_ISLAND_CALENDAR_COMPACT_TIME = "island_calendar_compact_time"
+        const val KEY_ISLAND_CALENDAR_ICON_ONLY = "island_calendar_icon_only"
         const val KEY_ISLAND_CALENDAR_HIDE_NOW = "island_calendar_hide_now"
         const val KEY_ISLAND_CALENDAR_SHOW_ONGOING = "island_calendar_show_ongoing"
         const val KEY_ISLAND_CALENDAR_HIDDEN_EVENTS = "island_calendar_hidden_events"
         const val KEY_ISLAND_TIME_HIDE_LOCKED = "island_time_hide_locked"
         const val KEY_ISLAND_BATTERY_HIDE_LOCKED = "island_battery_hide_locked"
         const val KEY_ISLAND_TIMEOUT_MS = "island_timeout_ms"
+        const val KEY_ISLAND_TIMEOUT_AFTER_MARQUEE = "island_timeout_after_marquee"
         const val KEY_ISLAND_SHOW_GLOW = "island_show_glow"
         const val KEY_ISLAND_GLOW_INTENSITY = "island_glow_intensity"
         const val KEY_ISLAND_GLOW_SIZE = "island_glow_size"
@@ -670,6 +672,7 @@ class SettingsRepository(
         const val KEY_ISLAND_LIKE_WHILE_PLAYING = "island_like_while_playing"
         const val KEY_ISLAND_SLIDE_INVERT_DIRECTION = "island_slide_invert_direction"
         const val KEY_ISLAND_BATTERY_PERCENTAGE_CONDITIONAL = "island_battery_percentage_conditional"
+        const val KEY_ISLAND_BATTERY_STATUS_ICON = "island_battery_status_icon"
         const val KEY_ISLAND_BATTERY_ICON_CONDITIONAL = "island_battery_icon_conditional"
         const val KEY_ISLAND_BATTERY_ONLY_LOW = "island_battery_only_low"
         const val KEY_ISLAND_BATTERY_PEEK_ALERTS = "island_battery_peek_alerts"
@@ -687,7 +690,11 @@ class SettingsRepository(
         const val KEY_ISLAND_DISABLE_INTERACTIONS_IN_FULLSCREEN = "island_disable_interactions_in_fullscreen"
         const val KEY_ISLAND_LANDSCAPE_TOP_SPACING = "island_landscape_top_spacing"
         const val KEY_ISLAND_BOND_EDGE = "island_bond_edge"
+        const val KEY_ISLAND_BOND_SCALE = "island_bond_scale"
+        const val KEY_ISLAND_ALWAYS_BOND = "island_always_bond"
+        const val KEY_ISLAND_BOND_KEEP_GAP = "island_bond_keep_gap"
         const val KEY_ISLAND_BALANCE_COMPACT = "island_balance_compact"
+        const val KEY_ISLAND_PERSISTENT_ORDER = "island_persistent_order"
         const val KEY_ISLAND_NEURAL_EXPRESSIVE = "island_neural_expressive"
         const val KEY_ISLAND_NEURAL_EXPRESSIVE_ALWAYS = "island_neural_expressive_always"
         const val KEY_ISLAND_TRANSPARENCY = "island_transparency"
@@ -4227,6 +4234,10 @@ class SettingsRepository(
     fun getIslandTimeoutMs(): Long = getLong(KEY_ISLAND_TIMEOUT_MS, 4500L)
     fun setIslandTimeoutMs(value: Long) = putLong(KEY_ISLAND_TIMEOUT_MS, value)
 
+    fun isIslandTimeoutAfterMarqueeEnabled(): Boolean = getBoolean(KEY_ISLAND_TIMEOUT_AFTER_MARQUEE, false)
+
+    fun setIslandTimeoutAfterMarqueeEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_TIMEOUT_AFTER_MARQUEE, enabled)
+
     fun isIslandBorderOutlineEnabled(): Boolean = getBoolean(KEY_ISLAND_BORDER_OUTLINE_ENABLED, false)
     fun setIslandBorderOutlineEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_BORDER_OUTLINE_ENABLED, enabled)
 
@@ -4374,6 +4385,8 @@ class SettingsRepository(
 
     fun isIslandBatteryIconConditional(): Boolean = getBoolean(KEY_ISLAND_BATTERY_ICON_CONDITIONAL, false)
     fun setIslandBatteryIconConditional(enabled: Boolean) = putBoolean(KEY_ISLAND_BATTERY_ICON_CONDITIONAL, enabled)
+    fun isIslandBatteryStatusIconEnabled(): Boolean = getBoolean(KEY_ISLAND_BATTERY_STATUS_ICON, false)
+    fun setIslandBatteryStatusIconEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_BATTERY_STATUS_ICON, enabled)
     fun isIslandBatteryPercentageConditional(): Boolean = getBoolean(KEY_ISLAND_BATTERY_PERCENTAGE_CONDITIONAL, false)
 
     fun isIslandBatteryOnlyLowEnabled(): Boolean = getBoolean(KEY_ISLAND_BATTERY_ONLY_LOW, false)
@@ -4554,7 +4567,7 @@ class SettingsRepository(
 
     fun setIslandAlwaysGesturesEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_ALWAYS_GESTURES, enabled)
 
-    fun getIslandMaxItems(): Int = getDisplayInt(KEY_ISLAND_MAX_ITEMS, 2).coerceIn(1, 4)
+    fun getIslandMaxItems(): Int = getDisplayInt(KEY_ISLAND_MAX_ITEMS, 2).coerceIn(1, 6)
 
     fun setIslandMaxItems(value: Int) = putDisplayInt(KEY_ISLAND_MAX_ITEMS, value)
 
@@ -4562,9 +4575,25 @@ class SettingsRepository(
 
     fun setIslandBondEdgeEnabled(enabled: Boolean) = putDisplayBoolean(KEY_ISLAND_BOND_EDGE, enabled)
 
+    fun isIslandAlwaysBondEnabled(): Boolean = getDisplayBoolean(KEY_ISLAND_ALWAYS_BOND, false)
+
+    fun setIslandAlwaysBondEnabled(enabled: Boolean) = putDisplayBoolean(KEY_ISLAND_ALWAYS_BOND, enabled)
+
+    fun isIslandBondKeepGapEnabled(): Boolean = getDisplayBoolean(KEY_ISLAND_BOND_KEEP_GAP, false)
+
+    fun setIslandBondKeepGapEnabled(enabled: Boolean) = putDisplayBoolean(KEY_ISLAND_BOND_KEEP_GAP, enabled)
+
+    fun getIslandBondScale(): Float = getDisplayFloat(KEY_ISLAND_BOND_SCALE, 0.7f).coerceIn(0.1f, 3f)
+
+    fun setIslandBondScale(value: Float) = putDisplayFloat(KEY_ISLAND_BOND_SCALE, value)
+
     fun isIslandBalanceCompactEnabled(): Boolean = getBoolean(KEY_ISLAND_BALANCE_COMPACT, true)
 
     fun setIslandBalanceCompactEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_BALANCE_COMPACT, enabled)
+
+    fun isIslandPersistentOrderEnabled(): Boolean = getBoolean(KEY_ISLAND_PERSISTENT_ORDER, false)
+
+    fun setIslandPersistentOrderEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_PERSISTENT_ORDER, enabled)
 
     fun isIslandNeuralExpressiveEnabled(): Boolean = getBoolean(KEY_ISLAND_NEURAL_EXPRESSIVE, false)
 

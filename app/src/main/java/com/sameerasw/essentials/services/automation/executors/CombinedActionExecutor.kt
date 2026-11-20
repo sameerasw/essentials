@@ -957,6 +957,12 @@ object CombinedActionExecutor {
                 is Action.TurnOnLocation -> setLocationEnabled(context, true)
                 is Action.TurnOffLocation -> setLocationEnabled(context, false)
                 is Action.ToggleLocation -> setLocationEnabled(context, !isLocationEnabled(context))
+                is Action.TurnOnDarkTheme -> setDarkTheme(context, true)
+                is Action.TurnOffDarkTheme -> setDarkTheme(context, false)
+                is Action.ToggleDarkTheme -> setDarkTheme(context, !isDarkTheme(context))
+                is Action.TurnOnShowTaps -> setShowTaps(context, true)
+                is Action.TurnOffShowTaps -> setShowTaps(context, false)
+                is Action.ToggleShowTaps -> setShowTaps(context, !isShowTaps(context))
                 is Action.TurnOnAutoBrightness -> setAutoBrightnessEnabled(context, true)
                 is Action.TurnOffAutoBrightness -> setAutoBrightnessEnabled(context, false)
                 is Action.ToggleAutoBrightness -> setAutoBrightnessEnabled(context, !isAutoBrightnessEnabled(context))
@@ -1248,6 +1254,35 @@ object CombinedActionExecutor {
                 featureName = context.getString(if (enabled) R.string.diy_action_auto_brightness_on else R.string.diy_action_auto_brightness_off),
             )
         }
+    }
+
+    private fun isDarkTheme(context: Context): Boolean =
+        context.resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK ==
+            android.content.res.Configuration.UI_MODE_NIGHT_YES
+
+    private fun setDarkTheme(
+        context: Context,
+        enabled: Boolean,
+    ) {
+        ShellUtils.runCommand(
+            context,
+            "cmd uimode night ${if (enabled) "yes" else "no"}",
+            featureName = context.getString(if (enabled) R.string.diy_action_dark_theme_on else R.string.diy_action_dark_theme_off),
+        )
+    }
+
+    private fun isShowTaps(context: Context): Boolean =
+        Settings.System.getInt(context.contentResolver, "show_touches", 0) == 1
+
+    private fun setShowTaps(
+        context: Context,
+        enabled: Boolean,
+    ) {
+        ShellUtils.runCommand(
+            context,
+            "settings put system show_touches ${if (enabled) 1 else 0}",
+            featureName = context.getString(if (enabled) R.string.diy_action_show_taps_on else R.string.diy_action_show_taps_off),
+        )
     }
 
     private fun openNowPlayingApp(context: Context) {

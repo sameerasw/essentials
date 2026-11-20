@@ -28,6 +28,7 @@ import com.sameerasw.essentials.island.model.InteractionOverrides
 import com.sameerasw.essentials.island.model.IslandItem
 import com.sameerasw.essentials.island.model.IslandPriority
 import com.sameerasw.essentials.island.model.IslandStage
+import com.sameerasw.essentials.island.state.MarqueeProgress
 import com.sameerasw.essentials.island.model.LineContent
 import com.sameerasw.essentials.island.model.PluginRequest
 import com.sameerasw.essentials.island.plugins.BaseIslandPlugin
@@ -452,6 +453,14 @@ class NotificationsPlugin : BaseIslandPlugin() {
     private fun onTimeout() {
         val c = ctx ?: return
         if (pendingPopUp) return
+        if (settings.isIslandTimeoutAfterMarqueeEnabled() && c.currentStage() == IslandStage.Line) {
+            val remaining = MarqueeProgress.remainingMs()
+            if (remaining > 0L) {
+                c.mainHandler.removeCallbacks(timeoutRunnable)
+                c.mainHandler.postDelayed(timeoutRunnable, remaining + MARQUEE_SETTLE_MS)
+                return
+            }
+        }
         if (showingHere() && alerts.size > 1 && !manualPick && advanceToUnseen()) {
             scheduleTimeout()
             render()
@@ -1056,6 +1065,8 @@ class NotificationsPlugin : BaseIslandPlugin() {
     }
 
     companion object {
+        private const val MARQUEE_SETTLE_MS = 400L
+
         const val ITEM_KEY = "notifications"
         private const val MAX_QUEUE = 20
         private const val HUB_MAX_QUEUE = 200

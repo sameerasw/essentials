@@ -134,6 +134,15 @@ object DIYRepository {
 
     fun getAutomation(id: String): Automation? = _automations.value.find { it.id == id }
 
+    fun automationToJson(automation: Automation): JsonElement = gson.toJsonTree(automation)
+
+    fun automationFromJson(element: JsonElement): Automation? =
+        try {
+            gson.fromJson(element, Automation::class.java)
+        } catch (e: Exception) {
+            null
+        }
+
     private fun updateActionShortcutLauncherState() {
         val context = appContext ?: return
         val showLauncher =

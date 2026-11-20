@@ -245,7 +245,11 @@ class MainViewModel : ViewModel() {
     val isIslandKeepInFullscreen = mutableStateOf(false)
     val isIslandDisableInteractionsInFullscreen = mutableStateOf(false)
     val isIslandBondEdge = mutableStateOf(false)
+    val islandBondScale = mutableFloatStateOf(0.7f)
+    val isIslandAlwaysBond = mutableStateOf(false)
+    val isIslandBondKeepGap = mutableStateOf(false)
     val isIslandBalanceCompact = mutableStateOf(true)
+    val isIslandPersistentOrder = mutableStateOf(false)
     val isIslandNeuralExpressive = mutableStateOf(false)
     val isIslandNeuralExpressiveAlways = mutableStateOf(false)
     val isIslandTransparency = mutableStateOf(true)
@@ -299,6 +303,7 @@ class MainViewModel : ViewModel() {
     val isIslandCompactHideStatusBar = mutableStateOf(false)
     val isIslandHideWhenScreenOff = mutableStateOf(true)
     val islandTimeoutMs = mutableLongStateOf(4500L)
+    val isIslandTimeoutAfterMarquee = mutableStateOf(false)
     val isIslandLineStageEnabled = mutableStateOf(false)
     val isIslandMediaPeekSongChange = mutableStateOf(true)
     val isIslandMediaKeepWhenPaused = mutableStateOf(true)
@@ -358,6 +363,7 @@ class MainViewModel : ViewModel() {
     val islandDevicesBatteryStyle = mutableStateOf(SettingsRepository.ISLAND_BATTERY_STYLE_RING)
     val isIslandBatteryPercentageEnabled = mutableStateOf(false)
     val isIslandBatteryPercentageConditional = mutableStateOf(false)
+    val isIslandBatteryStatusIcon = mutableStateOf(false)
     val isIslandBatteryIconConditional = mutableStateOf(false)
     val isIslandBatteryOnlyLow = mutableStateOf(false)
     val isIslandDevicesBatteryOnlyLow = mutableStateOf(false)
@@ -2585,7 +2591,11 @@ class MainViewModel : ViewModel() {
         isIslandKeepInFullscreen.value = settingsRepository.isIslandKeepInFullscreenEnabled()
         isIslandDisableInteractionsInFullscreen.value = settingsRepository.isIslandDisableInteractionsInFullscreenEnabled()
         isIslandBondEdge.value = settingsRepository.isIslandBondEdgeEnabled()
+        islandBondScale.floatValue = settingsRepository.getIslandBondScale()
+        isIslandAlwaysBond.value = settingsRepository.isIslandAlwaysBondEnabled()
+        isIslandBondKeepGap.value = settingsRepository.isIslandBondKeepGapEnabled()
         isIslandBalanceCompact.value = settingsRepository.isIslandBalanceCompactEnabled()
+        isIslandPersistentOrder.value = settingsRepository.isIslandPersistentOrderEnabled()
         isIslandNeuralExpressive.value = settingsRepository.isIslandNeuralExpressiveEnabled()
         isIslandNeuralExpressiveAlways.value = settingsRepository.isIslandNeuralExpressiveAlwaysEnabled()
         isIslandTransparency.value = settingsRepository.isIslandTransparencyEnabled()
@@ -2652,6 +2662,7 @@ class MainViewModel : ViewModel() {
             )
         isIslandHideWhenScreenOff.value = settingsRepository.isIslandHideWhenScreenOffEnabled()
         islandTimeoutMs.longValue = settingsRepository.getIslandTimeoutMs()
+        isIslandTimeoutAfterMarquee.value = settingsRepository.isIslandTimeoutAfterMarqueeEnabled()
         isIslandLineStageEnabled.value = settingsRepository.isIslandLineStageEnabled()
         isIslandMediaPeekSongChange.value = settingsRepository.isIslandMediaPeekSongChangeEnabled()
         isIslandMediaKeepWhenPaused.value = settingsRepository.isIslandMediaKeepWhenPausedEnabled()
@@ -2711,6 +2722,7 @@ class MainViewModel : ViewModel() {
         islandDevicesBatteryStyle.value = settingsRepository.getIslandDevicesBatteryStyle()
         isIslandBatteryPercentageEnabled.value = settingsRepository.isIslandBatteryPercentageEnabled()
         isIslandBatteryPercentageConditional.value = settingsRepository.isIslandBatteryPercentageConditional()
+        isIslandBatteryStatusIcon.value = settingsRepository.isIslandBatteryStatusIconEnabled()
         isIslandBatteryIconConditional.value = settingsRepository.isIslandBatteryIconConditional()
         isIslandBatteryOnlyLow.value = settingsRepository.isIslandBatteryOnlyLowEnabled()
         isIslandDevicesBatteryOnlyLow.value = settingsRepository.isIslandDevicesBatteryOnlyLowEnabled()
@@ -5613,6 +5625,9 @@ class MainViewModel : ViewModel() {
         islandBorderOutlineThickness.floatValue = settingsRepository.getIslandBorderOutlineThickness()
         islandMaxItems.value = settingsRepository.getIslandMaxItems()
         isIslandBondEdge.value = settingsRepository.isIslandBondEdgeEnabled()
+        islandBondScale.floatValue = settingsRepository.getIslandBondScale()
+        isIslandAlwaysBond.value = settingsRepository.isIslandAlwaysBondEnabled()
+        isIslandBondKeepGap.value = settingsRepository.isIslandBondKeepGapEnabled()
         isIslandStatusBarAwareWidth.value = settingsRepository.isIslandStatusBarAwareWidthEnabled()
         isIslandKeepOnLandscape.value = settingsRepository.isIslandKeepOnLandscapeEnabled()
     }
@@ -6101,6 +6116,11 @@ class MainViewModel : ViewModel() {
         settingsRepository.setIslandSecondaryBubbleEnabled(enabled)
     }
 
+    fun setIslandPersistentOrder(enabled: Boolean) {
+        isIslandPersistentOrder.value = enabled
+        settingsRepository.setIslandPersistentOrderEnabled(enabled)
+    }
+
     fun setIslandBalanceCompact(enabled: Boolean) {
         isIslandBalanceCompact.value = enabled
         settingsRepository.setIslandBalanceCompactEnabled(enabled)
@@ -6155,6 +6175,21 @@ class MainViewModel : ViewModel() {
     fun setIslandStatusBarAwareWidth(enabled: Boolean) {
         isIslandStatusBarAwareWidth.value = enabled
         settingsRepository.setIslandStatusBarAwareWidthEnabled(enabled)
+    }
+
+    fun setIslandAlwaysBond(enabled: Boolean) {
+        isIslandAlwaysBond.value = enabled
+        settingsRepository.setIslandAlwaysBondEnabled(enabled)
+    }
+
+    fun setIslandBondKeepGap(enabled: Boolean) {
+        isIslandBondKeepGap.value = enabled
+        settingsRepository.setIslandBondKeepGapEnabled(enabled)
+    }
+
+    fun setIslandBondScale(value: Float) {
+        islandBondScale.floatValue = value
+        settingsRepository.setIslandBondScale(value)
     }
 
     fun setIslandBondEdge(enabled: Boolean) {
@@ -6249,6 +6284,11 @@ class MainViewModel : ViewModel() {
     fun setIslandHideWhenScreenOff(enabled: Boolean) {
         isIslandHideWhenScreenOff.value = enabled
         settingsRepository.setIslandHideWhenScreenOffEnabled(enabled)
+    }
+
+    fun setIslandTimeoutAfterMarquee(enabled: Boolean) {
+        isIslandTimeoutAfterMarquee.value = enabled
+        settingsRepository.setIslandTimeoutAfterMarqueeEnabled(enabled)
     }
 
     fun setIslandTimeoutMs(value: Long) {
@@ -6596,6 +6636,11 @@ class MainViewModel : ViewModel() {
     fun setIslandBatteryIconConditional(enabled: Boolean) {
         isIslandBatteryIconConditional.value = enabled
         settingsRepository.setIslandBatteryIconConditional(enabled)
+    }
+
+    fun setIslandBatteryStatusIcon(enabled: Boolean) {
+        isIslandBatteryStatusIcon.value = enabled
+        settingsRepository.setIslandBatteryStatusIconEnabled(enabled)
     }
 
     fun setIslandBatteryPercentageConditional(enabled: Boolean) {
@@ -9252,10 +9297,13 @@ class MainViewModel : ViewModel() {
      *
      * @param context [Context] Target context.
      */
-    fun freezeAllAuto(context: Context) {
+    fun freezeAllAuto(
+        context: Context,
+        packageFilter: Set<String>? = null,
+    ) {
         viewModelScope.launch(Dispatchers.IO) {
             com.sameerasw.essentials.utils.FreezeManager
-                .freezeAll(context)
+                .freezeAll(context, packageFilter)
         }
     }
 
@@ -9264,10 +9312,13 @@ class MainViewModel : ViewModel() {
      *
      * @param context [Context] Target context.
      */
-    fun unfreezeAllAuto(context: Context) {
+    fun unfreezeAllAuto(
+        context: Context,
+        packageFilter: Set<String>? = null,
+    ) {
         viewModelScope.launch(Dispatchers.IO) {
             com.sameerasw.essentials.utils.FreezeManager
-                .unfreezeAll(context)
+                .unfreezeAll(context, packageFilter)
         }
     }
 
@@ -9276,10 +9327,13 @@ class MainViewModel : ViewModel() {
      *
      * @param context [Context] Target context.
      */
-    fun freezeAllManual(context: Context) {
+    fun freezeAllManual(
+        context: Context,
+        packageFilter: Set<String>? = null,
+    ) {
         viewModelScope.launch(Dispatchers.IO) {
             com.sameerasw.essentials.utils.FreezeManager
-                .freezeAllManual(context)
+                .freezeAllManual(context, packageFilter)
         }
     }
 
@@ -9288,10 +9342,13 @@ class MainViewModel : ViewModel() {
      *
      * @param context [Context] Target context.
      */
-    fun unfreezeAllManual(context: Context) {
+    fun unfreezeAllManual(
+        context: Context,
+        packageFilter: Set<String>? = null,
+    ) {
         viewModelScope.launch(Dispatchers.IO) {
             com.sameerasw.essentials.utils.FreezeManager
-                .unfreezeAllManual(context)
+                .unfreezeAllManual(context, packageFilter)
         }
     }
 

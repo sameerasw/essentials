@@ -807,6 +807,7 @@ class IslandCoordinator(
             CameraAnchor.Start -> screenWidthDp - (geo.centerX / density - slotDp / 2f) - 8f
             CameraAnchor.End -> geo.centerX / density + slotDp / 2f - 8f
         }.coerceAtLeast(slotDp * 3f)
+        val alwaysBond = settings.isIslandAlwaysBondEnabled()
         val flatExpanded = !geo.hasCamera && settings.isIslandBondEdgeEnabled()
         val scale = if (flatExpanded) 1f else settings.getIslandExpandedScale().coerceIn(1f, 1.3f)
         val lineWidth = minOf(settings.getIslandMaxWidth(), available)
@@ -833,7 +834,11 @@ class IslandCoordinator(
             cameraAnchor = geo.anchor,
             cameraPresence = if (geo.hasCamera) 1f else 0f,
             landscape = isLandscape,
-            bondEdge = !geo.hasCamera && settings.isIslandBondEdgeEnabled(),
+            bondEdge = alwaysBond || (!geo.hasCamera && settings.isIslandBondEdgeEnabled()),
+            bondKeepGap = alwaysBond && geo.hasCamera && settings.isIslandBondKeepGapEnabled(),
+            bondRemoveGap = alwaysBond && geo.hasCamera && !settings.isIslandBondKeepGapEnabled(),
+            bondScale = settings.getIslandBondScale(),
+            bondFlatExpanded = flatExpanded,
             balanceCompact = settings.isIslandBalanceCompactEnabled(),
             dismissDown = settings.getIslandDismissDirection() == SettingsRepository.ISLAND_DISMISS_DOWN,
             gestureHints = settings.isIslandGestureHintsEnabled(),
@@ -887,6 +892,7 @@ class IslandCoordinator(
         compactMaxWidthPx = (lineWidth * density).toInt()
         applyStatusBarAwareWidth()
         controller.balanceCompact = settings.isIslandBalanceCompactEnabled()
+        controller.persistentOrder = settings.isIslandPersistentOrderEnabled()
         controller.chipsEnabled = settings.getBoolean(SettingsRepository.KEY_ISLAND_CHIPS, false)
         controller.secondaryBubbleEnabled = settings.isIslandSecondaryBubbleEnabled()
         controller.secondaryBubbleMax = settings.getIslandNotifHubIcons()
@@ -1146,7 +1152,11 @@ class IslandCoordinator(
             SettingsRepository.KEY_ISLAND_HIDE_LANDSCAPE,
             SettingsRepository.KEY_ISLAND_LANDSCAPE_TOP_SPACING,
             SettingsRepository.KEY_ISLAND_BOND_EDGE,
+            SettingsRepository.KEY_ISLAND_BOND_SCALE,
+            SettingsRepository.KEY_ISLAND_ALWAYS_BOND,
+            SettingsRepository.KEY_ISLAND_BOND_KEEP_GAP,
             SettingsRepository.KEY_ISLAND_BALANCE_COMPACT,
+            SettingsRepository.KEY_ISLAND_PERSISTENT_ORDER,
             SettingsRepository.KEY_ISLAND_DISMISS_DIRECTION,
             SettingsRepository.KEY_ISLAND_GESTURE_HINTS,
             SettingsRepository.KEY_ISLAND_NEURAL_EXPRESSIVE,

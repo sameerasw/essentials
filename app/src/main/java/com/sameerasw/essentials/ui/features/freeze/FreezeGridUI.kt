@@ -152,6 +152,19 @@ fun FreezeGridUI(
             list
         }
 
+    val tagFilterPackages =
+        remember(pickedApps, selectedTagId, freezeAppTagMap) {
+            val filterTagId = selectedTagId
+            if (filterTagId.isNullOrEmpty()) {
+                null
+            } else {
+                pickedApps
+                    .filter { freezeAppTagMap[it.packageName]?.contains(filterTagId) == true }
+                    .map { it.packageName }
+                    .toSet()
+            }
+        }
+
     val bestMatch =
         remember(searchQuery, filteredApps) {
             if (searchQuery.isNotBlank() && filteredApps.isNotEmpty()) filteredApps.first() else null
@@ -192,6 +205,17 @@ fun FreezeGridUI(
             withContext(Dispatchers.Main) {
                 frozenStates.putAll(states)
             }
+        }
+    }
+
+    val runBulk: ((Set<String>?) -> Unit) -> Unit = { action ->
+        scope.launch(Dispatchers.IO) {
+            action(tagFilterPackages)
+            val states =
+                pickedApps.associate { app ->
+                    app.packageName to FreezeManager.isAppFrozen(context, app.packageName)
+                }
+            withContext(Dispatchers.Main) { frozenStates.putAll(states) }
         }
     }
 
@@ -275,16 +299,16 @@ fun FreezeGridUI(
                                 iconRes = R.drawable.rounded_mode_cool_24,
                                 text = stringResource(R.string.action_freeze),
                                 menuText = stringResource(R.string.action_freeze_all),
-                                onClick = { viewModel.freezeAllAuto(context) },
-                                onMenuClick = { viewModel.freezeAllManual(context) },
+                                onClick = { runBulk { FreezeManager.freezeAll(context, it) } },
+                                onMenuClick = { runBulk { FreezeManager.freezeAllManual(context, it) } },
                                 showLabel = showLabels,
                             )
                             FreezeSplitButton(
                                 iconRes = R.drawable.rounded_mode_cool_off_24,
                                 text = stringResource(R.string.action_unfreeze),
                                 menuText = stringResource(R.string.action_unfreeze_all),
-                                onClick = { viewModel.unfreezeAllAuto(context) },
-                                onMenuClick = { viewModel.unfreezeAllManual(context) },
+                                onClick = { runBulk { FreezeManager.unfreezeAll(context, it) } },
+                                onMenuClick = { runBulk { FreezeManager.unfreezeAllManual(context, it) } },
                                 showLabel = showLabels,
                             )
                             if (onSettingsClick != null) {

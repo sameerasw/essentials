@@ -159,7 +159,7 @@ const val OVERLAP_MAX = 3
 
 private fun queueVisible(icons: List<StackIcon>, max: Int, overflow: QueueOverflow = QueueOverflow.Number): List<StackIcon> {
     if (icons.size <= max) return icons
-    if (overflow == QueueOverflow.None) return icons.take(max)
+    if (overflow == QueueOverflow.None || max <= 1) return icons.take(max)
     val drawn = icons.take(max - 1)
     return drawn + queueOverflowIcon(icons.size - drawn.size, overflow == QueueOverflow.Dot)
 }
@@ -219,6 +219,7 @@ private fun dotBase(size: Dp) = dotBox(size) - size * 0.08f
 
 // The +N counter gets a slot of its own so the next icon doesn't sit on top of it
 fun stackOverlapWidth(count: Int, size: Dp, maxIcons: Int = OVERLAP_MAX, overflow: QueueOverflow = QueueOverflow.Number): Dp {
+    val overflow = if (maxIcons <= 1) QueueOverflow.None else overflow
     if (count > maxIcons && overflow == QueueOverflow.Dot) {
         return dotBase(size) + if (maxIcons > 1) size + size * OVERLAP_STEP * (maxIcons - 2) else 0.dp
     }
@@ -227,7 +228,7 @@ fun stackOverlapWidth(count: Int, size: Dp, maxIcons: Int = OVERLAP_MAX, overflo
 }
 
 fun overlapSlots(icons: List<StackIcon>, maxIcons: Int): Int =
-    if (maxIcons <= 0) 1 else (maxIcons - icons.take(maxIcons).count { it.widthFactor > 1f }).coerceAtLeast(if (icons.size > 1) 2 else 1)
+    if (maxIcons <= 0) 1 else (maxIcons - icons.take(maxIcons).count { it.widthFactor > 1f }).coerceAtLeast(1)
 
 fun overlapOverflow(maxIcons: Int, overflow: QueueOverflow): QueueOverflow = if (maxIcons <= 0) QueueOverflow.None else overflow
 

@@ -66,16 +66,23 @@ object NestedWidgetSupport {
         base: Bundle,
         widthDp: Int,
         heightDp: Int,
+        sizes: List<SizeF> = listOf(SizeF(widthDp.toFloat(), heightDp.toFloat())),
     ): Bundle =
         Bundle(base).apply {
-            putInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH, widthDp)
-            putInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH, widthDp)
-            putInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT, heightDp)
-            putInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT, heightDp)
+            val portrait = sizes.firstOrNull()
+            val landscape = sizes.getOrNull(1)
+            val minWidth = portrait?.width?.toInt() ?: widthDp
+            val maxWidth = landscape?.width?.toInt() ?: widthDp
+            val minHeight = landscape?.height?.toInt() ?: heightDp
+            val maxHeight = portrait?.height?.toInt() ?: heightDp
+            putInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH, minWidth)
+            putInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH, maxWidth)
+            putInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT, minHeight)
+            putInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT, maxHeight)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 putParcelableArrayList(
                     AppWidgetManager.OPTION_APPWIDGET_SIZES,
-                    arrayListOf(SizeF(widthDp.toFloat(), heightDp.toFloat())),
+                    ArrayList(sizes),
                 )
             }
         }

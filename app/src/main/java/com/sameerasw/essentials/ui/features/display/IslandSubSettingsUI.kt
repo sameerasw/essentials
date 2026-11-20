@@ -84,6 +84,7 @@ import com.sameerasw.essentials.utils.PermissionUIHelper
 import com.sameerasw.essentials.utils.PermissionUtils
 import com.sameerasw.essentials.ui.core.sheets.HideStatusBarInfoBottomSheet
 import com.sameerasw.essentials.ui.core.sheets.StatusBarAwareWidthInfoBottomSheet
+import com.sameerasw.essentials.ui.core.sheets.PersistentOrderInfoBottomSheet
 import com.sameerasw.essentials.ui.core.sheets.PreferStillIslandInfoBottomSheet
 import com.sameerasw.essentials.ui.core.sheets.BackdropBlurUnavailableBottomSheet
 import com.sameerasw.essentials.utils.ShellUtils
@@ -507,6 +508,49 @@ fun IslandPlacementSettingsUI(
                         )
                     }
                 }
+
+                ConfigSliderItem(
+                    title = stringResource(R.string.island_bond_scale_title),
+                    value = viewModel.islandBondScale.floatValue,
+                    onValueChange = {
+                        HapticUtil.performUIHaptic(view)
+                        viewModel.setIslandBondScale(it)
+                    },
+                    valueRange = 0.1f..3f,
+                    increment = 0.05f,
+                    iconRes = R.drawable.rounded_arrows_outward_24,
+                    valueFormatter = { "%.2fx".format(it) },
+                    allowDecimals = true,
+                    modifier = Modifier.highlight(highlightSetting == "island_bond_scale"),
+                )
+
+                IconToggleItem(
+                    iconRes = R.drawable.rounded_vertical_align_top_24,
+                    title = stringResource(R.string.island_always_bond_title),
+                    isChecked = viewModel.isIslandAlwaysBond.value,
+                    onCheckedChange = { checked ->
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        viewModel.setIslandAlwaysBond(checked)
+                    },
+                    modifier = Modifier.highlight(highlightSetting == "island_always_bond"),
+                )
+
+                AnimatedVisibility(
+                    visible = viewModel.isIslandAlwaysBond.value,
+                    enter = expandVertically() + fadeIn(),
+                    exit = shrinkVertically() + fadeOut(),
+                ) {
+                    IconToggleItem(
+                        iconRes = R.drawable.rounded_arrows_outward_24,
+                        title = stringResource(R.string.island_bond_keep_gap_title),
+                        isChecked = viewModel.isIslandBondKeepGap.value,
+                        onCheckedChange = { checked ->
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            viewModel.setIslandBondKeepGap(checked)
+                        },
+                        modifier = Modifier.highlight(highlightSetting == "island_bond_keep_gap"),
+                    )
+                }
             }
         }
 
@@ -582,6 +626,12 @@ fun IslandVisualsSettingsUI(
         BackdropBlurUnavailableBottomSheet(status = backdropBlurStatus, onDismissRequest = { showBackdropBlurInfo = false })
     }
 
+    var showPersistentOrderInfo by remember { mutableStateOf(false) }
+
+    if (showPersistentOrderInfo) {
+        PersistentOrderInfoBottomSheet(onDismissRequest = { showPersistentOrderInfo = false })
+    }
+
     var showPreferStillInfo by remember { mutableStateOf(false) }
 
     if (showPreferStillInfo) {
@@ -639,6 +689,18 @@ fun IslandVisualsSettingsUI(
                     viewModel.setIslandBalanceCompact(checked)
                 },
                 modifier = Modifier.highlight(highlightSetting == "island_balance_compact"),
+            )
+
+            IconToggleItem(
+                iconRes = R.drawable.rounded_swap_vert_24,
+                title = stringResource(R.string.island_persistent_order_title),
+                isChecked = viewModel.isIslandPersistentOrder.value,
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    viewModel.setIslandPersistentOrder(checked)
+                },
+                onInfoClick = { showPersistentOrderInfo = true },
+                modifier = Modifier.highlight(highlightSetting == "island_persistent_order"),
             )
 
         }
@@ -978,6 +1040,16 @@ fun IslandDurationSettingsUI(
                 increment = 0.5f,
                 iconRes = R.drawable.rounded_timer_24,
                 valueFormatter = { "%.1fs".format(it) },
+            )
+
+            IconToggleItem(
+                iconRes = R.drawable.rounded_timer_24,
+                title = stringResource(R.string.island_timeout_after_marquee_title),
+                isChecked = viewModel.isIslandTimeoutAfterMarquee.value,
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    viewModel.setIslandTimeoutAfterMarquee(checked)
+                },
             )
 
             val infinityText = stringResource(R.string.island_timeout_infinity)

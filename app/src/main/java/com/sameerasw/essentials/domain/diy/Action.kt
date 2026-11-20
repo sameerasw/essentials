@@ -605,6 +605,48 @@ sealed interface Action {
     }
 
     @Keep
+    data object TurnOnDarkTheme : Action {
+        override val title: Int = R.string.diy_action_dark_theme_on
+        override val icon: Int = R.drawable.rounded_dark_mode_24
+        override val permissions: List<String> = listOf("SHIZUKU", "ROOT")
+    }
+
+    @Keep
+    data object TurnOffDarkTheme : Action {
+        override val title: Int = R.string.diy_action_dark_theme_off
+        override val icon: Int = R.drawable.rounded_light_mode_24
+        override val permissions: List<String> = listOf("SHIZUKU", "ROOT")
+    }
+
+    @Keep
+    data object ToggleDarkTheme : Action {
+        override val title: Int = R.string.diy_action_dark_theme_toggle
+        override val icon: Int = R.drawable.rounded_dark_mode_24
+        override val permissions: List<String> = listOf("SHIZUKU", "ROOT")
+    }
+
+    @Keep
+    data object TurnOnShowTaps : Action {
+        override val title: Int = R.string.diy_action_show_taps_on
+        override val icon: Int = R.drawable.rounded_touch_app_24
+        override val permissions: List<String> = listOf("SHIZUKU", "ROOT")
+    }
+
+    @Keep
+    data object TurnOffShowTaps : Action {
+        override val title: Int = R.string.diy_action_show_taps_off
+        override val icon: Int = R.drawable.rounded_touch_app_24
+        override val permissions: List<String> = listOf("SHIZUKU", "ROOT")
+    }
+
+    @Keep
+    data object ToggleShowTaps : Action {
+        override val title: Int = R.string.diy_action_show_taps_toggle
+        override val icon: Int = R.drawable.rounded_touch_app_24
+        override val permissions: List<String> = listOf("SHIZUKU", "ROOT")
+    }
+
+    @Keep
     data object TurnOnWifi : Action {
         override val title: Int = R.string.diy_action_wifi_on
         override val icon: Int = R.drawable.rounded_android_wifi_4_bar_plus_24
