@@ -1763,6 +1763,7 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="island_battery_only_low_title">Solo mostrar si esta baja</string>
     <string name="island_battery_percentage_title">Mostrar porcentaje</string>
     <string name="island_battery_percentage_conditional_title">% solo para algunas condiciones</string>
+    <string name="island_battery_status_icon_title">Show status icon</string>
     <string name="island_launcher_only_desc">Ocultar si una aplicación esta abierta</string>
     <string name="island_section_notifications">Notificaciones</string>
     <string name="island_hide_on_shade_title">Ocultar cuando Barra de Estado se desliza</string>

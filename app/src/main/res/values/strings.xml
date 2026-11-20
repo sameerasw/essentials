@@ -3334,6 +3334,7 @@
     <string name="island_gesture_visuals_hint">Turn on Time &amp; battery to see volume, brightness and sound mode changes on the island.</string>
     <string name="island_battery_percentage_title">Show percentage</string>
     <string name="island_battery_percentage_conditional_title">% only for below conditions</string>
+    <string name="island_battery_status_icon_title">Show status icon</string>
     <string name="island_battery_icon_conditional_title">Icon only for below conditions</string>
     <string name="island_tap_action_desc">Choose what tap and long press do</string>
     <string name="island_tap_action_open">Open</string>

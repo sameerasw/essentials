@@ -1655,6 +1655,7 @@
     <string name="island_battery_style_title">Estilo da bateria</string>
     <string name="island_battery_percentage_title">Mostrar porcentagem </string>
     <string name="island_battery_percentage_conditional_title">Apenas para as condições abaixo</string>
+    <string name="island_battery_status_icon_title">Show status icon</string>
     <string name="island_launcher_only_title">Só aparece no iniciador</string>
     <string name="island_show_on_update_title">Periodically show on updates</string>
     <string name="island_provider_chip_title">Show as a chip</string>

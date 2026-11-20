@@ -1915,6 +1915,7 @@ Wi-Fi、Bluetooth、モバイルデータなどの個々のアイコンを非表
     <string name="island_battery_style_title">バッテリースタイル</string>
     <string name="island_battery_percentage_title">パーセントを表示</string>
     <string name="island_battery_percentage_conditional_title">以下の条件のみ</string>
+    <string name="island_battery_status_icon_title">Show status icon</string>
     <string name="island_battery_idle_color_title">アイドル時の色</string>
     <string name="island_launcher_only_title">ランチャーにいるときのみ表示</string>
     <string name="island_show_on_update_title">Periodically show on updates</string>

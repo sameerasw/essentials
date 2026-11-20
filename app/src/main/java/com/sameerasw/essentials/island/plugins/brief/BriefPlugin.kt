@@ -153,6 +153,7 @@ class BriefPlugin : BaseIslandPlugin() {
     override val settingKeys = setOf(
         SettingsRepository.KEY_ISLAND_BRIEF_ENABLED,
         SettingsRepository.KEY_ISLAND_BATTERY_STYLE,
+        SettingsRepository.KEY_ISLAND_BATTERY_STATUS_ICON,
         SettingsRepository.KEY_ISLAND_DEVICES_BATTERY_STYLE,
         SettingsRepository.KEY_STATUS_GLANCE_CALENDAR_SHOW_ALL_DAY,
         SettingsRepository.KEY_ISLAND_BRIEF_SHOW_ALARM,
@@ -165,6 +166,7 @@ class BriefPlugin : BaseIslandPlugin() {
             publish(null)
             return
         }
+        val statusIcon = settings.isIslandBatteryStatusIconEnabled()
         val iconStyle = settings.getIslandBatteryStyle() == SettingsRepository.ISLAND_BATTERY_STYLE_ICON
         val devicesIconStyle = settings.getIslandDevicesBatteryStyle() == SettingsRepository.ISLAND_BATTERY_STYLE_ICON
         val alarmHours = if (settings.isIslandBriefShowAlarmEnabled()) settings.getIslandAlarmWindowHours() else null
@@ -189,7 +191,7 @@ class BriefPlugin : BaseIslandPlugin() {
                 compact = listOf(CompactCell("brief.placeholder") {}),
                 expanded = ExpandedContent { scope ->
                     BriefExpanded(
-                        scope, iconStyle, devicesIconStyle, alarmHours, calendarEnabled, calendarIds, showAllDay, showGlow, twoLineHeader,
+                        scope, iconStyle, devicesIconStyle, statusIcon, alarmHours, calendarEnabled, calendarIds, showAllDay, showGlow, twoLineHeader,
                         onOpenLivePlayer = { ctx?.request?.invoke(PluginRequest.Expand(MediaPlugin.ITEM_KEY)) },
                         onRequestExpand = { ctx?.request?.invoke(PluginRequest.Expand(it)) },
                     ) { open ->
@@ -212,6 +214,7 @@ private fun BriefExpanded(
     scope: IslandExpandedScope,
     iconStyle: Boolean,
     devicesIconStyle: Boolean,
+    statusIcon: Boolean,
     alarmHours: Int?,
     calendarEnabled: Boolean,
     calendarIds: Set<Long>,
@@ -262,6 +265,7 @@ private fun BriefExpanded(
                         scope = scope,
                         iconStyle = iconStyle,
                         devicesIconStyle = devicesIconStyle,
+                        statusIcon = statusIcon,
                         alarmHours = alarmHours,
                         calendarEnabled = calendarEnabled,
                         calendarIds = calendarIds,
@@ -440,6 +444,7 @@ private fun BriefOverview(
     scope: IslandExpandedScope,
     iconStyle: Boolean,
     devicesIconStyle: Boolean,
+    statusIcon: Boolean,
     alarmHours: Int?,
     calendarEnabled: Boolean,
     calendarIds: Set<Long>,
@@ -534,9 +539,9 @@ private fun BriefOverview(
                     }
                     if (battery != null) {
                         if (iconStyle) {
-                            BatteryGlyph(battery.level, batteryColor, showLevel = true, charging = battery.charging, powerSave = battery.powerSave, limited = battery.limited)
+                            BatteryGlyph(battery.level, batteryColor, showLevel = true, charging = battery.charging && statusIcon, powerSave = battery.powerSave && statusIcon, limited = battery.limited && statusIcon)
                         } else {
-                            BatteryRing(battery.level, batteryColor, showLevel = true, charging = battery.charging, powerSave = battery.powerSave, limited = battery.limited)
+                            BatteryRing(battery.level, batteryColor, showLevel = true, charging = battery.charging && statusIcon, powerSave = battery.powerSave && statusIcon, limited = battery.limited && statusIcon)
                         }
                     }
                 },

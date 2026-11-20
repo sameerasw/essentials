@@ -1937,6 +1937,7 @@ Eingeschränkt – Niedrigste Priorität (Android 12+); etwa einmal täglich geb
     <string name="island_battery_icon_conditional_title">Symbol nur unter folgenden Bedingungen</string>
     <string name="battery_show_percentage_title">Prozent anzeigen</string>
     <string name="island_battery_percentage_conditional_title">% nur unter folgenden Bedingungen</string>
+    <string name="island_battery_status_icon_title">Show status icon</string>
     <string name="island_battery_idle_color_title">Leerlauffarbe</string>
     <string name="island_time_show_seconds_title">Sekunden anzeigen</string>
     <string name="island_launcher_only_title">Nur im Launcher anzeigen</string>

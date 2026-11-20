@@ -1953,6 +1953,7 @@ Nút Tiếp tục sẽ bị vô hiệu hóa trong vài giây để bạn có th�
     <string name="duo_slide_mirror_direction_title">Hướng phản chiếu</string>
     <string name="island_calendar_priority_title">Ưu tiên khi ở gần</string>
     <string name="island_battery_percentage_conditional_title">Chỉ áp dụng trong các điều kiện dưới đây</string>
+    <string name="island_battery_status_icon_title">Show status icon</string>
     <string name="island_call_sticky_title">Không tự động thu gọn</string>
     <string name="island_call_show_mode_title">Cách xem</string>
     <string name="island_media_show_previous_title">Hiển thị nút bài hát trước</string>

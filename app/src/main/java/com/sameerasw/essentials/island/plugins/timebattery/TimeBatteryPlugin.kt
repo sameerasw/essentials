@@ -59,6 +59,7 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
         SettingsRepository.KEY_ISLAND_BATTERY_STYLE,
         SettingsRepository.KEY_ISLAND_BATTERY_PERCENTAGE,
         SettingsRepository.KEY_ISLAND_BATTERY_PERCENTAGE_CONDITIONAL,
+        SettingsRepository.KEY_ISLAND_BATTERY_STATUS_ICON,
         SettingsRepository.KEY_ISLAND_BATTERY_ONLY_LOW,
         SettingsRepository.KEY_ISLAND_BATTERY_ICON_CONDITIONAL,
         SettingsRepository.KEY_ISLAND_BATTERY_PEEK_ALERTS,
@@ -252,6 +253,7 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
         val isLimited = shielded
         val stateColor = stateColor()
         val displayColor = stateColor ?: idleColor()
+        val statusIcon = settings.isIslandBatteryStatusIconEnabled()
         val iconStyle = settings.getIslandBatteryStyle() == SettingsRepository.ISLAND_BATTERY_STYLE_ICON
         val showLevel = settings.isIslandBatteryPercentageEnabled() &&
             (!settings.isIslandBatteryPercentageConditional() || stateColor != null)
@@ -299,8 +301,8 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
             compact = listOf(
                 CompactCell("battery") {
                     when {
-                        iconStyle -> BatteryGlyph(batteryLevel, displayColor ?: islandAccent(), showLevel = showLevel, charging = isCharging, powerSave = isSaving, limited = isLimited)
-                        else -> BatteryRing(batteryLevel, displayColor ?: islandAccent(), showLevel = showLevel, charging = isCharging, powerSave = isSaving, limited = isLimited)
+                        iconStyle -> BatteryGlyph(batteryLevel, displayColor ?: islandAccent(), showLevel = showLevel, charging = isCharging && statusIcon, powerSave = isSaving && statusIcon, limited = isLimited && statusIcon)
+                        else -> BatteryRing(batteryLevel, displayColor ?: islandAccent(), showLevel = showLevel, charging = isCharging && statusIcon, powerSave = isSaving && statusIcon, limited = isLimited && statusIcon)
                     }
                 },
             ),
