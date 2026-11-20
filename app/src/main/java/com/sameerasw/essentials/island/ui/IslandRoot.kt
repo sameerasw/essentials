@@ -612,6 +612,10 @@ private fun IslandRootContent(
                     else -> IslandMotion.hideBubble()
                 },
             )
+            if (stage == IslandStage.Compact) {
+                bubbleTucking = false
+                bubbleAbsorbing = false
+            }
         }
     }
     LaunchedEffect(stage) {
