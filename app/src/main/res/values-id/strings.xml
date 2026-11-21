@@ -127,7 +127,7 @@ Anda dapat menyesuaikan gaya animasi, warna, dan perilakunya. Fitur ini berfungs
     <string name="volume_steps_enable_title">Aktifkan volume steps</string>
     <string name="volume_steps_per_press_title">langkah per tekanan</string>
     <string name="feat_app_volume_title">Volume aplikasi </string>
-    <string name="feat_app_volume_desc">Atur volume terpisah untuk setiap aplikasi.</string>
+    <string name="feat_app_volume_desc">Atur volume terpisah untuk setiap aplikasi</string>
     <string name="app_volume_enable_title">Aktifkan volume aplikasi</string>
     <string name="app_volume_overlay_title">Kontrol UI overlay</string>
     <string name="app_volume_add_app">Tambah aplikasi </string>
@@ -391,4 +391,8 @@ Anda dapat menyesuaikan gaya animasi, warna, dan perilakunya. Fitur ini berfungs
     <string name="diy_device_effects_disabled">Dimatikan</string>
     <string name="diy_device_effects_enabled">Dinyalakan</string>
     <string name="haptic_mode_stronger">Lebih kuat</string>
+    <string name="feat_activity_launcher_title">Peluncur aktifitas</string>
+    <string name="setting_show_legacy_features_title">Tampilkan fitur lama</string>
+    <string name="setting_show_legacy_features_desc">Fitur-fitur ini mungkin tidak akan mendapatkan pembaruan mendatang karena batasan teknis atau karena tidak penting. </string>
+    <string name="feat_calendar_sync_desc">sinkronisasikan jadwalmu</string>
 </resources>
