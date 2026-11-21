@@ -68,7 +68,7 @@ Anda dapat menyesuaikan gaya animasi, warna, dan perilakunya. Fitur ini berfungs
     <string name="feat_statusbar_icons_title">Ikon statusbar</string>
     <string name="feat_always_on_display_title">Always on Display </string>
     <string name="cat_navigation">Navigasi</string>
-    <string name="feat_caffeinate_desc">Layar tetap menyala</string>
+    <string name="feat_caffeinate_desc">Jaga layar agar tetap menyala</string>
     <string name="feat_smart_pixels_title">Pixel pintar </string>
     <string name="feat_smart_pixels_desc">Matikan piksel untuk menghemat daya.</string>
     <string name="feat_pocket_mode_desc">Cegah sentuhan yang tidak disengaja saat berada di dalam saku.</string>
@@ -116,7 +116,7 @@ Anda dapat menyesuaikan gaya animasi, warna, dan perilakunya. Fitur ini berfungs
     <string name="label_animator_duration_scale">Skala durasi animator</string>
     <string name="label_transition_animation_scale">Skala animasi transisi</string>
     <string name="label_window_animation_scale">Skala animasi jendela</string>
-    <string name="setting_app_icon_title">Ikon aplikasi </string>
+    <string name="setting_app_icon_title">Lambang aplikasi</string>
     <string name="setting_app_icon_desc">Sesuaikan ikon peluncur layar beranda.</string>
     <string name="feat_hilight_notifications_title">Efek notifikasi </string>
     <string name="hilight_notifications_desc">Putar efek masing-masing aplikasi saat notifikasi tiba.</string>
@@ -371,4 +371,24 @@ Anda dapat menyesuaikan gaya animasi, warna, dan perilakunya. Fitur ini berfungs
     <string name="tour_help_fab">Use this anytime for help</string>
     <string name="action_reset_tour">Reset tour</string>
     <string name="tour_reset_toast">Tour reset</string>
+    <string name="perm_accessibility_title">Layanan Aksesibilitas</string>
+    <string name="perm_location_title">Lokasi</string>
+    <string name="perm_device_admin_title">Administrasi Perangkat</string>
+    <string name="perm_root_title">Akses Root</string>
+    <string name="perm_shizuku_desc">Dibutuhkan untuk perintah tingkat lanjut. Install Shizuku dari Play Store.</string>
+    <string name="perm_calendar_title">Kalender</string>
+    <string name="perm_nearby_devices_title">Perangkat Disekitar</string>
+    <string name="perm_contacts_title">Izin Kontak</string>
+    <string name="watch_call_sync_title">Panggilan</string>
+    <string name="perm_storage_title">Akses ke semua file</string>
+    <string name="perm_sensitive_notifications_title">Baca pemberitahuan sensitif</string>
+    <string name="perm_bubbles_title">Gelembung Mengambang</string>
+    <string name="perm_overlay_title">Tampilkan Diatas Aplikasi Lain</string>
+    <string name="permission_post_notifications_desc">Mengizinkan aplikasi untuk menampilkan pemberitahuan</string>
+    <string name="perm_files_media_desc">Untuk mencari dan menampilkan foto, video, audio, dan dokumen di dalam hasil Pencarian Pixel, Essentials butuh izin untuk mengakses semua file and media</string>
+    <string name="tile_lockdown_mode">Kunci Total</string>
+    <string name="tile_lockdown_mode_desc">Ubin setelan cepat untuk mematikan layar</string>
+    <string name="diy_device_effects_disabled">Dimatikan</string>
+    <string name="diy_device_effects_enabled">Dinyalakan</string>
+    <string name="haptic_mode_stronger">Lebih kuat</string>
 </resources>
