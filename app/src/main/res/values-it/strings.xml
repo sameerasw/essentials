@@ -1103,7 +1103,7 @@
     <string name="action_website">Sito web</string>
     <string name="action_contact">Contatto</string>
     <string name="action_telegram">Telegramma</string>
-    <string name="action_support">Supporto</string>
+    <string name="action_support">Sostienimi</string>
     <string name="label_other_apps">Altre app</string>
     <string name="app_airsync">AirSync</string>
     <string name="app_zenzero">ZenZero</string>
@@ -1779,8 +1779,8 @@
     <string name="island_expanded_dark_theme_warning">Expanded dark theme is on. If the island text or colors look wrong, filter Essentials out of it in Display settings.</string>
     <string name="island_expanded_dark_theme_action">Open display settings</string>
     <string name="settings_reset_all_hold">Hold to reset all data</string>
-    <string name="settings_reset_all_info_title">Reset Essentials data</string>
-    <string name="settings_reset_all_info_desc">Resets all Essentials settings and data to a fresh start. System settings, permissions and anything Essentials changed on your device, such as secure settings, are not reverted.</string>
+    <string name="settings_reset_all_info_title">Reimposta I dati di Essentials</string>
+    <string name="settings_reset_all_info_desc">Reimposta tutte le impostazioni e i dati di Essentials per un inizio pulito. Le impostazioni di sistema, i permessi e qualsiasi cosa Essentials ha modificato sul tuo dispositivo, come le impostazioni di sicurezza, non verranno ripristinate.</string>
     <string name="island_prefer_still_title">Prefer still island</string>
     <string name="island_prefer_still_info">Stops the island\'s animations after a few seconds without interaction, so the display can drop to a low refresh rate and save battery. Media visualizers, second by second counters and other looping animations pause until you interact with the island again.</string>
     <string name="island_pulse_shadow_title">Pulse for new notifications</string>
