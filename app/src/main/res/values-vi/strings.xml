@@ -2488,4 +2488,7 @@ Tính năng này chỉ được dùng cho trình khởi chạy và không phải
     <string name="tour_help_fab">Use this anytime for help</string>
     <string name="action_reset_tour">Reset tour</string>
     <string name="tour_reset_toast">Tour reset</string>
+    <string name="duo_section_position">Vị trí và kích thước</string>
+    <string name="duo_section_behavior">Hành vi</string>
+    <string name="duo_aod_burn_in_protection_desc">Các tùy chọn Ambient/AOD bị khóa để ngăn ngừa hiện tượng cháy màn hình. Bật \"Cho phép các tính năng không được hỗ trợ\" trong cài đặt để tùy chỉnh.</string>
 </resources>
