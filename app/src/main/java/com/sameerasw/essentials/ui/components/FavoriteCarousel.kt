@@ -46,10 +46,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.blur
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
-import androidx.compose.ui.input.nestedscroll.NestedScrollSource
-import androidx.compose.ui.input.nestedscroll.nestedScroll
+import com.sameerasw.essentials.ui.modifiers.consumeHorizontalScroll
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
@@ -86,27 +83,11 @@ fun FavoriteCarousel(
 
     val carouselState = rememberCarouselState { pinnedFeatures.size }
 
-    val nestedScrollConnection =
-        remember {
-            object : NestedScrollConnection {
-                override fun onPostScroll(
-                    consumed: Offset,
-                    available: Offset,
-                    source: NestedScrollSource,
-                ): Offset =
-                    if (available.x != 0f) {
-                        Offset(x = available.x, y = 0f)
-                    } else {
-                        Offset.Zero
-                    }
-            }
-        }
-
     Column(
         modifier =
             modifier
                 .fillMaxWidth()
-                .nestedScroll(nestedScrollConnection),
+                .consumeHorizontalScroll(),
     ) {
         HorizontalMultiBrowseCarousel(
             state = carouselState,

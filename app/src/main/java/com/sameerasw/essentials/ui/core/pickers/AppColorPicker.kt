@@ -51,6 +51,7 @@ import com.materialkolor.dynamicColorScheme
 import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenu
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
+import com.sameerasw.essentials.ui.modifiers.consumeHorizontalScroll
 import com.sameerasw.essentials.ui.theme.AppColorOption
 import com.sameerasw.essentials.ui.theme.AppColorVariant
 import com.sameerasw.essentials.ui.theme.AppColorOptions
@@ -182,7 +183,8 @@ fun AppColorPicker(
                 Modifier
                     .padding(top = 16.dp)
                     .fillMaxWidth()
-                    .height(64.dp),
+                    .height(64.dp)
+                    .consumeHorizontalScroll(),
         ) { index ->
             val option = items[index]
             val scheme = schemes[index]
