@@ -38,7 +38,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
@@ -62,6 +65,7 @@ fun AppColorPicker(
     onVariantSelected: (String) -> Unit,
     onSelected: (Int, String?) -> Unit,
     modifier: Modifier = Modifier,
+    onSelectedWithPosition: ((Offset) -> Unit)? = null,
 ) {
     val view = LocalView.current
     val context = LocalContext.current
@@ -108,10 +112,12 @@ fun AppColorPicker(
                 color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.padding(start = 16.dp).weight(1f),
             )
+            var pillCenter by remember { mutableStateOf(Offset.Zero) }
             Box {
                 Row(
                     modifier =
                         Modifier
+                            .onGloballyPositioned { pillCenter = it.centerInRoot() }
                             .clip(CircleShape)
                             .background(MaterialTheme.colorScheme.surfaceContainerHighest)
                             .clickable {
@@ -142,6 +148,7 @@ fun AppColorPicker(
                             onClick = {
                                 showVariantMenu = false
                                 onVariantSelected(entry.name)
+                                onSelectedWithPosition?.invoke(pillCenter)
                                 val current = items.firstOrNull { it != null && it.seed == selectedSeed && it.styleFor(variant).name == selectedStyle }
                                 if (current != null && !current.isMix) {
                                     onSelected(current.seed, entry.style.name)
@@ -194,15 +201,18 @@ fun AppColorPicker(
                 }
             val contentColor = scheme?.onPrimary ?: MaterialTheme.colorScheme.onPrimaryContainer
 
+            var cardCenter by remember { mutableStateOf(Offset.Zero) }
             Box(
                 modifier =
                     Modifier
                         .fillMaxSize()
+                        .onGloballyPositioned { cardCenter = it.centerInRoot() }
                         .maskClip(MaterialTheme.shapes.large)
                         .then(backgroundModifier)
                         .clickable {
                             HapticUtil.performVirtualKeyHaptic(view)
                             onSelected(option?.seed ?: 0, option?.styleFor(variant)?.name)
+                            onSelectedWithPosition?.invoke(cardCenter)
                         },
                 contentAlignment = Alignment.Center,
             ) {
@@ -220,4 +230,9 @@ fun AppColorPicker(
             }
         }
     }
+}
+
+private fun androidx.compose.ui.layout.LayoutCoordinates.centerInRoot(): Offset {
+    val pos = positionInRoot()
+    return Offset(pos.x + size.width / 2f, pos.y + size.height / 2f)
 }

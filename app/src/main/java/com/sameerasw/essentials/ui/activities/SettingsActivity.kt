@@ -175,6 +175,7 @@ fun SettingsContent(
     onAppIconSelectedWithPosition: ((com.sameerasw.essentials.domain.model.AppIcon, Offset) -> Unit)? = null,
     onAvatarLongClickWithPosition: ((Offset) -> Unit)? = null,
     onRippleToggleEnabledWithPosition: ((Offset) -> Unit)? = null,
+    onAppColorSelectedWithPosition: ((Offset) -> Unit)? = null,
 ) {
     val isAccessibilityEnabled by viewModel.isAccessibilityEnabled
     val isWriteSecureSettingsEnabled by viewModel.isWriteSecureSettingsEnabled
@@ -670,6 +671,7 @@ fun SettingsContent(
                 selectedVariant = appColorVariant,
                 onVariantSelected = { viewModel.setAppColorVariant(it) },
                 onSelected = { seed, style -> viewModel.setAppColor(seed, style) },
+                onSelectedWithPosition = onAppColorSelectedWithPosition,
             )
 
             IconToggleItem(
