@@ -1402,11 +1402,11 @@ con il ❤️ da 🇱🇰</string>
     <string name="action_new_automation">Nuova Automazione</string>
     <string name="action_add_repository">Aggiungi Repository</string>
     <!-- Bug Report Enhancement -->
-    <string name="bug_report_feedback_placeholder">Describe the issue or provide feedback…</string>
-    <string name="bug_report_contact_email_label">Contact email</string>
-    <string name="action_send_feedback">Send Feedback</string>
+    <string name="bug_report_feedback_placeholder">Descrivi il problema o fornisci feedback...</string>
+    <string name="bug_report_contact_email_label">Email di contatto</string>
+    <string name="action_send_feedback">Invia Feedback</string>
     <string name="msg_feedback_sent">Feedback sent successfully! Thanks for helping us improve the app.</string>
-    <string name="label_alternatively">Alternatively</string>
+    <string name="label_alternatively">Alternativamente</string>
     <!-- Pixel Diagnostics -->
     <string name="label_diagnostics">Diagnostics</string>
     <string name="label_device_check">Device Check</string>
@@ -1964,4 +1964,7 @@ con il ❤️ da 🇱🇰</string>
     <string name="tour_reset_toast">Tour reset</string>
     <string name="instruction_section_genai_title">IA Generativa sul dispositivo (Gemini Nano)</string>
     <string name="label_motion_blur_amount">Quantità</string>
+    <string name="bug_report_issue_details">Info sul problema</string>
+    <string name="crash_logs_title">Log di crash</string>
+    <string name="btn_clear_all_crash_logs">Elimina tutti</string>
 </resources>
