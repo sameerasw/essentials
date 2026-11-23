@@ -22,24 +22,34 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.carousel.HorizontalMultiBrowseCarousel
 import androidx.compose.material3.carousel.rememberCarouselState
+import androidx.compose.material3.dynamicDarkColorScheme
+import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.materialkolor.dynamicColorScheme
 import com.sameerasw.essentials.translation.TranslatableText
+import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenu
+import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
 import com.sameerasw.essentials.ui.theme.AppColorOption
+import com.sameerasw.essentials.ui.theme.AppColorVariant
 import com.sameerasw.essentials.ui.theme.AppColorOptions
 import com.sameerasw.essentials.utils.HapticUtil
 
@@ -48,18 +58,27 @@ import com.sameerasw.essentials.utils.HapticUtil
 fun AppColorPicker(
     selectedSeed: Int,
     selectedStyle: String?,
+    selectedVariant: String,
+    onVariantSelected: (String) -> Unit,
     onSelected: (Int, String?) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val view = LocalView.current
+    val context = LocalContext.current
     val isDark = isSystemInDarkTheme()
+    val variant = AppColorVariant.from(selectedVariant)
+    var showVariantMenu by remember { mutableStateOf(false) }
     val hasSystemColors = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
 
     val items = remember(hasSystemColors) { if (hasSystemColors) listOf<AppColorOption?>(null) + AppColorOptions else AppColorOptions }
     val schemes =
-        remember(items, isDark) {
+        remember(items, isDark, variant) {
             items.map { option ->
-                option?.let { dynamicColorScheme(seedColor = it.seedColor, isDark = isDark, style = it.style) }
+                if (option == null) {
+                    if (isDark) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+                } else {
+                    dynamicColorScheme(seedColor = option.seedColor, isDark = isDark, style = option.styleFor(variant))
+                }
             }
         }
     val noneSelected = !hasSystemColors && selectedSeed == 0
@@ -74,7 +93,7 @@ fun AppColorPicker(
                 .padding(vertical = 16.dp),
     ) {
         Row(
-            modifier = Modifier.padding(horizontal = 16.dp),
+            modifier = Modifier.padding(horizontal = 16.dp).fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Icon(
@@ -87,8 +106,62 @@ fun AppColorPicker(
                 stringResId = R.string.setting_app_color_title,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier.padding(start = 16.dp),
+                modifier = Modifier.padding(start = 16.dp).weight(1f),
             )
+            Box {
+                Row(
+                    modifier =
+                        Modifier
+                            .clip(CircleShape)
+                            .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+                            .clickable {
+                                HapticUtil.performVirtualKeyHaptic(view)
+                                showVariantMenu = true
+                            }.padding(start = 12.dp, end = 8.dp, top = 6.dp, bottom = 6.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    TranslatableText(
+                        stringResId = variant.labelRes,
+                        style = MaterialTheme.typography.labelLarge,
+                        color = MaterialTheme.colorScheme.onSurface,
+                    )
+                    Icon(
+                        painter = painterResource(id = R.drawable.rounded_keyboard_arrow_down_24),
+                        contentDescription = null,
+                        modifier = Modifier.size(18.dp),
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
+                SegmentedDropdownMenu(
+                    expanded = showVariantMenu,
+                    onDismissRequest = { showVariantMenu = false },
+                ) {
+                    AppColorVariant.entries.forEach { entry ->
+                        SegmentedDropdownMenuItem(
+                            text = { TranslatableText(entry.labelRes) },
+                            onClick = {
+                                showVariantMenu = false
+                                onVariantSelected(entry.name)
+                                val current = items.firstOrNull { it != null && it.seed == selectedSeed && it.styleFor(variant).name == selectedStyle }
+                                if (current != null && !current.isMix) {
+                                    onSelected(current.seed, entry.style.name)
+                                }
+                            },
+                            trailingIcon =
+                                if (entry == variant) {
+                                    {
+                                        Icon(
+                                            painter = painterResource(id = R.drawable.rounded_check_24),
+                                            contentDescription = null,
+                                        )
+                                    }
+                                } else {
+                                    null
+                                },
+                        )
+                    }
+                }
+            }
         }
 
         HorizontalMultiBrowseCarousel(
@@ -111,15 +184,15 @@ fun AppColorPicker(
                     selectedSeed == 0 && hasSystemColors
                 } else {
                     (noneSelected && option === AppColorOptions.first()) ||
-                        (selectedSeed == option.seed && selectedStyle == option.style.name)
+                        (selectedSeed == option.seed && selectedStyle == option.styleFor(variant).name)
                 }
             val backgroundModifier =
                 when {
-                    option == null || scheme == null -> Modifier.background(MaterialTheme.colorScheme.primaryContainer)
+                    option == null || scheme == null -> Modifier.background(scheme?.primary ?: MaterialTheme.colorScheme.primaryContainer)
                     option.isMix -> Modifier.background(Brush.linearGradient(listOf(scheme.primary, scheme.secondary, scheme.tertiary)))
                     else -> Modifier.background(scheme.primary)
                 }
-            val contentColor = if (scheme == null) MaterialTheme.colorScheme.onPrimaryContainer else scheme.onPrimary
+            val contentColor = scheme?.onPrimary ?: MaterialTheme.colorScheme.onPrimaryContainer
 
             Box(
                 modifier =
@@ -129,7 +202,7 @@ fun AppColorPicker(
                         .then(backgroundModifier)
                         .clickable {
                             HapticUtil.performVirtualKeyHaptic(view)
-                            onSelected(option?.seed ?: 0, option?.style?.name)
+                            onSelected(option?.seed ?: 0, option?.styleFor(variant)?.name)
                         },
                 contentAlignment = Alignment.Center,
             ) {

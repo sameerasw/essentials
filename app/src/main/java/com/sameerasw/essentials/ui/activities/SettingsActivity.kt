@@ -663,9 +663,12 @@ fun SettingsContent(
 
             val appColorSeed by viewModel.appColorSeed
             val appColorStyle by viewModel.appColorStyle
+            val appColorVariant by viewModel.appColorVariant
             AppColorPicker(
                 selectedSeed = appColorSeed,
                 selectedStyle = appColorStyle,
+                selectedVariant = appColorVariant,
+                onVariantSelected = { viewModel.setAppColorVariant(it) },
                 onSelected = { seed, style -> viewModel.setAppColor(seed, style) },
             )
 

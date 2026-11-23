@@ -66,6 +66,9 @@
     <string name="flashlight_options_desc">Біртіндеп сөну мен басқа параметрлерді реттеу</string>
     <string name="setting_pitch_black_theme_title">Толық қара тақырып</string>
     <string name="setting_app_color_title">App color</string>
+    <string name="app_color_variant_soft">Soft</string>
+    <string name="app_color_variant_bright">Bright</string>
+    <string name="app_color_variant_neutral">Neutral</string>
     <string name="setting_pitch_black_theme_desc">Қараңғы режимде таза қара фонды қолдану</string>
     <string name="settings_section_haptic">Тактильді кері байланыс</string>
     <string name="button_remap_section_long_press">Ұзақ басуды қайта тағайындау</string>

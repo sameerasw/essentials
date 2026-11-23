@@ -47,6 +47,9 @@
     <string name="flashlight_options_desc">Ajusteu l\'esvaïment i altres paràmetres</string>
     <string name="setting_pitch_black_theme_title">Tema negre del to</string>
     <string name="setting_app_color_title">App color</string>
+    <string name="app_color_variant_soft">Soft</string>
+    <string name="app_color_variant_bright">Bright</string>
+    <string name="app_color_variant_neutral">Neutral</string>
     <string name="setting_pitch_black_theme_desc">Utilitzeu fons negre pur en mode fosc</string>
     <string name="settings_section_haptic">Feedback hàptic</string>
     <string name="button_remap_section_long_press">Remapejar Premsa llarga</string>

@@ -47,6 +47,9 @@
     <string name="flashlight_options_desc">Налаштуйте згасання та інші параметри</string>
     <string name="setting_pitch_black_theme_title">Безпросвітна темна тема</string>
     <string name="setting_app_color_title">App color</string>
+    <string name="app_color_variant_soft">Soft</string>
+    <string name="app_color_variant_bright">Bright</string>
+    <string name="app_color_variant_neutral">Neutral</string>
     <string name="setting_pitch_black_theme_desc">Використовуйте чистий чорний фон у темному режимі</string>
     <string name="settings_section_haptic">Тактильний зворотний зв\'язок</string>
     <string name="button_remap_section_long_press">Remap Тривале натискання</string>
