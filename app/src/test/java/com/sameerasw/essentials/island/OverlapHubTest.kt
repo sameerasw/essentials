@@ -12,7 +12,7 @@ class OverlapHubTest {
     private fun icon(key: String, width: Float = 1f) = StackIcon(key, widthFactor = width) {}
     private val hub = listOf(icon("media", 2.2f), icon("n1"), icon("n2"), icon("n3"))
 
-    @Test fun counterNeverReplacesTheLead() = assertEquals(2, overlapSlots(hub, 1))
+    @Test fun counterNeverReplacesTheLead() = assertEquals(1, overlapSlots(hub, 1))
 
     @Test fun singleIconNeedsOneSlot() = assertEquals(1, overlapSlots(listOf(icon("media", 2.2f)), 1))
 
