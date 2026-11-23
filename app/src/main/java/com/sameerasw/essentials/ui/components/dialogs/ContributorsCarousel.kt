@@ -64,7 +64,7 @@ import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.ContributorsRepository
 import com.sameerasw.essentials.domain.model.github.GitHubContributor
 import com.sameerasw.essentials.translation.TranslatableText
-import com.sameerasw.essentials.ui.theme.GoogleSansFlexRounded
+import com.sameerasw.essentials.ui.theme.AppFontFamily
 import com.sameerasw.essentials.utils.HapticUtil
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -174,7 +174,7 @@ fun ContributorsCarousel(modifier: Modifier = Modifier) {
                                     text = "${contributor.contributions}",
                                     style =
                                         MaterialTheme.typography.labelSmall.copy(
-                                            fontFamily = GoogleSansFlexRounded,
+                                            fontFamily = AppFontFamily,
                                             fontSize = 11.sp,
                                             fontWeight = FontWeight.Medium,
                                         ),
@@ -207,7 +207,7 @@ fun ContributorsCarousel(modifier: Modifier = Modifier) {
                             text = contributor.login,
                             style =
                                 MaterialTheme.typography.labelMedium.copy(
-                                    fontFamily = GoogleSansFlexRounded,
+                                    fontFamily = AppFontFamily,
                                     fontWeight = FontWeight.Normal,
                                 ),
                             color = Color.White,

@@ -234,7 +234,10 @@ private fun flexFont(weight: Int) = Font(
     variationSettings = FontVariation.Settings(FontVariation.weight(weight), FontVariation.Setting("ROND", 100f)),
 )
 
-val IslandFontFamily = FontFamily(flexFont(400), flexFont(500), flexFont(600), flexFont(700))
+private val IslandFlexFontFamily = FontFamily(flexFont(400), flexFont(500), flexFont(600), flexFont(700))
+
+val IslandFontFamily: FontFamily
+    get() = if (com.sameerasw.essentials.ui.theme.SystemFontState.enabled) FontFamily.Default else IslandFlexFontFamily
 
 val LocalIslandTextColor = compositionLocalOf<Color?> { null }
 

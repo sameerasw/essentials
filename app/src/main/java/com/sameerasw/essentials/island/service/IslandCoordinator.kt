@@ -563,7 +563,7 @@ class IslandCoordinator(
                 remember(revision) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) dynamicDarkColorScheme(service) else darkColorScheme()
                 }
-            MaterialTheme(colorScheme = colors, typography = IslandTypography) {
+            MaterialTheme(colorScheme = colors, typography = islandTypography()) {
                 val base = LocalDensity.current
                 CompositionLocalProvider(
                     LocalDensity provides Density(base.density, base.fontScale * layoutSpec.fontScale),
@@ -1186,7 +1186,7 @@ class IslandCoordinator(
     }
 }
 
-private val IslandTypography = Typography().run {
+private fun islandTypography() = Typography().run {
     copy(
         bodyLarge = bodyLarge.copy(fontFamily = IslandFontFamily),
         bodyMedium = bodyMedium.copy(fontFamily = IslandFontFamily),

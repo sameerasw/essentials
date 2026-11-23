@@ -623,6 +623,7 @@ class MainViewModel : ViewModel() {
     val appColorSeed = mutableStateOf(0)
     val appColorStyle = mutableStateOf<String?>(null)
     val appColorVariant = mutableStateOf("Bright")
+    val useSystemFont = mutableStateOf(false)
     val isGenAIAutomationEnabled = mutableStateOf(false)
     val isLocationReachedFullScreenAlarmEnabled = mutableStateOf(true)
 
@@ -2816,6 +2817,7 @@ class MainViewModel : ViewModel() {
             settingsRepository.getBoolean(SettingsRepository.KEY_PITCH_BLACK_THEME_ENABLED)
         appColorSeed.value = settingsRepository.getInt(SettingsRepository.KEY_APP_COLOR_SEED)
         appColorStyle.value = settingsRepository.getString(SettingsRepository.KEY_APP_COLOR_STYLE)
+        useSystemFont.value = settingsRepository.getBoolean(SettingsRepository.KEY_USE_SYSTEM_FONT)
         appColorVariant.value = settingsRepository.getString(SettingsRepository.KEY_APP_COLOR_VARIANT, "Bright") ?: "Bright"
         isLocationReachedFullScreenAlarmEnabled.value =
             settingsRepository.getLocationReachedFullScreenAlarmEnabled()
@@ -3647,6 +3649,11 @@ class MainViewModel : ViewModel() {
     ) {
         isPitchBlackThemeEnabled.value = enabled
         settingsRepository.putBoolean(SettingsRepository.KEY_PITCH_BLACK_THEME_ENABLED, enabled)
+    }
+
+    fun setUseSystemFont(enabled: Boolean) {
+        useSystemFont.value = enabled
+        settingsRepository.putBoolean(SettingsRepository.KEY_USE_SYSTEM_FONT, enabled)
     }
 
     fun setAppColorVariant(variant: String) {

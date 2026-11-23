@@ -47,7 +47,7 @@ import com.sameerasw.essentials.island.remote.OvercastLink
 import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
-import com.sameerasw.essentials.ui.theme.GoogleSansFlexRounded
+import com.sameerasw.essentials.ui.theme.AppFontFamily
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.viewmodels.MainViewModel
 
@@ -278,7 +278,7 @@ private fun WhatsNewSectionCard(
                         text = title,
                         style =
                             MaterialTheme.typography.titleLarge.copy(
-                                fontFamily = GoogleSansFlexRounded,
+                                fontFamily = AppFontFamily,
                                 fontWeight = FontWeight.Bold,
                             ),
                         color = MaterialTheme.colorScheme.onSurface,

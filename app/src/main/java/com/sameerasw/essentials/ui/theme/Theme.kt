@@ -27,6 +27,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontFamily
 import com.materialkolor.PaletteStyle
 import com.materialkolor.dynamicColorScheme
 import com.sameerasw.essentials.data.repository.SettingsRepository
@@ -86,6 +87,8 @@ fun EssentialsTheme(
     content: @Composable () -> Unit,
 ) {
     val (seed, style) = rememberAppColor()
+    SystemFontState.init(LocalContext.current)
+    val useSystemFont = SystemFontState.enabled
     val baseScheme =
         when {
             dynamicColor && seed != 0 ->
@@ -111,7 +114,7 @@ fun EssentialsTheme(
     CompositionLocalProvider(LocalHapticFeedback provides gatedHaptics) {
         MaterialTheme(
             colorScheme = colorScheme,
-            typography = Typography,
+            typography = if (useSystemFont) Typography.withFontFamily(FontFamily.Default) else Typography,
             shapes = Shapes,
             content = content,
         )

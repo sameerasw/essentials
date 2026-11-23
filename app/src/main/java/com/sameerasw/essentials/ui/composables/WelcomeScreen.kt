@@ -96,7 +96,6 @@ import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.pickers.CrashReportingPicker
 import com.sameerasw.essentials.ui.core.pickers.LanguagePicker
 import com.sameerasw.essentials.ui.core.sheets.UpdateBottomSheet
-import com.sameerasw.essentials.ui.theme.GoogleSansFlexRounded
 import com.sameerasw.essentials.utils.DeviceUtils
 import com.sameerasw.essentials.ui.core.pickers.SegmentedPicker
 import com.sameerasw.essentials.utils.AppHapticMode
@@ -367,7 +366,7 @@ fun WelcomeStepContent(
                 text = stringResource(if (isWhatsNewFlow) R.string.welcome_back_title else R.string.welcome_title),
                 style =
                     MaterialTheme.typography.headlineMedium.copy(
-                        fontFamily = GoogleSansFlexRounded,
+                        fontFamily = MaterialTheme.typography.headlineLarge.fontFamily,
                         fontWeight = FontWeight.SemiBold,
                     ),
                 textAlign = TextAlign.Center,
@@ -480,7 +479,7 @@ fun AcknowledgementStepContent(
             stringResId = R.string.acknowledgement_title,
             style =
                 MaterialTheme.typography.headlineLarge.copy(
-                    fontFamily = GoogleSansFlexRounded,
+                    fontFamily = MaterialTheme.typography.headlineLarge.fontFamily,
                     fontWeight = FontWeight.Bold,
                 ),
             textAlign = TextAlign.Center,
@@ -627,7 +626,7 @@ fun FeatureIntroStepContent(
                 stringResId = R.string.action_what_is_this,
                 style =
                     MaterialTheme.typography.headlineLarge.copy(
-                        fontFamily = GoogleSansFlexRounded,
+                        fontFamily = MaterialTheme.typography.headlineLarge.fontFamily,
                         fontWeight = FontWeight.Bold,
                     ),
                 textAlign = TextAlign.Center,
@@ -826,7 +825,7 @@ fun WhatsNewStepContent(
                 text = "Essentials v${com.sameerasw.essentials.BuildConfig.VERSION_NAME}",
                 style =
                     MaterialTheme.typography.headlineLarge.copy(
-                        fontFamily = GoogleSansFlexRounded,
+                        fontFamily = MaterialTheme.typography.headlineLarge.fontFamily,
                         fontWeight = FontWeight.Bold,
                     ),
                 textAlign = TextAlign.Center,
@@ -1009,7 +1008,7 @@ fun PreferencesStepContent(
                 stringResId = R.string.preferences_title,
                 style =
                     MaterialTheme.typography.headlineLarge.copy(
-                        fontFamily = GoogleSansFlexRounded,
+                        fontFamily = MaterialTheme.typography.headlineLarge.fontFamily,
                         fontWeight = FontWeight.Bold,
                         fontSize = 36.sp,
                     ),

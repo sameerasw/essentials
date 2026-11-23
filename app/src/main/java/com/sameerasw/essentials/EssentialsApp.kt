@@ -48,6 +48,7 @@ class EssentialsApp : Application() {
         super.onCreate()
         com.sameerasw.essentials.data.repository.SettingsRepository(this).syncTorchRestriction()
         context = applicationContext
+        com.sameerasw.essentials.ui.theme.SystemFontState.init(this)
         com.sameerasw.essentials.utils.HapticUtil.initialize(this)
 
         try {

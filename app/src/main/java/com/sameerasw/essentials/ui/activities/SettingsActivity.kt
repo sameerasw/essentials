@@ -675,6 +675,13 @@ fun SettingsContent(
             )
 
             IconToggleItem(
+                iconRes = R.drawable.rounded_format_size_24,
+                title = stringResource(R.string.setting_use_system_font_title),
+                isChecked = viewModel.useSystemFont.value,
+                onCheckedChange = { viewModel.setUseSystemFont(it) },
+            )
+
+            IconToggleItem(
                 iconRes = R.drawable.rounded_invert_colors_24,
                 title = stringResource(R.string.setting_pitch_black_theme_title),
                 isChecked = viewModel.isPitchBlackThemeEnabled.value,

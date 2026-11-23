@@ -43,6 +43,7 @@
     <string name="flashlight_options_desc">Passe Überblendungen und andere Einstellungen an</string>
     <string name="setting_pitch_black_theme_title">Tiefschwarzes Design</string>
     <string name="setting_app_color_title">App color</string>
+    <string name="setting_use_system_font_title">Use system font</string>
     <string name="app_color_variant_soft">Soft</string>
     <string name="app_color_variant_bright">Bright</string>
     <string name="app_color_variant_neutral">Neutral</string>
