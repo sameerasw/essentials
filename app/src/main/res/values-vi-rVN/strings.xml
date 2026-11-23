@@ -46,6 +46,7 @@
     <string name="flashlight_options_title">Tùy chọn đèn pin</string>
     <string name="flashlight_options_desc">Điều chỉnh độ mờ và các cài đặt khác</string>
     <string name="setting_pitch_black_theme_title">Chủ đề đen tuyền</string>
+    <string name="setting_app_color_title">App color</string>
     <string name="setting_pitch_black_theme_desc">Sử dụng nền đen thuần túy ở chế độ tối</string>
     <string name="settings_section_haptic">Phản hồi xúc giác</string>
     <string name="button_remap_section_long_press">Nhấn giữ lại bản đồ</string>

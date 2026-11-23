@@ -46,6 +46,7 @@
     <string name="flashlight_options_title">Impostazioni torcia</string>
     <string name="flashlight_options_desc">Regola la dissolvenza e altre impostazioni</string>
     <string name="setting_pitch_black_theme_title">Tema nero assoluto</string>
+    <string name="setting_app_color_title">App color</string>
     <string name="setting_pitch_black_theme_desc">Utilizza lo sfondo nero puro in modalità scura</string>
     <string name="settings_section_haptic">Feedback aptico</string>
     <string name="button_remap_section_long_press">Riassegna pressione prolungata</string>

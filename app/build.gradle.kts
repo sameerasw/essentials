@@ -219,6 +219,7 @@ dependencies {
     // Gson for JSON serialization
     implementation(libs.gson.v2140)
     implementation(libs.androidx.palette)
+    implementation(libs.material.kolor)
 
     // Reorderable library
     implementation(libs.reorderable)

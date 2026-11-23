@@ -42,6 +42,7 @@
     <string name="flashlight_options_title">El feneri seçenekleri</string>
     <string name="flashlight_options_desc">Solmayı ve diğer ayarları düzenleyin</string>
     <string name="setting_pitch_black_theme_title">Zifiri siyah tema</string>
+    <string name="setting_app_color_title">App color</string>
     <string name="setting_pitch_black_theme_desc">Karanlık modda saf siyah arka plan kullanın</string>
     <string name="settings_section_haptic">Dokunsal Geri Bildirim</string>
     <string name="button_remap_section_long_press">Uzun Basmayı Yeniden Eşle</string>

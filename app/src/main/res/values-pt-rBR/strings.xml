@@ -46,6 +46,7 @@
     <string name="flashlight_options_title">Opções de lanterna</string>
     <string name="flashlight_options_desc">Ajustar o desbotamento e outras configurações</string>
     <string name="setting_pitch_black_theme_title">Tema preto como breu</string>
+    <string name="setting_app_color_title">App color</string>
     <string name="setting_pitch_black_theme_desc">Use fundo preto puro no modo escuro</string>
     <string name="settings_section_haptic">Feedback tátil</string>
     <string name="button_remap_section_long_press">Remapear toque longo</string>

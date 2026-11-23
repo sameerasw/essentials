@@ -42,6 +42,7 @@
     <string name="flashlight_options_title">Opcje latarki</string>
     <string name="flashlight_options_desc">Dostosuj zanikanie i inne ustawienia</string>
     <string name="setting_pitch_black_theme_title">Czarny motyw</string>
+    <string name="setting_app_color_title">App color</string>
     <string name="setting_pitch_black_theme_desc">Używaj czystego czarnego tła w trybie ciemnym</string>
     <string name="settings_section_haptic">Informacje zwrotne dotykowe</string>
     <string name="button_remap_section_long_press">Zmień mapowanie Długie naciśnięcie</string>

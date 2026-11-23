@@ -389,6 +389,8 @@ class SettingsRepository(
         const val KEY_USE_ROOT = "use_root"
         const val KEY_PRIVILEGED_MODE = "privileged_mode"
         const val KEY_PITCH_BLACK_THEME_ENABLED = "pitch_black_theme_enabled"
+        const val KEY_APP_COLOR_SEED = "app_color_seed"
+        const val KEY_APP_COLOR_STYLE = "app_color_style"
         const val KEY_ENABLE_UNSUPPORTED_FEATURES = "enable_unsupported_features"
         const val KEY_FORCE_FLASHLIGHT_CONTROLS = "force_flashlight_controls"
         const val KEY_SHOW_LEGACY_FEATURES = "show_legacy_features"

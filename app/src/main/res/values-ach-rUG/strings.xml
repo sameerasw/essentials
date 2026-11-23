@@ -46,6 +46,7 @@
     <string name="flashlight_options_title">Jami ma ki tiyo kwede me yero mac</string>
     <string name="flashlight_options_desc">Lok kit ma jami nen kwede ki jami mukene ma ki keto</string>
     <string name="setting_pitch_black_theme_title">Wi lok macol</string>
+    <string name="setting_app_color_title">App color</string>
     <string name="setting_pitch_black_theme_desc">Tii ki rangi macol maleng i kit macol</string>
     <string name="settings_section_haptic">Lagam ma ki lwongo ni Haptic</string>
     <string name="button_remap_section_long_press">Lok i kom gin ma ki lwongo ni Long Press</string>

@@ -46,6 +46,7 @@
     <string name="flashlight_options_title">אפשרויות פנס</string>
     <string name="flashlight_options_desc">Adjust fading and other settings</string>
     <string name="setting_pitch_black_theme_title">מראה שחור מוחלט</string>
+    <string name="setting_app_color_title">App color</string>
     <string name="setting_pitch_black_theme_desc">השתמש בצבע שחור מוחלט בשביל הרקע</string>
     <string name="settings_section_haptic">משוב הפטי</string>
     <string name="button_remap_section_long_press">מיפוי לחיצה ארוכה</string>

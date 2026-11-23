@@ -117,6 +117,7 @@ import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.pickers.PrivilegedModePicker
 import com.sameerasw.essentials.ui.core.cards.PermissionCard
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
+import com.sameerasw.essentials.ui.core.pickers.AppColorPicker
 import com.sameerasw.essentials.ui.core.pickers.AppIconPicker
 import com.sameerasw.essentials.ui.core.pickers.CrashReportingPicker
 import com.sameerasw.essentials.ui.core.pickers.DefaultTabPicker
@@ -659,6 +660,14 @@ fun SettingsContent(
                     title = stringResource(R.string.label_haptic_feedback),
                 )
             }
+
+            val appColorSeed by viewModel.appColorSeed
+            val appColorStyle by viewModel.appColorStyle
+            AppColorPicker(
+                selectedSeed = appColorSeed,
+                selectedStyle = appColorStyle,
+                onSelected = { seed, style -> viewModel.setAppColor(seed, style) },
+            )
 
             IconToggleItem(
                 iconRes = R.drawable.rounded_invert_colors_24,

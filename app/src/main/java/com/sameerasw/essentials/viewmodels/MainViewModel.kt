@@ -620,6 +620,8 @@ class MainViewModel : ViewModel() {
     val hasPendingUpdates = mutableStateOf(false)
 
     val isPitchBlackThemeEnabled = mutableStateOf(false)
+    val appColorSeed = mutableStateOf(0)
+    val appColorStyle = mutableStateOf<String?>(null)
     val isGenAIAutomationEnabled = mutableStateOf(false)
     val isLocationReachedFullScreenAlarmEnabled = mutableStateOf(true)
 
@@ -2811,6 +2813,8 @@ class MainViewModel : ViewModel() {
             )
         isPitchBlackThemeEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_PITCH_BLACK_THEME_ENABLED)
+        appColorSeed.value = settingsRepository.getInt(SettingsRepository.KEY_APP_COLOR_SEED)
+        appColorStyle.value = settingsRepository.getString(SettingsRepository.KEY_APP_COLOR_STYLE)
         isLocationReachedFullScreenAlarmEnabled.value =
             settingsRepository.getLocationReachedFullScreenAlarmEnabled()
         isEnableUnsupportedFeatures.value = settingsRepository.isEnableUnsupportedFeatures()
@@ -3641,6 +3645,13 @@ class MainViewModel : ViewModel() {
     ) {
         isPitchBlackThemeEnabled.value = enabled
         settingsRepository.putBoolean(SettingsRepository.KEY_PITCH_BLACK_THEME_ENABLED, enabled)
+    }
+
+    fun setAppColor(seed: Int, style: String?) {
+        appColorSeed.value = seed
+        appColorStyle.value = style
+        settingsRepository.putString(SettingsRepository.KEY_APP_COLOR_STYLE, style ?: "")
+        settingsRepository.putInt(SettingsRepository.KEY_APP_COLOR_SEED, seed)
     }
 
     fun setLocationReachedFullScreenAlarmEnabled(enabled: Boolean) {

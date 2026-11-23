@@ -42,6 +42,7 @@
     <string name="flashlight_options_title">Opciones de la linterna</string>
     <string name="flashlight_options_desc">Ajustar el desvanecimiento y otros ajustes</string>
     <string name="setting_pitch_black_theme_title">Tema negro absoluto</string>
+    <string name="setting_app_color_title">App color</string>
     <string name="setting_pitch_black_theme_desc">Utiliza un fondo negro puro en el modo oscuro</string>
     <string name="settings_section_haptic">Retroalimentación háptica</string>
     <string name="button_remap_section_long_press">Reasignar pulsación larga</string>

@@ -42,6 +42,7 @@
     <string name="flashlight_options_title">손전등 옵션</string>
     <string name="flashlight_options_desc">페이딩 및 기타 설정 조정</string>
     <string name="setting_pitch_black_theme_title">피치 블랙 테마</string>
+    <string name="setting_app_color_title">App color</string>
     <string name="setting_pitch_black_theme_desc">어두운 모드에서 순수한 검정색 배경 사용</string>
     <string name="settings_section_haptic">햅틱 피드백</string>
     <string name="button_remap_section_long_press">길게 누르기 다시 매핑</string>
