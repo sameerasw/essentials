@@ -718,7 +718,7 @@
     <string name="sentry_mode_off">Tắt</string>
     <string name="sentry_mode_auto">Tự động</string>
     <string name="sentry_crash_toast">Essentials crashed, Report sent</string>
-    <string name="simulate_crash">Simulate crash</string>
+    <string name="simulate_crash">Mô phỏng sự cố</string>
     <string name="welcome_title">Welcome to Essentials</string>
     <string name="welcome_subtitle">A Toolbox for Android Nerds</string>
     <string name="welcome_developer_attribution">by sameerasw.com</string>
@@ -799,11 +799,15 @@ Trên các thiết bị có phần cứng hỗ trợ điều chỉnh độ sáng
     <string name="location_reached_resolving">Resolving location…</string>
     <string name="location_reached_last_trip">Last Trip</string>
     <string name="location_reached_saved_destinations">Saved Destinations</string>
-    <string name="location_reached_no_saved_dest">No destinations saved yet.</string>
+    <string name="location_reached_no_saved_dest">Chưa có điểm đến nào được lưu.</string>
     <string name="location_reached_delete">Delete Destination</string>
     <string name="location_reached_tracking_now">Tracking Now</string>
     <string name="location_reached_restart_btn">Re-Start</string>
-    <string name="location_reached_instructional_desc">Share coordinates (Dropped pin) from Google Maps to Essentials to save as a destination.\n\nThe distance shown is the direct distance to the destination, not the distance along the roads.\n\nTake all calculations of time and distance with a grain of salt as they are not always accurate.</string>
+    <string name="location_reached_instructional_desc">Chia sẻ tọa độ (ghim đã thả) từ Google Maps sang Essentials để lưu làm điểm đến.
+
+Khoảng cách hiển thị là khoảng cách đường chim bay đến điểm đến, không phải khoảng cách đi theo đường bộ.
+
+Hãy xem các phép tính về thời gian và khoảng cách chỉ mang tính tham khảo, vì chúng không phải lúc nào cũng chính xác.</string>
     <string name="tile_location_reached">Are we there yet?</string>
     <string name="location_reached_pause">Pause</string>
     <string name="location_reached_resume">Resume</string>
@@ -876,7 +880,7 @@ Cần có quyền ghi cài đặt bảo mật để bật hoặc tắt tính nă
     <string name="diy_in_action_label">Đang hoạt động</string>
     <string name="diy_out_action_label">Ra hành động</string>
     <string name="action_cancel">Hủy bỏ</string>
-    <string name="action_save">Cứu</string>
+    <string name="action_save">Lưu</string>
     <string name="action_edit">Biên tập</string>
     <string name="action_delete">Xóa bỏ</string>
     <string name="action_enable">Cho phép</string>
@@ -1306,9 +1310,9 @@ Cần có quyền ghi cài đặt bảo mật để bật hoặc tắt tính nă
     <string name="cat_display">Trưng bày</string>
     <string name="cat_protection">Sự bảo vệ</string>
     <string name="cat_accessibility">Trợ năng</string>
-    <string name="cat_connectivity">Connectivity</string>
-    <string name="cat_privacy">Privacy</string>
-    <string name="cat_utils">Utilities</string>
+    <string name="cat_connectivity">Kết nối</string>
+    <string name="cat_privacy">Riêng tư</string>
+    <string name="cat_utils">Tiện ích</string>
     <string name="label_kbd_abc">ABC</string>
     <string name="label_kbd_symbols">\?#/</string>
     <string name="label_kaomoji">Kaomoji</string>
@@ -1877,8 +1881,8 @@ Cần có quyền quản trị thiết bị nếu sử dụng chế độ khóa.
     <string name="island_expanded_dark_theme_warning">Expanded dark theme is on. If the island text or colors look wrong, filter Essentials out of it in Display settings.</string>
     <string name="island_expanded_dark_theme_action">Open display settings</string>
     <string name="settings_reset_all_hold">Hold to reset all data</string>
-    <string name="settings_reset_all_info_title">Reset Essentials data</string>
-    <string name="settings_reset_all_info_desc">Resets all Essentials settings and data to a fresh start. System settings, permissions and anything Essentials changed on your device, such as secure settings, are not reverted.</string>
+    <string name="settings_reset_all_info_title">Đặt lại dữ liệu Essentials</string>
+    <string name="settings_reset_all_info_desc">Đặt lại tất cả cài đặt và dữ liệu của Essentials để bắt đầu lại từ đầu. Các cài đặt hệ thống, quyền và mọi thứ Essentials đã thay đổi trên thiết bị của bạn, chẳng hạn như cài đặt bảo mật, sẽ không được khôi phục.</string>
     <string name="island_prefer_still_title">Island yên tĩnh hơn</string>
     <string name="island_prefer_still_info">Dừng các hiệu ứng động của Island sau vài giây không tương tác, nhờ đó màn hình có thể giảm xuống tần số quét thấp để tiết kiệm pin. Các hiệu ứng trực quan hóa phương tiện, bộ đếm từng giây và những hoạt ảnh lặp khác sẽ tạm dừng cho đến khi bạn tương tác lại với Island. </string>
     <string name="island_line_peek_title">Xem trước dòng</string>
@@ -2225,7 +2229,7 @@ Tính năng này chỉ được dùng cho trình khởi chạy và không phải
     <string name="island_notif_show_title">Hiển thị thông báo</string>
     <string name="island_media_use_art_color_title">Advertise album art color</string>
     <string name="island_media_player_style_title">Kiểu phát nhạc</string>
-    <string name="debug_ui_margin_overlay_title">Debug UI margin overlay</string>
+    <string name="debug_ui_margin_overlay_title">Lớp phủ lề giao diện gỡ lỗi</string>
     <string name="island_statusbar_ignore_notifications_title">Ignore notifications</string>
     <string name="feat_back_gesture_left_title">Độ rộng cạnh trái</string>
     <string name="feat_back_gesture_default_width_desc">Vuốt vào sâu bao nhiêu từ mép màn hình thì sẽ kích hoạt thao tác quay lại. Giống với Độ nhạy thao tác quay lại trong cài đặt hệ thống.</string>
@@ -2337,7 +2341,15 @@ Tính năng này chỉ được dùng cho trình khởi chạy và không phải
     <string name="label_how_to_use">How to use</string>
     <string name="shut_up_how_to_use">1. Grant Write secure settings and Usage access from the permissions prompt. Shizuku is needed for freezing apps.\n\n2. Tap Select Apps and pick the apps that refuse to run with developer options, debugging or accessibility turned on, such as banking or payment apps.\n\n3. Tap an app to choose what gets hidden for it: Developer Options, USB Debugging, Wireless Debugging and Accessibility Services. You can also turn on Auto Freeze to freeze the app after you leave it, and Restore keyboard to switch back to your keyboard afterwards.\n\n4. Tap Create shortcut for each app and add it to your home screen. Always open the app from this shortcut, never from its normal icon, so the settings are turned off before the app starts and can check them.\n\n5. When you leave the app, Shut-Up! waits for the Restoration Delay and then shows a notification. Tap it to turn everything back on. Set Restore mode to Auto if you would rather have the settings restored on their own.\n\nTips: if wireless debugging was turned off, Shizuku may stop working, so enable Attempt Shizuku restart. Use the Keyboard option to pick the keyboard to restore, or leave it on Skip. With Auto Freeze, a notification counts down and lets you freeze now or abort.</string>
     <string name="island_notif_lock_hidden_title">Hidden</string>
-    <string name="text_snippets_how_to_use">1. Turn on Text Snippets and grant the Accessibility permission so shortcuts can expand in any app.\n\n2. Pick a Trigger Prefix: ; : @@ or a space.\n\n3. Tap the + button to add a snippet. Enter a keyword without spaces and the text it should expand into.\n\n4. Type the prefix followed by the keyword, for example ;brb, to expand it. With the space prefix, type the keyword and press space.\n\nTips: keywords only expand at the start of a word, so URLs and times are left alone. Password fields are always ignored. Some apps do not allow text replacement and will not expand snippets.</string>
+    <string name="text_snippets_how_to_use">1. Bật Text Snippets và cấp quyền Trợ năng để các phím tắt có thể mở rộng văn bản trong mọi ứng dụng.
+
+2. Chọn tiền tố kích hoạt: ; : @@ hoặc dấu cách.
+
+3. Nhấn nút + để thêm đoạn văn bản. Nhập một từ khóa không có dấu cách và nội dung mà từ khóa đó sẽ được mở rộng thành.
+
+4. Nhập tiền tố theo sau là từ khóa, ví dụ ;brb, để mở rộng từ khóa. Với tiền tố là dấu cách, hãy nhập từ khóa rồi nhấn dấu cách.
+
+Mẹo: từ khóa chỉ được mở rộng khi nằm ở đầu một từ, vì vậy URL và giờ giấc sẽ không bị ảnh hưởng. Các trường mật khẩu luôn bị bỏ qua. Một số ứng dụng không cho phép thay thế văn bản nên các đoạn văn bản sẽ không được mở rộng.</string>
     <string name="island_progressive_blur_title">Hoạt ảnh làm mờ</string>
     <string name="island_expanded_offset_y_title">Độ lệch dọc mở rộng</string>
     <string name="island_pulse_shadow_offset_y_title">Độ lệch theo chiều dọc</string>
@@ -2491,4 +2503,68 @@ Tính năng này chỉ được dùng cho trình khởi chạy và không phải
     <string name="duo_section_position">Vị trí và kích thước</string>
     <string name="duo_section_behavior">Hành vi</string>
     <string name="duo_aod_burn_in_protection_desc">Các tùy chọn Ambient/AOD bị khóa để ngăn ngừa hiện tượng cháy màn hình. Bật \"Cho phép các tính năng không được hỗ trợ\" trong cài đặt để tùy chỉnh.</string>
+    <string name="auto_backup_title">Tự động sao lưu cấu hình</string>
+    <string name="btn_grant_all_permissions">Cấp tất cả quyền</string>
+    <string name="btn_reset_onboarding">Đặt lại quy trình hướng dẫn ban đầu</string>
+    <string name="btn_reset_update_note">Đặt lại ghi chú cập nhật</string>
+    <string name="btn_clear_search_history">Xóa lịch sử tìm kiếm</string>
+    <string name="settings_translated_texts_desc">Còn %d chỉnh sửa đang chờ — nhấn để gửi hoặc hủy</string>
+    <string name="translation_logged_in_as">Đã đăng nhập với tư cách %1$s</string>
+    <string name="setting_hidden_debugging_help_2">Điều này giúp đối phó với các ứng dụng ngân hàng rác và những ứng dụng khác có biện pháp bảo mật vớ vẩn, vốn cũng được chúng tôi xử lý bằng tính năng Shut Up.</string>
+    <string name="setting_hidden_debugging_help_3">Nhưng điều này cũng làm hỏng chức năng phát hiện của Essentials. Trong trường hợp này, hãy bật tùy chọn này để dùng shell Shizuku nhằm phát hiện trạng thái, việc này vẫn khả thi. Hãy nhớ rằng tính năng gỡ lỗi không dây không được ẩn.</string>
+    <string name="setting_hidden_debugging_auto_title">Tự động phát hiện</string>
+    <string name="setting_hidden_debugging_auto_help">Đảm bảo rằng Tùy chọn nhà phát triển và Gỡ lỗi USB đã được bật.</string>
+    <string name="action_got_it">Hiểu rồi</string>
+    <string name="setting_hidden_debugging_help_1">Trong Android 17 QPR1, Google đã giới thiệu một thay đổi khiến trạng thái của tùy chọn nhà phát triển và gỡ lỗi USB bị ẩn đối với các ứng dụng bên thứ ba và luôn được báo cáo là 0.</string>
+    <string name="external_control_token_title">Mã điều khiển bên ngoài</string>
+    <string name="permission_required_for">Yêu cầu đối với:</string>
+    <string name="perm_files_media_desc">Để tìm kiếm và hiển thị ảnh, video, âm thanh và tài liệu trong kết quả Pixel Search, Essentials cần được cấp quyền truy cập vào tệp và nội dung đa phương tiện.</string>
+    <string name="perm_sensitive_notifications_title">Đọc thông báo nhạy cảm</string>
+    <string name="perm_sensitive_notifications_desc">Android ẩn mã dùng một lần khỏi các ứng dụng nghe thông báo. Essentials cần quyền truy cập này để hiển thị mã trên island.</string>
+    <string name="perm_sensitive_notifications_instructions">Cấp quyền cho ứng dụng bằng Shizuku hoặc root, hoặc chạy lệnh qua ADB.</string>
+    <string name="perm_local_network_title">Truy cập mạng cục bộ</string>
+    <string name="perm_local_network_desc">Android 17 chặn các ứng dụng giao tiếp với thiết bị trên mạng Wi-Fi của bạn trừ khi bạn cho phép. Essentials cần quyền này để hoạt động với đồng hồ của bạn qua mạng cục bộ.</string>
+    <string name="instruction_section_genai_title">GenAI trên thiết bị (Gemini Nano)</string>
+    <string name="instruction_section_genai_desc">Được hỗ trợ trực tiếp trên thiết bị bởi Google Gemini Nano thông qua dịch vụ hệ thống AICore của Android. Chạy các mô hình nền tảng ngay trên thiết bị để tăng cường quyền riêng tư cho người dùng mà không gửi dữ liệu đến máy chủ từ xa.
+
+• Yêu cầu &amp; AICore: Sử dụng các API GenAI Prompt của ML Kit trên những thiết bị được hỗ trợ (chẳng hạn như dòng Pixel 9/10, Galaxy S25/S26, v.v.) chạy AICore của Android.
+• Giới hạn khi ứng dụng chạy ở nền trước: Chỉ được phép suy luận bằng API GenAI khi ứng dụng đang ở trạng thái nền trước và đứng đầu.
+• Hạn mức &amp; thực thi: Chịu các hạn mức pin và suy luận của AICore cho từng ứng dụng. Các tính năng hoạt động hoàn toàn ngoại tuyến sau khi tải xong mô hình AICore.
+• Tự động hóa theo ngữ cảnh: Ánh xạ các yêu cầu lời nhắc thành các trình kích hoạt DIY, trạng thái, thẻ ứng dụng và cài đặt chi tiết ngay trên thiết bị.</string>
+    <string name="instruction_section_freezetags_title">Đóng băng ứng dụng &amp; Đóng băng thông minh</string>
+    <string name="instruction_section_freezetags_desc">Sắp xếp và đóng băng hàng loạt các ứng dụng chạy nền bằng Thẻ ứng dụng tùy chỉnh.\n\n• Thẻ tùy chỉnh: Tạo thẻ tùy chỉnh với màu sắc tùy chọn (ví dụ: Mạng xã hội, Trò chơi, Công việc).\n• Quy tắc mục tiêu: Bật chế độ bảo vệ Không bao giờ tự động đóng băng cho các ứng dụng quan trọng để chúng luôn hoạt động.\n• Tích hợp tự động hóa: Tự động kích hoạt thao tác đóng băng hoặc bỏ đóng băng tất cả ứng dụng trong một thẻ dựa trên các sự kiện kích hoạt của thiết bị, khung giờ hoặc thời điểm ứng dụng được mở.</string>
+    <string name="instruction_section_diy_title">Tự động hóa DIY</string>
+    <string name="instruction_section_backup_title">Sao lưu &amp; Khôi phục</string>
+    <string name="instruction_section_diy_desc">Tạo các quy trình tùy chỉnh mạnh mẽ phù hợp với thói quen sử dụng hằng ngày của bạn.
+
+• Tự động hóa theo sự kiện: Các quy tắc dựa trên sự kiện, tự động thực hiện những hành động cụ thể khi một sự kiện xảy ra (ví dụ: khi bộ sạc bị ngắt kết nối, kích hoạt rung phản hồi xúc giác).
+• Tự động hóa theo trạng thái: Các quy tắc dựa trên điều kiện, thực hiện Hành động khi vào khi chuyển sang một trạng thái (ví dụ: Đang sạc hoặc Khung giờ) và Hành động khi thoát khi rời khỏi trạng thái đó.
+• Tự động hóa ứng dụng: Tự động áp dụng hồ sơ hoặc đóng băng/bỏ đóng băng thẻ khi mở hoặc thoát các ứng dụng được chỉ định.</string>
+    <string name="instruction_section_backup_desc">Bảo vệ và chuyển thiết lập tùy chỉnh của bạn giữa các thiết bị.
+
+• Xuất cấu hình: Tạo bản sao lưu JSON cho các Tự động hóa tự tạo, Thẻ ứng dụng, cấu hình ô và tùy chọn tùy chỉnh của bạn.
+• Nhập cấu hình: Dễ dàng khôi phục tệp thiết lập đã lưu mà không cần cấu hình lại từng cài đặt.</string>
+    <string name="instruction_section_safe_volume_title">Tại sao lại tắt cảnh báo âm lượng an toàn?</string>
+    <string name="instruction_section_safe_volume_desc">Để bảo vệ thính giác, các quy định của EU yêu cầu hiển thị cảnh báo bật lên khi âm lượng vượt quá 85 dB. Vì cảnh báo này xuất hiện một lần sau mỗi lần khởi động hoặc sau mỗi 20 giờ phát âm thanh cộng dồn, nên có thể làm gián đoạn quá trình phát nội dung đa phương tiện. Bật tùy chọn này sẽ bỏ qua hạn chế vĩnh viễn bằng cách ghi vào cài đặt Global audio_safe_volume_state.</string>
+    <string name="instruction_section_notification_snoozing_title">Cách sử dụng tính năng báo lại thông báo?</string>
+    <string name="instruction_section_notification_snoozing_desc">Sau khi được bật, vuốt xuống hoặc kéo nhẹ một thông báo để hiển thị biểu tượng báo lại (đồng hồ), hoặc nhấn giữ hay chạm vào nút báo lại nếu nút này đã hiển thị. Chạm vào đó để lên lịch lại. Bạn có thể tùy chỉnh các khoảng thời gian có sẵn và thời gian báo lại mặc định trong menu cài đặt. Ghi vào các thuộc tính cài đặt bảo mật và cài đặt toàn cục.</string>
+    <string name="instruction_section_battery_saver_title">Cài đặt Nguồn và Pin hoạt động như thế nào</string>
+    <string name="instruction_section_battery_saver_desc">Các cài đặt này ghi đè trực tiếp lên các hằng số chính sách Trình tiết kiệm pin nội bộ của Android (cụ thể là thuộc tính trong bảng cài đặt toàn cục: battery_saver_constants).
+
+Khi Android kích hoạt chế độ tiết kiệm pin, hệ thống sẽ đọc các khóa này để xác định những tính năng nào cần bị hạn chế (chẳng hạn như giảm độ sáng màn hình, tắt AOD, hạn chế quyền truy cập vị trí qua GPS hoặc đưa ứng dụng vào trạng thái ngủ).
+
+Nếu bạn sửa đổi các giá trị này, chính sách tiết kiệm pin tùy chỉnh sẽ có hiệu lực vào lần tiếp theo Trình tiết kiệm pin được bật. Bạn có thể khôi phục cài đặt mặc định bất cứ lúc nào bằng nút ở cuối màn hình. Cần có quyền WRITE_SECURE_SETTINGS để ghi các cấu hình hệ thống này.</string>
+    <string name="about_desc_text_snippets">Tạo các phím tắt có thể tùy chỉnh để mở rộng thành cụm từ đầy đủ, liên kết hoặc mẫu khi bạn nhập tiền tố kích hoạt (chẳng hạn như ;, : hoặc @@) hoặc nhấn phím cách.</string>
+    <string name="feat_text_snippets_title">Đoạn văn bản</string>
+    <string name="feat_text_snippets_desc">Mở rộng văn bản</string>
+    <string name="snippets_empty_subtitle">Nhấn vào dấu + bên dưới để tạo phím tắt đầu tiên của bạn.</string>
+    <string name="snippets_empty_title">Chưa có đoạn mã nào</string>
+    <string name="snippets_dialog_new_title">Đoạn mã mới</string>
+    <string name="watermark_border">Bo góc</string>
+    <string name="qs_tiles_long_press_info">Nhấn giữ một ô để xem nó làm gì</string>
+    <string name="qs_tiles_widget_name">Ô yêu thích</string>
+    <string name="qs_tiles_long_press_add">Nhấn giữ các ô để thêm</string>
+    <string name="qs_tiles_widget_empty_state">Chưa ghim ô yêu thích nào. Chưa ghim ô nào. Nhấn giữ để ghim một vài ô nhé!!</string>
+    <string name="lockscreen_shortcuts_hint">Mỗi bên thực hiện một thao tác. Chạm và giữ một lối tắt trên màn hình khóa để chạy thao tác đó. Các thao tác mở ứng dụng sẽ yêu cầu bạn mở khóa trước.</string>
+    <string name="keyboard_user_dictionary_title">Từ điển người dùng (Học từ)</string>
 </resources>
