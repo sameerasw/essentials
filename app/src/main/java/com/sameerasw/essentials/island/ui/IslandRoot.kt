@@ -403,7 +403,7 @@ private fun IslandRootContent(
             effectShadow.animateTo(0f, motionTween((spec.pulseDurationMs - 250).coerceAtLeast(100), easing = LinearEasing))
         }
     }
-    val minSurfaceWidth = with(density) { spec.cameraDiameter.roundToPx() }
+    val minSurfaceWidth = with(density) { (if (spec.cameraPresence <= 0f) spec.cellSize + spec.cellSpacing * 2 else spec.cameraDiameter).roundToPx() }
     val minSurfaceHeight = with(density) { spec.compactHeight.roundToPx() }
     val fallbackCompact = with(density) {
         IntSize((spec.cameraSlotWidth + spec.compactHeight * 2).roundToPx(), spec.compactHeight.roundToPx())

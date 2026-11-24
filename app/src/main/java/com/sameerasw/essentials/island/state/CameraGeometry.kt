@@ -13,11 +13,13 @@ data class CameraGeometry(
     val verticalGap: Float = gap,
     val hasCamera: Boolean = true,
     val contentGap: Float = gap,
+    val slotEnabled: Boolean = true,
 ) {
+    val hasSlot: Boolean get() = hasCamera && slotEnabled
     val diameter: Float get() = radius * 2f
     val compactHeight: Float get() = diameter + verticalGap * 2f
     val surfaceTop: Float get() = (centerY - radius - verticalGap).coerceAtLeast(0f)
     val edgeInset: Float get() = compactHeight * 0.15f * (if (verticalGap > 0f) contentGap / verticalGap else 1f)
     val contentSize: Float get() = (diameter + (verticalGap - contentGap) * 2f).coerceAtLeast(diameter * 0.5f)
-    val cameraSlotWidth: Float get() = if (hasCamera) diameter + gap * 2f else 0f
+    val cameraSlotWidth: Float get() = if (hasSlot) diameter + gap * 2f else 0f
 }
