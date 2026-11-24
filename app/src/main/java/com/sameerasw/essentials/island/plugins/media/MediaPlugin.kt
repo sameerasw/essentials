@@ -95,6 +95,7 @@ class MediaPlugin : BaseIslandPlugin() {
     override fun onStop() {
         IslandMediaState.current.value = null
         IslandMediaState.live.value = false
+        IslandMediaState.skip = null
         lastController = null
         lastTrack = null
         ctx?.mainHandler?.removeCallbacks(pausedGrace)
@@ -235,6 +236,7 @@ class MediaPlugin : BaseIslandPlugin() {
         publishLastPlayer()
         if (t == null || controller == null) {
             IslandMediaState.live.value = false
+            IslandMediaState.skip = null
             publish(null)
             return
         }
@@ -255,6 +257,14 @@ class MediaPlugin : BaseIslandPlugin() {
             canSeek = { active?.let(MediaSessionSource::canSeek) ?: false },
             seekTo = { fraction -> active?.let { MediaSessionSource.seekTo(it, fraction) } },
         )
+        IslandMediaState.skip = { forward ->
+            if (forward) {
+                if (canSkipForward) actions.next()
+            } else if (canSkipBack) {
+                active?.transportControls?.skipToPrevious()
+            }
+            true
+        }
         publish(
             IslandItem(
                 key = ITEM_KEY,
