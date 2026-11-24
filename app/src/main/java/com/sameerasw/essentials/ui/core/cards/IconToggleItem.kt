@@ -79,6 +79,7 @@ fun IconToggleItem(
     trailingContent: (@Composable () -> Unit)? = null,
     infoText: String? = null,
     onInfoClick: (() -> Unit)? = null,
+    infoWarning: Boolean = false,
     dragHandle: (@Composable () -> Unit)? = null,
     leadingIcon: (@Composable () -> Unit)? = null,
 ) {
@@ -211,7 +212,7 @@ fun IconToggleItem(
                                         painter = painterResource(id = R.drawable.rounded_info_24),
                                         contentDescription = infoText,
                                         modifier = Modifier.size(20.dp),
-                                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                                        tint = if (infoWarning) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant,
                                     )
                                 }
                             }
@@ -325,7 +326,7 @@ fun IconToggleItem(
                                         painter = painterResource(id = R.drawable.rounded_info_24),
                                         contentDescription = infoText,
                                         modifier = Modifier.size(20.dp),
-                                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                                        tint = if (infoWarning) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant,
                                     )
                                 }
                             }

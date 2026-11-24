@@ -790,19 +790,18 @@ fun IslandVisualsSettingsUI(
                         IconToggleItem(
                             iconRes = R.drawable.rounded_blur_on_24,
                             title = stringResource(R.string.island_backdrop_blur_title),
-                            isChecked = backdropBlurAvailable && viewModel.isIslandBackdropBlur.value,
-                            enabled = backdropBlurAvailable,
+                            isChecked = viewModel.isIslandBackdropBlur.value,
                             onCheckedChange = { checked ->
                                 HapticUtil.performVirtualKeyHaptic(view)
                                 viewModel.setIslandBackdropBlur(checked)
                             },
-                            onDisabledClick = { showBackdropBlurInfo = true },
                             onInfoClick = { showBackdropBlurInfo = true },
+                            infoWarning = !backdropBlurAvailable,
                             modifier = Modifier.highlight(highlightSetting == "island_backdrop_blur"),
                         )
 
                         AnimatedVisibility(
-                            visible = backdropBlurAvailable && viewModel.isIslandBackdropBlur.value,
+                            visible = viewModel.isIslandBackdropBlur.value,
                             enter = expandVertically() + fadeIn(),
                             exit = shrinkVertically() + fadeOut(),
                         ) {
