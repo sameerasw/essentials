@@ -2117,6 +2117,7 @@ Duoと組み合わせることで、単一の統合カメラエリアとして�
     <string name="island_transparency_title">Island の透明度</string>
     <string name="island_transparency_intensity_title">透明度の強度</string>
     <string name="island_backdrop_blur_title">バックドロップぼかし</string>
+    <string name="island_backdrop_blur_incompatible_chip">Device is reporting incompatible</string>
     <string name="island_backdrop_blur_unavailable_os">Backdrop blur needs Android 12 or newer. This device runs an older version, so the system can\'t blur what is behind the island.</string>
     <string name="island_backdrop_blur_unavailable_disabled">現在、システムでウィンドウのぼかしがオフになっています。これは通常、バッテリーセーバーがオンの場合、開発者向けオプションで「ウィンドウのぼかしを無効にする」が有効になっている場合、またはデバイスがサポートしていない場合に発生します。ウィンドウのぼかしが再びオンになると、このオプションは自動的にロック解除されます。</string>
     <string name="island_backdrop_blur_unavailable_api">This device\'s system doesn\'t expose the blur feature the island needs for backdrop blur, so it can\'t be enabled here.</string>
