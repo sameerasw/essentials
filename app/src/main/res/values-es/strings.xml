@@ -2154,4 +2154,5 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="island_camera_gap_toggle_title">Espacio para la cámara</string>
     <string name="island_starlink_status_color_title">Status colors</string>
     <string name="island_starlink_offline">Offline</string>
+    <string name="auto_backup_folder">Carpeta de la copia de seguridad</string>
 </resources>
