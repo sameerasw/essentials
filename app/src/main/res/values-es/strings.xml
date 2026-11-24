@@ -1754,8 +1754,8 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="island_section_behavior">Comportamiento</string>
     <string name="island_section_interactions">Interactions</string>
     <string name="island_section_gestures">Gestures</string>
-    <string name="island_section_expanded">Expanded island</string>
-    <string name="island_section_landscape">Landscape</string>
+    <string name="island_section_expanded">Isla expandida</string>
+    <string name="island_section_landscape">Horizontal (Paisaje)</string>
     <string name="island_section_experimental">Experimental</string>
     <string name="island_section_placement">Posicion</string>
     <string name="island_brief_show_alarm_title">Mostrar las siguientes alarmas</string>
@@ -1943,8 +1943,8 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="watch_esim_install_desc">En regiones insoportadas</string>
     <string name="island_bond_edge_title">Union con la Isla si esta inactuva</string>
     <string name="island_bond_scale_title">Bonded island scale</string>
-    <string name="island_always_bond_title">Always bond with notch</string>
-    <string name="island_bond_keep_gap_title">Keep camera gap</string>
+    <string name="island_always_bond_title">Siempre unir con la Isla</string>
+    <string name="island_bond_keep_gap_title">Dejar el espacio de la cámara</string>
     <string name="island_navigation_on_new_title">Nueva instrucción</string>
     <string name="feat_screenshots_title">Limpieza de capturas de pantalla</string>
     <string name="feat_screenshots_desc">Limpiar capturas de pantallas compartidas y viejas</string>
@@ -2093,7 +2093,7 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="island_starlink_alert_mast">Mast not vertical</string>
     <string name="island_starlink_alert_ethernet">Slow ethernet</string>
     <string name="island_provider_pair_refused">This app doesn\'t trust this version of Essentials</string>
-    <string name="island_persistent_order_title">Persistent ordering</string>
+    <string name="island_persistent_order_title">Orden persistenete</string>
     <string name="island_persistent_order_info">This mode prioritizes the ordering of the island items rather than moving them around for best balance. This may lead to unexpected spacing.</string>
     <string name="island_timeout_after_marquee_title">Wait for scrolling text to finish</string>
     <string name="island_calendar_icon_only_title">Icon only</string>
@@ -2151,7 +2151,7 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="diy_action_show_taps_on">Turn On Show Taps</string>
     <string name="diy_action_show_taps_off">Turn Off Show Taps</string>
     <string name="diy_action_show_taps_toggle">Toggle Show Taps</string>
-    <string name="island_camera_gap_toggle_title">Camera gap</string>
+    <string name="island_camera_gap_toggle_title">Espacio para la cámara</string>
     <string name="island_starlink_status_color_title">Status colors</string>
     <string name="island_starlink_offline">Offline</string>
 </resources>
