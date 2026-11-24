@@ -2166,4 +2166,5 @@ Esto le permite a Essentials automatizarse y reiniciar Shizuku en demanda cuando
     <string name="settings_section_customizations">Personalizacion</string>
     <string name="instruction_section_backup_title">Respaldar y restaurar</string>
     <string name="bug_report_view_existing_pr">Mirar el PR existente</string>
+    <string name="translation_logged_in_as">Inicaste secion como  %1$s</string>
 </resources>
