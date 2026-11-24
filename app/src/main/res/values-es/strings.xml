@@ -2168,4 +2168,5 @@ Esto le permite a Essentials automatizarse y reiniciar Shizuku en demanda cuando
     <string name="bug_report_view_existing_pr">Mirar el PR existente</string>
     <string name="translation_logged_in_as">Inicaste secion como  %1$s</string>
     <string name="label_developer_options">Opciones de desarrollador</string>
+    <string name="bug_report_issue_details">Detalles del informe</string>
 </resources>
