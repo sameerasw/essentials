@@ -184,8 +184,8 @@
     <string name="action_app_info">App info</string>
     <string name="freeze_mode_description_freeze_title">Cos\'è Blocco App?</string>
     <string name="freeze_mode_description_freeze_body">App freezing disables the app\'s launch activity which removes it from the app list and updates. It will prevent the app from starting at all until it\'s unfrozen which saves resources but you will need to unfreeze from here or manually re-enable.</string>
-    <string name="freeze_mode_description_freeze_warning">DO NOT FREEZE COMMUNICATION APPS</string>
-    <string name="freeze_mode_description_suspend_title">What is Suspend?</string>
+    <string name="freeze_mode_description_freeze_warning">NON CONGELARE LE APP DI COMUNICAZIONE</string>
+    <string name="freeze_mode_description_suspend_title">Cosa è Sospendi?</string>
     <string name="freeze_mode_description_suspend_body">Suspending an app used to pause the app activity and prevent background executions but with recent Android changes, it only pauses the notifications from appearing and that\'s pretty much it. But does allows you to unpause from the launcher app list as they will be still available as grayscale paused app icons.</string>
     <string name="freeze_mode_description_suspend_footer">Should work the same as the native app pause/ focus mode features.</string>
     <string name="content_desc_more_options">Altre opzioni</string>
@@ -209,7 +209,7 @@
     <string name="freeze_automation_hint">Congela le app selezionate quando il dispositivo si blocca. Scegli un ritardo per evitare di congelare le app se sblocchi lo schermo subito dopo averlo spento.</string>
     <string name="freeze_warning">Il congelamento delle app di sistema potrebbe essere pericoloso e causare comportamenti imprevisti.</string>
     <string name="action_enable_in_settings">Abilita nelle Impostazioni</string>
-    <string name="freeze_dont_freeze_active_apps_title">Non non congelare le app attive</string>
+    <string name="freeze_dont_freeze_active_apps_title">Non congelare le app attive</string>
     <string name="perm_usage_stats_title">Statistiche di utilizzo</string>
     <string name="perm_usage_stats_desc">Necessario per rilevare quali app sono attualmente in primo piano per evitare di congelarle</string>
     <string name="perm_usage_stats_desc_app_lock">Required to detect foreground apps for App Lock features when accessibility is not used.</string>
@@ -861,7 +861,7 @@
     <string name="diy_select_action">Seleziona Azione</string>
     <string name="diy_in_action_label">In azione</string>
     <string name="diy_out_action_label">Fuori azione</string>
-    <string name="action_cancel">Cancellare</string>
+    <string name="action_cancel">Annulla</string>
     <string name="action_save">Salva</string>
     <string name="action_edit">Modificare</string>
     <string name="action_delete">Eliminare</string>
@@ -1967,4 +1967,18 @@ con il ❤️ da 🇱🇰</string>
     <string name="bug_report_issue_details">Info sul problema</string>
     <string name="crash_logs_title">Log di crash</string>
     <string name="btn_clear_all_crash_logs">Elimina tutti</string>
+    <string name="diy_type_state">Stato</string>
+    <string name="diy_type_action_shortcut">Collegamento azione</string>
+    <string name="diy_type_accessibility_shortcut">Collegamento accessibilità</string>
+    <string name="diy_type_pixel_searchbar">Barra di ricerca</string>
+    <string name="button_remap_add_action">Aggiungi azione</string>
+    <string name="diy_category_connectivity">Connettività e Internet</string>
+    <string name="diy_category_display">Display e Schermo</string>
+    <string name="app_volume_apps_section">App</string>
+    <string name="diy_category_sound_media">Suoni e Media</string>
+    <string name="diy_category_essentials">Miglioram. di Essentials</string>
+    <string name="translation_discard">Annulla modifiche</string>
+    <string name="diy_discard_warning_title">Annullare le modifiche?</string>
+    <string name="diy_discard_warning_desc">Hai delle modifiche non salvate. Sei sicuro che vuoi uscire senza salvare?</string>
+    <string name="freeze_tags_section_title">Tag</string>
 </resources>
