@@ -37,11 +37,13 @@ object IslandMotion {
     fun <T> compactFloat(): FiniteAnimationSpec<T> = motionSpring(COMPACT_DAMPING, COMPACT_STIFFNESS)
     private const val COLLAPSE_MS_BASE = 480
     val COLLAPSE_MS get() = scaled(COLLAPSE_MS_BASE)
-    val collapseSize: FiniteAnimationSpec<IntSize> get() = motionSpring(0.8f, 360f, IntSize(1, 1))
+    val collapseSize: FiniteAnimationSpec<IntSize> get() = motionSpring(Spring.DampingRatioNoBouncy, 240f, IntSize(1, 1))
     val offset: FiniteAnimationSpec<IntOffset> get() = motionSpring(Spring.DampingRatioNoBouncy, 300f, IntOffset(1, 1))
     fun <T> float(): FiniteAnimationSpec<T> = motionSpring(DAMPING, STIFFNESS)
     fun <T> collapseFloat(): FiniteAnimationSpec<T> = motionSpring(Spring.DampingRatioNoBouncy, 380f)
     fun collapseProgress(): FiniteAnimationSpec<Float> = motionSpring(Spring.DampingRatioNoBouncy, 300f)
+    fun collapseFollow(): FiniteAnimationSpec<Float> = motionSpring(Spring.DampingRatioNoBouncy, 600f)
+    fun collapseCommit(): FiniteAnimationSpec<Float> = motionSpring(Spring.DampingRatioNoBouncy, 130f)
 
     private const val HIDE_BUBBLE_MS_BASE = 460
     val HIDE_BUBBLE_MS get() = scaled(HIDE_BUBBLE_MS_BASE)

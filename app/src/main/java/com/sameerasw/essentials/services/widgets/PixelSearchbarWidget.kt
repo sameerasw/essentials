@@ -175,7 +175,7 @@ class PixelSearchbarWidget : GlanceAppWidget() {
                                                 color = GlanceTheme.colors.onSurfaceVariant,
                                                 fontSize = 14.sp,
                                                 fontWeight = FontWeight.Medium,
-                                                fontFamily = androidx.glance.text.FontFamily("google_sans_flex_round"),
+                                                fontFamily = searchbarWidgetFont(),
                                                 textAlign = TextAlign.Center,
                                             ),
                                     )
@@ -228,7 +228,7 @@ class PixelSearchbarWidget : GlanceAppWidget() {
                                                     },
                                                 fontSize = 18.sp,
                                                 fontWeight = FontWeight.Medium,
-                                                fontFamily = androidx.glance.text.FontFamily("google_sans_flex_round"),
+                                                fontFamily = searchbarWidgetFont(),
                                                 textAlign = TextAlign.Center,
                                             ),
                                         maxLines = 1,
@@ -246,7 +246,7 @@ class PixelSearchbarWidget : GlanceAppWidget() {
                                                         },
                                                     fontSize = 13.sp,
                                                     fontWeight = FontWeight.Normal,
-                                                    fontFamily = androidx.glance.text.FontFamily("google_sans_flex_round"),
+                                                    fontFamily = searchbarWidgetFont(),
                                                     textAlign = TextAlign.Center,
                                                 ),
                                             maxLines = 1,
@@ -286,7 +286,7 @@ class PixelSearchbarWidget : GlanceAppWidget() {
                                                 color = GlanceTheme.colors.onSurfaceVariant,
                                                 fontSize = 20.sp,
                                                 fontWeight = FontWeight.Medium,
-                                                fontFamily = androidx.glance.text.FontFamily("google_sans_flex_round"),
+                                                fontFamily = searchbarWidgetFont(),
                                                 textAlign = TextAlign.Center,
                                             ),
                                     )
@@ -299,7 +299,7 @@ class PixelSearchbarWidget : GlanceAppWidget() {
                                             color = GlanceTheme.colors.onSurface,
                                             fontSize = 20.sp,
                                             fontWeight = FontWeight.Medium,
-                                            fontFamily = androidx.glance.text.FontFamily("google_sans_flex_round"),
+                                            fontFamily = searchbarWidgetFont(),
                                             textAlign = TextAlign.Center,
                                         ),
                                 )
@@ -330,7 +330,7 @@ class PixelSearchbarWidget : GlanceAppWidget() {
                                         color = GlanceTheme.colors.onSurfaceVariant,
                                         fontSize = 16.sp,
                                         fontWeight = FontWeight.Normal,
-                                        fontFamily = androidx.glance.text.FontFamily("google_sans_flex_round"),
+                                        fontFamily = searchbarWidgetFont(),
                                     ),
                                 modifier = GlanceModifier.defaultWeight(),
                             )
@@ -347,3 +347,10 @@ class PixelSearchbarWidget : GlanceAppWidget() {
         }
     }
 }
+
+private fun searchbarWidgetFont(): androidx.glance.text.FontFamily =
+    if (com.sameerasw.essentials.ui.theme.SystemFontState.enabled) {
+        androidx.glance.text.FontFamily.SansSerif
+    } else {
+        androidx.glance.text.FontFamily("google_sans_flex_round")
+    }

@@ -26,11 +26,23 @@ class SettingsExternalHandler : ExternalHandler {
             SettingsRepository.KEY_UNSPLASH_ACCESS_KEY,
         )
 
-    // Only primitive feature flags and numbers are exposed; strings may hold tokens or action JSON
+    private val allowedStringKeys = setOf(SettingsRepository.KEY_APP_VOLUME_LEVELS)
+
+    // Only primitive feature flags and numbers are exposed, plus explicitly allowed string keys; other strings may hold tokens or action JSON
     private fun isExposed(
         key: String,
         value: Any?,
-    ): Boolean = key !in blockedKeys && (value is Boolean || value is Int || value is Float || value is Long)
+    ): Boolean =
+        key !in blockedKeys &&
+            (value is Boolean || value is Int || value is Float || value is Long || (value is String && key in allowedStringKeys))
+
+    private fun validAppVolumeLevels(json: String): Boolean =
+        try {
+            val obj = org.json.JSONObject(json)
+            obj.keys().asSequence().all { obj.getDouble(it) in 0.0..1.0 }
+        } catch (e: Exception) {
+            false
+        }
 
     override fun onQuery(
         context: Context,
@@ -58,6 +70,11 @@ class SettingsExternalHandler : ExternalHandler {
         val key = remainingPath
         val prefs =
             context.getSharedPreferences(SettingsRepository.PREFS_NAME, Context.MODE_PRIVATE)
+        if (key in allowedStringKeys) {
+            if (value == null || !validAppVolumeLevels(value)) return false
+            SettingsRepository(context).putString(key, value)
+            return true
+        }
         if (!prefs.contains(key)) return false
 
         val currentValue = prefs.all[key] ?: return false

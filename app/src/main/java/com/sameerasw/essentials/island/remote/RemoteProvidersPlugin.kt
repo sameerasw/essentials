@@ -90,6 +90,7 @@ class RemoteProvidersPlugin : BaseIslandPlugin() {
     }
 
     private fun publishAll() {
+        if (ctx == null) return
         val trust = ProviderTrustStore(settings)
         val hidden = trust.hiddenFromIsland() + if (isDeviceLocked()) trust.hideWhenLocked() else emptySet()
         publish(connections.filterKeys { it !in hidden }.values.flatMap { it.items.value })

@@ -42,6 +42,11 @@
     <string name="flashlight_options_title">Opțiuni pentru lanternă</string>
     <string name="flashlight_options_desc">Ajustați estomparea și alte setări</string>
     <string name="setting_pitch_black_theme_title">Tema pitch black</string>
+    <string name="setting_app_color_title">App color</string>
+    <string name="setting_use_system_font_title">Use system font</string>
+    <string name="app_color_variant_soft">Soft</string>
+    <string name="app_color_variant_bright">Bright</string>
+    <string name="app_color_variant_neutral">Neutral</string>
     <string name="setting_pitch_black_theme_desc">Utilizați fundal negru pur în modul întunecat</string>
     <string name="settings_section_haptic">Feedback haptic</string>
     <string name="button_remap_section_long_press">Remapează apăsarea lungă</string>
@@ -1632,4 +1637,7 @@
     <string name="diy_action_show_taps_on">Turn On Show Taps</string>
     <string name="diy_action_show_taps_off">Turn Off Show Taps</string>
     <string name="diy_action_show_taps_toggle">Toggle Show Taps</string>
+    <string name="island_camera_gap_toggle_title">Camera gap</string>
+    <string name="island_starlink_status_color_title">Status colors</string>
+    <string name="island_starlink_offline">Offline</string>
 </resources>

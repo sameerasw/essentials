@@ -539,7 +539,7 @@ fun KeyboardInputView(
         }
     }
 
-    val CustomFontFamily = remember { FontFamily(Font(R.font.google_sans_flex)) }
+    val CustomFontFamily = if (com.sameerasw.essentials.ui.theme.SystemFontState.enabled) FontFamily.Default else remember { FontFamily(Font(R.font.google_sans_flex)) }
 
     // Layers
     val numberRow = remember { listOf("1", "2", "3", "4", "5", "6", "7", "8", "9", "0") }

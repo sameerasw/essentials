@@ -62,7 +62,13 @@ fun SignalBars(level: Int, color: Color, label: String?, modifier: Modifier = Mo
             )
         }
         if (label != null) {
-            drawText(measurer.measure(label, labelStyle), color = color, topLeft = Offset(-size.width * LABEL_SHIFT_X, -size.height * LABEL_SHIFT_Y))
+            val origin = Offset(-size.width * LABEL_SHIFT_X, -size.height * LABEL_SHIFT_Y)
+            val limit = 2 * (barWidth + gap) - gap - origin.x
+            val natural = measurer.measure(label, labelStyle)
+            val layout = if (natural.size.width > limit) {
+                measurer.measure(label, labelStyle.copy(fontSize = labelStyle.fontSize * (limit / natural.size.width), lineHeight = labelStyle.lineHeight * (limit / natural.size.width)))
+            } else natural
+            drawText(layout, color = color, topLeft = origin)
         }
     }
 }

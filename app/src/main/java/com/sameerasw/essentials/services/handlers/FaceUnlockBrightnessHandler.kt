@@ -72,7 +72,7 @@ import androidx.savedstate.setViewTreeSavedStateRegistryOwner
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.island.service.OverlayLifecycleOwner
-import com.sameerasw.essentials.ui.theme.GoogleSansFlexRounded
+import com.sameerasw.essentials.ui.theme.AppFontFamily
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.utils.LockscreenShortcutDetector
 import com.sameerasw.essentials.utils.ShellUtils
@@ -565,7 +565,7 @@ class FaceUnlockBrightnessHandler(
                     )
                     Text(
                         text = label,
-                        style = MaterialTheme.typography.labelLarge.copy(fontFamily = GoogleSansFlexRounded),
+                        style = MaterialTheme.typography.labelLarge.copy(fontFamily = AppFontFamily),
                         color = colors.onSurface,
                         modifier = Modifier.padding(start = 8.dp),
                     )

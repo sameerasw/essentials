@@ -156,6 +156,7 @@ class BriefPlugin : BaseIslandPlugin() {
         SettingsRepository.KEY_ISLAND_BATTERY_STATUS_ICON,
         SettingsRepository.KEY_ISLAND_DEVICES_BATTERY_STYLE,
         SettingsRepository.KEY_STATUS_GLANCE_CALENDAR_SHOW_ALL_DAY,
+        SettingsRepository.KEY_ISLAND_SHOW_CALENDAR,
         SettingsRepository.KEY_ISLAND_BRIEF_SHOW_ALARM,
         SettingsRepository.KEY_ISLAND_BRIEF_TWO_LINE_HEADER,
         SettingsRepository.KEY_ISLAND_ALARM_WINDOW_HOURS,
@@ -173,7 +174,8 @@ class BriefPlugin : BaseIslandPlugin() {
         val calendarIds = settings.getStatusGlanceCalendarSelectedCalendars().mapNotNull { it.toLongOrNull() }.toSet()
         val showAllDay = settings.isStatusGlanceCalendarShowAllDayEnabled()
         val showGlow = settings.isIslandShowGlowEnabled()
-        val calendarEnabled = context.checkSelfPermission(Manifest.permission.READ_CALENDAR) == PackageManager.PERMISSION_GRANTED
+        val calendarEnabled = settings.isIslandShowCalendarEnabled() &&
+            context.checkSelfPermission(Manifest.permission.READ_CALENDAR) == PackageManager.PERMISSION_GRANTED
         val twoLineHeader = settings.getBoolean(SettingsRepository.KEY_ISLAND_BRIEF_TWO_LINE_HEADER, false)
         ctx?.scope?.launch(Dispatchers.IO) {
             BriefDevicesCache.dateFormat()

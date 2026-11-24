@@ -300,20 +300,37 @@ fun IslandPlacementSettingsUI(
                 modifier = Modifier.highlight(highlightSetting == "island_camera_size"),
             )
 
-            ConfigSliderItem(
-                title = stringResource(R.string.island_cutout_gap_title),
-                value = viewModel.islandCutoutGap.floatValue,
-                onValueChange = {
-                    HapticUtil.performUIHaptic(view)
-                    viewModel.setIslandCutoutGap(it)
-                },
-                valueRange = 0f..16f,
-                increment = 1f,
+            IconToggleItem(
                 iconRes = R.drawable.rounded_arrows_outward_24,
-                valueFormatter = { "%.1f dp".format(it) },
-                allowDecimals = true,
-                modifier = Modifier.highlight(highlightSetting == "island_cutout_gap"),
+                title = stringResource(R.string.island_camera_gap_toggle_title),
+                isChecked = viewModel.isIslandCameraGapEnabled.value,
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    viewModel.setIslandCameraGapEnabled(checked)
+                },
+                modifier = Modifier.highlight(highlightSetting == "island_camera_gap_enabled"),
             )
+
+            AnimatedVisibility(
+                visible = viewModel.isIslandCameraGapEnabled.value,
+                enter = expandVertically() + fadeIn(),
+                exit = shrinkVertically() + fadeOut(),
+            ) {
+                ConfigSliderItem(
+                    title = stringResource(R.string.island_cutout_gap_title),
+                    value = viewModel.islandCutoutGap.floatValue,
+                    onValueChange = {
+                        HapticUtil.performUIHaptic(view)
+                        viewModel.setIslandCutoutGap(it)
+                    },
+                    valueRange = 0f..16f,
+                    increment = 1f,
+                    iconRes = R.drawable.rounded_arrows_outward_24,
+                    valueFormatter = { "%.1f dp".format(it) },
+                    allowDecimals = true,
+                    modifier = Modifier.highlight(highlightSetting == "island_cutout_gap"),
+                )
+            }
         }
 
         RoundedCardContainer(
@@ -1269,23 +1286,6 @@ fun IslandBehaviorSettingsUI(
                 },
                 modifier = Modifier.highlight(highlightSetting == "island_keep_in_fullscreen"),
             )
-
-            AnimatedVisibility(
-                visible = viewModel.isIslandKeepInFullscreen.value,
-                enter = expandVertically() + fadeIn(),
-                exit = shrinkVertically() + fadeOut(),
-            ) {
-                IconToggleItem(
-                    iconRes = R.drawable.rounded_do_not_touch_24,
-                    title = stringResource(R.string.disable_interactions_in_full_screen_title),
-                    isChecked = viewModel.isIslandDisableInteractionsInFullscreen.value,
-                    onCheckedChange = { checked ->
-                        HapticUtil.performVirtualKeyHaptic(view)
-                        viewModel.setIslandDisableInteractionsInFullscreen(checked)
-                    },
-                    modifier = Modifier.highlight(highlightSetting == "island_disable_interactions_in_fullscreen"),
-                )
-            }
         }
 
         IslandSettingsSection(R.string.island_section_statusbar) {

@@ -6,6 +6,7 @@ import android.provider.Settings
 import android.view.KeyEvent
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.domain.diy.Action
+import com.sameerasw.essentials.island.plugins.media.IslandMediaState
 import com.sameerasw.essentials.utils.LinearBrightness
 import com.sameerasw.essentials.utils.media.MusicSessionUtil
 import com.sameerasw.essentials.services.automation.executors.CombinedActionExecutor
@@ -78,7 +79,9 @@ class CompactGestureController(
     override fun slideCommit(dx: Float) {
         val forward = forward(dx)
         when (slideMode) {
-            SlideMode.Track -> mediaKey(if (forward) KeyEvent.KEYCODE_MEDIA_NEXT else KeyEvent.KEYCODE_MEDIA_PREVIOUS)
+            SlideMode.Track -> if (IslandMediaState.skip?.invoke(forward) != true) {
+                mediaKey(if (forward) KeyEvent.KEYCODE_MEDIA_NEXT else KeyEvent.KEYCODE_MEDIA_PREVIOUS)
+            }
             SlideMode.SoundMode -> cycleSoundMode(forward)
             else -> {}
         }

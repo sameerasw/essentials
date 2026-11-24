@@ -45,7 +45,7 @@ import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.translation.TranslatableText
-import com.sameerasw.essentials.ui.theme.GoogleSansFlexRounded
+import com.sameerasw.essentials.ui.theme.AppFontFamily
 
 /**
  * A reusable promotion card for the "Made by Sameera" subreddit community.
@@ -131,7 +131,7 @@ fun MadebySameeraswCard(modifier: Modifier = Modifier) {
                     text = "r/MadebySameerasw",
                     style =
                         MaterialTheme.typography.titleLarge.copy(
-                            fontFamily = GoogleSansFlexRounded,
+                            fontFamily = AppFontFamily,
                             fontWeight = FontWeight.Bold,
                             letterSpacing = 0.5.sp,
                         ),

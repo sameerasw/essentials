@@ -389,6 +389,10 @@ class SettingsRepository(
         const val KEY_USE_ROOT = "use_root"
         const val KEY_PRIVILEGED_MODE = "privileged_mode"
         const val KEY_PITCH_BLACK_THEME_ENABLED = "pitch_black_theme_enabled"
+        const val KEY_APP_COLOR_SEED = "app_color_seed"
+        const val KEY_APP_COLOR_STYLE = "app_color_style"
+        const val KEY_APP_COLOR_VARIANT = "app_color_variant"
+        const val KEY_USE_SYSTEM_FONT = "use_system_font"
         const val KEY_ENABLE_UNSUPPORTED_FEATURES = "enable_unsupported_features"
         const val KEY_FORCE_FLASHLIGHT_CONTROLS = "force_flashlight_controls"
         const val KEY_SHOW_LEGACY_FEATURES = "show_legacy_features"
@@ -585,6 +589,7 @@ class SettingsRepository(
         const val KEY_ISLAND_CAMERA_SIZE = "island_camera_size"
         const val KEY_ISLAND_MAX_WIDTH = "island_max_width"
         const val KEY_ISLAND_CUTOUT_GAP = "island_cutout_gap"
+        const val KEY_ISLAND_CAMERA_GAP_ENABLED = "island_camera_gap_enabled"
         const val KEY_ISLAND_PADDING_AROUND = "island_padding_around"
         const val KEY_ISLAND_SUPPRESS_SYSTEM_HEADS_UP = "island_suppress_system_heads_up"
         const val KEY_ISLAND_DYNAMIC_HIDE_STATUS_BAR = "island_dynamic_hide_status_bar"
@@ -786,6 +791,7 @@ class SettingsRepository(
         const val KEY_ISLAND_STARLINK_HIDE_UNIT = "island_starlink_hide_unit"
         const val KEY_ISLAND_STARLINK_HIDE_ARROW = "island_starlink_hide_arrow"
         const val KEY_ISLAND_STARLINK_CHIP = "island_starlink_chip"
+        const val KEY_ISLAND_STARLINK_STATUS_COLOR = "island_starlink_status_color"
         const val KEY_ISLAND_BRIEF_ENABLED = "island_brief_enabled"
         const val KEY_ISLAND_BRIEF_SHOW_ALARM = "island_brief_show_alarm"
         const val KEY_ISLAND_BRIEF_TWO_LINE_HEADER = "island_brief_two_line_header"
@@ -4209,6 +4215,8 @@ class SettingsRepository(
 
     fun getIslandCutoutGap(): Float = getDisplayFloat(KEY_ISLAND_CUTOUT_GAP, 6f)
     fun setIslandCutoutGap(value: Float) = putDisplayFloat(KEY_ISLAND_CUTOUT_GAP, value)
+    fun isIslandCameraGapEnabled(): Boolean = getDisplayBoolean(KEY_ISLAND_CAMERA_GAP_ENABLED, true)
+    fun setIslandCameraGapEnabled(enabled: Boolean) = putDisplayBoolean(KEY_ISLAND_CAMERA_GAP_ENABLED, enabled)
     fun getIslandPaddingAround(): Float = getDisplayFloat(KEY_ISLAND_PADDING_AROUND, 6f)
     fun setIslandPaddingAround(value: Float) = putDisplayFloat(KEY_ISLAND_PADDING_AROUND, value)
 

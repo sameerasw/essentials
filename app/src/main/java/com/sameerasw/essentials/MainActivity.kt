@@ -1149,6 +1149,7 @@ class MainActivity : AppCompatActivity() {
                                                                             onAppIconSelectedWithPosition = { _, pos -> AppRipple.fire(pos) },
                                                                             onAvatarLongClickWithPosition = AppRipple::fire,
                                                                             onRippleToggleEnabledWithPosition = AppRipple::fire,
+                                                                            onAppColorSelectedWithPosition = AppRipple::fire,
                                                                             modifier = Modifier.fillMaxSize(),
                                                                         )
                                                                     }

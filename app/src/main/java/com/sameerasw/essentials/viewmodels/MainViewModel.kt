@@ -233,6 +233,7 @@ class MainViewModel : ViewModel() {
     val islandCameraSize = mutableFloatStateOf(1.0f)
     val islandMaxWidth = mutableFloatStateOf(360f)
     val islandCutoutGap = mutableFloatStateOf(6f)
+    val isIslandCameraGapEnabled = mutableStateOf(true)
     val islandPaddingAround = mutableFloatStateOf(6f)
     val islandExpandedWidth = mutableFloatStateOf(360f)
     val islandExpandedRoundness = mutableFloatStateOf(24f)
@@ -620,6 +621,10 @@ class MainViewModel : ViewModel() {
     val hasPendingUpdates = mutableStateOf(false)
 
     val isPitchBlackThemeEnabled = mutableStateOf(false)
+    val appColorSeed = mutableStateOf(0)
+    val appColorStyle = mutableStateOf<String?>(null)
+    val appColorVariant = mutableStateOf("Bright")
+    val useSystemFont = mutableStateOf(false)
     val isGenAIAutomationEnabled = mutableStateOf(false)
     val isLocationReachedFullScreenAlarmEnabled = mutableStateOf(true)
 
@@ -982,6 +987,9 @@ class MainViewModel : ViewModel() {
 
                     SettingsRepository.KEY_ISLAND_CUTOUT_GAP ->
                         islandCutoutGap.floatValue = settingsRepository.getIslandCutoutGap()
+
+                    SettingsRepository.KEY_ISLAND_CAMERA_GAP_ENABLED ->
+                        isIslandCameraGapEnabled.value = settingsRepository.isIslandCameraGapEnabled()
 
                     SettingsRepository.KEY_ISLAND_PADDING_AROUND ->
                         islandPaddingAround.floatValue = settingsRepository.getIslandPaddingAround()
@@ -2579,6 +2587,7 @@ class MainViewModel : ViewModel() {
         islandCameraSize.floatValue = settingsRepository.getIslandCameraSize()
         islandMaxWidth.floatValue = settingsRepository.getIslandMaxWidth()
         islandCutoutGap.floatValue = settingsRepository.getIslandCutoutGap()
+        isIslandCameraGapEnabled.value = settingsRepository.isIslandCameraGapEnabled()
         islandPaddingAround.floatValue = settingsRepository.getIslandPaddingAround()
         islandExpandedWidth.floatValue = settingsRepository.getIslandExpandedWidth()
         islandExpandedRoundness.floatValue = settingsRepository.getIslandExpandedRoundness()
@@ -2811,6 +2820,10 @@ class MainViewModel : ViewModel() {
             )
         isPitchBlackThemeEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_PITCH_BLACK_THEME_ENABLED)
+        appColorSeed.value = settingsRepository.getInt(SettingsRepository.KEY_APP_COLOR_SEED)
+        appColorStyle.value = settingsRepository.getString(SettingsRepository.KEY_APP_COLOR_STYLE)
+        useSystemFont.value = settingsRepository.getBoolean(SettingsRepository.KEY_USE_SYSTEM_FONT)
+        appColorVariant.value = settingsRepository.getString(SettingsRepository.KEY_APP_COLOR_VARIANT, "Bright") ?: "Bright"
         isLocationReachedFullScreenAlarmEnabled.value =
             settingsRepository.getLocationReachedFullScreenAlarmEnabled()
         isEnableUnsupportedFeatures.value = settingsRepository.isEnableUnsupportedFeatures()
@@ -3641,6 +3654,23 @@ class MainViewModel : ViewModel() {
     ) {
         isPitchBlackThemeEnabled.value = enabled
         settingsRepository.putBoolean(SettingsRepository.KEY_PITCH_BLACK_THEME_ENABLED, enabled)
+    }
+
+    fun setUseSystemFont(enabled: Boolean) {
+        useSystemFont.value = enabled
+        settingsRepository.putBoolean(SettingsRepository.KEY_USE_SYSTEM_FONT, enabled)
+    }
+
+    fun setAppColorVariant(variant: String) {
+        appColorVariant.value = variant
+        settingsRepository.putString(SettingsRepository.KEY_APP_COLOR_VARIANT, variant)
+    }
+
+    fun setAppColor(seed: Int, style: String?) {
+        appColorSeed.value = seed
+        appColorStyle.value = style
+        settingsRepository.putString(SettingsRepository.KEY_APP_COLOR_STYLE, style ?: "")
+        settingsRepository.putInt(SettingsRepository.KEY_APP_COLOR_SEED, seed)
     }
 
     fun setLocationReachedFullScreenAlarmEnabled(enabled: Boolean) {
@@ -5612,6 +5642,7 @@ class MainViewModel : ViewModel() {
         isIslandAutoDetect.value = settingsRepository.isIslandAutoDetectEnabled()
         islandMaxWidth.floatValue = settingsRepository.getIslandMaxWidth()
         islandCutoutGap.floatValue = settingsRepository.getIslandCutoutGap()
+        isIslandCameraGapEnabled.value = settingsRepository.isIslandCameraGapEnabled()
         islandPaddingAround.floatValue = settingsRepository.getIslandPaddingAround()
         islandExpandedWidth.floatValue = settingsRepository.getIslandExpandedWidth()
         islandExpandedRoundness.floatValue = settingsRepository.getIslandExpandedRoundness()
@@ -5897,6 +5928,11 @@ class MainViewModel : ViewModel() {
     fun setIslandMaxWidth(value: Float) {
         islandMaxWidth.floatValue = value
         settingsRepository.setIslandMaxWidth(value)
+    }
+
+    fun setIslandCameraGapEnabled(enabled: Boolean) {
+        isIslandCameraGapEnabled.value = enabled
+        settingsRepository.setIslandCameraGapEnabled(enabled)
     }
 
     fun setIslandCutoutGap(value: Float) {

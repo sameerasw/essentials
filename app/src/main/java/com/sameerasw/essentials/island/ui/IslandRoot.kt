@@ -132,6 +132,7 @@ import com.sameerasw.essentials.island.state.IslandUiState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.math.abs
+import kotlin.math.pow
 import kotlin.math.sign
 import kotlinx.coroutines.coroutineScope
 import androidx.compose.ui.draw.drawWithContent
@@ -403,7 +404,7 @@ private fun IslandRootContent(
             effectShadow.animateTo(0f, motionTween((spec.pulseDurationMs - 250).coerceAtLeast(100), easing = LinearEasing))
         }
     }
-    val minSurfaceWidth = with(density) { spec.cameraDiameter.roundToPx() }
+    val minSurfaceWidth = with(density) { (if (spec.cameraPresence <= 0f) spec.cellSize + spec.cellSpacing * 2 else spec.cameraDiameter).roundToPx() }
     val minSurfaceHeight = with(density) { spec.compactHeight.roundToPx() }
     val fallbackCompact = with(density) {
         IntSize((spec.cameraSlotWidth + spec.compactHeight * 2).roundToPx(), spec.compactHeight.roundToPx())
@@ -1580,7 +1581,7 @@ private fun IslandRootContent(
                             startX = start.x
                             dx = 0f
                             dy = 0f
-                            collapseBase = collapse.value.coerceIn(0f, 1f)
+                            collapseBase = collapseUneased(collapse.value)
                             dismissBase = dismissOffset.value
                             scope.launch { collapse.stop() }
                             scope.launch { dismissOffset.stop() }
@@ -1624,7 +1625,7 @@ private fun IslandRootContent(
                             } else {
                                 val pull = if (peek) maxOf(inward, -dy) else -dy
                                 progress = (collapseBase + pull / collapseRange).coerceIn(0f, 1f)
-                                scope.launch { collapse.snapTo(progress) }
+                                scope.launch { collapse.animateTo(collapseEased(progress), IslandMotion.collapseFollow()) }
                                 if (dismissOffset.targetValue != 0f) scope.launch { dismissOffset.animateTo(0f, IslandMotion.fling()) }
                                 if (dropOffset.targetValue != 0f) scope.launch { dropOffset.animateTo(0f, IslandMotion.fling()) }
                             }
@@ -1765,7 +1766,7 @@ private fun IslandRootContent(
                                 scope.launch {
                                     if (commit) {
                                         IslandHaptics.commit(context)
-                                        collapse.animateTo(1f, IslandMotion.release(), initialVelocity = pullVelocity.coerceIn(0f, 8f))
+                                        collapse.animateTo(1f, IslandMotion.collapseCommit())
                                         dragCommitted = true
                                         actions.onCollapse()
                                     } else {
@@ -2176,3 +2177,9 @@ private fun SwipeIntentChip(intent: SwipeIntent?, modifier: Modifier) {
         }
     }
 }
+
+private const val COLLAPSE_EASE_POWER = 3f
+
+private fun collapseEased(p: Float): Float = 1f - (1f - p.coerceIn(0f, 1f)).pow(COLLAPSE_EASE_POWER)
+
+private fun collapseUneased(s: Float): Float = 1f - (1f - s.coerceIn(0f, 1f)).pow(1f / COLLAPSE_EASE_POWER)

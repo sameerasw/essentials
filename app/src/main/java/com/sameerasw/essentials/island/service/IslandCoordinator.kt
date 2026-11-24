@@ -288,6 +288,7 @@ class IslandCoordinator(
         }
         controller.onStateChanged = { state ->
             reportCameraOccupied(state.stage != IslandStage.Hidden && !(state.stage == IslandStage.Compact && state.arrangement.visibleItems.isEmpty()))
+            publishSideLimits()
         }
         settings.setIslandPreviewRingEnabled(false)
         settings.setIslandPreviewStage(SettingsRepository.ISLAND_PREVIEW_STAGE_AUTO)
@@ -563,7 +564,7 @@ class IslandCoordinator(
                 remember(revision) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) dynamicDarkColorScheme(service) else darkColorScheme()
                 }
-            MaterialTheme(colorScheme = colors, typography = IslandTypography) {
+            MaterialTheme(colorScheme = colors, typography = islandTypography()) {
                 val base = LocalDensity.current
                 CompositionLocalProvider(
                     LocalDensity provides Density(base.density, base.fontScale * layoutSpec.fontScale),
@@ -832,11 +833,11 @@ class IslandCoordinator(
             fontScale = settings.getIslandFontScale().coerceIn(0.8f, 1.3f),
             expandedOutset = (expandedWidth * (scale - 1f) / 2f).dp,
             cameraAnchor = geo.anchor,
-            cameraPresence = if (geo.hasCamera) 1f else 0f,
+            cameraPresence = if (geo.hasSlot) 1f else 0f,
             landscape = isLandscape,
             bondEdge = alwaysBond || (!geo.hasCamera && settings.isIslandBondEdgeEnabled()),
-            bondKeepGap = alwaysBond && geo.hasCamera && settings.isIslandBondKeepGapEnabled(),
-            bondRemoveGap = alwaysBond && geo.hasCamera && !settings.isIslandBondKeepGapEnabled(),
+            bondKeepGap = alwaysBond && geo.hasSlot && settings.isIslandBondKeepGapEnabled(),
+            bondRemoveGap = alwaysBond && geo.hasSlot && !settings.isIslandBondKeepGapEnabled(),
             bondScale = settings.getIslandBondScale(),
             bondFlatExpanded = flatExpanded,
             balanceCompact = settings.isIslandBalanceCompactEnabled(),
@@ -1118,6 +1119,7 @@ class IslandCoordinator(
             SettingsRepository.KEY_ISLAND_CAMERA_SIZE,
             SettingsRepository.KEY_ISLAND_MAX_WIDTH,
             SettingsRepository.KEY_ISLAND_CUTOUT_GAP,
+            SettingsRepository.KEY_ISLAND_CAMERA_GAP_ENABLED,
             SettingsRepository.KEY_ISLAND_PADDING_AROUND,
             SettingsRepository.KEY_ISLAND_EXPANDED_WIDTH,
             SettingsRepository.KEY_ISLAND_ICON_COLOR_MODE,
@@ -1186,7 +1188,7 @@ class IslandCoordinator(
     }
 }
 
-private val IslandTypography = Typography().run {
+private fun islandTypography() = Typography().run {
     copy(
         bodyLarge = bodyLarge.copy(fontFamily = IslandFontFamily),
         bodyMedium = bodyMedium.copy(fontFamily = IslandFontFamily),

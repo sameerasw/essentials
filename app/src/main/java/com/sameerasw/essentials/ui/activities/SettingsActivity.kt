@@ -117,6 +117,7 @@ import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.pickers.PrivilegedModePicker
 import com.sameerasw.essentials.ui.core.cards.PermissionCard
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
+import com.sameerasw.essentials.ui.core.pickers.AppColorPicker
 import com.sameerasw.essentials.ui.core.pickers.AppIconPicker
 import com.sameerasw.essentials.ui.core.pickers.CrashReportingPicker
 import com.sameerasw.essentials.ui.core.pickers.DefaultTabPicker
@@ -174,6 +175,7 @@ fun SettingsContent(
     onAppIconSelectedWithPosition: ((com.sameerasw.essentials.domain.model.AppIcon, Offset) -> Unit)? = null,
     onAvatarLongClickWithPosition: ((Offset) -> Unit)? = null,
     onRippleToggleEnabledWithPosition: ((Offset) -> Unit)? = null,
+    onAppColorSelectedWithPosition: ((Offset) -> Unit)? = null,
 ) {
     val isAccessibilityEnabled by viewModel.isAccessibilityEnabled
     val isWriteSecureSettingsEnabled by viewModel.isWriteSecureSettingsEnabled
@@ -659,6 +661,25 @@ fun SettingsContent(
                     title = stringResource(R.string.label_haptic_feedback),
                 )
             }
+
+            val appColorSeed by viewModel.appColorSeed
+            val appColorStyle by viewModel.appColorStyle
+            val appColorVariant by viewModel.appColorVariant
+            AppColorPicker(
+                selectedSeed = appColorSeed,
+                selectedStyle = appColorStyle,
+                selectedVariant = appColorVariant,
+                onVariantSelected = { viewModel.setAppColorVariant(it) },
+                onSelected = { seed, style -> viewModel.setAppColor(seed, style) },
+                onSelectedWithPosition = onAppColorSelectedWithPosition,
+            )
+
+            IconToggleItem(
+                iconRes = R.drawable.rounded_format_size_24,
+                title = stringResource(R.string.setting_use_system_font_title),
+                isChecked = viewModel.useSystemFont.value,
+                onCheckedChange = { viewModel.setUseSystemFont(it) },
+            )
 
             IconToggleItem(
                 iconRes = R.drawable.rounded_invert_colors_24,
