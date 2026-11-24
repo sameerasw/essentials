@@ -63,6 +63,7 @@ class ProviderConnection(
     private val heights = mutableStateMapOf<String, Int>()
     private val snapshots = mutableStateMapOf<String, ImageBitmap>()
     private var bound = false
+    @Volatile private var closed = false
     private var mapper: Job? = null
     private var retry: Job? = null
     private var retryDelayMs = INITIAL_RETRY_MS
@@ -86,6 +87,7 @@ class ProviderConnection(
 
     private val connection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName, service: IBinder) {
+            if (closed) return
             val stub = IIslandProvider.Stub.asInterface(service)
             scope.launch {
                 val status = withContext(Dispatchers.IO) {
@@ -118,16 +120,19 @@ class ProviderConnection(
         }
 
         override fun onServiceDisconnected(name: ComponentName) {
+            if (closed) return
             clear()
         }
 
         override fun onBindingDied(name: ComponentName) {
+            if (closed) return
             clear()
             unbind()
             scheduleRetry()
         }
 
         override fun onNullBinding(name: ComponentName) {
+            if (closed) return
             clear()
             unbind()
         }
@@ -135,6 +140,7 @@ class ProviderConnection(
 
     fun connect() {
         if (bound) return
+        closed = false
         mapper = scope.launch {
             pending.filterNotNull().collect { decoded ->
                 apply(decoded)
@@ -145,6 +151,7 @@ class ProviderConnection(
     }
 
     fun disconnect() {
+        closed = true
         retry?.cancel()
         mapper?.cancel()
         try {
