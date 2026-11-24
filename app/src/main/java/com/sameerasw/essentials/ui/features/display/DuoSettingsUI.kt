@@ -546,22 +546,6 @@ fun DuoSettingsUI(
                 },
                 modifier = Modifier.highlight(highlightSetting == "duo_keep_in_fullscreen"),
             )
-            AnimatedVisibility(
-                visible = viewModel.isDuoKeepInFullscreen.value,
-                enter = expandVertically() + fadeIn(),
-                exit = shrinkVertically() + fadeOut(),
-            ) {
-                IconToggleItem(
-                    iconRes = R.drawable.rounded_do_not_touch_24,
-                    title = stringResource(R.string.disable_interactions_in_full_screen_title),
-                    isChecked = viewModel.isDuoDisableInteractionsInFullscreen.value,
-                    onCheckedChange = { checked ->
-                        HapticUtil.performVirtualKeyHaptic(view)
-                        viewModel.setDuoDisableInteractionsInFullscreen(checked)
-                    },
-                    modifier = Modifier.highlight(highlightSetting == "duo_disable_interactions_in_fullscreen"),
-                )
-            }
             val areUnsupportedFeaturesEnabled = viewModel.isEnableUnsupportedFeatures.value
             IconToggleItem(
                 iconRes = R.drawable.rounded_mobile_off_24,
@@ -617,6 +601,22 @@ fun DuoSettingsUI(
             spacing = 2.dp,
             cornerRadius = 24.dp,
         ) {
+            AnimatedVisibility(
+                visible = viewModel.isDuoKeepInFullscreen.value,
+                enter = expandVertically() + fadeIn(),
+                exit = shrinkVertically() + fadeOut(),
+            ) {
+                IconToggleItem(
+                    iconRes = R.drawable.rounded_do_not_touch_24,
+                    title = stringResource(R.string.disable_interactions_in_full_screen_title),
+                    isChecked = viewModel.isDuoDisableInteractionsInFullscreen.value,
+                    onCheckedChange = { checked ->
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        viewModel.setDuoDisableInteractionsInFullscreen(checked)
+                    },
+                    modifier = Modifier.highlight(highlightSetting == "duo_disable_interactions_in_fullscreen"),
+                )
+            }
             val tapAction = viewModel.duoTapAction.value
             val tapForBriefActive = viewModel.isDuoIslandCombined.value && viewModel.isDuoTapForBrief.value
             IconToggleItem(

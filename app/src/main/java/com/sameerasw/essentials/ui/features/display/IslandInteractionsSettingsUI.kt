@@ -210,6 +210,23 @@ fun IslandInteractionsSettingsUI(
                 },
                 modifier = Modifier.highlight(highlightSetting == "island_gesture_hints"),
             )
+
+            AnimatedVisibility(
+                visible = viewModel.isIslandKeepInFullscreen.value,
+                enter = expandVertically() + fadeIn(),
+                exit = shrinkVertically() + fadeOut(),
+            ) {
+                IconToggleItem(
+                    iconRes = R.drawable.rounded_do_not_touch_24,
+                    title = stringResource(R.string.disable_interactions_in_full_screen_title),
+                    isChecked = viewModel.isIslandDisableInteractionsInFullscreen.value,
+                    onCheckedChange = { checked ->
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        viewModel.setIslandDisableInteractionsInFullscreen(checked)
+                    },
+                    modifier = Modifier.highlight(highlightSetting == "island_disable_interactions_in_fullscreen"),
+                )
+            }
         }
 
         TranslatableText(
