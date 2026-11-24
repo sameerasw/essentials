@@ -2161,4 +2161,9 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
 Esto le permite a Essentials automatizarse y reiniciar Shizuku en demanda cuando esta encendido</string>
     <string name="stb_hide_entire_status_bar_title">Esconder la barra de estado entera</string>
     <string name="stb_clock_position">Posicion del reloj</string>
+    <string name="settings_translations_section">Traducciones</string>
+    <string name="settings_section_more">Más</string>
+    <string name="settings_section_customizations">Personalizacion</string>
+    <string name="instruction_section_backup_title">Respaldar y restaurar</string>
+    <string name="bug_report_view_existing_pr">Mirar el PR existente</string>
 </resources>
