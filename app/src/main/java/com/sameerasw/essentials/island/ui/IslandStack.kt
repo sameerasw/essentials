@@ -584,12 +584,12 @@ fun IslandStackPill(
     val liquid = rememberLiquidBody(bond = bond)
     val itemWidth = iconSize + 8.dp
     val spacing = 2.dp
-    val carouselState = rememberCarouselState { icons.size }
-    val hapticContext = LocalContext.current
     val selectedIndex = icons.indexOfFirst { it.key == selectedKey }
+    val carouselState = rememberCarouselState(initialItem = selectedIndex.coerceAtLeast(0)) { icons.size }
+    val hapticContext = LocalContext.current
     val programmatic = remember { booleanArrayOf(false) }
-    LaunchedEffect(selectedKey) {
-        if (selectedIndex < 0) return@LaunchedEffect
+    LaunchedEffect(selectedKey, keysSignature) {
+        if (selectedIndex < 0 || carouselState.currentItem == selectedIndex) return@LaunchedEffect
         programmatic[0] = true
         try {
             carouselState.animateScrollToItem(selectedIndex)

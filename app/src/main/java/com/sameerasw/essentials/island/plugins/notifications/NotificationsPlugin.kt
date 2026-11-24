@@ -574,8 +574,8 @@ class NotificationsPlugin : BaseIslandPlugin() {
 
     private fun carouselOrder(): List<ActiveNotificationAlert> {
         if (!hub()) return alerts
-        val ordered = hubEntries().asReversed().flatMap { it.alerts.asReversed() }
-        return alerts.filter { a -> ordered.none { it === a } } + ordered
+        val ordered = hubEntries().flatMap { it.alerts }
+        return ordered + alerts.filter { a -> ordered.none { it === a } }
     }
 
     private fun hubIconFor(entry: HubEntry): StackIcon {
