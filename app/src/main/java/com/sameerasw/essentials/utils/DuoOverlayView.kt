@@ -1350,11 +1350,21 @@ class DuoOverlayView(context: Context) : View(context) {
 
     private fun timeTextSize(): Float = (dotRadiusPx * 2.2f).coerceIn(12f * density, 15f * density) * timeTextScale
 
+    private val timeDigitBounds = android.graphics.Rect()
+
+    private fun timeBaselineOffset(textSize: Float): Float {
+        val previousSize = timePaint.textSize
+        timePaint.textSize = textSize
+        timePaint.getTextBounds("8", 0, 1, timeDigitBounds)
+        timePaint.textSize = previousSize
+        return timeDigitBounds.height() - arcThicknessPx / 2f
+    }
+
     private fun timeGapDegrees(): Float {
         if (currentTimeText.isEmpty()) return DEFAULT_BOTTOM_GAP
         val textSize = timeTextSize()
         val ringRadius = (cameraRadiusPx + 14f * density) * ringRadiusScale
-        val timeRadius = ringRadius + textSize * 0.45f
+        val timeRadius = ringRadius + timeBaselineOffset(textSize)
         val previousSize = timePaint.textSize
         timePaint.textSize = textSize
         val textWidth = timePaint.measureText(timeTemplate(currentTimeText))
@@ -1897,7 +1907,7 @@ class DuoOverlayView(context: Context) : View(context) {
             timePaint.textSize = calculatedTextSize
             contrastTimePaint.textSize = calculatedTextSize
 
-            val timeRadius = baseRadius + (calculatedTextSize * 0.45f)
+            val timeRadius = baseRadius + timeBaselineOffset(calculatedTextSize)
             timeArcBounds.set(
                 cameraCenterX - timeRadius,
                 cameraCenterY - timeRadius,
