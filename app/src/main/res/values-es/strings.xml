@@ -2159,4 +2159,6 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="shizuku_auth_token_help">En shizuku, en la seccion de \"Controla Shizuku con apps de automatizacion\", Abre \"Ver intents\" y copia y pega el token auutorizador en la seccion de \"Extras\".
 
 Esto le permite a Essentials automatizarse y reiniciar Shizuku en demanda cuando esta encendido</string>
+    <string name="stb_hide_entire_status_bar_title">Esconder la barra de estado entera</string>
+    <string name="stb_clock_position">Posicion del reloj</string>
 </resources>
