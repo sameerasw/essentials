@@ -68,6 +68,7 @@ class StarlinkPlugin : BaseIslandPlugin() {
         SettingsRepository.KEY_ISLAND_STARLINK_HIDE_UNIT,
         SettingsRepository.KEY_ISLAND_STARLINK_HIDE_ARROW,
         SettingsRepository.KEY_ISLAND_STARLINK_CHIP,
+        SettingsRepository.KEY_ISLAND_STARLINK_STATUS_COLOR,
         SettingsRepository.KEY_ISLAND_CHIPS,
         SettingsRepository.KEY_ISLAND_BRIEF_ENABLED,
     )
@@ -78,6 +79,7 @@ class StarlinkPlugin : BaseIslandPlugin() {
         val compact: Boolean,
         val chip: Boolean,
         val warn: Boolean,
+        val offline: Boolean,
         val speed: String?,
         val hideUnit: Boolean,
         val hideArrow: Boolean,
@@ -85,7 +87,7 @@ class StarlinkPlugin : BaseIslandPlugin() {
         val details: StarlinkStatus?,
     ) {
         override fun equals(other: Any?) = other is RenderSignature && compact == other.compact && chip == other.chip &&
-            warn == other.warn && speed == other.speed && hideUnit == other.hideUnit && hideArrow == other.hideArrow &&
+            warn == other.warn && offline == other.offline && speed == other.speed && hideUnit == other.hideUnit && hideArrow == other.hideArrow &&
             line == other.line && details == other.details
 
         override fun hashCode() = 0
@@ -279,12 +281,14 @@ class StarlinkPlugin : BaseIslandPlugin() {
         } else {
             null
         }
-        val warn = !connected || current.degraded
+        val statusColor = settings.getBoolean(SettingsRepository.KEY_ISLAND_STARLINK_STATUS_COLOR, false)
+        val warn = statusColor && (!connected || current.degraded)
+        val offline = compact && !connected && speedsOn()
         val chip = compact && settings.getBoolean(SettingsRepository.KEY_ISLAND_STARLINK_CHIP, false)
         val stage = c.currentStage()
         val lineText = if (stage == IslandStage.Line || stage == IslandStage.Expanded) lineSummary(current) else null
         val signature = RenderSignature(
-            compact, chip, warn,
+            compact, chip, warn, offline,
             speed?.let { "${it.text}|${it.unit}|${it.direction}" },
             hideUnit, hideArrow, lineText,
             current.takeIf { expandedHere(c) },
@@ -300,7 +304,12 @@ class StarlinkPlugin : BaseIslandPlugin() {
                     CompactCell("starlink.icon") {
                         IslandIcon(R.drawable.ic_starlink_24, size = 20.dp, tint = if (warn) WARN else islandAccent())
                     },
-                ) + listOfNotNull(speed?.let { s -> CompactCell("starlink.speed") { SpeedCell(s, hideUnit, hideArrow) } }),
+                ) + listOfNotNull(
+                    speed?.let { s -> CompactCell("starlink.speed") { SpeedCell(s, hideUnit, hideArrow) } },
+                    if (offline) CompactCell("starlink.offline") {
+                        IslandIcon(R.drawable.rounded_cloud_off_24, size = 18.dp, tint = if (warn) WARN else islandAccent())
+                    } else null,
+                ),
                 line = LineContent(
                     icon = { IslandIcon(R.drawable.ic_starlink_24, tint = if (warn) WARN else islandAccent()) },
                     start = context.getString(R.string.island_show_starlink_title),
@@ -367,7 +376,7 @@ class StarlinkPlugin : BaseIslandPlugin() {
                 }
                 if (alerts.isNotEmpty()) {
                     Spacer(Modifier.height(6.dp))
-                    Text(alerts, style = IslandTextStyles.body, color = WARN, modifier = Modifier.padding(horizontal = side))
+                    Text(alerts, style = IslandTextStyles.body, color = if (settings.getBoolean(SettingsRepository.KEY_ISLAND_STARLINK_STATUS_COLOR, false)) WARN else islandAccent(), modifier = Modifier.padding(horizontal = side))
                 }
                 Spacer(Modifier.height(12.dp))
             }
@@ -429,7 +438,7 @@ class StarlinkPlugin : BaseIslandPlugin() {
 
     @Composable
     private fun stateLabel(s: StarlinkStatus): String = when {
-        s.state == StarlinkState.Searching -> stringResource(R.string.island_starlink_searching)
+        s.state == StarlinkState.Searching -> stringResource(R.string.island_starlink_offline)
         s.state == StarlinkState.Booting -> stringResource(R.string.island_starlink_booting)
         s.currentlyObstructed -> stringResource(R.string.island_starlink_obstructed)
         else -> stringResource(R.string.island_devices_connected)
@@ -454,7 +463,7 @@ class StarlinkPlugin : BaseIslandPlugin() {
         private const val RETRY_POLL_MS = 3_000L
         private val ABSENT_POLL_MS = longArrayOf(20_000L, 60_000L, 300_000L, 600_000L)
         private const val MISSES_BEFORE_HIDE = 2
-        private val WARN = Color(0xFFFFB74D)
+        private val WARN = Color(0xFFFF9AA2)
 
         fun rateParts(bps: Float): Pair<String, String> = when {
             bps >= 1_000_000_000f -> "%.1f".format(bps / 1_000_000_000f) to "Gbps"

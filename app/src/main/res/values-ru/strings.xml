@@ -2445,4 +2445,6 @@
     <string name="diy_action_show_taps_off">Turn Off Show Taps</string>
     <string name="diy_action_show_taps_toggle">Toggle Show Taps</string>
     <string name="island_camera_gap_toggle_title">Camera gap</string>
+    <string name="island_starlink_status_color_title">Status colors</string>
+    <string name="island_starlink_offline">Offline</string>
 </resources>
