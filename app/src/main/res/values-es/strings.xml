@@ -2169,4 +2169,15 @@ Esto le permite a Essentials automatizarse y reiniciar Shizuku en demanda cuando
     <string name="translation_logged_in_as">Inicaste secion como  %1$s</string>
     <string name="label_developer_options">Opciones de desarrollador</string>
     <string name="bug_report_issue_details">Detalles del informe</string>
+    <string name="diy_type_trigger">Automatizacion</string>
+    <string name="diy_type_state">Estado</string>
+    <string name="diy_type_action_shortcut">Acceso directo de accion</string>
+    <string name="diy_type_accessibility_shortcut">Acceso directo de accesibilidad</string>
+    <string name="button_remap_add_action">Añadir accion</string>
+    <string name="diy_category_connectivity">Conectividad e internet</string>
+    <string name="diy_category_display">Pantalla</string>
+    <string name="diy_category_sound_media">Sonido y medios</string>
+    <string name="diy_discard_warning_title">Descartar cambios?</string>
+    <string name="diy_discard_warning_desc">No guardaste los cambios. Estas seguro de que quieres salir sin guardar?</string>
+    <string name="translation_discard">Descartar</string>
 </resources>
