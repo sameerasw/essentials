@@ -2180,4 +2180,19 @@ Esto le permite a Essentials automatizarse y reiniciar Shizuku en demanda cuando
     <string name="diy_discard_warning_title">Descartar cambios?</string>
     <string name="diy_discard_warning_desc">No guardaste los cambios. Estas seguro de que quieres salir sin guardar?</string>
     <string name="translation_discard">Descartar</string>
+    <string name="freeze_tags_section_title">Etiquetas</string>
+    <string name="freeze_tags_empty">No has creado etiquetas todavia</string>
+    <string name="freeze_tag_color_coded_desc">Mostrar el color de las etiquetas en la cuadricula de apps</string>
+    <string name="watch_update_required_title">Actualiza Essentials Wear</string>
+    <string name="watch_update_action">Actualizar app</string>
+    <string name="watch_update_required_desc">Una nueva version de Essentials Wear esta disponible para tu reloj. Actualiza para una compatibilidad completa.</string>
+    <string name="cat_sync">Sincronizacion</string>
+    <string name="watch_wireless_debugging_refresh">Actualizar info</string>
+    <string name="watch_wireless_debugging_command_title">Comando de conexion</string>
+    <string name="watch_wireless_debugging_port_title">Puerto ADB</string>
+    <string name="watch_wireless_debugging_ip_title">Direccion IP</string>
+    <string name="watch_wireless_debugging_wifi_title">Conexion Wi-Fi</string>
+    <string name="watch_wireless_debugging_info_title">Info de la conexion del reloj</string>
+    <string name="watch_controls_long_press_hint">Manten presionado para habilitar o deshabilitar botones</string>
+    <string name="watch_controls_reorder_title">Reordenar control del reloj</string>
 </resources>
