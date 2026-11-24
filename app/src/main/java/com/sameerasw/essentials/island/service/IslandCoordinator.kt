@@ -288,6 +288,7 @@ class IslandCoordinator(
         }
         controller.onStateChanged = { state ->
             reportCameraOccupied(state.stage != IslandStage.Hidden && !(state.stage == IslandStage.Compact && state.arrangement.visibleItems.isEmpty()))
+            publishSideLimits()
         }
         settings.setIslandPreviewRingEnabled(false)
         settings.setIslandPreviewStage(SettingsRepository.ISLAND_PREVIEW_STAGE_AUTO)
