@@ -1119,6 +1119,7 @@ class IslandCoordinator(
             SettingsRepository.KEY_ISLAND_CAMERA_SIZE,
             SettingsRepository.KEY_ISLAND_MAX_WIDTH,
             SettingsRepository.KEY_ISLAND_CUTOUT_GAP,
+            SettingsRepository.KEY_ISLAND_CAMERA_GAP_ENABLED,
             SettingsRepository.KEY_ISLAND_PADDING_AROUND,
             SettingsRepository.KEY_ISLAND_EXPANDED_WIDTH,
             SettingsRepository.KEY_ISLAND_ICON_COLOR_MODE,

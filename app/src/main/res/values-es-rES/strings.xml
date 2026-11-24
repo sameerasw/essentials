@@ -1894,4 +1894,5 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla s
     <string name="diy_action_show_taps_on">Turn On Show Taps</string>
     <string name="diy_action_show_taps_off">Turn Off Show Taps</string>
     <string name="diy_action_show_taps_toggle">Toggle Show Taps</string>
+    <string name="island_camera_gap_toggle_title">Camera gap</string>
 </resources>

@@ -24,7 +24,7 @@ object CameraGeometryResolver {
             size.x to size.y
         }
         val sizeScale = settings.getIslandCameraSize()
-        val gap = settings.getIslandCutoutGap() * density
+        val gap = if (settings.isIslandCameraGapEnabled()) settings.getIslandCutoutGap() * density else 0f
         val contentGap = settings.getIslandPaddingAround() * density
         val verticalGap = VERTICAL_GAP_DP * density
 
