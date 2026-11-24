@@ -2155,4 +2155,8 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="island_starlink_status_color_title">Status colors</string>
     <string name="island_starlink_offline">Offline</string>
     <string name="auto_backup_folder">Carpeta de la copia de seguridad</string>
+    <string name="shizuku_auth_token_title">Token de autorizacion de Shizuku</string>
+    <string name="shizuku_auth_token_help">En shizuku, en la seccion de \"Controla Shizuku con apps de automatizacion\", Abre \"Ver intents\" y copia y pega el token auutorizador en la seccion de \"Extras\".
+
+Esto le permite a Essentials automatizarse y reiniciar Shizuku en demanda cuando esta encendido</string>
 </resources>
