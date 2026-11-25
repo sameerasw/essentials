@@ -13,6 +13,19 @@ import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
 import android.content.pm.ApplicationInfo
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.clickable
+import androidx.compose.material3.Icon
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.res.painterResource
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -185,6 +198,51 @@ fun ModePermissionRow(
 }
 
 @Composable
+fun ModeCollapsibleSection(
+    titleRes: Int,
+    initiallyExpanded: Boolean,
+    content: @Composable () -> Unit,
+) {
+    val view = LocalView.current
+    var expanded by rememberSaveable { mutableStateOf(initiallyExpanded) }
+    val rotation by animateFloatAsState(if (expanded) 180f else 0f, label = "section_chevron")
+
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        Row(
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .clip(MaterialTheme.shapes.large)
+                    .clickable {
+                        HapticUtil.performUIHaptic(view)
+                        expanded = !expanded
+                    }.padding(start = 16.dp, end = 8.dp, top = 8.dp, bottom = 8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            TranslatableText(
+                stringResId = titleRes,
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.weight(1f),
+            )
+            Icon(
+                painter = painterResource(R.drawable.rounded_keyboard_arrow_down_24),
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.rotate(rotation),
+            )
+        }
+        AnimatedVisibility(
+            visible = expanded,
+            enter = expandVertically() + fadeIn(),
+            exit = shrinkVertically() + fadeOut(),
+        ) {
+            Column(verticalArrangement = Arrangement.spacedBy(16.dp)) { content() }
+        }
+    }
+}
+
+@Composable
 fun ModeSectionTitle(titleRes: Int) {
     TranslatableText(
         stringResId = titleRes,
@@ -202,7 +260,6 @@ fun ModeFeaturesSection(
     features: Map<String, Boolean>,
     onFeatureChange: (ModeFeature, Boolean?) -> Unit,
 ) {
-    ModeSectionTitle(R.string.mode_section_features)
     RoundedCardContainer(spacing = 2.dp) {
         ModeFeature.entries.forEach { feature ->
             ModeFeatureRow(
@@ -263,7 +320,6 @@ fun ModeFreezeSection(
     val context = LocalContext.current
     val tags = remember { SettingsRepository(context).getFreezeTags() }
 
-    ModeSectionTitle(R.string.mode_section_freeze)
     RoundedCardContainer(spacing = 2.dp) {
         tags.forEach { tag ->
             val iconRes =
@@ -310,7 +366,6 @@ fun ModeExitTripRow(
         ModeTripStarter.requiredPermissions.filterNot { it.isGranted(context) }.forEach { ModePermissionRow(it, viewModel) }
     }
 
-    ModeSectionTitle(R.string.tile_location_reached)
     val onStartLabel = stringResource(R.string.mode_trip_on_start)
     val onEndLabel = stringResource(R.string.mode_trip_on_end)
     RoundedCardContainer(spacing = 2.dp) {

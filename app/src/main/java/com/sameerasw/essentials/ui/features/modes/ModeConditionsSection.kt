@@ -90,7 +90,6 @@ fun ModeConditionsSection(
         editing = null
     }
 
-    ModeSectionTitle(R.string.mode_section_conditions)
 
     // Read so a grant made elsewhere refreshes this list on the next permission check
     viewModel.isCalendarPermissionGranted.value
