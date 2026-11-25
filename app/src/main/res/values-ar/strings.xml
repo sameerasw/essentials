@@ -66,6 +66,12 @@
     <string name="mode_trip_on_end">When it ends</string>
     <string name="mode_linked_to">Linked to %1$s</string>
     <string name="mode_owned">Essentials mode</string>
+    <string name="tab_modes_desc">Turn Essentials and system modes into routines</string>
+    <string name="about_desc_tab_modes">Modes build on Android\'s own Modes, the ones you see in Quick Settings and Settings.\n\nWhile a mode is on, Essentials can switch features and system settings on or off, freeze apps by tag or category, run your own actions and start an Are we there yet? trip. Everything is put back when the mode ends.\n\nModes can turn on by themselves from a schedule, calendar events or your working location, Wi-Fi, Bluetooth, a place, charging or Android Auto. You can also link existing system modes like Bedtime.</string>
+    <string name="how_to_use_tab_modes">Tap + to create a mode or link a system mode. Open a mode to choose what turns it on and what it changes. Use the switch to turn it on or off yourself.</string>
+    <string name="about_desc_tab_diy">Build your own automations.\n\nRun actions when something happens, while a state holds, when an app opens, or from a shortcut.</string>
+    <string name="how_to_use_tab_diy">Tap + to create an automation, pick what starts it, then add the actions to run.</string>
+    <string name="about_desc_tab_your_android">See your device\'s specs at a glance and track updates for apps you follow on GitHub.</string>
     <string name="diy_calendar_match">Match</string>
     <string name="diy_calendar_title_contains">Event title contains</string>
     <string name="diy_calendar_working_location">Working location only</string>

@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials.ui.features.modes
 
+import com.sameerasw.essentials.ui.core.sheets.WhatIsThisButton
 import android.content.Context
 import android.os.Build
 import androidx.compose.foundation.background
@@ -76,6 +77,7 @@ fun ModesScreen(
     onDismissNewModeSheet: () -> Unit = {},
     onNewModeClick: () -> Unit,
     onModeClick: (String) -> Unit,
+    onHelpClick: (() -> Unit)? = null,
 ) {
     val context = LocalContext.current
     val appContext = context.applicationContext
@@ -184,6 +186,10 @@ fun ModesScreen(
                     }
                 }
             }
+        }
+
+        onHelpClick?.let { help ->
+            item { WhatIsThisButton(onClick = help, modifier = Modifier.padding(top = 8.dp)) }
         }
     }
 }

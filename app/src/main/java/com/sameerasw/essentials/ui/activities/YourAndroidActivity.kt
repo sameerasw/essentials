@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials.ui.activities
 
+import com.sameerasw.essentials.ui.core.sheets.WhatIsThisButton
 import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.navigation.AppRoutes
 import androidx.compose.foundation.layout.aspectRatio
@@ -238,6 +239,7 @@ fun YourAndroidContent(
     onShowReleaseNotes: (String) -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp),
+    onHelpClick: (() -> Unit)? = null,
 ) {
     val scrollState = rememberScrollState()
     val view = LocalView.current
@@ -592,6 +594,7 @@ fun YourAndroidContent(
                 }
             }
         }
+        onHelpClick?.let { WhatIsThisButton(onClick = it, modifier = Modifier.padding(top = 24.dp)) }
     }
 }
 
