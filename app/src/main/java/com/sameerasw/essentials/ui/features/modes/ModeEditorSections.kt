@@ -10,13 +10,19 @@
 package com.sameerasw.essentials.ui.features.modes
 
 import android.content.pm.ApplicationInfo
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ButtonGroupDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.ToggleButton
 import androidx.compose.runtime.Composable
@@ -25,14 +31,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.SettingsRepository
+import com.sameerasw.essentials.domain.model.AppPermission
 import com.sameerasw.essentials.domain.modes.ModeFeature
+import com.sameerasw.essentials.domain.modes.ModeIcons
 import com.sameerasw.essentials.translation.TranslatableText
+import com.sameerasw.essentials.ui.components.FreezeTagColorPicker
+import com.sameerasw.essentials.ui.components.FreezeTagIconPicker
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.utils.HapticUtil
+import com.sameerasw.essentials.utils.PermissionUIHelper
+import com.sameerasw.essentials.viewmodels.MainViewModel
 
 private val FREEZE_CATEGORIES =
     listOf(
@@ -45,6 +58,108 @@ private val FREEZE_CATEGORIES =
         ApplicationInfo.CATEGORY_MAPS to R.drawable.rounded_map_24,
         ApplicationInfo.CATEGORY_PRODUCTIVITY to R.drawable.rounded_work_24,
     )
+
+@Composable
+fun ModeAppearanceFields(
+    name: String,
+    onNameChange: (String) -> Unit,
+    colorHex: String,
+    onColorChange: (String) -> Unit,
+    iconName: String,
+    onIconChange: (String) -> Unit,
+    identityLocked: Boolean = false,
+) {
+    RoundedCardContainer(spacing = 2.dp) {
+        Box(
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.surfaceBright, MaterialTheme.shapes.extraSmall)
+                    .padding(12.dp),
+        ) {
+            OutlinedTextField(
+                value = name,
+                onValueChange = onNameChange,
+                placeholder = { TranslatableText(R.string.mode_name_hint) },
+                modifier = Modifier.fillMaxWidth(),
+                enabled = !identityLocked,
+                readOnly = identityLocked,
+                singleLine = true,
+                shape = MaterialTheme.shapes.medium,
+                colors =
+                    OutlinedTextFieldDefaults.colors(
+                        focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                        unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                    ),
+                keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Words),
+            )
+        }
+
+        Box(
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.surfaceBright, MaterialTheme.shapes.extraSmall)
+                    .padding(16.dp),
+        ) {
+            FreezeTagColorPicker(
+                selectedColorHex = colorHex,
+                onColorSelected = onColorChange,
+            )
+        }
+
+        if (!identityLocked) {
+            Box(
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .background(MaterialTheme.colorScheme.surfaceBright, MaterialTheme.shapes.extraSmall)
+                        .padding(16.dp),
+            ) {
+                FreezeTagIconPicker(
+                    selectedIconName = iconName,
+                    onIconSelected = onIconChange,
+                    icons = ModeIcons.names,
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun ModePermissionRow(
+    permission: AppPermission,
+    viewModel: MainViewModel,
+    modifier: Modifier = Modifier,
+) {
+    val context = LocalContext.current
+    val view = LocalView.current
+    val item = PermissionUIHelper.getPermissionItems(listOf(permission), context, viewModel).firstOrNull() ?: return
+    val title =
+        when (val raw = item.title) {
+            is Int -> stringResource(raw)
+            else -> raw.toString()
+        }
+
+    RoundedCardContainer(modifier = modifier) {
+        IconToggleItem(
+            iconRes = item.iconRes,
+            title = title,
+            showToggle = false,
+            onClick = { item.action?.invoke() },
+            trailingContent = {
+                FilledTonalButton(
+                    onClick = {
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        item.action?.invoke()
+                    },
+                ) {
+                    Text(stringResource(R.string.widget_stack_grant))
+                }
+            },
+        )
+    }
+}
 
 @Composable
 fun ModeSectionTitle(titleRes: Int) {

@@ -10,6 +10,7 @@
 package com.sameerasw.essentials.ui.features.modes
 
 import android.content.Context
+import android.os.Build
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -38,25 +39,22 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.toColorInt
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.domain.model.AppPermission
 import com.sameerasw.essentials.domain.modes.Mode
-import com.sameerasw.essentials.domain.modes.ModeIcons
 import com.sameerasw.essentials.domain.modes.ModesController
 import com.sameerasw.essentials.domain.modes.ModesRepository
 import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.components.PullTitleHeader
 import com.sameerasw.essentials.ui.components.rememberPullTitleHeaderState
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
-import com.sameerasw.essentials.ui.core.cards.PermissionCard
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.modifiers.scrollMotionBlur
 import com.sameerasw.essentials.utils.HapticUtil
-import com.sameerasw.essentials.utils.PermissionUtils
 import com.sameerasw.essentials.viewmodels.MainViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -66,6 +64,8 @@ fun ModesScreen(
     viewModel: MainViewModel,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp),
+    showNewModeSheet: Boolean = false,
+    onDismissNewModeSheet: () -> Unit = {},
     onNewModeClick: () -> Unit,
     onModeClick: (String) -> Unit,
 ) {
@@ -79,8 +79,12 @@ fun ModesScreen(
     val hasAccess by viewModel.isNotificationPolicyAccessGranted
 
     LifecycleResumeEffect(hasAccess) {
-        scope.launch(Dispatchers.IO) { ModesController.sync(appContext) }
+        ModesController.requestSync(appContext)
         onPauseOrDispose {}
+    }
+
+    if (showNewModeSheet && Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
+        NewModeSheet(viewModel = viewModel, onDismiss = onDismissNewModeSheet)
     }
 
     val isMotionBlurEnabled =
@@ -114,22 +118,19 @@ fun ModesScreen(
             )
         }
 
-        when {
-            !ModesController.isSupported -> item {
-                CenteredMessage(R.string.modes_unsupported)
-            }
+        if (!ModesController.isSupported) {
+            item { CenteredMessage(R.string.modes_unsupported) }
+            return@LazyColumn
+        }
 
-            !hasAccess -> item {
-                PermissionCard(
-                    iconRes = R.drawable.rounded_do_not_disturb_on_24,
-                    title = R.string.perm_notif_policy_title,
-                    dependentFeatures = listOf(R.string.tab_modes),
-                    isGranted = false,
-                    onActionClick = { PermissionUtils.openNotificationPolicySettings(context) },
-                )
+        if (!hasAccess) {
+            item {
+                ModePermissionRow(AppPermission.NOTIFICATION_POLICY, viewModel)
             }
+        }
 
-            modes.isEmpty() -> item {
+        if (modes.isEmpty()) {
+            item {
                 CenteredMessage(R.string.modes_empty) {
                     Button(
                         onClick = {
@@ -141,13 +142,14 @@ fun ModesScreen(
                     }
                 }
             }
-
-            else -> item {
+        } else {
+            item {
                 RoundedCardContainer(spacing = 2.dp) {
                     modes.forEach { mode ->
                         ModeRow(
                             mode = mode,
                             isActive = mode.id in activeIds,
+                            canSwitch = if (mode.isLinked) ModesController.canLinkSystemModes() else hasAccess,
                             onClick = { onModeClick(mode.id) },
                             onActiveChange = { active ->
                                 scope.launch(Dispatchers.IO) { ModesController.setActive(appContext, mode.id, active) }
@@ -164,6 +166,7 @@ fun ModesScreen(
 private fun ModeRow(
     mode: Mode,
     isActive: Boolean,
+    canSwitch: Boolean,
     onClick: () -> Unit,
     onActiveChange: (Boolean) -> Unit,
 ) {
@@ -175,7 +178,7 @@ private fun ModeRow(
         title = mode.name,
         isChecked = isActive,
         onCheckedChange = onActiveChange,
-        enabled = mode.isEnabled,
+        enabled = mode.isEnabled && canSwitch,
         onClick = onClick,
         onDisabledClick = onClick,
         leadingIcon = {
@@ -187,7 +190,7 @@ private fun ModeRow(
                 contentAlignment = Alignment.Center,
             ) {
                 Icon(
-                    painter = painterResource(ModeIcons.resolve(mode.iconName)),
+                    painter = rememberModeIconPainter(mode),
                     contentDescription = null,
                     tint = Color.Black.copy(alpha = 0.7f),
                     modifier = Modifier.size(22.dp),
