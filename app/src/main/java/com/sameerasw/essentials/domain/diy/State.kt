@@ -70,6 +70,8 @@ sealed interface State {
         @SerializedName("includeDeclined") val includeDeclined: Boolean = false,
         @SerializedName("includeTentative") val includeTentative: Boolean = true,
         @SerializedName("includeFree") val includeFree: Boolean = true,
+        @SerializedName("titleContains") val titleContains: String = "",
+        @SerializedName("workingLocationOnly") val workingLocationOnly: Boolean = false,
     ) : State {
         override val title: Int get() = R.string.diy_state_calendar_event
         override val icon: Int get() = R.drawable.rounded_calendar_today_24

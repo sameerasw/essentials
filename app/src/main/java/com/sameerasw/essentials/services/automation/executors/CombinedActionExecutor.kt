@@ -42,6 +42,7 @@ import com.sameerasw.essentials.domain.controller.CaffeinateController
 import com.sameerasw.essentials.domain.controller.HilightController
 import com.sameerasw.essentials.domain.controller.HotspotController
 import com.sameerasw.essentials.domain.controller.ZenModeController
+import com.sameerasw.essentials.domain.modes.ModeAutomation
 import com.sameerasw.essentials.domain.diy.Action
 import com.sameerasw.essentials.domain.model.DashConfig
 import com.sameerasw.essentials.domain.model.NotificationLightingStyle
@@ -489,6 +490,11 @@ object CombinedActionExecutor {
                         .SoundModeHandler(context)
                         .cycleNextMode()
                 }
+
+                is Action.ModeConditionChanged ->
+                    withContext(Dispatchers.IO) {
+                        ModeAutomation.onConditionChanged(context, action.modeId, action.conditionKey, action.active)
+                    }
 
                 is Action.SetMode -> {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {

@@ -1603,6 +1603,10 @@
         </receiver>
 
         <receiver
+            android:name=".services.receivers.ModeConfirmReceiver"
+            android:exported="false" />
+
+        <receiver
             android:name=".services.receivers.ModeStatusReceiver"
             android:exported="false">
             <intent-filter>

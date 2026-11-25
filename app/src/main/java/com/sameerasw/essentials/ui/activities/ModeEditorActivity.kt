@@ -60,6 +60,7 @@ import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.sheets.PRESET_PASTEL_COLORS
 import com.sameerasw.essentials.ui.core.sheets.PermissionsBottomSheet
 import com.sameerasw.essentials.ui.features.modes.ModeAppearanceFields
+import com.sameerasw.essentials.ui.features.modes.ModeConditionsSection
 import com.sameerasw.essentials.ui.features.modes.ModeFeaturesSection
 import com.sameerasw.essentials.ui.features.modes.ModeFreezeSection
 import com.sameerasw.essentials.ui.features.modes.ModeSectionTitle
@@ -99,6 +100,8 @@ fun ModeEditorScreen(
     var exitActions by remember { mutableStateOf(existing?.exitActions ?: emptyList()) }
     var missingPermissions by remember { mutableStateOf<List<AppPermission>>(emptyList()) }
     var linkBase by remember { mutableStateOf(existing?.takeIf { it.isLinked }) }
+    var conditions by remember { mutableStateOf(existing?.conditions ?: emptyList()) }
+    var askBeforeActivating by remember { mutableStateOf(existing?.askBeforeActivating ?: false) }
     var showSystemModePicker by remember { mutableStateOf(false) }
     val actionCategories = remember { ActionRegistry.getCategories() }
 
@@ -120,6 +123,8 @@ fun ModeEditorScreen(
                 freezeCategories = freezeCategories,
                 entryActions = entryActions,
                 exitActions = exitActions,
+                conditions = conditions,
+                askBeforeActivating = askBeforeActivating,
             )
         ModesRepository.upsert(mode)
         ModesController.requestSync(appContext, reapply = true)
@@ -197,6 +202,14 @@ fun ModeEditorScreen(
                     )
                 }
             }
+
+            ModeConditionsSection(
+                conditions = conditions,
+                onConditionsChange = { conditions = it },
+                askBeforeActivating = askBeforeActivating,
+                onAskBeforeActivatingChange = { askBeforeActivating = it },
+                onMissingPermissions = { missingPermissions = it },
+            )
 
             ModeFeaturesSection(
                 features = features,

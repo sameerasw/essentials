@@ -14,6 +14,7 @@ import android.content.Context
 import android.content.Intent
 import com.sameerasw.essentials.domain.diy.Automation
 import com.sameerasw.essentials.domain.diy.DIYRepository
+import com.sameerasw.essentials.domain.modes.ModeAutomation
 import com.sameerasw.essentials.services.automation.executors.CombinedActionExecutor
 import com.sameerasw.essentials.services.automation.modules.TimeModule
 import kotlinx.coroutines.CoroutineScope
@@ -42,7 +43,10 @@ class TimeAutomationReceiver : BroadcastReceiver() {
         scope.launch {
             try {
                 DIYRepository.init(context)
-                val automation = DIYRepository.getAutomation(automationId) ?: return@launch
+                val automation =
+                    DIYRepository.getAutomation(automationId)
+                        ?: ModeAutomation.automationsFor(context).find { it.id == automationId }
+                        ?: return@launch
                 if (!automation.isEnabled) {
                     return@launch
                 }

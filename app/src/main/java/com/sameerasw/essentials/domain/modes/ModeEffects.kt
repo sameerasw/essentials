@@ -51,6 +51,7 @@ object ModeEffects {
         val frozenBy = readFrozen(prefs).toMutableMap()
 
         exited.forEach { modeId ->
+            ModeAutomation.onModeExited(context, modeId)
             val claimed = frozenBy.remove(modeId).orEmpty()
             val stillWanted = frozenBy.values.flatten().toSet()
             val toUnfreeze = claimed - stillWanted

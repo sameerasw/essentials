@@ -15,7 +15,9 @@ import android.content.pm.PackageManager
 import android.provider.CalendarContract
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -23,6 +25,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -98,6 +102,40 @@ fun CalendarStateSheet(
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(start = 8.dp),
             )
+
+            SectionLabel(stringResource(R.string.diy_calendar_match))
+            RoundedCardContainer(spacing = 2.dp, cornerRadius = 24.dp) {
+                Box(
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .background(MaterialTheme.colorScheme.surfaceBright, MaterialTheme.shapes.extraSmall)
+                            .padding(12.dp),
+                ) {
+                    OutlinedTextField(
+                        value = state.titleContains,
+                        onValueChange = {
+                            state = state.copy(titleContains = it)
+                            onStateChange(state)
+                        },
+                        placeholder = { TranslatableText(R.string.diy_calendar_title_contains) },
+                        modifier = Modifier.fillMaxWidth(),
+                        singleLine = true,
+                        shape = MaterialTheme.shapes.medium,
+                        colors =
+                            OutlinedTextFieldDefaults.colors(
+                                focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                                unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                            ),
+                    )
+                }
+                IconToggleItem(
+                    iconRes = R.drawable.rounded_work_history_24,
+                    title = stringResource(R.string.diy_calendar_working_location),
+                    isChecked = state.workingLocationOnly,
+                    onCheckedChange = { update(state.copy(workingLocationOnly = it)) },
+                )
+            }
 
             SectionLabel(stringResource(R.string.diy_calendar_filters))
             RoundedCardContainer(spacing = 2.dp, cornerRadius = 24.dp) {

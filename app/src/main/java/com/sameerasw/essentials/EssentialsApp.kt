@@ -73,9 +73,9 @@ class EssentialsApp : Application() {
         // Init Automation
         com.sameerasw.essentials.domain.diy.DIYRepository
             .init(this)
+        ModesRepository.init(this)
         com.sameerasw.essentials.services.automation.AutomationManager
             .init(this)
-        ModesRepository.init(this)
         ModesController.startWatching(this)
         CoroutineScope(Dispatchers.IO).launch { ModesController.sync(this@EssentialsApp) }
         com.sameerasw.essentials.services.CalendarSyncManager

@@ -15,6 +15,7 @@ import androidx.work.WorkerParameters
 import com.google.android.gms.location.Geofence
 import com.sameerasw.essentials.domain.diy.Automation
 import com.sameerasw.essentials.domain.diy.DIYRepository
+import com.sameerasw.essentials.domain.modes.ModeAutomation
 import com.sameerasw.essentials.domain.diy.Trigger
 import com.sameerasw.essentials.services.automation.executors.CombinedActionExecutor
 
@@ -27,7 +28,7 @@ class LocationAutomationWorker(
         val transition = inputData.getInt(KEY_TRANSITION, -1)
 
         DIYRepository.init(applicationContext)
-        DIYRepository.automations.value
+        (DIYRepository.automations.value + ModeAutomation.automationsFor(applicationContext))
             .filter { automation ->
                 automation.isEnabled &&
                     automation.type == Automation.Type.TRIGGER &&
