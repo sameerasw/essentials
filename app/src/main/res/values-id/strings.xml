@@ -51,9 +51,8 @@ Anda dapat menyesuaikan gaya animasi, warna, dan perilakunya. Fitur ini berfungs
     <string name="settings_translate_mode">Mode translasi </string>
     <string name="settings_translate_mode_desc">Tekan lama teks mana pun untuk menerjemahkan dan berkontribusi pada komunitas.</string>
     <string name="cat_accessibility">Aksesibilitas</string>
-    <string name="feat_auto_accessibility_title">Aksesibilitas otomatis</string>
-    <string name="feat_auto_accessibility_desc">Memberikan izin aksesibilitas secara otomatis pada peluncuran aplikasi jika hilang menggunakan
-WRITE_SECURE_SETTINGS.</string>
+    <string name="feat_auto_accessibility_title">Aksesibilitas otomatis </string>
+    <string name="feat_auto_accessibility_desc">Secara otomatis memberikan izin aksesibilitas saat aplikasi diluncurkan jika izin tersebut hilang menggunakan WRITE_SECURE_SETTINGS.</string>
     <string name="label_device_battery">Baterai </string>
     <string name="label_device_ram">RAM</string>
     <string name="feat_networks_title">Jaringan</string>
@@ -69,7 +68,7 @@ WRITE_SECURE_SETTINGS.</string>
     <string name="feat_statusbar_icons_title">Ikon statusbar</string>
     <string name="feat_always_on_display_title">Always on Display </string>
     <string name="cat_navigation">Navigasi</string>
-    <string name="feat_caffeinate_desc">Jaga layar agar tetap menyala</string>
+    <string name="feat_caffeinate_desc">Layar tetap menyala</string>
     <string name="feat_smart_pixels_title">Pixel pintar </string>
     <string name="feat_smart_pixels_desc">Matikan piksel untuk menghemat daya.</string>
     <string name="feat_pocket_mode_desc">Cegah sentuhan yang tidak disengaja saat berada di dalam saku.</string>
@@ -117,7 +116,7 @@ WRITE_SECURE_SETTINGS.</string>
     <string name="label_animator_duration_scale">Skala durasi animator</string>
     <string name="label_transition_animation_scale">Skala animasi transisi</string>
     <string name="label_window_animation_scale">Skala animasi jendela</string>
-    <string name="setting_app_icon_title">Lambang aplikasi</string>
+    <string name="setting_app_icon_title">Ikon aplikasi </string>
     <string name="setting_app_icon_desc">Sesuaikan ikon peluncur layar beranda.</string>
     <string name="feat_hilight_notifications_title">Efek notifikasi </string>
     <string name="hilight_notifications_desc">Putar efek masing-masing aplikasi saat notifikasi tiba.</string>
@@ -128,7 +127,7 @@ WRITE_SECURE_SETTINGS.</string>
     <string name="volume_steps_enable_title">Aktifkan volume steps</string>
     <string name="volume_steps_per_press_title">langkah per tekanan</string>
     <string name="feat_app_volume_title">Volume aplikasi </string>
-    <string name="feat_app_volume_desc">Atur volume terpisah untuk setiap aplikasi</string>
+    <string name="feat_app_volume_desc">Atur volume terpisah untuk setiap aplikasi.</string>
     <string name="app_volume_enable_title">Aktifkan volume aplikasi</string>
     <string name="app_volume_overlay_title">Kontrol UI overlay</string>
     <string name="app_volume_add_app">Tambah aplikasi </string>
@@ -219,7 +218,7 @@ WRITE_SECURE_SETTINGS.</string>
     <string name="label_feature_designed_by">Designed by</string>
     <string name="label_how_to_use">How to use</string>
     <string name="shut_up_how_to_use">1. Grant Write secure settings and Usage access from the permissions prompt. Shizuku is needed for freezing apps.\n\n2. Tap Select Apps and pick the apps that refuse to run with developer options, debugging or accessibility turned on, such as banking or payment apps.\n\n3. Tap an app to choose what gets hidden for it: Developer Options, USB Debugging, Wireless Debugging and Accessibility Services. You can also turn on Auto Freeze to freeze the app after you leave it, and Restore keyboard to switch back to your keyboard afterwards.\n\n4. Tap Create shortcut for each app and add it to your home screen. Always open the app from this shortcut, never from its normal icon, so the settings are turned off before the app starts and can check them.\n\n5. When you leave the app, Shut-Up! waits for the Restoration Delay and then shows a notification. Tap it to turn everything back on. Set Restore mode to Auto if you would rather have the settings restored on their own.\n\nTips: if wireless debugging was turned off, Shizuku may stop working, so enable Attempt Shizuku restart. Use the Keyboard option to pick the keyboard to restore, or leave it on Skip. With Auto Freeze, a notification counts down and lets you freeze now or abort.</string>
-    <string name="island_section_interactions">Interactions</string>
+    <string name="island_section_interactions">Interaksi</string>
     <string name="island_section_gestures">Gestures</string>
     <string name="island_section_expanded">Expanded island</string>
     <string name="island_section_landscape">Landscape</string>
@@ -318,7 +317,7 @@ WRITE_SECURE_SETTINGS.</string>
     <string name="diy_action_show_taps_on">Turn On Show Taps</string>
     <string name="diy_action_show_taps_off">Turn Off Show Taps</string>
     <string name="diy_action_show_taps_toggle">Toggle Show Taps</string>
-    <string name="island_camera_gap_toggle_title">Camera gap</string>
+    <string name="island_camera_gap_toggle_title">Jarak antar kamera</string>
     <string name="island_starlink_status_color_title">Status colors</string>
     <string name="island_starlink_offline">Offline</string>
     <string name="label_toolbar">Customize toolbar</string>
@@ -403,7 +402,7 @@ WRITE_SECURE_SETTINGS.</string>
     <string name="island_alarm_hide_time_title">Sembunyikan waktu</string>
     <string name="island_call_options_title">Panggilan</string>
     <string name="duo_show_time_title">Waktu</string>
-    <string name="duo_show_battery_title">Batetai</string>
+    <string name="duo_show_battery_title">Baterai</string>
     <string name="island_live_updates_title">Pembaruan langsung</string>
     <string name="diy_category_notifications">Notifikasi</string>
     <string name="island_show_timers_title">Pewaktu dan stopwatch</string>
@@ -415,7 +414,7 @@ WRITE_SECURE_SETTINGS.</string>
     <string name="settings_section_permissions">Perizinan</string>
     <string name="island_show_network_title">Jaringan</string>
     <string name="duo_action_horizontal_slide_sound_mode">Mode suara</string>
-    <string name="island_devices_battery_section">Perangkat</string>
+    <string name="island_devices_battery_section">Perangkat terhubung</string>
     <string name="island_reorder_title">Susun ulang</string>
     <string name="shorten_copy_link">Salin</string>
     <string name="qr_code_title">Kode QR</string>
@@ -433,4 +432,28 @@ WRITE_SECURE_SETTINGS.</string>
     <string name="shorten_settings_auto_copy_desc">Salin tautan pendek yang dihasilkan ke papan clip secara otomatis</string>
     <string name="btn_grant_all_permissions">mengizinkan semua perizinan</string>
     <string name="shorten_expiry_label">Tautan kedaluwarsa dalam</string>
+    <string name="island_section_placement">Penempatan</string>
+    <string name="island_section_visuals">Tampilan</string>
+    <string name="island_section_duration">Pengaturan Waktu</string>
+    <string name="island_section_behavior">Perilaku</string>
+    <string name="island_brief_title">Ringkasan</string>
+    <string name="island_brief_desc">Dapatkan ringkasan tentang apa yang sedang terjadi</string>
+    <string name="duo_section_what_to_show">Apa yang akan ditampilkan</string>
+    <string name="island_max_items_title">Maksimal item yang akan ditampilkan</string>
+    <string name="settings_section_customizations">Kostumisasi</string>
+    <string name="feat_flashlight_title">Senter</string>
+    <string name="diy_volume_channel_alarm">Alaram</string>
+    <string name="island_combine_with_duo">Gabungkan dengan Duo</string>
+    <string name="island_preview_ring_title">Bantuan perataan</string>
+    <string name="island_preview_stage_title">Pratinjau</string>
+    <string name="island_camera_position_title">Posisi kamera</string>
+    <string name="island_auto_align_camera">Sejajarkan otomatis dengan kamera</string>
+    <string name="island_camera_position_left">Kiri</string>
+    <string name="island_camera_position_center">Tengah</string>
+    <string name="island_camera_position_right">Kanan</string>
+    <string name="duo_camera_offset_x_title">Posisi horizontal</string>
+    <string name="duo_camera_offset_y_title">Posisi vertical</string>
+    <string name="island_max_width_title">Lebar maksimal</string>
+    <string name="duo_camera_size_title">Ukuran kamera</string>
+    <string name="feat_location_reached_title">Apakah kita sudah sampai?</string>
 </resources>
