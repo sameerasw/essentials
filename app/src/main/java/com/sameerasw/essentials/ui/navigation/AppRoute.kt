@@ -32,6 +32,10 @@ sealed interface AppRoute {
         val highlightSetting: String? = null,
     ) : AppRoute
 
+    data class TabPage(
+        val tab: DIYTabs,
+    ) : AppRoute
+
     data object PixelSearchbarSettings : AppRoute
 
     data class Wallpaper(

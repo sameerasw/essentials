@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials.ui.composables
 
+import com.sameerasw.essentials.domain.DIYTabs
 import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.navigation.LocalSelectedFeatureIds
 import com.sameerasw.essentials.ui.navigation.LocalListPaneWidth
@@ -117,6 +118,7 @@ fun SetupFeatures(
 
     viewModel.isScreenLockedSecurityEnabled.value
     val pinnedFeatureKeys by viewModel.pinnedFeatureKeys
+    val toolbarTabs by viewModel.toolbarTabs
     val context = LocalContext.current
 
     var showSheet by remember { mutableStateOf(false) }
@@ -1152,6 +1154,29 @@ fun SetupFeatures(
                                                 null
                                             },
                                         hasBadge = if (feature.id == "Watch") isWearUpdateRequired else false,
+                                    )
+                                }
+                            }
+                        }
+                    }
+
+                    val hiddenTabs = DIYTabs.MOVABLE.filter { it !in toolbarTabs }
+                    if (hiddenTabs.isNotEmpty()) {
+                        item {
+                            RoundedCardContainer(
+                                modifier =
+                                    Modifier
+                                        .padding(horizontal = 16.dp)
+                                        .padding(bottom = 12.dp),
+                            ) {
+                                hiddenTabs.forEach { tab ->
+                                    FeatureCard(
+                                        title = tab.displayTitle,
+                                        isEnabled = true,
+                                        onToggle = {},
+                                        showToggle = false,
+                                        onClick = { onNavigateToTab?.invoke(tab) },
+                                        iconRes = tab.iconRes,
                                     )
                                 }
                             }

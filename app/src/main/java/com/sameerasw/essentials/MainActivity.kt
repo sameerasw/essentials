@@ -32,6 +32,9 @@ import com.sameerasw.essentials.ui.navigation.LocalBottomBarHost
 import com.sameerasw.essentials.ui.navigation.BottomBarHost
 import com.sameerasw.essentials.ui.navigation.AppRoutes
 import com.sameerasw.essentials.ui.navigation.AppRoute
+import com.sameerasw.essentials.ui.navigation.BottomBarSpec
+import com.sameerasw.essentials.ui.navigation.ProvideBottomBar
+import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import com.sameerasw.essentials.ui.navigation.AppNavigationViewModel
 import com.sameerasw.essentials.ui.navigation.AppNavTransitions
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
@@ -367,8 +370,8 @@ class MainActivity : AppCompatActivity() {
                         updatesViewModel.loadTrackedRepos(context)
                     }
 
-                    // Dynamic tabs configuration
-                    val tabs = remember { DIYTabs.entries }
+                    val toolbarTabs by viewModel.toolbarTabs
+                    val tabs = remember(toolbarTabs) { DIYTabs.toolbarTabs(toolbarTabs) }
 
                     val defaultTab by viewModel.defaultTab
                     val initialPage =
@@ -381,6 +384,13 @@ class MainActivity : AppCompatActivity() {
                             initialPage = initialPage,
                             pageCount = { tabs.size },
                         )
+                    val shownTabs = remember { TabsHolder(tabs) }
+                    if (shownTabs.tabs != tabs) {
+                        val previousTab = shownTabs.tabs.getOrNull(pagerState.currentPage)
+                        shownTabs.tabs = tabs
+                        val newIndex = previousTab?.let { tabs.indexOf(it) } ?: -1
+                        pagerState.requestScrollToPage(if (newIndex != -1) newIndex else 0)
+                    }
                     val tabSwitchProgress = remember { Animatable(1f) }
                     var tabSwitchDirection by remember { androidx.compose.runtime.mutableFloatStateOf(1f) }
                     val jumpToTab: suspend (Int) -> Unit = { target ->
@@ -403,7 +413,7 @@ class MainActivity : AppCompatActivity() {
                     LaunchedEffect(navViewModel.pendingTab) {
                         navViewModel.pendingTab?.let { tab ->
                             val index = tabs.indexOf(tab)
-                            if (index != -1) jumpToTab(index)
+                            if (index != -1) jumpToTab(index) else navViewModel.navigate(AppRoute.TabPage(tab))
                             navViewModel.pendingTab = null
                         }
                     }
@@ -415,8 +425,10 @@ class MainActivity : AppCompatActivity() {
                                 val index = tabs.indexOf(tab)
                                 if (index != -1) {
                                     pagerState.scrollToPage(index)
-                                    intent.removeExtra("target_tab")
+                                } else {
+                                    navViewModel.navigate(AppRoute.TabPage(tab))
                                 }
+                                intent.removeExtra("target_tab")
                             } catch (e: Exception) {
                                 // Ignore
                             }
@@ -477,13 +489,6 @@ class MainActivity : AppCompatActivity() {
                                     animationSpec = tween(durationMillis = 300),
                                 )
                             }
-                        }
-                    }
-
-                    // Gracefully handle tab removal (e.g. disabling Developer Mode)
-                    LaunchedEffect(tabs) {
-                        if (pagerState.currentPage >= tabs.size) {
-                            pagerState.scrollToPage(0)
                         }
                     }
 
@@ -633,6 +638,105 @@ class MainActivity : AppCompatActivity() {
                             repoToShowReleaseNotesFullName = null
                         }
                     }
+                    val openTab: (DIYTabs) -> Unit = { target ->
+                        val tabIndex = tabs.indexOf(target)
+                        if (tabIndex != -1) {
+                            scope.launch { jumpToTab(tabIndex) }
+                        } else {
+                            viewModel.onSearchQueryChanged("", context)
+                            isSearchActive = false
+                            navViewModel.navigate(AppRoute.TabPage(target))
+                        }
+                    }
+
+                    val tabContent: @Composable (DIYTabs, PaddingValues) -> Unit = { tab, contentPadding ->
+                        when (tab) {
+                            DIYTabs.ESSENTIALS -> {
+                                SetupFeatures(
+                                    viewModel = viewModel,
+                                    modifier = Modifier.fillMaxSize(),
+                                    contentPadding = contentPadding,
+                                    isSearchActive = isSearchActive,
+                                    onHelpClick = { showInstructionsSheet = true },
+                                    onNavigateToTab = openTab,
+                                )
+                            }
+
+                            DIYTabs.FREEZE -> {
+                                FreezeGridUI(
+                                    viewModel = viewModel,
+                                    modifier = Modifier.fillMaxSize(),
+                                    contentPadding = contentPadding,
+                                    onGetStartedClick = {
+                                        startActivity(
+                                            Intent(
+                                                context,
+                                                FeatureSettingsActivity::class.java,
+                                            ).apply {
+                                                putExtra("feature", "Freeze")
+                                            },
+                                        )
+                                    },
+                                    onSettingsClick = {
+                                        startActivity(
+                                            Intent(
+                                                context,
+                                                FeatureSettingsActivity::class.java,
+                                            ).apply {
+                                                putExtra("feature", "Freeze")
+                                            },
+                                        )
+                                    },
+                                    searchQuery = freezeSearchQuery,
+                                    searchSubmitSignal = freezeSearchSubmitSignal,
+                                )
+                            }
+
+                            DIYTabs.DIY -> {
+                                DIYScreen(
+                                    modifier = Modifier.fillMaxSize(),
+                                    contentPadding = contentPadding,
+                                    showNewAutomationSheet = showNewAutomationSheet,
+                                    onDismissNewAutomationSheet = {
+                                        showNewAutomationSheet = false
+                                    },
+                                    onNewAutomationClick = {
+                                        showNewAutomationSheet = true
+                                    },
+                                )
+                            }
+
+                            DIYTabs.YOUR_ANDROID -> {
+                                YourAndroidContent(
+                                    deviceInfo = deviceInfo,
+                                    updatesViewModel = updatesViewModel,
+                                    hasRunStartupAnimation = yourAndroidViewModel.hasRunStartupAnimation,
+                                    onAnimationRun = { yourAndroidViewModel.hasRunStartupAnimation = true },
+                                    exportLauncher = exportLauncher,
+                                    importLauncher = importLauncher,
+                                    backupAppListLauncher = backupAppListLauncher,
+                                    viewModel = yourAndroidViewModel,
+                                    onAddRepoClick = { showAddRepoSheet = true },
+                                    onShowReleaseNotes = { repoToShowReleaseNotesFullName = it },
+                                    modifier = Modifier.fillMaxSize(),
+                                )
+                            }
+
+                            DIYTabs.SETTINGS -> {
+                                SettingsContent(
+                                    viewModel = viewModel,
+                                    contentPadding = contentPadding,
+                                    expandPermissionsInitial = navViewModel.expandSettingsPermissions,
+                                    onAppIconSelectedWithPosition = { _, pos -> AppRipple.fire(pos) },
+                                    onAvatarLongClickWithPosition = AppRipple::fire,
+                                    onRippleToggleEnabledWithPosition = AppRipple::fire,
+                                    onAppColorSelectedWithPosition = AppRipple::fire,
+                                    modifier = Modifier.fillMaxSize(),
+                                )
+                            }
+                        }
+                    }
+
                     Box(modifier = Modifier.fillMaxSize()) {
                         Scaffold(
                             contentWindowInsets =
@@ -671,7 +775,8 @@ class MainActivity : AppCompatActivity() {
 
                                 val focusManager = androidx.compose.ui.platform.LocalFocusManager.current
                                 val searchFocusRequester = remember { FocusRequester() }
-                                val isFreezeSearch = currentTab == DIYTabs.FREEZE
+                                val pageTab = (barRoute as? AppRoute.TabPage)?.tab
+                                val isFreezeSearch = (if (barAtHome) currentTab else pageTab) == DIYTabs.FREEZE
                                 val searchQuery = if (isFreezeSearch) freezeSearchQuery else viewModel.searchQuery.value
                                 val onSearchQueryChange: (String) -> Unit = {
                                     if (isFreezeSearch) freezeSearchQuery = it else viewModel.onSearchQueryChanged(it, context)
@@ -683,7 +788,7 @@ class MainActivity : AppCompatActivity() {
                                     isSearchActive = false
                                 }
 
-                                BackHandler(enabled = isAtHome && isSearchActive) { closeSearch() }
+                                BackHandler(enabled = (isAtHome || pageTab == DIYTabs.FREEZE) && isSearchActive) { closeSearch() }
 
                                 LaunchedEffect(pagerState.currentPage) {
                                     if (isSearchActive) closeSearch()
@@ -708,10 +813,11 @@ class MainActivity : AppCompatActivity() {
                                                     ?.let { stringResource(it.title) }
                                                     ?: route.featureId
                                             is AppRoute.PixelSearchbarSettings -> stringResource(R.string.pixel_searchbar_settings_title)
+                                            is AppRoute.TabPage -> stringResource(route.tab.displayTitle)
                                             is AppRoute.Wallpaper -> stringResource(R.string.feat_daily_wallpaper_title)
                                             else -> ""
                                         }
-                                    val barMode = if (barAtHome && isSearchActive) "search" else "bar"
+                                    val barMode = if ((barAtHome || pageTab == DIYTabs.FREEZE) && isSearchActive) "search" else "bar"
                                     Box(
                                         modifier = Modifier.fillMaxWidth(),
                                         contentAlignment = Alignment.BottomCenter,
@@ -785,6 +891,7 @@ class MainActivity : AppCompatActivity() {
                                                 EssentialsFloatingToolbar(
                                                     modifier = morphBounds,
                                                     selectedIndex = pagerState.currentPage,
+                                                    itemSlots = DIYTabs.entries.size,
                                                     title = if (isDetail) detailSpec?.title ?: routeTitle else null,
                                                     isBeta = isDetail && detailSpec?.isBeta == true,
                                                     onBackClick = if (isDetail) detailSpec?.onBack ?: { navViewModel.pop() } else null,
@@ -928,7 +1035,7 @@ class MainActivity : AppCompatActivity() {
                                                                 }
                                                             }
 
-                                                            if (!isDetail && currentTab == DIYTabs.YOUR_ANDROID && gitHubUser != null) {
+                                                            if (((!isDetail && currentTab == DIYTabs.YOUR_ANDROID) || pageTab == DIYTabs.YOUR_ANDROID) && gitHubUser != null) {
                                                                 SegmentedDropdownMenu(
                                                                     expanded = showFabProfileMenu,
                                                                     onDismissRequest = { showFabProfileMenu = false },
@@ -1047,6 +1154,7 @@ class MainActivity : AppCompatActivity() {
                                                                         }
                                                                         .scrollMotionBlur(pagerState, enabled = isMotionBlurEnabled),
                                                                 userScrollEnabled = isSwipeTabsEnabled && !isSearchActive && isAtHome,
+                                                                key = { tabs[it].name },
                                                             ) { targetPage ->
                                                                 val statusBarHeight =
                                                                     WindowInsets.statusBars
@@ -1062,99 +1170,70 @@ class MainActivity : AppCompatActivity() {
                                                                         end = 16.dp,
                                                                     )
 
-                                                                when (tabs[targetPage]) {
-                                                                    DIYTabs.ESSENTIALS -> {
-                                                                        SetupFeatures(
-                                                                            viewModel = viewModel,
-                                                                            modifier = Modifier.fillMaxSize(),
-                                                                            contentPadding = contentPadding,
-                                                                            isSearchActive = isSearchActive,
-                                                                            onHelpClick = { showInstructionsSheet = true },
-                                                                            onNavigateToTab = { targetTab ->
-                                                                                val tabIndex = tabs.indexOf(targetTab)
-                                                                                if (tabIndex != -1) {
-                                                                                    scope.launch {
-                                                                                        jumpToTab(tabIndex)
+                                                                tabContent(tabs[targetPage], contentPadding)
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                                entry<AppRoute.TabPage>(metadata = { mapOf(ROUTE_METADATA_KEY to it) }) { route ->
+                                                    UnderlayBlur(route = route, backStack = backStack, lastNavWasPop = navViewModel.lastNavWasPop) {
+                                                        Box(
+                                                            modifier =
+                                                                Modifier
+                                                                    .fillMaxSize()
+                                                                    .background(MaterialTheme.colorScheme.surfaceContainer),
+                                                        ) {
+                                                            CompositionLocalProvider(
+                                                                LocalViewModelStoreOwner provides this@MainActivity,
+                                                            ) {
+                                                                tabContent(
+                                                                    route.tab,
+                                                                    PaddingValues(
+                                                                        top = WindowInsets.statusBars.asPaddingValues().calculateTopPadding(),
+                                                                        bottom = 150.dp,
+                                                                        start = 16.dp,
+                                                                        end = 16.dp,
+                                                                    ),
+                                                                )
+                                                            }
+                                                            ProvideBottomBar(
+                                                                route = route,
+                                                                spec =
+                                                                    BottomBarSpec(
+                                                                        title = stringResource(route.tab.displayTitle),
+                                                                        onBack = { navViewModel.pop() },
+                                                                        fabIconRes =
+                                                                            when (route.tab) {
+                                                                                DIYTabs.FREEZE -> R.drawable.rounded_search_24
+                                                                                DIYTabs.DIY -> R.drawable.rounded_add_24
+                                                                                DIYTabs.YOUR_ANDROID -> R.drawable.brand_github
+                                                                                else -> null
+                                                                            },
+                                                                        fabContentDescription =
+                                                                            when (route.tab) {
+                                                                                DIYTabs.FREEZE -> stringResource(R.string.label_search_content_description)
+                                                                                DIYTabs.DIY -> stringResource(R.string.diy_editor_new_title)
+                                                                                DIYTabs.YOUR_ANDROID ->
+                                                                                    stringResource(if (gitHubUser != null) R.string.action_profile else R.string.action_sign_in_github)
+                                                                                else -> null
+                                                                            },
+                                                                        fabAction =
+                                                                            when (route.tab) {
+                                                                                DIYTabs.FREEZE -> { { isSearchActive = true } }
+                                                                                DIYTabs.DIY -> { { showNewAutomationSheet = true } }
+                                                                                DIYTabs.YOUR_ANDROID -> {
+                                                                                    {
+                                                                                        if (gitHubUser != null) {
+                                                                                            showFabProfileMenu = true
+                                                                                        } else {
+                                                                                            showGitHubAuthSheet = true
+                                                                                        }
                                                                                     }
                                                                                 }
+                                                                                else -> null
                                                                             },
-                                                                        )
-                                                                    }
-
-                                                                    DIYTabs.FREEZE -> {
-                                                                        FreezeGridUI(
-                                                                            viewModel = viewModel,
-                                                                            modifier = Modifier.fillMaxSize(),
-                                                                            contentPadding = contentPadding,
-                                                                            onGetStartedClick = {
-                                                                                startActivity(
-                                                                                    Intent(
-                                                                                        context,
-                                                                                        FeatureSettingsActivity::class.java,
-                                                                                    ).apply {
-                                                                                        putExtra("feature", "Freeze")
-                                                                                    },
-                                                                                )
-                                                                            },
-                                                                            onSettingsClick = {
-                                                                                startActivity(
-                                                                                    Intent(
-                                                                                        context,
-                                                                                        FeatureSettingsActivity::class.java,
-                                                                                    ).apply {
-                                                                                        putExtra("feature", "Freeze")
-                                                                                    },
-                                                                                )
-                                                                            },
-                                                                            searchQuery = freezeSearchQuery,
-                                                                            searchSubmitSignal = freezeSearchSubmitSignal,
-                                                                        )
-                                                                    }
-
-                                                                    DIYTabs.DIY -> {
-                                                                        DIYScreen(
-                                                                            modifier = Modifier.fillMaxSize(),
-                                                                            contentPadding = contentPadding,
-                                                                            showNewAutomationSheet = showNewAutomationSheet,
-                                                                            onDismissNewAutomationSheet = {
-                                                                                showNewAutomationSheet = false
-                                                                            },
-                                                                            onNewAutomationClick = {
-                                                                                showNewAutomationSheet = true
-                                                                            },
-                                                                        )
-                                                                    }
-
-                                                                    DIYTabs.YOUR_ANDROID -> {
-                                                                        YourAndroidContent(
-                                                                            deviceInfo = deviceInfo,
-                                                                            updatesViewModel = updatesViewModel,
-                                                                            hasRunStartupAnimation = yourAndroidViewModel.hasRunStartupAnimation,
-                                                                            onAnimationRun = { yourAndroidViewModel.hasRunStartupAnimation = true },
-                                                                            exportLauncher = exportLauncher,
-                                                                            importLauncher = importLauncher,
-                                                                            backupAppListLauncher = backupAppListLauncher,
-                                                                            viewModel = yourAndroidViewModel,
-                                                                            onAddRepoClick = { showAddRepoSheet = true },
-                                                                            onShowReleaseNotes = { repoToShowReleaseNotesFullName = it },
-                                                                            modifier = Modifier.fillMaxSize(),
-                                                                        )
-                                                                    }
-
-                                                                    DIYTabs.SETTINGS -> {
-                                                                        SettingsContent(
-                                                                            viewModel = viewModel,
-                                                                            contentPadding = contentPadding,
-                                                                            expandPermissionsInitial = navViewModel.expandSettingsPermissions,
-                                                                            onAppIconSelectedWithPosition = { _, pos -> AppRipple.fire(pos) },
-                                                                            onAvatarLongClickWithPosition = AppRipple::fire,
-                                                                            onRippleToggleEnabledWithPosition = AppRipple::fire,
-                                                                            onAppColorSelectedWithPosition = AppRipple::fire,
-                                                                            modifier = Modifier.fillMaxSize(),
-                                                                        )
-                                                                    }
-                                                                }
-                                                            }
+                                                                    ),
+                                                            )
                                                         }
                                                     }
                                                 }
@@ -1288,6 +1367,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
 }
+
+private class TabsHolder(
+    var tabs: List<DIYTabs>,
+)
 
 @Composable
 private fun SettingsTabBadge(isTranslationMode: Boolean) {

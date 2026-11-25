@@ -21,6 +21,9 @@
     <string name="check_pre_releases_label">檢查預覽版更新</string>
     <string name="check_pre_releases_desc">可能不穩定</string>
     <string name="label_default_tab">預設分頁</string>
+    <string name="label_toolbar">Customize toolbar</string>
+    <string name="toolbar_section_hidden">Hidden from toolbar</string>
+    <string name="toolbar_hidden_hint">Drag items here to remove them from the toolbar. They will show up in the Essentials tab.</string>
     <!-- App Lock -->
     <string name="settings_section_security">安全性</string>
     <string name="app_lock_enable_title">啟用應用程式鎖</string>

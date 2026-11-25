@@ -37,6 +37,9 @@
     <string name="check_pre_releases_label">检查预发布版本</string>
     <string name="check_pre_releases_desc">可能不稳定</string>
     <string name="label_default_tab">默认标签页</string>
+    <string name="label_toolbar">Customize toolbar</string>
+    <string name="toolbar_section_hidden">Hidden from toolbar</string>
+    <string name="toolbar_hidden_hint">Drag items here to remove them from the toolbar. They will show up in the Essentials tab.</string>
     <string name="label_open_with">用其他应用打开</string>
     <string name="label_share_with">分享到</string>
 

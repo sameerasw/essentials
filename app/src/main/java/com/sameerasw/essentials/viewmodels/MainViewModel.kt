@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials.viewmodels
 
+import com.sameerasw.essentials.domain.DIYTabs
 import android.Manifest
 import android.app.Activity
 import android.app.ActivityManager
@@ -135,6 +136,7 @@ class MainViewModel : ViewModel() {
     val isNotificationLightingAccessibilityEnabled = mutableStateOf(false)
     val hapticFeedbackType = mutableStateOf(HapticFeedbackType.SUBTLE)
     val defaultTab = mutableStateOf(com.sameerasw.essentials.domain.DIYTabs.ESSENTIALS)
+    val toolbarTabs = mutableStateOf(DIYTabs.MOVABLE)
     val selectedAppIcon = mutableStateOf(AppIcon.DEFAULT)
     val isDefaultBrowserSet = mutableStateOf(false)
     val onlyShowWhenScreenOff = mutableStateOf(true)
@@ -2437,7 +2439,9 @@ class MainViewModel : ViewModel() {
 
         MapsState.isEnabled = isMapsPowerSavingEnabled.value
         hapticFeedbackType.value = settingsRepository.getHapticFeedbackType()
+        toolbarTabs.value = settingsRepository.getToolbarTabs()
         defaultTab.value = settingsRepository.getDIYTab()
+        ensureDefaultTabVisible()
         selectedAppIcon.value = settingsRepository.getAppIcon()
         isSwipeTabsEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_SWIPE_TABS, true)
@@ -8400,8 +8404,25 @@ class MainViewModel : ViewModel() {
         tab: com.sameerasw.essentials.domain.DIYTabs,
         context: Context,
     ) {
-        defaultTab.value = tab
-        settingsRepository.saveDIYTab(tab)
+        val target = if (isTabInToolbar(tab)) tab else DIYTabs.ESSENTIALS
+        defaultTab.value = target
+        settingsRepository.saveDIYTab(target)
+    }
+
+    private fun isTabInToolbar(tab: DIYTabs): Boolean = tab !in DIYTabs.MOVABLE || tab in toolbarTabs.value
+
+    private fun ensureDefaultTabVisible() {
+        if (!isTabInToolbar(defaultTab.value)) {
+            defaultTab.value = DIYTabs.ESSENTIALS
+            settingsRepository.saveDIYTab(DIYTabs.ESSENTIALS)
+        }
+    }
+
+    fun setToolbarTabs(tabs: List<DIYTabs>) {
+        val sanitized = tabs.filter { it in DIYTabs.MOVABLE }.distinct()
+        settingsRepository.saveToolbarTabs(sanitized)
+        toolbarTabs.value = sanitized
+        ensureDefaultTabVisible()
     }
 
     fun setAppIcon(

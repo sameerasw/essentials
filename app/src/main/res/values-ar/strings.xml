@@ -34,6 +34,9 @@
     <string name="check_pre_releases_label">التحقق من الإصدارات التجريبية</string>
     <string name="check_pre_releases_desc">قد تكون غير مستقرة</string>
     <string name="label_default_tab">علامة التبويب الافتراضية</string>
+    <string name="label_toolbar">Customize toolbar</string>
+    <string name="toolbar_section_hidden">Hidden from toolbar</string>
+    <string name="toolbar_hidden_hint">Drag items here to remove them from the toolbar. They will show up in the Essentials tab.</string>
     <string name="label_open_with">فتح باستخدام</string>
     <string name="label_share_with">مشاركة باستخدام</string>
 

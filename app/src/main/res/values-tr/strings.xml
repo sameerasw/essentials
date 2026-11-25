@@ -17,6 +17,9 @@
     <string name="check_pre_releases_label">Ön sürümleri kontrol et</string>
     <string name="check_pre_releases_desc">Kararsız olabilir</string>
     <string name="label_default_tab">Varsayılan sekme</string>
+    <string name="label_toolbar">Customize toolbar</string>
+    <string name="toolbar_section_hidden">Hidden from toolbar</string>
+    <string name="toolbar_hidden_hint">Drag items here to remove them from the toolbar. They will show up in the Essentials tab.</string>
     <!-- App Lock -->
     <string name="settings_section_security">Güvenlik</string>
     <string name="app_lock_enable_title">Uygulama kilidini etkinleştir</string>
