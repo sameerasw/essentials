@@ -38,6 +38,18 @@
     <string name="mode_link_title">Link a system mode</string>
     <string name="mode_link_none">No system modes left to link</string>
     <string name="mode_unlink">Unlink</string>
+    <string name="mode_section_conditions">Turn on automatically</string>
+    <string name="mode_condition_add">Add condition</string>
+    <string name="mode_condition_place">At a location</string>
+    <string name="mode_condition_working_location_named">Working at %1$s</string>
+    <string name="mode_condition_event_named">During “%1$s”</string>
+    <string name="mode_ask_before_activating">Ask before turning on</string>
+    <string name="mode_confirm_title">Turn on %1$s?</string>
+    <string name="mode_confirm_decline">Not now</string>
+    <string name="mode_confirm_channel">Mode suggestions</string>
+    <string name="diy_calendar_match">Match</string>
+    <string name="diy_calendar_title_contains">Event title contains</string>
+    <string name="diy_calendar_working_location">Working location only</string>
     <string name="toolbar_tab_your_android_desc">Specs and track app updates</string>
     <string name="toolbar_tab_freeze_no_apps">No apps</string>
     <!-- App Lock -->

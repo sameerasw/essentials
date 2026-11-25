@@ -24,7 +24,11 @@ object ModesRepository {
     val modes = _modes.asStateFlow()
 
     private var prefs: SharedPreferences? = null
-    private val gson = ActionGsonAdapter.gson
+    private val gson =
+        ActionGsonAdapter.gson
+            .newBuilder()
+            .registerTypeAdapter(ModeCondition::class.java, ModeCondition.GsonAdapter)
+            .create()
 
     fun init(context: Context) {
         if (prefs != null) return

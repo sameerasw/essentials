@@ -30,15 +30,20 @@ class CalendarModule : AutomationModule {
         const val ID = "calendar_module"
         private const val LOOKAHEAD_MS = 2 * 24 * 60 * 60 * 1000L
         private const val MAX_WAIT_MS = 15 * 60 * 1000L
+        private const val EVENT_TYPE_PROPERTY = "shared:calendarProviderEventType"
+        private const val EVENT_TYPE_WORKING_LOCATION = "WORKING_LOCATION"
     }
 
-    private class Instance(
+    private data class Instance(
         val begin: Long,
         val end: Long,
         val allDay: Boolean,
         val status: Int,
         val availability: Int,
         val calendarId: Long,
+        val eventId: Long,
+        val title: String,
+        val eventType: String?,
     )
 
     override val id: String = ID
@@ -116,6 +121,9 @@ class CalendarModule : AutomationModule {
 
     private fun matches(instance: Instance, state: DIYState.CalendarEvent): Boolean {
         if (state.calendarIds.isNotEmpty() && instance.calendarId !in state.calendarIds) return false
+        if (state.titleContains.isNotBlank() && !instance.title.contains(state.titleContains.trim(), ignoreCase = true)) return false
+        // Working location entries are free and often all day, so the usual filters would always drop them
+        if (state.workingLocationOnly) return instance.eventType == EVENT_TYPE_WORKING_LOCATION
         if (instance.allDay && !state.includeAllDay) return false
         if (instance.status == CalendarContract.Attendees.ATTENDEE_STATUS_DECLINED && !state.includeDeclined) return false
         if (instance.status == CalendarContract.Attendees.ATTENDEE_STATUS_TENTATIVE && !state.includeTentative) return false
@@ -138,18 +146,24 @@ class CalendarModule : AutomationModule {
             CalendarContract.Instances.SELF_ATTENDEE_STATUS,
             CalendarContract.Instances.AVAILABILITY,
             CalendarContract.Instances.CALENDAR_ID,
+            CalendarContract.Instances.EVENT_ID,
+            CalendarContract.Instances.TITLE,
         )
         val result = mutableListOf<Instance>()
         try {
             context.contentResolver.query(uri, projection, null, null, null)?.use { c ->
                 while (c.moveToNext()) {
+                    val allDay = c.getInt(2) == 1
                     val instance = Instance(
-                        begin = c.getLong(0),
-                        end = c.getLong(1),
-                        allDay = c.getInt(2) == 1,
+                        begin = if (allDay) utcDayToLocal(c.getLong(0)) else c.getLong(0),
+                        end = if (allDay) utcDayToLocal(c.getLong(1)) else c.getLong(1),
+                        allDay = allDay,
                         status = c.getInt(3),
                         availability = c.getInt(4),
                         calendarId = c.getLong(5),
+                        eventId = c.getLong(6),
+                        title = c.getString(7).orEmpty(),
+                        eventType = null,
                     )
                     if (instance.end > from) result += instance
                 }
@@ -157,6 +171,29 @@ class CalendarModule : AutomationModule {
         } catch (e: Exception) {
             Log.e(ID, "Failed to query calendar instances", e)
         }
-        return result
+        if (result.isEmpty() || automations.none { (it.state as? DIYState.CalendarEvent)?.workingLocationOnly == true }) return result
+        val types = queryEventTypes(context, result.map { it.eventId }.toSet())
+        return result.map { it.copy(eventType = types[it.eventId]) }
+    }
+
+    // All-day instances are stored as UTC midnights, so shift them onto the local day
+    private fun utcDayToLocal(utcMillis: Long): Long = utcMillis - java.util.TimeZone.getDefault().getOffset(utcMillis)
+
+    private fun queryEventTypes(context: Context, eventIds: Set<Long>): Map<Long, String> {
+        val types = mutableMapOf<Long, String>()
+        try {
+            context.contentResolver.query(
+                CalendarContract.ExtendedProperties.CONTENT_URI,
+                arrayOf(CalendarContract.ExtendedProperties.EVENT_ID, CalendarContract.ExtendedProperties.VALUE),
+                "${CalendarContract.ExtendedProperties.NAME} = ? AND ${CalendarContract.ExtendedProperties.EVENT_ID} IN (${eventIds.joinToString(",")})",
+                arrayOf(EVENT_TYPE_PROPERTY),
+                null,
+            )?.use { c ->
+                while (c.moveToNext()) types[c.getLong(0)] = c.getString(1).orEmpty()
+            }
+        } catch (e: Exception) {
+            Log.e(ID, "Failed to query calendar event types", e)
+        }
+        return types
     }
 }

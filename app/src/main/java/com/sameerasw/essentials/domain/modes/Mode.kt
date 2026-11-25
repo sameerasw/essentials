@@ -33,6 +33,8 @@ data class Mode(
     @SerializedName("linkedIconPackage") val linkedIconPackage: String? = null,
     @SerializedName("linkedIconName") val linkedIconName: String? = null,
     @SerializedName("linkedType") val linkedType: Int? = null,
+    @SerializedName("conditions") val conditions: List<ModeCondition> = emptyList(),
+    @SerializedName("askBeforeActivating") val askBeforeActivating: Boolean = false,
 ) {
     val isLinked: Boolean
         get() = linkedModeId != null
