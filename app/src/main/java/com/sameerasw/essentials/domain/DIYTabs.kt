@@ -25,7 +25,7 @@ enum class DIYTabs(
     FREEZE(R.string.tab_freeze, R.string.tab_freeze_subtitle, R.drawable.rounded_mode_cool_24),
     YOUR_ANDROID(R.string.tab_your_android, "", R.drawable.rounded_mobile_24),
     DIY(R.string.tab_diy, R.string.tab_diy_subtitle, R.drawable.rounded_experiment_24),
-    MODES(R.string.tab_modes, "", R.drawable.rounded_do_not_disturb_on_24),
+    MODES(R.string.tab_modes, "", R.drawable.rounded_photo_filter_24),
     SETTINGS(R.string.label_settings, "", R.drawable.rounded_settings_24),
     ;
 

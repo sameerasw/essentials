@@ -282,7 +282,7 @@ sealed interface Action {
         @SerializedName("active") val active: Boolean = false,
     ) : Action {
         override val title: Int get() = R.string.tab_modes
-        override val icon: Int get() = R.drawable.rounded_do_not_disturb_on_24
+        override val icon: Int get() = R.drawable.rounded_photo_filter_24
     }
 
     @Keep
