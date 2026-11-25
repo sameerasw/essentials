@@ -16,10 +16,13 @@ import android.content.pm.ApplicationInfo
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ButtonGroupDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledTonalButton
@@ -29,23 +32,31 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.ToggleButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.data.repository.LocationReachedRepository
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.domain.model.AppPermission
 import com.sameerasw.essentials.domain.modes.ModeFeature
 import com.sameerasw.essentials.domain.modes.ModeIcons
+import com.sameerasw.essentials.domain.modes.ModeTripStarter
 import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.components.FreezeTagColorPicker
 import com.sameerasw.essentials.ui.components.FreezeTagIconPicker
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
+import com.sameerasw.essentials.ui.core.pickers.SegmentedPicker
+import com.sameerasw.essentials.ui.core.sheets.EssentialsBottomSheet
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.utils.PermissionUIHelper
 import com.sameerasw.essentials.viewmodels.MainViewModel
@@ -275,6 +286,103 @@ fun ModeFreezeSection(
                     isChecked = category in categories,
                     onCheckedChange = { onCategoryChange(category, it) },
                 )
+            }
+        }
+    }
+}
+
+@Composable
+fun ModeExitTripRow(
+    alarmId: String?,
+    onAlarmChange: (String?) -> Unit,
+    onStart: Boolean,
+    onOnStartChange: (Boolean) -> Unit,
+    viewModel: MainViewModel,
+) {
+    val context = LocalContext.current
+    val alarms = remember { LocationReachedRepository(context).getAlarms() }
+    var showPicker by remember { mutableStateOf(false) }
+    val selected = alarms.find { it.id == alarmId }
+
+    viewModel.isLocationPermissionGranted.value
+    viewModel.isBackgroundLocationPermissionGranted.value
+    if (selected != null) {
+        ModeTripStarter.requiredPermissions.filterNot { it.isGranted(context) }.forEach { ModePermissionRow(it, viewModel) }
+    }
+
+    ModeSectionTitle(R.string.tile_location_reached)
+    val onStartLabel = stringResource(R.string.mode_trip_on_start)
+    val onEndLabel = stringResource(R.string.mode_trip_on_end)
+    RoundedCardContainer(spacing = 2.dp) {
+        RoundedCardContainer(containerColor = MaterialTheme.colorScheme.surfaceBright, cornerRadius = 4.dp) {
+            SegmentedPicker(
+                items = listOf(true, false),
+                selectedItem = onStart,
+                onItemSelected = onOnStartChange,
+                labelProvider = { if (it) onStartLabel else onEndLabel },
+                modifier = Modifier.fillMaxWidth(),
+            )
+        }
+        IconToggleItem(
+            iconRes = R.drawable.round_navigation_24,
+            title = stringResource(R.string.mode_exit_trip),
+            description = selected?.name ?: stringResource(R.string.app_lock_auto_lock_delay_none),
+            showToggle = false,
+            onClick = { showPicker = true },
+        )
+    }
+
+    if (showPicker) {
+        EssentialsBottomSheet(onDismissRequest = { showPicker = false }) {
+            Column(
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .verticalScroll(rememberScrollState())
+                        .padding(horizontal = 16.dp)
+                        .padding(bottom = 32.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+            ) {
+                TranslatableText(
+                    stringResId = R.string.mode_exit_trip,
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface,
+                )
+                RoundedCardContainer(spacing = 2.dp) {
+                    IconToggleItem(
+                        iconRes = R.drawable.rounded_close_24,
+                        title = stringResource(R.string.app_lock_auto_lock_delay_none),
+                        showToggle = false,
+                        onClick = {
+                            onAlarmChange(null)
+                            showPicker = false
+                        },
+                    )
+                    alarms.forEach { alarm ->
+                        val iconRes =
+                            remember(alarm.iconResName) {
+                                context.resources.getIdentifier(alarm.iconResName, "drawable", context.packageName)
+                            }
+                        IconToggleItem(
+                            iconRes = if (iconRes != 0) iconRes else R.drawable.round_navigation_24,
+                            title = alarm.name,
+                            showToggle = false,
+                            onClick = {
+                                onAlarmChange(alarm.id)
+                                showPicker = false
+                            },
+                        )
+                    }
+                }
+                if (alarms.isEmpty()) {
+                    TranslatableText(
+                        stringResId = R.string.mode_exit_trip_empty,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(start = 16.dp),
+                    )
+                }
             }
         }
     }
