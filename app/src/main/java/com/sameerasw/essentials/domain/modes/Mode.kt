@@ -13,6 +13,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.Keep
 import com.google.gson.annotations.SerializedName
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.domain.diy.Action
 import java.util.UUID
 
 @Keep
@@ -22,7 +23,18 @@ data class Mode(
     @SerializedName("iconName") val iconName: String = ModeIcons.DEFAULT,
     @SerializedName("colorHex") val colorHex: String = "#BAE1FF",
     @SerializedName("isEnabled") val isEnabled: Boolean = true,
-)
+    @SerializedName("features") val features: Map<String, Boolean> = emptyMap(),
+    @SerializedName("freezeTagIds") val freezeTagIds: Set<String> = emptySet(),
+    @SerializedName("freezeCategories") val freezeCategories: Set<Int> = emptySet(),
+    @SerializedName("entryActions") val entryActions: List<Action> = emptyList(),
+    @SerializedName("exitActions") val exitActions: List<Action> = emptyList(),
+) {
+    val featureOverrides: Map<ModeFeature, Boolean>
+        get() = features.mapNotNull { (key, value) -> ModeFeature.fromKey(key)?.let { it to value } }.toMap()
+
+    val freezesApps: Boolean
+        get() = freezeTagIds.isNotEmpty() || freezeCategories.isNotEmpty()
+}
 
 object ModeIcons {
     const val DEFAULT = "rounded_work_24"

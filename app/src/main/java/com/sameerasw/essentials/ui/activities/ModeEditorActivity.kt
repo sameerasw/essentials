@@ -36,6 +36,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -50,7 +51,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.toColorInt
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.domain.diy.Action
+import com.sameerasw.essentials.domain.diy.ActionRegistry
+import com.sameerasw.essentials.domain.model.AppPermission
 import com.sameerasw.essentials.domain.modes.Mode
 import com.sameerasw.essentials.domain.modes.ModeIcons
 import com.sameerasw.essentials.domain.modes.ModesController
@@ -61,10 +66,18 @@ import com.sameerasw.essentials.ui.components.FreezeTagIconPicker
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.sheets.PRESET_PASTEL_COLORS
+import com.sameerasw.essentials.ui.core.sheets.PermissionsBottomSheet
+import com.sameerasw.essentials.ui.features.modes.ModeFeaturesSection
+import com.sameerasw.essentials.ui.features.modes.ModeFreezeSection
+import com.sameerasw.essentials.ui.features.modes.ModeSectionTitle
+import com.sameerasw.essentials.ui.features.system.ActionSequenceEditor
 import com.sameerasw.essentials.ui.navigation.AppRoute
 import com.sameerasw.essentials.ui.navigation.AppRoutes
 import com.sameerasw.essentials.ui.navigation.BottomBarSpec
 import com.sameerasw.essentials.ui.navigation.ProvideBottomBar
+import com.sameerasw.essentials.utils.AutomationFailureNotifier
+import com.sameerasw.essentials.utils.PermissionUIHelper
+import com.sameerasw.essentials.viewmodels.MainViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -76,6 +89,8 @@ fun ModeEditorScreen(
     val context = LocalContext.current
     val appContext = context.applicationContext
     val scope = rememberCoroutineScope()
+    val viewModel: MainViewModel = viewModel()
+    LaunchedEffect(Unit) { viewModel.check(context) }
 
     val existing = remember(route.modeId) {
         ModesRepository.init(appContext)
@@ -85,13 +100,35 @@ fun ModeEditorScreen(
     var name by remember { mutableStateOf(existing?.name ?: "") }
     var colorHex by remember { mutableStateOf(existing?.colorHex ?: PRESET_PASTEL_COLORS.random()) }
     var iconName by remember { mutableStateOf(existing?.iconName ?: ModeIcons.DEFAULT) }
+    var features by remember { mutableStateOf(existing?.features ?: emptyMap()) }
+    var freezeTagIds by remember { mutableStateOf(existing?.freezeTagIds ?: emptySet()) }
+    var freezeCategories by remember { mutableStateOf(existing?.freezeCategories ?: emptySet()) }
+    var entryActions by remember { mutableStateOf(existing?.entryActions ?: emptyList()) }
+    var exitActions by remember { mutableStateOf(existing?.exitActions ?: emptyList()) }
+    var missingPermissions by remember { mutableStateOf<List<AppPermission>>(emptyList()) }
+    val actionCategories = remember { ActionRegistry.getCategories() }
+
+    fun requirePermissionsFor(action: Action) {
+        val missing = AutomationFailureNotifier.missingPermissions(context, action)
+        if (missing.isNotEmpty()) missingPermissions = missing
+    }
 
     val isValid = name.isNotBlank()
 
     fun save() {
-        val mode = (existing ?: Mode()).copy(name = name.trim(), colorHex = colorHex, iconName = iconName)
+        val mode =
+            (existing ?: Mode()).copy(
+                name = name.trim(),
+                colorHex = colorHex,
+                iconName = iconName,
+                features = features,
+                freezeTagIds = freezeTagIds,
+                freezeCategories = freezeCategories,
+                entryActions = entryActions,
+                exitActions = exitActions,
+            )
         ModesRepository.upsert(mode)
-        scope.launch(Dispatchers.IO) { ModesController.sync(appContext) }
+        scope.launch(Dispatchers.IO) { ModesController.sync(appContext, reapply = true) }
         onBack()
     }
 
@@ -191,6 +228,49 @@ fun ModeEditorScreen(
                 }
             }
 
+            ModeFeaturesSection(
+                features = features,
+                onFeatureChange = { feature, value ->
+                    features = if (value == null) features - feature.name else features + (feature.name to value)
+                    if (value != null) requirePermissionsFor(feature.action(value))
+                },
+            )
+
+            ModeFreezeSection(
+                tagIds = freezeTagIds,
+                categories = freezeCategories,
+                onTagChange = { id, checked ->
+                    freezeTagIds = if (checked) freezeTagIds + id else freezeTagIds - id
+                    if (checked) requirePermissionsFor(Action.FreezeApps())
+                },
+                onCategoryChange = { category, checked ->
+                    freezeCategories = if (checked) freezeCategories + category else freezeCategories - category
+                    if (checked) requirePermissionsFor(Action.FreezeApps())
+                },
+            )
+
+            ModeSectionTitle(R.string.mode_section_start_actions)
+            ActionSequenceEditor(
+                viewModel = viewModel,
+                actions = entryActions,
+                onActionsChange = { entryActions = it },
+                screenOnOnly = false,
+                listKey = "mode_entry",
+                emptyText = stringResource(R.string.diy_no_actions),
+                categories = actionCategories,
+            )
+
+            ModeSectionTitle(R.string.mode_section_end_actions)
+            ActionSequenceEditor(
+                viewModel = viewModel,
+                actions = exitActions,
+                onActionsChange = { exitActions = it },
+                screenOnOnly = false,
+                listKey = "mode_exit",
+                emptyText = stringResource(R.string.diy_no_actions),
+                categories = actionCategories,
+            )
+
             if (existing != null) {
                 RoundedCardContainer(spacing = 2.dp) {
                     val settingsIntent = remember(existing.id) { ModesController.systemSettingsIntent(appContext, existing.id) }
@@ -210,6 +290,17 @@ fun ModeEditorScreen(
                     )
                 }
             }
+        }
+
+        if (missingPermissions.isNotEmpty()) {
+            PermissionsBottomSheet(
+                onDismissRequest = {
+                    missingPermissions = emptyList()
+                    viewModel.check(context)
+                },
+                featureTitle = R.string.tab_modes,
+                permissions = PermissionUIHelper.getPermissionItems(missingPermissions, context, viewModel),
+            )
         }
 
         ProvideBottomBar(
