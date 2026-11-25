@@ -252,9 +252,10 @@ fun ModeEditorScreen(
                             onClick = { runCatching { context.startActivity(settingsIntent) } },
                         )
                     }
+                    val isLinked = existing.isLinked
                     IconToggleItem(
-                        iconRes = R.drawable.rounded_delete_24,
-                        title = stringResource(R.string.action_delete),
+                        iconRes = if (isLinked) R.drawable.rounded_link_off_24 else R.drawable.rounded_delete_24,
+                        title = stringResource(if (isLinked) R.string.mode_unlink else R.string.action_delete),
                         showToggle = false,
                         onClick = { delete(existing) },
                     )
