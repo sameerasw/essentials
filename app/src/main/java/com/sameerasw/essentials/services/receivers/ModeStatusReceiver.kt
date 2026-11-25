@@ -37,7 +37,9 @@ class ModeStatusReceiver : BroadcastReceiver() {
                 NotificationManager.AUTOMATIC_RULE_STATUS_DISABLED -> ModesRepository.setEnabled(modeId, false)
             }
         }
-        ModesController.refreshActive(context)
+        val pending = goAsync()
+        val job = ModesController.refreshActive(context)
+        if (job == null) pending.finish() else job.invokeOnCompletion { pending.finish() }
     }
 
     private companion object {

@@ -47,6 +47,12 @@
     <string name="mode_editor_edit_title">Edit mode</string>
     <string name="mode_name_hint">Mode name</string>
     <string name="mode_system_settings">Open in system settings</string>
+    <string name="mode_section_features">While active</string>
+    <string name="mode_section_freeze">Freeze apps</string>
+    <string name="mode_section_start_actions">When mode starts</string>
+    <string name="mode_section_end_actions">When mode ends</string>
+    <string name="mode_feature_mobile_data">Mobile data</string>
+    <string name="mode_feature_show_taps">Show taps</string>
     <string name="toolbar_tab_your_android_desc">Specs and track app updates</string>
     <string name="toolbar_tab_freeze_no_apps">No apps</string>
     <string name="label_open_with">Көмегімен ашу</string>

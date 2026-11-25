@@ -21,8 +21,13 @@ import android.service.notification.Condition
 import android.util.Log
 import androidx.annotation.RequiresApi
 import com.sameerasw.essentials.ui.activities.ModeEditorActivity
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 
 object ModesController {
     private const val TAG = "ModesController"
@@ -37,6 +42,7 @@ object ModesController {
     val activeModeIds = _activeModeIds.asStateFlow()
 
     private val ruleIds = mutableMapOf<String, String>()
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     fun hasAccess(context: Context): Boolean = notificationManager(context).isNotificationPolicyAccessGranted
 
@@ -51,18 +57,25 @@ object ModesController {
         return runCatching { notificationManager(context).getAutomaticZenRule(ruleId)?.let(::modeIdOf) }.getOrNull()
     }
 
-    fun sync(context: Context) {
+    fun sync(
+        context: Context,
+        reapply: Boolean = false,
+    ) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.VANILLA_ICE_CREAM || !hasAccess(context)) return
         runCatching { syncRules(context) }.onFailure { Log.e(TAG, "Failed to sync modes", it) }
-        refreshActive(context)
+        refreshActive(context, reapply)
     }
 
-    fun refreshActive(context: Context) {
+    fun refreshActive(
+        context: Context,
+        reapply: Boolean = false,
+    ): Job? {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.VANILLA_ICE_CREAM || !hasAccess(context)) {
             _activeModeIds.value = emptySet()
-            return
+            return null
         }
-        runCatching {
+        val appContext = context.applicationContext
+        return runCatching {
             val nm = notificationManager(context)
             val owned = ownedRules(nm)
             synchronized(ruleIds) {
@@ -73,7 +86,10 @@ object ModesController {
                 owned
                     .filter { (_, entry) -> nm.getAutomaticZenRuleState(entry.first) == Condition.STATE_TRUE }
                     .keys
+            val active = _activeModeIds.value
+            scope.launch { ModeEffects.reconcile(appContext, active, reapply) }
         }.onFailure { Log.e(TAG, "Failed to read mode states", it) }
+            .getOrNull()
     }
 
     fun setActive(

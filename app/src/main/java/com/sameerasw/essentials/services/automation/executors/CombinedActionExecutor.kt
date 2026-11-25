@@ -1060,7 +1060,7 @@ object CombinedActionExecutor {
         }
     }
 
-    private fun isHotspotEnabled(context: Context): Boolean =
+    internal fun isHotspotEnabled(context: Context): Boolean =
         try {
             val wifiManager =
                 context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
@@ -1136,7 +1136,7 @@ object CombinedActionExecutor {
         }
     }
 
-    private fun isWifiEnabled(context: Context): Boolean? =
+    internal fun isWifiEnabled(context: Context): Boolean? =
         try {
             val wifiManager = context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
             when (wifiManager.wifiState) {
@@ -1161,7 +1161,7 @@ object CombinedActionExecutor {
     }
 
     @Suppress("MissingPermission")
-    private fun isCellularDataEnabled(context: Context): Boolean? =
+    internal fun isCellularDataEnabled(context: Context): Boolean? =
         try {
             (context.applicationContext.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager).isDataEnabled
         } catch (_: Exception) {
@@ -1215,7 +1215,7 @@ object CombinedActionExecutor {
         )
     }
 
-    private fun isLocationEnabled(context: Context): Boolean =
+    internal fun isLocationEnabled(context: Context): Boolean =
         context.getSystemService(LocationManager::class.java)?.let { LocationManagerCompat.isLocationEnabled(it) } ?: false
 
     private fun setLocationEnabled(
@@ -1229,7 +1229,7 @@ object CombinedActionExecutor {
         )
     }
 
-    private fun isAutoBrightnessEnabled(context: Context): Boolean =
+    internal fun isAutoBrightnessEnabled(context: Context): Boolean =
         android.provider.Settings.System.getInt(
             context.contentResolver,
             android.provider.Settings.System.SCREEN_BRIGHTNESS_MODE,
@@ -1271,7 +1271,7 @@ object CombinedActionExecutor {
         )
     }
 
-    private fun isShowTaps(context: Context): Boolean =
+    internal fun isShowTaps(context: Context): Boolean =
         Settings.System.getInt(context.contentResolver, "show_touches", 0) == 1
 
     private fun setShowTaps(

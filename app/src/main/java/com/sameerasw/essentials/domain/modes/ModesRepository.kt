@@ -11,8 +11,8 @@ package com.sameerasw.essentials.domain.modes
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.sameerasw.essentials.domain.diy.ActionGsonAdapter
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
@@ -24,7 +24,7 @@ object ModesRepository {
     val modes = _modes.asStateFlow()
 
     private var prefs: SharedPreferences? = null
-    private val gson = Gson()
+    private val gson = ActionGsonAdapter.gson
 
     fun init(context: Context) {
         if (prefs != null) return
