@@ -80,6 +80,7 @@
     <string name="diy_calendar_match">Match</string>
     <string name="diy_calendar_title_contains">Event title contains</string>
     <string name="diy_calendar_working_location">Working location only</string>
+    <string name="diy_calendar_working_location_name">Location, like Office</string>
     <string name="toolbar_tab_your_android_desc">Specs and track app updates</string>
     <string name="toolbar_tab_freeze_no_apps">No apps</string>
     <string name="setting_app_icon_title">App icon</string>
@@ -1487,7 +1488,6 @@
     <string name="diy_summary_calendars_count">Calendars: %1$d</string>
     <string name="diy_calendar_filters">Filters</string>
     <string name="diy_calendar_calendars">Calendars</string>
-    <string name="diy_calendar_permission">Calendar access is needed to pick calendars</string>
     <string name="diy_time_selection_title">Select Time</string>
     <string name="diy_time_range_selection_title">Select Time Range</string>
     <string name="diy_start_time_label">Start Time</string>

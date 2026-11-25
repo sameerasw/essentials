@@ -52,6 +52,7 @@ import com.sameerasw.essentials.domain.diy.Action
 import com.sameerasw.essentials.domain.diy.ActionRegistry
 import com.sameerasw.essentials.domain.model.AppPermission
 import com.sameerasw.essentials.domain.modes.Mode
+import com.sameerasw.essentials.domain.modes.ModeAutomation
 import com.sameerasw.essentials.domain.modes.ModeIcons
 import com.sameerasw.essentials.domain.modes.ModesController
 import com.sameerasw.essentials.domain.modes.ModesRepository
@@ -60,6 +61,7 @@ import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.sheets.PRESET_PASTEL_COLORS
 import com.sameerasw.essentials.ui.core.sheets.PermissionsBottomSheet
 import com.sameerasw.essentials.ui.features.modes.ModeAppearanceFields
+import com.sameerasw.essentials.ui.features.modes.findActivity
 import com.sameerasw.essentials.ui.features.modes.ModeConditionsSection
 import com.sameerasw.essentials.ui.features.modes.ModeFeaturesSection
 import com.sameerasw.essentials.ui.features.modes.ModeFreezeSection
@@ -126,6 +128,9 @@ fun ModeEditorScreen(
                 conditions = conditions,
                 askBeforeActivating = askBeforeActivating,
             )
+        if (existing != null && (existing.conditions != conditions || existing.askBeforeActivating != askBeforeActivating)) {
+            ModeAutomation.resetHold(appContext, existing.id)
+        }
         ModesRepository.upsert(mode)
         ModesController.requestSync(appContext, reapply = true)
         onBack()
@@ -209,6 +214,7 @@ fun ModeEditorScreen(
                 askBeforeActivating = askBeforeActivating,
                 onAskBeforeActivatingChange = { askBeforeActivating = it },
                 onMissingPermissions = { missingPermissions = it },
+                viewModel = viewModel,
             )
 
             ModeFeaturesSection(
@@ -303,7 +309,7 @@ fun ModeEditorScreen(
                     viewModel.check(context)
                 },
                 featureTitle = R.string.tab_modes,
-                permissions = PermissionUIHelper.getPermissionItems(missingPermissions, context, viewModel),
+                permissions = PermissionUIHelper.getPermissionItems(missingPermissions, context, viewModel, context.findActivity()),
             )
         }
 

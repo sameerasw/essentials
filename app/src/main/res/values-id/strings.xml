@@ -352,6 +352,7 @@ Anda dapat menyesuaikan gaya animasi, warna, dan perilakunya. Fitur ini berfungs
     <string name="diy_calendar_match">Match</string>
     <string name="diy_calendar_title_contains">Event title contains</string>
     <string name="diy_calendar_working_location">Working location only</string>
+    <string name="diy_calendar_working_location_name">Location, like Office</string>
     <string name="toolbar_tab_your_android_desc">Specs and track app updates</string>
     <string name="toolbar_tab_freeze_no_apps">No apps</string>
 </resources>

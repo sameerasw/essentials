@@ -9,6 +9,9 @@
 
 package com.sameerasw.essentials.ui.features.modes
 
+import android.app.Activity
+import android.content.Context
+import android.content.ContextWrapper
 import android.content.pm.ApplicationInfo
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -126,6 +129,15 @@ fun ModeAppearanceFields(
     }
 }
 
+fun Context.findActivity(): Activity? {
+    var current: Context? = this
+    while (current is ContextWrapper) {
+        if (current is Activity) return current
+        current = current.baseContext
+    }
+    return null
+}
+
 @Composable
 fun ModePermissionRow(
     permission: AppPermission,
@@ -134,7 +146,7 @@ fun ModePermissionRow(
 ) {
     val context = LocalContext.current
     val view = LocalView.current
-    val item = PermissionUIHelper.getPermissionItems(listOf(permission), context, viewModel).firstOrNull() ?: return
+    val item = PermissionUIHelper.getPermissionItems(listOf(permission), context, viewModel, context.findActivity()).firstOrNull() ?: return
     val title =
         when (val raw = item.title) {
             is Int -> stringResource(raw)

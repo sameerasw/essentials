@@ -23,6 +23,7 @@ import com.sameerasw.essentials.island.model.IslandPriority
 import com.sameerasw.essentials.island.model.LineContent
 import com.sameerasw.essentials.island.plugins.BaseIslandPlugin
 import com.sameerasw.essentials.island.ui.components.RollingText
+import com.sameerasw.essentials.data.repository.CalendarRepository
 import com.sameerasw.essentials.utils.CalendarEventUtil
 import com.sameerasw.essentials.utils.UpcomingCalendarEvent
 import kotlinx.coroutines.Dispatchers
@@ -55,7 +56,14 @@ class CalendarPlugin : BaseIslandPlugin() {
     private var events: List<UpcomingCalendarEvent> = emptyList()
     private val poll = Runnable { refresh() }
 
+    private val onCalendarChanged: () -> Unit = { refresh() }
+
+    override fun onStart() {
+        ctx?.let { CalendarRepository.addListener(it.service, onCalendarChanged) }
+    }
+
     override fun onStop() {
+        CalendarRepository.removeListener(onCalendarChanged)
         ctx?.mainHandler?.removeCallbacks(poll)
         events = emptyList()
     }

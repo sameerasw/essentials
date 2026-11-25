@@ -10,20 +10,24 @@
 package com.sameerasw.essentials.ui.core.sheets
 
 import android.Manifest
-import android.content.Context
-import android.content.pm.PackageManager
-import android.provider.CalendarContract
+import android.content.Intent
+import android.net.Uri
+import android.provider.Settings
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -39,8 +43,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
+import androidx.lifecycle.compose.LifecycleResumeEffect
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.data.repository.CalendarInfo
+import com.sameerasw.essentials.data.repository.CalendarRepository
+import com.sameerasw.essentials.domain.model.AppPermission
 import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
@@ -49,9 +56,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import com.sameerasw.essentials.domain.diy.State as DIYState
 
-private class CalendarEntry(val id: Long, val name: String, val account: String)
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun CalendarStateSheet(
     initialState: DIYState.CalendarEvent?,
@@ -62,17 +68,49 @@ fun CalendarStateSheet(
     val view = LocalView.current
     var state by remember { mutableStateOf(initialState ?: DIYState.CalendarEvent()) }
     var hasPermission by remember {
-        mutableStateOf(ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CALENDAR) == PackageManager.PERMISSION_GRANTED)
+        mutableStateOf(CalendarRepository.hasPermission(context))
     }
-    var calendars by remember { mutableStateOf<List<CalendarEntry>>(emptyList()) }
+    var calendars by remember { mutableStateOf<List<CalendarInfo>>(emptyList()) }
+    var askedOnce by remember { mutableStateOf(false) }
+    var workingLocations by remember { mutableStateOf<List<String>>(emptyList()) }
 
-    val permissionLauncher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { hasPermission = it }
+    val permissionLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+            askedOnce = true
+            hasPermission = granted
+            if (granted) CalendarRepository.onPermissionChanged(context)
+        }
+
+    fun requestPermission() {
+        // Once Android stops showing the prompt, the app settings page is the only way left to grant it
+        if (askedOnce) {
+            context.startActivity(
+                Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.fromParts("package", context.packageName, null))
+                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
+            )
+        } else {
+            permissionLauncher.launch(Manifest.permission.READ_CALENDAR)
+        }
+    }
+
+    LifecycleResumeEffect(Unit) {
+        val granted = CalendarRepository.hasPermission(context)
+        if (granted && !hasPermission) CalendarRepository.onPermissionChanged(context)
+        hasPermission = granted
+        onPauseOrDispose {}
+    }
+
+    LaunchedEffect(Unit) {
+        if (!hasPermission) requestPermission()
+    }
 
     LaunchedEffect(hasPermission) {
-        if (!hasPermission) {
-            permissionLauncher.launch(Manifest.permission.READ_CALENDAR)
-        } else {
-            calendars = withContext(Dispatchers.IO) { loadCalendars(context) }
+        if (hasPermission) calendars = withContext(Dispatchers.IO) { CalendarRepository.queryCalendars(context) }
+    }
+
+    LaunchedEffect(hasPermission, state.workingLocationOnly) {
+        if (hasPermission && state.workingLocationOnly && workingLocations.isEmpty()) {
+            workingLocations = withContext(Dispatchers.IO) { CalendarRepository.workingLocationNames(context) }
         }
     }
 
@@ -118,7 +156,11 @@ fun CalendarStateSheet(
                             state = state.copy(titleContains = it)
                             onStateChange(state)
                         },
-                        placeholder = { TranslatableText(R.string.diy_calendar_title_contains) },
+                        placeholder = {
+                            TranslatableText(
+                                if (state.workingLocationOnly) R.string.diy_calendar_working_location_name else R.string.diy_calendar_title_contains,
+                            )
+                        },
                         modifier = Modifier.fillMaxWidth(),
                         singleLine = true,
                         shape = MaterialTheme.shapes.medium,
@@ -135,6 +177,24 @@ fun CalendarStateSheet(
                     isChecked = state.workingLocationOnly,
                     onCheckedChange = { update(state.copy(workingLocationOnly = it)) },
                 )
+                if (state.workingLocationOnly && workingLocations.isNotEmpty()) {
+                    FlowRow(
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .background(MaterialTheme.colorScheme.surfaceBright, MaterialTheme.shapes.extraSmall)
+                                .padding(horizontal = 16.dp, vertical = 8.dp),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    ) {
+                        workingLocations.forEach { location ->
+                            FilterChip(
+                                selected = state.titleContains.trim().equals(location, ignoreCase = true),
+                                onClick = { update(state.copy(titleContains = location)) },
+                                label = { Text(location) },
+                            )
+                        }
+                    }
+                }
             }
 
             SectionLabel(stringResource(R.string.diy_calendar_filters))
@@ -167,12 +227,24 @@ fun CalendarStateSheet(
 
             SectionLabel(stringResource(R.string.diy_calendar_calendars))
             if (!hasPermission) {
-                TranslatableText(
-                    stringResId = R.string.diy_calendar_permission,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(start = 8.dp),
-                )
+                RoundedCardContainer(spacing = 2.dp, cornerRadius = 24.dp) {
+                    IconToggleItem(
+                        iconRes = AppPermission.READ_CALENDAR.iconRes,
+                        title = stringResource(AppPermission.READ_CALENDAR.titleRes),
+                        showToggle = false,
+                        onClick = { requestPermission() },
+                        trailingContent = {
+                            FilledTonalButton(
+                                onClick = {
+                                    HapticUtil.performVirtualKeyHaptic(view)
+                                    requestPermission()
+                                },
+                            ) {
+                                Text(stringResource(R.string.widget_stack_grant))
+                            }
+                        },
+                    )
+                }
             } else if (calendars.isEmpty()) {
                 TranslatableText(
                     stringResId = R.string.status_glance_calendar_no_calendars,
@@ -181,7 +253,7 @@ fun CalendarStateSheet(
                     modifier = Modifier.padding(start = 8.dp),
                 )
             } else {
-                calendars.groupBy { it.account }.forEach { (account, entries) ->
+                calendars.groupBy { it.accountName }.forEach { (account, entries) ->
                     Text(
                         text = account,
                         style = MaterialTheme.typography.labelLarge,
@@ -217,20 +289,3 @@ private fun SectionLabel(text: String) {
     )
 }
 
-private fun loadCalendars(context: Context): List<CalendarEntry> {
-    val projection = arrayOf(
-        CalendarContract.Calendars._ID,
-        CalendarContract.Calendars.CALENDAR_DISPLAY_NAME,
-        CalendarContract.Calendars.ACCOUNT_NAME,
-    )
-    val result = mutableListOf<CalendarEntry>()
-    try {
-        context.contentResolver.query(CalendarContract.Calendars.CONTENT_URI, projection, null, null, null)?.use { c ->
-            while (c.moveToNext()) {
-                result += CalendarEntry(c.getLong(0), c.getString(1).orEmpty(), c.getString(2).orEmpty())
-            }
-        }
-    } catch (_: Exception) {
-    }
-    return result
-}
