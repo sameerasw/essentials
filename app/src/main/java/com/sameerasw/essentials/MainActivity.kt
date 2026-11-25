@@ -100,6 +100,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
@@ -129,6 +130,7 @@ import com.airbnb.lottie.compose.rememberLottieDynamicProperties
 import com.airbnb.lottie.compose.rememberLottieDynamicProperty
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.domain.DIYTabs
+import com.sameerasw.essentials.ui.activities.ModeEditorScreen
 import com.sameerasw.essentials.ui.activities.YourAndroidContent
 import com.sameerasw.essentials.domain.registry.initPermissionRegistry
 import com.sameerasw.essentials.ui.components.EssentialsFloatingToolbar
@@ -139,6 +141,7 @@ import com.sameerasw.essentials.ui.composables.DIYScreen
 import com.sameerasw.essentials.ui.composables.FreezeGridUI
 import com.sameerasw.essentials.ui.composables.SetupFeatures
 import com.sameerasw.essentials.ui.composables.WelcomeScreen
+import com.sameerasw.essentials.ui.features.modes.ModesScreen
 import com.sameerasw.essentials.ui.core.sheets.AddRepoBottomSheet
 import com.sameerasw.essentials.ui.core.sheets.GitHubAuthSheet
 import com.sameerasw.essentials.ui.core.sheets.InstructionsBottomSheet
@@ -372,6 +375,7 @@ class MainActivity : AppCompatActivity() {
 
                     val toolbarTabs by viewModel.toolbarTabs
                     val tabs = remember(toolbarTabs) { DIYTabs.toolbarTabs(toolbarTabs) }
+                    val currentTabs by rememberUpdatedState(tabs)
 
                     val defaultTab by viewModel.defaultTab
                     val initialPage =
@@ -382,7 +386,7 @@ class MainActivity : AppCompatActivity() {
                     val pagerState =
                         rememberPagerState(
                             initialPage = initialPage,
-                            pageCount = { tabs.size },
+                            pageCount = { currentTabs.size },
                         )
                     val shownTabs = remember { TabsHolder(tabs) }
                     if (shownTabs.tabs != tabs) {
@@ -706,6 +710,16 @@ class MainActivity : AppCompatActivity() {
                                 )
                             }
 
+                            DIYTabs.MODES -> {
+                                ModesScreen(
+                                    viewModel = viewModel,
+                                    modifier = Modifier.fillMaxSize(),
+                                    contentPadding = contentPadding,
+                                    onNewModeClick = { navViewModel.navigate(AppRoute.ModeEditor()) },
+                                    onModeClick = { navViewModel.navigate(AppRoute.ModeEditor(it)) },
+                                )
+                            }
+
                             DIYTabs.YOUR_ANDROID -> {
                                 YourAndroidContent(
                                     deviceInfo = deviceInfo,
@@ -953,6 +967,10 @@ class MainActivity : AppCompatActivity() {
                                                                         DIYTabs.DIY -> {
                                                                             showNewAutomationSheet = true
                                                                         }
+
+                                                                        DIYTabs.MODES -> {
+                                                                            navViewModel.navigate(AppRoute.ModeEditor())
+                                                                        }
                                                                     }
                                                                 },
                                                                 containerColor = MaterialTheme.colorScheme.primaryContainer,
@@ -1028,6 +1046,13 @@ class MainActivity : AppCompatActivity() {
                                                                                 Icon(
                                                                                     painter = painterResource(id = R.drawable.rounded_add_24),
                                                                                     contentDescription = stringResource(R.string.diy_editor_new_title),
+                                                                                )
+                                                                            }
+
+                                                                            DIYTabs.MODES -> {
+                                                                                Icon(
+                                                                                    painter = painterResource(id = R.drawable.rounded_add_24),
+                                                                                    contentDescription = stringResource(R.string.action_new_mode),
                                                                                 )
                                                                             }
                                                                         }
@@ -1154,7 +1179,7 @@ class MainActivity : AppCompatActivity() {
                                                                         }
                                                                         .scrollMotionBlur(pagerState, enabled = isMotionBlurEnabled),
                                                                 userScrollEnabled = isSwipeTabsEnabled && !isSearchActive && isAtHome,
-                                                                key = { tabs[it].name },
+                                                                key = { currentTabs.getOrNull(it)?.name ?: "page_$it" },
                                                             ) { targetPage ->
                                                                 val statusBarHeight =
                                                                     WindowInsets.statusBars
@@ -1170,7 +1195,7 @@ class MainActivity : AppCompatActivity() {
                                                                         end = 16.dp,
                                                                     )
 
-                                                                tabContent(tabs[targetPage], contentPadding)
+                                                                currentTabs.getOrNull(targetPage)?.let { tabContent(it, contentPadding) }
                                                             }
                                                         }
                                                     }
@@ -1206,6 +1231,7 @@ class MainActivity : AppCompatActivity() {
                                                                             when (route.tab) {
                                                                                 DIYTabs.FREEZE -> R.drawable.rounded_search_24
                                                                                 DIYTabs.DIY -> R.drawable.rounded_add_24
+                                                                                DIYTabs.MODES -> R.drawable.rounded_add_24
                                                                                 DIYTabs.YOUR_ANDROID -> R.drawable.brand_github
                                                                                 else -> null
                                                                             },
@@ -1213,6 +1239,7 @@ class MainActivity : AppCompatActivity() {
                                                                             when (route.tab) {
                                                                                 DIYTabs.FREEZE -> stringResource(R.string.label_search_content_description)
                                                                                 DIYTabs.DIY -> stringResource(R.string.diy_editor_new_title)
+                                                                                DIYTabs.MODES -> stringResource(R.string.action_new_mode)
                                                                                 DIYTabs.YOUR_ANDROID ->
                                                                                     stringResource(if (gitHubUser != null) R.string.action_profile else R.string.action_sign_in_github)
                                                                                 else -> null
@@ -1221,6 +1248,7 @@ class MainActivity : AppCompatActivity() {
                                                                             when (route.tab) {
                                                                                 DIYTabs.FREEZE -> { { isSearchActive = true } }
                                                                                 DIYTabs.DIY -> { { showNewAutomationSheet = true } }
+                                                                                DIYTabs.MODES -> { { navViewModel.navigate(AppRoute.ModeEditor()) } }
                                                                                 DIYTabs.YOUR_ANDROID -> {
                                                                                     {
                                                                                         if (gitHubUser != null) {
@@ -1279,6 +1307,14 @@ class MainActivity : AppCompatActivity() {
                                                                 onBack = { navViewModel.pop() },
                                                             )
                                                         }
+                                                    }
+                                                }
+                                                entry<AppRoute.ModeEditor>(metadata = { mapOf(ROUTE_METADATA_KEY to it) }) { route ->
+                                                    UnderlayBlur(route = route, backStack = backStack, lastNavWasPop = navViewModel.lastNavWasPop) {
+                                                        ModeEditorScreen(
+                                                            route = route,
+                                                            onBack = { navViewModel.pop() },
+                                                        )
                                                     }
                                                 }
                                                 entry<AppRoute.FeatureSettings>(metadata = { mapOf(ROUTE_METADATA_KEY to it) }) { route ->
