@@ -1691,7 +1691,7 @@
     <string name="label_motion_blur_amount">Значение</string>
     <string name="crash_logs_title">Логирование крашей</string>
     <string name="crash_logs_desc">Просмотр и отправка логов последнего краша</string>
-    <string name="conscious_gate_reappear_off">Отключить</string>
+    <string name="conscious_gate_reappear_off">Выключено</string>
     <string name="label_charging_mode_limited">Ограниченная</string>
     <string name="diy_category_apps">Приложения</string>
     <string name="label_battery_tab_info">Информация</string>
@@ -2189,7 +2189,7 @@
     <string name="island_media_bubble_wide_title">Wider pill</string>
     <string name="island_media_bubble_fill_art_title">Fill album art</string>
     <string name="island_transparency_title">Прозрачность острова </string>
-    <string name="island_transparency_intensity_title">Transparency intensity</string>
+    <string name="island_transparency_intensity_title">Интенсивность прозрачности </string>
     <string name="island_backdrop_blur_title">Фонарное размытие </string>
     <string name="island_backdrop_blur_incompatible_chip">Device is reporting incompatible</string>
     <string name="island_backdrop_blur_unavailable_os">Backdrop blur needs Android 12 or newer. This device runs an older version, so the system can\'t blur what is behind the island.</string>
@@ -2407,7 +2407,7 @@
     <string name="tile_accessibility_off">Services off</string>
     <string name="about_desc_accessibility_tile">Turn off all accessibility services with one tap and bring them back with another.\n\nUseful for apps that refuse to work while accessibility services are enabled.</string>
     <string name="island_action_show">Show</string>
-    <string name="island_gesture_hints_title">Show gesture hints</string>
+    <string name="island_gesture_hints_title">Показать жесты </string>
     <string name="wallpaper_staging_not_set">Not set yet</string>
     <string name="action_got_it">Понял</string>
     <string name="island_reorder_hide_line">Drag below to hide</string>
@@ -2499,4 +2499,5 @@
     <string name="tour_help_fab">Use this anytime for help</string>
     <string name="action_reset_tour">Reset tour</string>
     <string name="tour_reset_toast">Tour reset</string>
+    <string name="island_reorder_title">Переупорядочивание </string>
 </resources>
