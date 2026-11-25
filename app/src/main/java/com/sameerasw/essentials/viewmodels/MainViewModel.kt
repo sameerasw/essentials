@@ -27,7 +27,6 @@ import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.os.PowerManager
-import android.provider.CalendarContract
 import android.provider.Settings
 import android.util.Log
 import android.view.WindowManager
@@ -50,6 +49,7 @@ import androidx.work.WorkManager
 import com.sameerasw.essentials.EssentialsApp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.island.service.CameraGeometryResolver
+import com.sameerasw.essentials.data.repository.CalendarRepository
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.data.repository.UpdateRepository
 import com.sameerasw.essentials.utils.LogManager
@@ -2181,7 +2181,9 @@ class MainViewModel : ViewModel() {
         isWriteSettingsEnabled.value = PermissionUtils.canWriteSystemSettings(context)
         isNotificationPolicyAccessGranted.value =
             PermissionUtils.hasNotificationPolicyAccess(context)
-        isCalendarPermissionGranted.value = PermissionUtils.hasReadCalendarPermission(context)
+        val calendarGranted = PermissionUtils.hasReadCalendarPermission(context)
+        if (calendarGranted != isCalendarPermissionGranted.value) CalendarRepository.onPermissionChanged(context)
+        isCalendarPermissionGranted.value = calendarGranted
         isUsageStatsPermissionGranted.value = PermissionUtils.hasUsageStatsPermission(context)
 
         isBluetoothPermissionGranted.value = PermissionUtils.hasBluetoothPermission(context)
@@ -6868,41 +6870,15 @@ class MainViewModel : ViewModel() {
                 statusGlanceSelectedCalendarIds.value = savedSelected
             }
 
-            val calendars = mutableListOf<CalendarAccount>()
-            val projection =
-                arrayOf(
-                    CalendarContract.Calendars._ID,
-                    CalendarContract.Calendars.CALENDAR_DISPLAY_NAME,
-                    CalendarContract.Calendars.ACCOUNT_NAME,
-                    CalendarContract.Calendars.CALENDAR_COLOR,
-                )
-
-            context.contentResolver
-                .query(
-                    CalendarContract.Calendars.CONTENT_URI,
-                    projection,
-                    null,
-                    null,
-                    null,
-                )?.use { cursor ->
-                    val idColumn = cursor.getColumnIndex(CalendarContract.Calendars._ID)
-                    val nameColumn = cursor.getColumnIndex(CalendarContract.Calendars.CALENDAR_DISPLAY_NAME)
-                    val accountColumn = cursor.getColumnIndex(CalendarContract.Calendars.ACCOUNT_NAME)
-
-                    while (cursor.moveToNext()) {
-                        val id = cursor.getLong(idColumn)
-                        val name = cursor.getString(nameColumn) ?: context.getString(R.string.calendar_unnamed)
-                        val account = cursor.getString(accountColumn) ?: context.getString(R.string.calendar_local)
-
-                        calendars.add(
-                            CalendarAccount(
-                                id,
-                                name,
-                                account,
-                                savedSelected.isEmpty() || savedSelected.contains(id.toString()),
-                            ),
-                        )
-                    }
+            val calendars =
+                CalendarRepository.queryCalendars(context).map { calendar ->
+                    val id = calendar.id
+                    CalendarAccount(
+                        id,
+                        calendar.name.ifBlank { context.getString(R.string.calendar_unnamed) },
+                        calendar.accountName.ifBlank { context.getString(R.string.calendar_local) },
+                        savedSelected.isEmpty() || savedSelected.contains(id.toString()),
+                    )
                 }
 
             withContext(Dispatchers.Main) {
@@ -7786,41 +7762,15 @@ class MainViewModel : ViewModel() {
                 selectedCalendarIds.value = savedSelected
             }
 
-            val calendars = mutableListOf<CalendarAccount>()
-            val projection =
-                arrayOf(
-                    CalendarContract.Calendars._ID,
-                    CalendarContract.Calendars.CALENDAR_DISPLAY_NAME,
-                    CalendarContract.Calendars.ACCOUNT_NAME,
-                    CalendarContract.Calendars.CALENDAR_COLOR,
-                )
-
-            context.contentResolver
-                .query(
-                    CalendarContract.Calendars.CONTENT_URI,
-                    projection,
-                    null,
-                    null,
-                    null,
-                )?.use { cursor ->
-                    val idColumn = cursor.getColumnIndex(CalendarContract.Calendars._ID)
-                    val nameColumn = cursor.getColumnIndex(CalendarContract.Calendars.CALENDAR_DISPLAY_NAME)
-                    val accountColumn = cursor.getColumnIndex(CalendarContract.Calendars.ACCOUNT_NAME)
-
-                    while (cursor.moveToNext()) {
-                        val id = cursor.getLong(idColumn)
-                        val name = cursor.getString(nameColumn) ?: context.getString(R.string.calendar_unnamed)
-                        val account = cursor.getString(accountColumn) ?: context.getString(R.string.calendar_local)
-
-                        calendars.add(
-                            CalendarAccount(
-                                id,
-                                name,
-                                account,
-                                selectedCalendarIds.value.contains(id.toString()),
-                            ),
-                        )
-                    }
+            val calendars =
+                CalendarRepository.queryCalendars(context).map { calendar ->
+                    val id = calendar.id
+                    CalendarAccount(
+                        id,
+                        calendar.name.ifBlank { context.getString(R.string.calendar_unnamed) },
+                        calendar.accountName.ifBlank { context.getString(R.string.calendar_local) },
+                        selectedCalendarIds.value.contains(id.toString()),
+                    )
                 }
 
             withContext(Dispatchers.Main) {

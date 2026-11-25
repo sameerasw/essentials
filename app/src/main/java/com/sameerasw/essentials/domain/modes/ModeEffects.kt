@@ -60,6 +60,7 @@ object ModeEffects {
         }
 
         entered.forEach { modeId ->
+            ModeAutomation.onModeEntered(context, modeId)
             val mode = modes.find { it.id == modeId } ?: return@forEach
             if (mode.freezesApps) {
                 val claimedByOthers = frozenBy.values.flatten().toSet()

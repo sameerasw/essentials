@@ -95,7 +95,7 @@ fun ModesScreen(
                 viewModel.check(context)
             },
             featureTitle = R.string.tab_modes,
-            permissions = PermissionUIHelper.getPermissionItems(missingPermissions, context, viewModel),
+            permissions = PermissionUIHelper.getPermissionItems(missingPermissions, context, viewModel, context.findActivity()),
         )
     }
 

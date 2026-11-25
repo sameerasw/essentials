@@ -11,22 +11,23 @@ package com.sameerasw.essentials.services
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.database.ContentObserver
-import android.os.Handler
-import android.os.Looper
 import android.provider.CalendarContract
 import android.util.Log
 import com.google.android.gms.wearable.DataMap
 import com.google.android.gms.wearable.PutDataMapRequest
 import com.google.android.gms.wearable.Wearable
+import com.sameerasw.essentials.data.repository.CalendarRepository
 import com.sameerasw.essentials.data.repository.SettingsRepository
 
 object CalendarSyncManager {
     private const val TAG = "CalendarSyncManager"
     private const val SYNC_PATH = "/calendar_events"
+    private const val PAST_BUFFER_MS = 2 * 24 * 60 * 60 * 1000L
+    private const val FUTURE_WINDOW_MS = 10 * 24 * 60 * 60 * 1000L
+    private const val MAX_EVENTS = 50
 
     private var isSyncEnabled = false
-    private var observer: ContentObserver? = null
+    private var listener: (() -> Unit)? = null
 
     fun forceSync(context: Context) {
         val repo = SettingsRepository(context)
@@ -69,37 +70,19 @@ object CalendarSyncManager {
     }
 
     private fun startSync(context: Context) {
-        if (observer != null) return
-
-        // Initial sync
+        if (listener != null) return
         syncEvents(context)
-
-        observer =
-            object : ContentObserver(Handler(Looper.getMainLooper())) {
-                override fun onChange(selfChange: Boolean) {
-                    Log.d(TAG, "Calendar content changed, syncing...")
-                    syncEvents(context)
-                }
-            }
-
-        try {
-            context.contentResolver.registerContentObserver(
-                CalendarContract.Events.CONTENT_URI,
-                true,
-                observer!!,
-            )
-            Log.d(TAG, "Calendar observer registered")
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to register calendar observer", e)
+        val onChanged: () -> Unit = {
+            Log.d(TAG, "Calendar content changed, syncing...")
+            syncEvents(context)
         }
+        listener = onChanged
+        CalendarRepository.addListener(context, onChanged)
     }
 
     private fun stopSync(context: Context) {
-        observer?.let {
-            context.contentResolver.unregisterContentObserver(it)
-            observer = null
-            Log.d(TAG, "Calendar observer unregistered")
-        }
+        listener?.let(CalendarRepository::removeListener)
+        listener = null
     }
 
     private val syncExecutor = java.util.concurrent.Executors.newSingleThreadExecutor { r -> Thread(r, "calendar-sync") }
@@ -114,11 +97,7 @@ object CalendarSyncManager {
             return
         }
 
-        if (androidx.core.content.ContextCompat.checkSelfPermission(
-                context,
-                android.Manifest.permission.READ_CALENDAR,
-            ) != android.content.pm.PackageManager.PERMISSION_GRANTED
-        ) {
+        if (!CalendarRepository.hasPermission(context)) {
             Log.w(TAG, "READ_CALENDAR permission not granted, skipping sync")
             return
         }
@@ -128,91 +107,68 @@ object CalendarSyncManager {
             val repo = SettingsRepository(context)
             val selectedIds = repo.getCalendarSyncSelectedCalendars().mapNotNull { it.toLongOrNull() }.toSet()
 
-            val projection = arrayOf(
-                CalendarContract.Calendars._ID,
-                CalendarContract.Calendars.CALENDAR_DISPLAY_NAME,
-                CalendarContract.Calendars.ACCOUNT_NAME,
-                CalendarContract.Calendars.ACCOUNT_TYPE,
-                CalendarContract.Calendars.VISIBLE,
-                CalendarContract.Calendars.SYNC_EVENTS,
-            )
-            context.contentResolver.query(
-                CalendarContract.Calendars.CONTENT_URI,
-                projection,
-                null,
-                null,
-                null,
-            )?.use { cursor ->
-                val idIndex = cursor.getColumnIndex(CalendarContract.Calendars._ID)
-                val displayNameIndex = cursor.getColumnIndex(CalendarContract.Calendars.CALENDAR_DISPLAY_NAME)
-                val accountNameIndex = cursor.getColumnIndex(CalendarContract.Calendars.ACCOUNT_NAME)
-                val accountTypeIndex = cursor.getColumnIndex(CalendarContract.Calendars.ACCOUNT_TYPE)
-                val visibleIndex = cursor.getColumnIndex(CalendarContract.Calendars.VISIBLE)
-                val syncIndex = cursor.getColumnIndex(CalendarContract.Calendars.SYNC_EVENTS)
+            CalendarRepository.queryCalendars(context).forEach { calendar ->
+                val calId = calendar.id
+                val accountName = calendar.accountName
+                val accountType = calendar.accountType
+                val currentVisible = if (calendar.visible) 1 else 0
+                val currentSync = if (calendar.syncEvents) 1 else 0
+                val isEnabled = selectedIds.isEmpty() || selectedIds.contains(calId)
+                val targetValue = if (isEnabled) 1 else 0
 
-                while (cursor.moveToNext()) {
-                    val calId = cursor.getLong(idIndex)
-                    val accountName = cursor.getString(accountNameIndex)
-                    val accountType = cursor.getString(accountTypeIndex)
-                    val currentVisible = if (visibleIndex != -1) cursor.getInt(visibleIndex) else 1
-                    val currentSync = if (syncIndex != -1) cursor.getInt(syncIndex) else 1
-                    val isEnabled = selectedIds.isEmpty() || selectedIds.contains(calId)
-                    val targetValue = if (isEnabled) 1 else 0
+                if (currentVisible != targetValue || currentSync != targetValue) {
+                    val hasWritePermission = androidx.core.content.ContextCompat.checkSelfPermission(
+                        context,
+                        android.Manifest.permission.WRITE_CALENDAR,
+                    ) == android.content.pm.PackageManager.PERMISSION_GRANTED
 
-                    if (currentVisible != targetValue || currentSync != targetValue) {
-                        val hasWritePermission = androidx.core.content.ContextCompat.checkSelfPermission(
-                            context,
-                            android.Manifest.permission.WRITE_CALENDAR,
-                        ) == android.content.pm.PackageManager.PERMISSION_GRANTED
-
-                        if (hasWritePermission) {
-                            try {
-                                val values = android.content.ContentValues().apply {
-                                    put(CalendarContract.Calendars.VISIBLE, targetValue)
-                                    put(CalendarContract.Calendars.SYNC_EVENTS, targetValue)
-                                }
-
-                                var rows = 0
-                                if (!accountName.isNullOrEmpty() && !accountType.isNullOrEmpty()) {
-                                    val syncAdapterUri = CalendarContract.Calendars.CONTENT_URI.buildUpon()
-                                        .appendQueryParameter(CalendarContract.CALLER_IS_SYNCADAPTER, "true")
-                                        .appendQueryParameter(CalendarContract.Calendars.ACCOUNT_NAME, accountName)
-                                        .appendQueryParameter(CalendarContract.Calendars.ACCOUNT_TYPE, accountType)
-                                        .build()
-                                    rows = context.contentResolver.update(
-                                        syncAdapterUri,
-                                        values,
-                                        "${CalendarContract.Calendars._ID} = ?",
-                                        arrayOf(calId.toString()),
-                                    )
-                                }
-
-                                if (rows == 0) {
-                                    context.contentResolver.update(
-                                        android.content.ContentUris.withAppendedId(CalendarContract.Calendars.CONTENT_URI, calId),
-                                        values,
-                                        null,
-                                        null,
-                                    )
-                                }
-                            } catch (e: Exception) {
-                                Log.w(TAG, "Could not update calendar $calId visibility: ${e.message}")
+                    if (hasWritePermission) {
+                        try {
+                            val values = android.content.ContentValues().apply {
+                                put(CalendarContract.Calendars.VISIBLE, targetValue)
+                                put(CalendarContract.Calendars.SYNC_EVENTS, targetValue)
                             }
+
+                            var rows = 0
+                            if (!accountName.isNullOrEmpty() && !accountType.isNullOrEmpty()) {
+                                val syncAdapterUri = CalendarContract.Calendars.CONTENT_URI.buildUpon()
+                                    .appendQueryParameter(CalendarContract.CALLER_IS_SYNCADAPTER, "true")
+                                    .appendQueryParameter(CalendarContract.Calendars.ACCOUNT_NAME, accountName)
+                                    .appendQueryParameter(CalendarContract.Calendars.ACCOUNT_TYPE, accountType)
+                                    .build()
+                                rows = context.contentResolver.update(
+                                    syncAdapterUri,
+                                    values,
+                                    "${CalendarContract.Calendars._ID} = ?",
+                                    arrayOf(calId.toString()),
+                                )
+                            }
+
+                            if (rows == 0) {
+                                context.contentResolver.update(
+                                    android.content.ContentUris.withAppendedId(CalendarContract.Calendars.CONTENT_URI, calId),
+                                    values,
+                                    null,
+                                    null,
+                                )
+                            }
+                        } catch (e: Exception) {
+                            Log.w(TAG, "Could not update calendar $calId visibility: ${e.message}")
                         }
                     }
+                }
 
-                    if (isEnabled && !accountName.isNullOrEmpty() && !accountType.isNullOrEmpty()) {
-                        try {
-                            val account = android.accounts.Account(accountName, accountType)
-                            android.content.ContentResolver.setIsSyncable(account, CalendarContract.AUTHORITY, 1)
-                            android.content.ContentResolver.setSyncAutomatically(account, CalendarContract.AUTHORITY, true)
-                            val extras = android.os.Bundle().apply {
-                                putBoolean(android.content.ContentResolver.SYNC_EXTRAS_MANUAL, true)
-                                putBoolean(android.content.ContentResolver.SYNC_EXTRAS_EXPEDITED, true)
-                            }
-                            android.content.ContentResolver.requestSync(account, CalendarContract.AUTHORITY, extras)
-                        } catch (_: Exception) { }
-                    }
+                if (isEnabled && !accountName.isNullOrEmpty() && !accountType.isNullOrEmpty()) {
+                    try {
+                        val account = android.accounts.Account(accountName, accountType)
+                        android.content.ContentResolver.setIsSyncable(account, CalendarContract.AUTHORITY, 1)
+                        android.content.ContentResolver.setSyncAutomatically(account, CalendarContract.AUTHORITY, true)
+                        val extras = android.os.Bundle().apply {
+                            putBoolean(android.content.ContentResolver.SYNC_EXTRAS_MANUAL, true)
+                            putBoolean(android.content.ContentResolver.SYNC_EXTRAS_EXPEDITED, true)
+                        }
+                        android.content.ContentResolver.requestSync(account, CalendarContract.AUTHORITY, extras)
+                    } catch (_: Exception) { }
                 }
             }
         } catch (e: Exception) {
@@ -239,88 +195,22 @@ object CalendarSyncManager {
         sendToWearable(context, events, primaryColor, secondaryColor, tertiaryColor)
     }
 
+    // The watch expects the provider's own all-day convention, so this keeps the raw times
     private fun queryUpcomingEvents(context: Context): List<CalendarEvent> {
-        val events = mutableListOf<CalendarEvent>()
         val nowMillis = System.currentTimeMillis()
-        val queryStartMillis = nowMillis - (2 * 24 * 60 * 60 * 1000L) // 2 days past buffer for ongoing/all-day events
-        val queryEndMillis = nowMillis + (10 * 24 * 60 * 60 * 1000L) // Next 10 days
-
-        val repo = SettingsRepository(context)
-        val selectedIds = repo.getCalendarSyncSelectedCalendars().mapNotNull { it.toLongOrNull() }.toSet()
-
-        val builder = CalendarContract.Instances.CONTENT_URI.buildUpon()
-        android.content.ContentUris.appendId(builder, queryStartMillis)
-        android.content.ContentUris.appendId(builder, queryEndMillis)
-
-        val projection = arrayOf(
-            CalendarContract.Instances.EVENT_ID,
-            CalendarContract.Instances.TITLE,
-            CalendarContract.Instances.DESCRIPTION,
-            CalendarContract.Instances.EVENT_LOCATION,
-            CalendarContract.Instances.BEGIN,
-            CalendarContract.Instances.END,
-            CalendarContract.Instances.ALL_DAY,
-            CalendarContract.Instances.DISPLAY_COLOR,
-            CalendarContract.Instances.CALENDAR_DISPLAY_NAME,
-            "account_name",
-            "organizer",
-            CalendarContract.Instances.SELF_ATTENDEE_STATUS,
-            CalendarContract.Instances.CALENDAR_ID,
-        )
-
-        try {
-            val cursor = context.contentResolver.query(
-                builder.build(),
-                projection,
-                null,
-                null,
-                CalendarContract.Instances.BEGIN + " ASC",
-            )
-
-            cursor?.use {
-                val idIndex = it.getColumnIndex(CalendarContract.Instances.EVENT_ID)
-                val titleIndex = it.getColumnIndex(CalendarContract.Instances.TITLE)
-                val locIndex = it.getColumnIndex(CalendarContract.Instances.EVENT_LOCATION)
-                val beginIndex = it.getColumnIndex(CalendarContract.Instances.BEGIN)
-                val endIndex = it.getColumnIndex(CalendarContract.Instances.END)
-                val allDayIndex = it.getColumnIndex(CalendarContract.Instances.ALL_DAY)
-                val statusIndex = it.getColumnIndex(CalendarContract.Instances.SELF_ATTENDEE_STATUS)
-                val calIdIndex = it.getColumnIndex(CalendarContract.Instances.CALENDAR_ID)
-
-                while (it.moveToNext()) {
-                    val calId = it.getLong(calIdIndex)
-                    if (selectedIds.isNotEmpty() && !selectedIds.contains(calId)) {
-                        continue
-                    }
-
-                    if (statusIndex != -1 && it.getInt(statusIndex) == CalendarContract.Attendees.ATTENDEE_STATUS_DECLINED) {
-                        continue
-                    }
-
-                    val rawTitle = it.getString(titleIndex)
-                    if (rawTitle.isNullOrBlank()) {
-                        continue
-                    }
-
-                    val idValue = it.getLong(idIndex)
-                    val title = rawTitle.trim()
-                    val begin = it.getLong(beginIndex)
-                    val end = it.getLong(endIndex)
-                    val isAllDay = it.getInt(allDayIndex) != 0
-                    val location = it.getString(locIndex)
-
-                    events.add(CalendarEvent(idValue, title, begin, end, isAllDay, location))
-                }
-            }
-        } catch (e: Exception) {
-            Log.e(TAG, "Error querying calendar instances", e)
-        }
-
-        return events
+        val selectedIds = SettingsRepository(context).getCalendarSyncSelectedCalendars().mapNotNull { it.toLongOrNull() }.toSet()
+        return CalendarRepository
+            .queryInstances(context, nowMillis - PAST_BUFFER_MS, nowMillis + FUTURE_WINDOW_MS)
+            .asSequence()
+            .filter { selectedIds.isEmpty() || it.calendarId in selectedIds }
+            .filterNot { it.isDeclined }
+            .filter { it.title.isNotBlank() }
+            .map { CalendarEvent(it.eventId, it.title, it.rawBegin, it.rawEnd, it.allDay, it.location) }
             .filter { it.end >= nowMillis || it.begin >= nowMillis }
             .sortedBy { it.begin }
             .distinctBy { "${it.id}_${it.begin}" }
-            .take(50)
+            .take(MAX_EVENTS)
+            .toList()
     }
 
     private fun sendToWearable(

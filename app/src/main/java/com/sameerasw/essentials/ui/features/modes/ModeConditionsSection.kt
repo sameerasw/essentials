@@ -46,6 +46,7 @@ import com.sameerasw.essentials.ui.core.sheets.TimeSelectionSheet
 import com.sameerasw.essentials.ui.core.sheets.WifiNetworkSelectionSheet
 import com.sameerasw.essentials.ui.features.location.sheets.LocationTriggerSheet
 import com.sameerasw.essentials.utils.HapticUtil
+import com.sameerasw.essentials.viewmodels.MainViewModel
 import java.text.DateFormatSymbols
 import java.util.Calendar
 import com.sameerasw.essentials.domain.diy.State as DIYState
@@ -68,6 +69,7 @@ fun ModeConditionsSection(
     askBeforeActivating: Boolean,
     onAskBeforeActivatingChange: (Boolean) -> Unit,
     onMissingPermissions: (List<AppPermission>) -> Unit,
+    viewModel: MainViewModel,
 ) {
     val context = LocalContext.current
     val view = LocalView.current
@@ -89,6 +91,19 @@ fun ModeConditionsSection(
     }
 
     ModeSectionTitle(R.string.mode_section_conditions)
+
+    // Read so a grant made elsewhere refreshes this list on the next permission check
+    viewModel.isCalendarPermissionGranted.value
+    viewModel.isLocationPermissionGranted.value
+    viewModel.isBluetoothPermissionGranted.value
+    viewModel.isPostNotificationsEnabled.value
+    val missing =
+        (conditions.flatMap { it.permissions } + if (askBeforeActivating) listOf("POST_NOTIFICATIONS") else emptyList())
+            .mapNotNull { AppPermission.fromKey(it) }
+            .distinct()
+            .filterNot { it.isGranted(context) }
+    missing.forEach { permission -> ModePermissionRow(permission, viewModel) }
+
     RoundedCardContainer(spacing = 2.dp) {
         conditions.forEachIndexed { index, condition ->
             IconToggleItem(

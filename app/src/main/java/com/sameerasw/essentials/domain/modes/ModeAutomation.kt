@@ -129,6 +129,23 @@ object ModeAutomation {
         if (metConditions[modeId].orEmpty().isNotEmpty()) edit(prefs, KEY_SUPPRESSED) { it + modeId }
     }
 
+    fun onModeEntered(
+        context: Context,
+        modeId: String,
+    ) {
+        edit(prefs(context), KEY_SUPPRESSED) { it - modeId }
+        ModeConfirmNotifier.dismiss(context, modeId)
+    }
+
+    // Changing what turns a mode on is a fresh start, so drop any hold from the old setup
+    fun resetHold(
+        context: Context,
+        modeId: String,
+    ) {
+        edit(prefs(context), KEY_SUPPRESSED) { it - modeId }
+        ModeConfirmNotifier.dismiss(context, modeId)
+    }
+
     fun respond(
         context: Context,
         modeId: String,
