@@ -1976,8 +1976,8 @@
     <string name="unsupported_cap_freeze_desc">允許選擇要凍結的系統應用。凍結錯誤的應用程式可能會導致裝置故障。</string>
     <string name="unsupported_cap_search_title">搜尋不支援的功能</string>
     <string name="unsupported_cap_search_desc">裝置上隱藏的功能會顯示在搜尋結果中，並且可以開啟。</string>
-    <string name="btn_export_config">匯出配置</string>
-    <string name="btn_import_config">匯入配置</string>
+    <string name="btn_export_config">导出配置</string>
+    <string name="btn_import_config">导入配置</string>
     <string name="translation_logged_in_as">以 %1$s 身份登入</string>
     <string name="subreddit_description">這裡是討論 Essentials 和我開發的其他應用的地方。加入社區，為專案貢獻，獲取幫助，還能學到一些東西。 ( ´ ▽ ` )ﾉ</string>
     <string name="label_developer_options">開發人員選項</string>
