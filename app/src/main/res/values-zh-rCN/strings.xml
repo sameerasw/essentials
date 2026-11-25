@@ -40,6 +40,8 @@
     <string name="label_toolbar">Customize toolbar</string>
     <string name="toolbar_section_hidden">Hidden from toolbar</string>
     <string name="toolbar_hidden_hint">Drag items here to remove them from the toolbar. They will show up in the Essentials tab.</string>
+    <string name="toolbar_tab_your_android_desc">Specs and track app updates</string>
+    <string name="toolbar_tab_freeze_no_apps">No apps</string>
     <string name="label_open_with">用其他应用打开</string>
     <string name="label_share_with">分享到</string>
 

@@ -56,6 +56,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -91,7 +92,9 @@ import com.sameerasw.essentials.ui.modifiers.scrollMotionBlur
 import com.sameerasw.essentials.utils.BiometricSecurityHelper
 import com.sameerasw.essentials.utils.PermissionUtils
 import com.sameerasw.essentials.viewmodels.MainViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.withContext
 
 @Composable
 fun SetupFeatures(
@@ -1169,9 +1172,29 @@ fun SetupFeatures(
                                         .padding(horizontal = 16.dp)
                                         .padding(bottom = 12.dp),
                             ) {
+                                val freezePickedApps by viewModel.freezePickedApps
+                                val frozenCount by produceState(0, freezePickedApps, DIYTabs.FREEZE in hiddenTabs) {
+                                    if (DIYTabs.FREEZE !in hiddenTabs) return@produceState
+                                    value =
+                                        withContext(Dispatchers.IO) {
+                                            freezePickedApps.count { FreezeManager.isAppFrozen(context, it.packageName) }
+                                        }
+                                }
                                 hiddenTabs.forEach { tab ->
                                     FeatureCard(
                                         title = tab.displayTitle,
+                                        description =
+                                            when (tab) {
+                                                DIYTabs.YOUR_ANDROID -> stringResource(R.string.toolbar_tab_your_android_desc)
+                                                DIYTabs.DIY -> stringResource(R.string.automation_channel_name)
+                                                DIYTabs.FREEZE ->
+                                                    if (freezePickedApps.isEmpty()) {
+                                                        stringResource(R.string.toolbar_tab_freeze_no_apps)
+                                                    } else {
+                                                        stringResource(R.string.freeze_header_caption, frozenCount, freezePickedApps.size)
+                                                    }
+                                                else -> null
+                                            },
                                         isEnabled = true,
                                         onToggle = {},
                                         showToggle = false,
