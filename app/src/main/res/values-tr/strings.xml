@@ -1422,7 +1422,7 @@ Bazı ayarların değişikliklerin yansıması için gelişmiş izinler veya bel
     <string name="msg_blur_compatibility_error">Android 15 veya daha eski sürümlere sahip Samsung cihazlarda bilinen bir ekran hatasını önlemek için bu cihazda bulanıklık devre dışı bırakıldı.</string>
     <!-- Empty State Actions -->
     <string name="msg_no_apps_frozen">Dondurulacak uygulama seçilmedi.</string>
-    <string name="action_get_started">Başlayın</string>
+    <string name="action_get_started">Başlarken</string>
     <string name="action_new_automation">Yeni Otomasyon</string>
     <string name="action_add_repository">Depo Ekle</string>
     <!-- Bug Report Enhancement -->
@@ -1865,7 +1865,7 @@ Gizlendiğinde, bildirimler ekranınızın üzerinde belirmek yerine bildirim pa
     <string name="duo_action_tap_title">Dokun</string>
     <string name="island_show_network_title">Ağ</string>
     <string name="island_section_notifications">Bildirimler</string>
-    <string name="island_call_options_title">Çağrı</string>
+    <string name="island_call_options_title">Çağrılar</string>
     <string name="island_devices_battery_section">Cihazlar</string>
     <string name="island_like_while_playing_title">Müzik Oynarken Beğen</string>
     <string name="feat_widget_stack_desc">Widget\'ları üst üste yerleştirin ve aralarında geçiş yapın</string>
@@ -1916,9 +1916,9 @@ Düğme yeniden eşleme bir ses seviyesi tuşu için uzun basma eylemi varsa, o 
     <string name="island_preview_ring_title">Hizalama ipucunu göster</string>
     <string name="island_camera_position_center">Orta</string>
     <string name="icon_network_speed">İnternet Hızı</string>
-    <string name="island_section_duration">Timing</string>
+    <string name="island_section_duration">Zamanlama</string>
     <string name="island_section_behavior">Davranış</string>
-    <string name="island_section_interactions">Interactions</string>
+    <string name="island_section_interactions">Etkileşimler</string>
     <string name="island_section_gestures">Gestures</string>
     <string name="island_section_expanded">Expanded island</string>
     <string name="island_section_landscape">Landscape</string>
@@ -2012,14 +2012,14 @@ Bu yalnızca başlatıcı için kullanılır ve tam bir arama yöneticisi değil
     <string name="about_desc_back_gesture">Sistem geri hareketine ince ayar yapın.
 
 Sol ve sağ hareket alanları için kenar genişliklerini ayarlayın ve uygulama bazında geri hareket davranışını belirleyin. Güvenli ayarlar izni gerektirir.</string>
-    <string name="island_chips_title">Island chips</string>
+    <string name="island_chips_title">Ada çipleri</string>
     <string name="island_calendar_compact_time_title">Compact time</string>
     <string name="island_calendar_hide_now_title">Hide \"Now\"</string>
     <string name="feat_aod_wallpaper_compat_title">Uyumluluk modu</string>
     <string name="feat_aod_wallpaper_compat_info_why">Some devices, especially on One UI, pause app animations while the always-on display is showing and skip drawing app windows. This can leave the AOD wallpaper half transparent or invisible, or stuck on screen after waking the device.</string>
     <string name="feat_aod_wallpaper_compat_info_what">Compatibility mode turns off the fade animations of the wallpaper. The wallpaper appears at full strength right away, disappears instantly when the screen wakes, and image changes are applied without a crossfade. Turn it on only if the wallpaper looks faded, never shows, or stays after waking.</string>
     <string name="feat_circle_to_search_gesture_hide_on_shade">Disable on statusbar expansion</string>
-    <string name="island_themed_app_icons_title">Use themed app icons</string>
+    <string name="island_themed_app_icons_title">Temalı uygulama ikonu kullan</string>
     <string name="island_time_day_suffix_title">Show date suffix</string>
     <string name="island_time_tap_opens_clock_title">Tap to open clock</string>
     <string name="diy_cts_method_title">Trigger method</string>
@@ -2091,11 +2091,11 @@ Bazı seçenekler Shizuku veya erişilebilirlik izni gerektirir ve sonuçlar cih
     <string name="island_notif_follow_dnd_title">\"Rahatsız Etmeyin\" modunu takip edin</string>
     <string name="island_notif_follow_dnd_desc">“Rahatsız Etmeyin” modunun sessize aldığı bildirimleri gizle</string>
     <string name="island_notif_keep_progress_title">İlerleme bildirimlerini tut</string>
-    <string name="island_live_updates_title">Live updates</string>
+    <string name="island_live_updates_title">Canlı güncellemeler</string>
     <string name="island_live_updates_count_title">Live updates count</string>
     <string name="island_live_updates_expanded_title">Expanded live update</string>
-    <string name="island_secondary_bubbles_count_title">Secondary bubbles count</string>
-    <string name="island_secondary_bubble_side_title">Secondary bubble placement</string>
+    <string name="island_secondary_bubbles_count_title">İkincil balon sayısı</string>
+    <string name="island_secondary_bubble_side_title">İkincil balon yerleşimi</string>
     <string name="island_notif_keep_progress_desc">İndirmeleri ve diğer devam eden işlemleri göster</string>
     <string name="island_otp_enabled_title">Doğrulama kodlarını algıla</string>
     <string name="island_otp_tap_to_copy_title">Dokunarak kopyala</string>
@@ -2114,13 +2114,13 @@ Bazı seçenekler Shizuku veya erişilebilirlik izni gerektirir ve sonuçlar cih
     <string name="flashlight_speed_label">Hız</string>
     <string name="notification_lighting_ripple_repeat_count_title">Tekrar sayısı</string>
     <string name="notification_lighting_ripple_wave_size_title">Dalga boyutu</string>
-    <string name="island_hide_media_in_owner_app_title">Hide media player inside the app</string>
+    <string name="island_hide_media_in_owner_app_title">Bir uygulamadayken medya oynatıcısını sakla</string>
     <string name="island_show_on_update_title">Periodically show on updates</string>
     <string name="island_provider_chip_title">Show as a chip</string>
-    <string name="island_tap_to_open_expanded_title">Tap to open when expanded</string>
+    <string name="island_tap_to_open_expanded_title">Genişletilmiş haldeyken üstüne basarak aç</string>
     <string name="island_statusbar_aware_width_title">Statusbar aware width</string>
     <string name="debug_ui_margin_overlay_title">Debug UI margin overlay</string>
-    <string name="island_statusbar_ignore_notifications_title">Ignore notifications</string>
+    <string name="island_statusbar_ignore_notifications_title">Bildirimleri yoksay</string>
     <string name="island_neural_expressive_title">Neural Expressive expanded animations</string>
     <string name="island_neural_expressive_always_title">Always show on expansion</string>
     <string name="island_glow_intensity_title">Glow intensity</string>
@@ -2131,18 +2131,18 @@ Bazı seçenekler Shizuku veya erişilebilirlik izni gerektirir ve sonuçlar cih
     <string name="settings_reset_all_hold">Hold to reset all data</string>
     <string name="settings_reset_all_info_title">Essentials verilerini sıfırla</string>
     <string name="settings_reset_all_info_desc">Essentials ayarlarının ve verilerinin tamamını sıfırlar. Sistem ayarları, izinler ve Essentials\'ın cihazınızda değiştirdiği güvenlik ayarları gibi şeyler geri alınmaz.</string>
-    <string name="island_prefer_still_title">Prefer still island</string>
+    <string name="island_prefer_still_title">Sabit ada kullan</string>
     <string name="island_prefer_still_info">Stops the island\'s animations after a few seconds without interaction, so the display can drop to a low refresh rate and save battery. Media visualizers, second by second counters and other looping animations pause until you interact with the island again.</string>
     <string name="island_pulse_shadow_title">Pulse for new notifications</string>
     <string name="island_statusbar_aware_width_info">This may not work on all devices. It works best on Pixels and devices with a status bar close to AOSP.</string>
     <string name="island_statusbar_aware_width_info_tip">Even on those devices, try reducing the number of visible status bar icons to give the island more space.</string>
-    <string name="island_dismiss_direction_title">Dismiss swipe</string>
-    <string name="island_dismiss_direction_horizontal">Horizontal</string>
-    <string name="island_dismiss_direction_down">Down</string>
+    <string name="island_dismiss_direction_title">Geçme davranışı</string>
+    <string name="island_dismiss_direction_horizontal">Yatay</string>
+    <string name="island_dismiss_direction_down">Aşşağa</string>
     <string name="island_media_bubble_title">Show as a bubble</string>
     <string name="island_media_bubble_wide_title">Wider pill</string>
     <string name="island_media_bubble_fill_art_title">Fill album art</string>
-    <string name="island_transparency_title">Island transparency</string>
+    <string name="island_transparency_title">Ada arkaplan opaklığı</string>
     <string name="island_transparency_intensity_title">Transparency intensity</string>
     <string name="island_backdrop_blur_title">Backdrop blur</string>
     <string name="island_backdrop_blur_incompatible_chip">Device is reporting incompatible</string>
@@ -2156,7 +2156,7 @@ Bazı seçenekler Shizuku veya erişilebilirlik izni gerektirir ve sonuçlar cih
     <string name="label_feature_designed_by">Designed by</string>
     <string name="label_how_to_use">Nasıl kullanılır</string>
     <string name="shut_up_how_to_use">1. Grant Write secure settings and Usage access from the permissions prompt. Shizuku is needed for freezing apps.\n\n2. Tap Select Apps and pick the apps that refuse to run with developer options, debugging or accessibility turned on, such as banking or payment apps.\n\n3. Tap an app to choose what gets hidden for it: Developer Options, USB Debugging, Wireless Debugging and Accessibility Services. You can also turn on Auto Freeze to freeze the app after you leave it, and Restore keyboard to switch back to your keyboard afterwards.\n\n4. Tap Create shortcut for each app and add it to your home screen. Always open the app from this shortcut, never from its normal icon, so the settings are turned off before the app starts and can check them.\n\n5. When you leave the app, Shut-Up! waits for the Restoration Delay and then shows a notification. Tap it to turn everything back on. Set Restore mode to Auto if you would rather have the settings restored on their own.\n\nTips: if wireless debugging was turned off, Shizuku may stop working, so enable Attempt Shizuku restart. Use the Keyboard option to pick the keyboard to restore, or leave it on Skip. With Auto Freeze, a notification counts down and lets you freeze now or abort.</string>
-    <string name="island_padding_around_title">Padding around</string>
+    <string name="island_padding_around_title">Boşluk aralığı</string>
     <string name="island_notif_lock_hidden_title">Hidden</string>
     <string name="text_snippets_how_to_use">1. Turn on Text Snippets and grant the Accessibility permission so shortcuts can expand in any app.\n\n2. Pick a Trigger Prefix: ; : @@ or a space.\n\n3. Tap the + button to add a snippet. Enter a keyword without spaces and the text it should expand into.\n\n4. Type the prefix followed by the keyword, for example ;brb, to expand it. With the space prefix, type the keyword and press space.\n\nTips: keywords only expand at the start of a word, so URLs and times are left alone. Password fields are always ignored. Some apps do not allow text replacement and will not expand snippets.</string>
     <string name="label_developer_options">Geliştirici Seçenekleri</string>
@@ -2241,7 +2241,7 @@ Bu izin için sadece şunlara ihtiyaç duyulmaktadır: </string>
     <string name="island_providers_title">Ada uygulamaları</string>
     <string name="duo_section_actions">Eylemler</string>
     <string name="island_gesture_visuals_hint">Ada üzerindeki ses seviyesi, parlaklık ve ses modu değişikliklerini görmek için Zaman ve pil özelliğini açın.</string>
-    <string name="island_secondary_bubble_title">İkincil kabarcık</string>
+    <string name="island_secondary_bubble_title">İkincil balon</string>
     <string name="island_navigation_hide_while_driving_title">Hide while driving</string>
     <string name="island_action_open_label">Open Island</string>
     <string name="tile_accessibility">Accessibility</string>
@@ -2249,7 +2249,7 @@ Bu izin için sadece şunlara ihtiyaç duyulmaktadır: </string>
     <string name="tile_accessibility_off">Services off</string>
     <string name="about_desc_accessibility_tile">Turn off all accessibility services with one tap and bring them back with another.\n\nUseful for apps that refuse to work while accessibility services are enabled.</string>
     <string name="island_action_show">Show</string>
-    <string name="island_gesture_hints_title">Show gesture hints</string>
+    <string name="island_gesture_hints_title">Dokunma ipuçlarını göster</string>
     <string name="wallpaper_staging_not_set">Not set yet</string>
     <string name="pocket_mode_exclude_apps_title">Hariç tutulan uygulamalar</string>
     <string name="action_reorder">Sırala</string>
@@ -2299,7 +2299,7 @@ Bu izin için sadece şunlara ihtiyaç duyulmaktadır: </string>
     <string name="island_provider_pair_refused">This app doesn\'t trust this version of Essentials</string>
     <string name="island_persistent_order_title">Persistent ordering</string>
     <string name="island_persistent_order_info">This mode prioritizes the ordering of the island items rather than moving them around for best balance. This may lead to unexpected spacing.</string>
-    <string name="island_timeout_after_marquee_title">Wait for scrolling text to finish</string>
+    <string name="island_timeout_after_marquee_title">Yazı kaydırma bitene kadar bekle</string>
     <string name="island_calendar_icon_only_title">Icon only</string>
     <string name="config_share_row_title">Share my config</string>
     <string name="config_share_action_share">Share</string>
@@ -2355,7 +2355,7 @@ Bu izin için sadece şunlara ihtiyaç duyulmaktadır: </string>
     <string name="diy_action_show_taps_on">Turn On Show Taps</string>
     <string name="diy_action_show_taps_off">Turn Off Show Taps</string>
     <string name="diy_action_show_taps_toggle">Toggle Show Taps</string>
-    <string name="island_camera_gap_toggle_title">Camera gap</string>
+    <string name="island_camera_gap_toggle_title">Kamera genişliği</string>
     <string name="island_starlink_status_color_title">Status colors</string>
     <string name="island_starlink_offline">Offline</string>
     <string name="tour_toolbar">Long press the toolbar to customize it</string>
@@ -2391,4 +2391,35 @@ Bu izin için sadece şunlara ihtiyaç duyulmaktadır: </string>
     <string name="setting_hidden_debugging_help_2">Bu, bizim de \"Sustur\" özelliğiyle karşı koyduğumuz, saçma güvenlik önlemlerine sahip çöp bankacılık ve diğer uygulamalara karşı koymaya yardımcı olur.</string>
     <string name="setting_hidden_debugging_help_3">Ancak bu, Essentials için algılamayı da bozar. Bu durumda, hala mümkün olan durumu algılamak için Shizuku kabuğunu kullanma seçeneğini etkinleştirin. Kablosuz hata ayıklamanın dikkate alınmadığını unutmayın.</string>
     <string name="action_got_it">Anladım</string>
+    <string name="island_preview_stage_title">Ön gösterim hali</string>
+    <string name="app_colors_auto">Otomatik</string>
+    <string name="duo_camera_size_title">Kamera büyüklüğü</string>
+    <string name="island_expanded_scale_title">Genişletilmiş boyut</string>
+    <string name="island_expanded_width_title">Genişlik açısı</string>
+    <string name="island_expanded_roundness_title">Genişlik kenar yumuşaklığı</string>
+    <string name="island_expanded_padding_title">Genişlik ayrımı</string>
+    <string name="island_expanded_top_padding_title">Genişlik üst boşluğu</string>
+    <string name="island_expanded_bottom_padding_title">Genişlik alt boşluğu</string>
+    <string name="island_keep_on_landscape_title">Yatay modda hâlâ görül</string>
+    <string name="island_bond_scale_title">Birleşmiş ada boyutu</string>
+    <string name="island_camera_position_title">Kamera pozisyonu</string>
+    <string name="island_animation_speed_title">Animasyon hızı</string>
+    <string name="island_show_glow_title">Genişli arkaplan parlaması</string>
+    <string name="island_border_outline_title">Kenar çizgileri</string>
+    <string name="app_colors_custom">Özel</string>
+    <string name="island_themed_text_title">Temalı yazı rengi</string>
+    <string name="island_section_icon_color">İkon renki</string>
+    <string name="island_timeout_title">Gösterim süresi</string>
+    <string name="island_expanded_timeout_title">Genişletilmiş zaman aşımı</string>
+    <string name="island_expanded_timeout_desc">Yineden küçük hapa dönmeden önce verilen zaman aşımı süresi (0 yazarak sonsuz olarak ayarlanır)</string>
+    <string name="island_line_peek_title">Etiket göz atımı</string>
+    <string name="island_line_peek_desc">Düz yazı olarak başlangıç yazı gözükür sonradan normal hale geti döndürür</string>
+    <string name="island_show_when_title">Buna göre göster</string>
+    <string name="island_show_when_unlocked">Kilidi açık</string>
+    <string name="island_show_when_screen_on">Ekran açıkken</string>
+    <string name="island_show_when_always">Herzaman</string>
+    <string name="island_hide_in_fullscreen_title">Tam ekranda sakla</string>
+    <string name="island_suppress_system_heads_up_title">Sistem mesajlarını sakla</string>
+    <string name="island_hide_live_updates_title">Canlı güncellemeleri ada görünür haldeyken sakla</string>
+    <string name="island_dismiss_on_outside_title">Dış aktivitedeyken geç</string>
 </resources>
