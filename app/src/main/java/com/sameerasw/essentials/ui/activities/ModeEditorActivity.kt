@@ -15,6 +15,12 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import com.sameerasw.essentials.utils.HapticUtil
+import com.sameerasw.essentials.translation.TranslatableText
+import androidx.compose.ui.platform.LocalView
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.AlertDialog
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -115,8 +121,7 @@ fun ModeEditorScreen(
 
     val isValid = name.isNotBlank()
 
-    fun save() {
-        val mode =
+    fun draftMode(): Mode =
             (linkBase ?: existing ?: Mode()).copy(
                 name = linkBase?.name ?: name.trim(),
                 colorHex = colorHex,
@@ -131,6 +136,9 @@ fun ModeEditorScreen(
                 exitTripAlarmId = exitTripAlarmId,
                 tripOnStart = tripOnStart,
             )
+
+    fun save() {
+        val mode = draftMode()
         if (existing != null && (existing.conditions != conditions || existing.askBeforeActivating != askBeforeActivating)) {
             ModeAutomation.resetHold(appContext, existing.id)
         }
@@ -143,6 +151,41 @@ fun ModeEditorScreen(
         ModesRepository.remove(mode.id)
         ModesController.requestSync(appContext)
         onBack()
+    }
+
+    val hasUnsavedChanges = if (existing != null) draftMode() != existing else name.isNotBlank()
+    var showDiscardDialog by remember { mutableStateOf(false) }
+    val view = LocalView.current
+    val handleBack = { if (hasUnsavedChanges) showDiscardDialog = true else onBack() }
+    BackHandler { handleBack() }
+
+    if (showDiscardDialog) {
+        AlertDialog(
+            onDismissRequest = { showDiscardDialog = false },
+            title = { TranslatableText(R.string.diy_discard_warning_title) },
+            text = { TranslatableText(R.string.diy_discard_warning_desc) },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        showDiscardDialog = false
+                        onBack()
+                    },
+                ) {
+                    TranslatableText(stringResId = R.string.translation_discard, color = MaterialTheme.colorScheme.error)
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        showDiscardDialog = false
+                    },
+                ) {
+                    TranslatableText(R.string.action_cancel)
+                }
+            },
+        )
     }
 
     var isEditingIdentity by rememberSaveable { mutableStateOf(existing == null) }
@@ -329,7 +372,7 @@ fun ModeEditorScreen(
             spec =
                 BottomBarSpec(
                     title = stringResource(if (existing == null) R.string.action_new_mode else R.string.mode_editor_edit_title),
-                    onBack = onBack,
+                    onBack = handleBack,
                     fabAction = if (isValid) { { save() } } else null,
                     fabIconRes = R.drawable.rounded_check_24,
                     fabContentDescription = stringResource(R.string.action_save),
