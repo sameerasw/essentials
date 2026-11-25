@@ -49,11 +49,8 @@
     <string name="mode_system_settings">Open in system settings</string>
     <string name="mode_section_features">While active</string>
     <string name="mode_section_freeze">Freeze apps</string>
-    <string name="mode_section_start_actions">When mode starts</string>
-    <string name="mode_section_end_actions">When mode ends</string>
     <string name="mode_feature_mobile_data">Mobile data</string>
     <string name="mode_feature_show_taps">Show taps</string>
-    <string name="mode_section_system">System mode</string>
     <string name="mode_link_title">Link a system mode</string>
     <string name="mode_link_none">No system modes left to link</string>
     <string name="mode_unlink">Unlink</string>
@@ -69,6 +66,8 @@
     <string name="mode_exit_trip_empty">No saved destinations yet. Add one in Are we there yet?</string>
     <string name="mode_trip_on_start">When it starts</string>
     <string name="mode_trip_on_end">When it ends</string>
+    <string name="mode_linked_to">Linked to %1$s</string>
+    <string name="mode_owned">Essentials mode</string>
     <string name="diy_calendar_match">Match</string>
     <string name="diy_calendar_title_contains">Event title contains</string>
     <string name="diy_calendar_working_location">Working location only</string>

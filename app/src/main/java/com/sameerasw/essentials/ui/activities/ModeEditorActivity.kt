@@ -15,8 +15,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -24,13 +22,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -38,7 +34,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -63,10 +58,13 @@ import com.sameerasw.essentials.ui.core.sheets.PermissionsBottomSheet
 import com.sameerasw.essentials.ui.features.modes.ModeAppearanceFields
 import com.sameerasw.essentials.ui.features.modes.findActivity
 import com.sameerasw.essentials.ui.features.modes.ModeConditionsSection
+import androidx.compose.runtime.saveable.rememberSaveable
+import com.sameerasw.essentials.ui.core.pickers.SegmentedPicker
+import com.sameerasw.essentials.ui.features.modes.ModeEditorHeader
+import com.sameerasw.essentials.ui.features.modes.ModeCollapsibleSection
 import com.sameerasw.essentials.ui.features.modes.ModeExitTripRow
 import com.sameerasw.essentials.ui.features.modes.ModeFeaturesSection
 import com.sameerasw.essentials.ui.features.modes.ModeFreezeSection
-import com.sameerasw.essentials.ui.features.modes.ModeSectionTitle
 import com.sameerasw.essentials.ui.features.modes.SystemModePickerSheet
 import com.sameerasw.essentials.ui.features.modes.rememberModeIconPainter
 import com.sameerasw.essentials.ui.features.system.ActionSequenceEditor
@@ -147,11 +145,15 @@ fun ModeEditorScreen(
         onBack()
     }
 
-    val previewColor by animateColorAsState(
-        targetValue = runCatching { Color(colorHex.toColorInt()) }.getOrDefault(MaterialTheme.colorScheme.primaryContainer),
-        label = "mode_preview_color",
-    )
-    val previewSize by animateDpAsState(if (isValid) 96.dp else 80.dp, label = "mode_preview_size")
+    var isEditingIdentity by rememberSaveable { mutableStateOf(existing == null) }
+    var customActionsOnStart by rememberSaveable { mutableStateOf(true) }
+    val nothingConfigured =
+        remember {
+            conditions.isEmpty() && features.isEmpty() && freezeTagIds.isEmpty() && freezeCategories.isEmpty() &&
+                entryActions.isEmpty() && exitActions.isEmpty() && exitTripAlarmId == null
+        }
+    val headerColor = runCatching { Color(colorHex.toColorInt()) }.getOrDefault(MaterialTheme.colorScheme.primaryContainer)
+    val settingsIntent = remember(existing?.id, linkBase) { existing?.let { ModesController.systemSettingsIntent(appContext, it.id) } }
 
     Box(
         modifier =
@@ -168,130 +170,126 @@ fun ModeEditorScreen(
                     .padding(horizontal = 16.dp)
                     .padding(bottom = 150.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Box(
-                modifier =
-                    Modifier
-                        .size(previewSize)
-                        .background(previewColor, CircleShape),
-                contentAlignment = Alignment.Center,
+            ModeEditorHeader(
+                icon = linkBase?.let { rememberModeIconPainter(it) } ?: painterResource(ModeIcons.resolve(iconName)),
+                color = headerColor,
+                name = linkBase?.name ?: name,
+                subtitle =
+                    linkBase?.linkedModeName?.let { stringResource(R.string.mode_linked_to, it) }
+                        ?: stringResource(R.string.mode_owned),
+                isEditing = isEditingIdentity,
+                onEditToggle = { isEditingIdentity = !isEditingIdentity },
+                onOpenSystemSettings = settingsIntent?.let { intent -> { runCatching { context.startActivity(intent) } } },
             ) {
-                Icon(
-                    painter = linkBase?.let { rememberModeIconPainter(it) } ?: painterResource(ModeIcons.resolve(iconName)),
-                    contentDescription = null,
-                    tint = Color.Black.copy(alpha = 0.7f),
-                    modifier = Modifier.size(40.dp),
+                ModeAppearanceFields(
+                    name = name,
+                    onNameChange = { name = it },
+                    colorHex = colorHex,
+                    onColorChange = { colorHex = it },
+                    iconName = iconName,
+                    onIconChange = { iconName = it },
+                    identityLocked = linkBase != null,
+                )
+                if (existing != null) {
+                    RoundedCardContainer(spacing = 2.dp) {
+                        linkBase?.linkedModeName?.let { linkedName ->
+                            IconToggleItem(
+                                iconRes = R.drawable.rounded_link_24,
+                                title = linkedName,
+                                showToggle = false,
+                                onClick = {
+                                    if (ModesController.canLinkSystemModes()) {
+                                        showSystemModePicker = true
+                                    } else {
+                                        missingPermissions = listOf(AppPermission.SHIZUKU)
+                                    }
+                                },
+                            )
+                        }
+                        IconToggleItem(
+                            iconRes = if (existing.isLinked) R.drawable.rounded_link_off_24 else R.drawable.rounded_delete_24,
+                            title = stringResource(if (existing.isLinked) R.string.mode_unlink else R.string.action_delete),
+                            showToggle = false,
+                            onClick = { delete(existing) },
+                        )
+                    }
+                }
+            }
+
+            ModeCollapsibleSection(R.string.mode_section_conditions, initiallyExpanded = conditions.isNotEmpty() || nothingConfigured) {
+                ModeConditionsSection(
+                    conditions = conditions,
+                    onConditionsChange = { conditions = it },
+                    askBeforeActivating = askBeforeActivating,
+                    onAskBeforeActivatingChange = { askBeforeActivating = it },
+                    onMissingPermissions = { missingPermissions = it },
+                    viewModel = viewModel,
                 )
             }
 
-            ModeAppearanceFields(
-                name = name,
-                onNameChange = { name = it },
-                colorHex = colorHex,
-                onColorChange = { colorHex = it },
-                iconName = iconName,
-                onIconChange = { iconName = it },
-                identityLocked = linkBase != null,
-            )
-
-            linkBase?.linkedModeName?.let { linkedName ->
-                ModeSectionTitle(R.string.mode_section_system)
-                RoundedCardContainer(spacing = 2.dp) {
-                    IconToggleItem(
-                        iconRes = R.drawable.rounded_link_24,
-                        title = linkedName,
-                        showToggle = false,
-                        onClick = {
-                            if (ModesController.canLinkSystemModes()) {
-                                showSystemModePicker = true
-                            } else {
-                                missingPermissions = listOf(AppPermission.SHIZUKU)
-                            }
-                        },
-                    )
-                }
+            ModeCollapsibleSection(R.string.mode_section_features, initiallyExpanded = features.isNotEmpty()) {
+                ModeFeaturesSection(
+                    features = features,
+                    onFeatureChange = { feature, value ->
+                        features = if (value == null) features - feature.name else features + (feature.name to value)
+                        if (value != null) requirePermissionsFor(feature.action(value))
+                    },
+                )
             }
 
-            ModeConditionsSection(
-                conditions = conditions,
-                onConditionsChange = { conditions = it },
-                askBeforeActivating = askBeforeActivating,
-                onAskBeforeActivatingChange = { askBeforeActivating = it },
-                onMissingPermissions = { missingPermissions = it },
-                viewModel = viewModel,
-            )
+            ModeCollapsibleSection(
+                R.string.mode_section_freeze,
+                initiallyExpanded = freezeTagIds.isNotEmpty() || freezeCategories.isNotEmpty(),
+            ) {
+                ModeFreezeSection(
+                    tagIds = freezeTagIds,
+                    categories = freezeCategories,
+                    onTagChange = { id, checked ->
+                        freezeTagIds = if (checked) freezeTagIds + id else freezeTagIds - id
+                        if (checked) requirePermissionsFor(Action.FreezeApps())
+                    },
+                    onCategoryChange = { category, checked ->
+                        freezeCategories = if (checked) freezeCategories + category else freezeCategories - category
+                        if (checked) requirePermissionsFor(Action.FreezeApps())
+                    },
+                )
+            }
 
-            ModeFeaturesSection(
-                features = features,
-                onFeatureChange = { feature, value ->
-                    features = if (value == null) features - feature.name else features + (feature.name to value)
-                    if (value != null) requirePermissionsFor(feature.action(value))
-                },
-            )
-
-            ModeFreezeSection(
-                tagIds = freezeTagIds,
-                categories = freezeCategories,
-                onTagChange = { id, checked ->
-                    freezeTagIds = if (checked) freezeTagIds + id else freezeTagIds - id
-                    if (checked) requirePermissionsFor(Action.FreezeApps())
-                },
-                onCategoryChange = { category, checked ->
-                    freezeCategories = if (checked) freezeCategories + category else freezeCategories - category
-                    if (checked) requirePermissionsFor(Action.FreezeApps())
-                },
-            )
-
-            ModeExitTripRow(
-                alarmId = exitTripAlarmId,
-                onAlarmChange = { exitTripAlarmId = it },
-                onStart = tripOnStart,
-                onOnStartChange = { tripOnStart = it },
-                viewModel = viewModel,
-            )
-
-            ModeSectionTitle(R.string.mode_section_start_actions)
-            ActionSequenceEditor(
-                viewModel = viewModel,
-                actions = entryActions,
-                onActionsChange = { entryActions = it },
-                screenOnOnly = false,
-                listKey = "mode_entry",
-                emptyText = stringResource(R.string.diy_no_actions),
-                categories = actionCategories,
-            )
-
-            ModeSectionTitle(R.string.mode_section_end_actions)
-            ActionSequenceEditor(
-                viewModel = viewModel,
-                actions = exitActions,
-                onActionsChange = { exitActions = it },
-                screenOnOnly = false,
-                listKey = "mode_exit",
-                emptyText = stringResource(R.string.diy_no_actions),
-                categories = actionCategories,
-            )
-
-            if (existing != null) {
-                RoundedCardContainer(spacing = 2.dp) {
-                    val settingsIntent = remember(existing.id) { ModesController.systemSettingsIntent(appContext, existing.id) }
-                    if (settingsIntent != null) {
-                        IconToggleItem(
-                            iconRes = R.drawable.rounded_open_in_new_24,
-                            title = stringResource(R.string.mode_system_settings),
-                            showToggle = false,
-                            onClick = { runCatching { context.startActivity(settingsIntent) } },
-                        )
-                    }
-                    val isLinked = existing.isLinked
-                    IconToggleItem(
-                        iconRes = if (isLinked) R.drawable.rounded_link_off_24 else R.drawable.rounded_delete_24,
-                        title = stringResource(if (isLinked) R.string.mode_unlink else R.string.action_delete),
-                        showToggle = false,
-                        onClick = { delete(existing) },
+            ModeCollapsibleSection(
+                R.string.button_remap_power_actions,
+                initiallyExpanded = entryActions.isNotEmpty() || exitActions.isNotEmpty(),
+            ) {
+                val startLabel = stringResource(R.string.mode_trip_on_start)
+                val endLabel = stringResource(R.string.mode_trip_on_end)
+                RoundedCardContainer(containerColor = MaterialTheme.colorScheme.surfaceBright) {
+                    SegmentedPicker(
+                        items = listOf(true, false),
+                        selectedItem = customActionsOnStart,
+                        onItemSelected = { customActionsOnStart = it },
+                        labelProvider = { if (it) startLabel else endLabel },
+                        modifier = Modifier.fillMaxWidth(),
                     )
                 }
+                ActionSequenceEditor(
+                    viewModel = viewModel,
+                    actions = if (customActionsOnStart) entryActions else exitActions,
+                    onActionsChange = { if (customActionsOnStart) entryActions = it else exitActions = it },
+                    screenOnOnly = false,
+                    listKey = if (customActionsOnStart) "mode_entry" else "mode_exit",
+                    emptyText = stringResource(R.string.diy_no_actions),
+                    categories = actionCategories,
+                )
+            }
+
+            ModeCollapsibleSection(R.string.tile_location_reached, initiallyExpanded = exitTripAlarmId != null) {
+                ModeExitTripRow(
+                    alarmId = exitTripAlarmId,
+                    onAlarmChange = { exitTripAlarmId = it },
+                    onStart = tripOnStart,
+                    onOnStartChange = { tripOnStart = it },
+                    viewModel = viewModel,
+                )
             }
         }
 

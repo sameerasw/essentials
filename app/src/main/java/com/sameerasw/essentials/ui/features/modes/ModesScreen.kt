@@ -44,6 +44,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.toColorInt
@@ -211,6 +212,14 @@ private fun ModeRow(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
             ) {
+                if (mode.conditions.isNotEmpty()) {
+                    Icon(
+                        painter = painterResource(R.drawable.rounded_auto_awesome_24),
+                        contentDescription = stringResource(R.string.mode_section_conditions),
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(20.dp),
+                    )
+                }
                 VerticalDivider(
                     modifier = Modifier.height(32.dp),
                     color = MaterialTheme.colorScheme.outlineVariant,
