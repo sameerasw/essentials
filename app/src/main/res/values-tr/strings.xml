@@ -86,8 +86,8 @@
     <string name="flashlight_options_title">El feneri seçenekleri</string>
     <string name="flashlight_options_desc">Solmayı ve diğer ayarları düzenleyin</string>
     <string name="setting_pitch_black_theme_title">Zifiri siyah tema</string>
-    <string name="setting_app_color_title">App color</string>
-    <string name="setting_use_system_font_title">Use system font</string>
+    <string name="setting_app_color_title">Uygulama rengi</string>
+    <string name="setting_use_system_font_title">Sistem fontunu kullan</string>
     <string name="app_color_variant_soft">Soft</string>
     <string name="app_color_variant_bright">Bright</string>
     <string name="app_color_variant_neutral">Neutral</string>
@@ -404,7 +404,7 @@
     <string name="hide_notification_icons_desc">Gelen tüm bildirim simgelerini gizler</string>
     <string name="feat_hide_gesture_bar_title">Hareket çubuğunu gizle</string>
     <string name="feat_hide_gesture_bar_desc">Alttaki gezinme çubuğunu gizle</string>
-    <string name="feat_hide_gesture_bar_on_launcher_title">Launcher\'da göster</string>
+    <string name="feat_hide_gesture_bar_on_launcher_title">Uygulama olarak göster</string>
     <string name="feat_hide_gesture_bar_on_launcher_desc">Dinamik olarak hareket çubuğunu yalnızca ana ekranda olduğunuzda gösterir</string>
     <string name="feat_circle_to_search_gesture_title">Aramak için daire hareketi</string>
     <string name="feat_circle_to_search_gesture_desc">Seçerek Arat\'ı başlatmak için alt alana uzun basın</string>
@@ -860,7 +860,7 @@ Bu özelliği etkinleştirmek için güvenli ayarlar yazma izni, zorla kapatma s
     <string name="diy_start_time_label">Başlangıç ​​Zamanı</string>
     <string name="diy_end_time_label">Bitiş Zamanı</string>
     <string name="diy_repeat_days_label">Tekrarla</string>
-    <string name="diy_state_charging">Şarj etme</string>
+    <string name="diy_state_charging">Şarj ediliyor</string>
     <string name="diy_state_screen_on">Ekran Açık</string>
     <string name="diy_action_haptic">Titreşim</string>
     <string name="diy_action_notification">Bildirimi Göster</string>
@@ -1860,7 +1860,7 @@ Gizlendiğinde, bildirimler ekranınızın üzerinde belirmek yerine bildirim pa
     <string name="duo_hide_when_screen_off_only_idle_title">Yalnızca boşta kalındığında AOD\'de gizle</string>
     <string name="duo_hide_when_screen_off_title">Ekran kapalıyken gizle</string>
     <string name="island_hide_on_shade_title">Durum çubuğu genişletildiğinde gizle</string>
-    <string name="duo_match_island_colors_title">Match island colors</string>
+    <string name="duo_match_island_colors_title">Ada rengiyle eşleş</string>
     <string name="duo_material_you_title">Material You renkleri kullan</string>
     <string name="duo_action_tap_title">Dokun</string>
     <string name="island_show_network_title">Ağ</string>
@@ -2422,4 +2422,21 @@ Bu izin için sadece şunlara ihtiyaç duyulmaktadır: </string>
     <string name="island_suppress_system_heads_up_title">Sistem mesajlarını sakla</string>
     <string name="island_hide_live_updates_title">Canlı güncellemeleri ada görünür haldeyken sakla</string>
     <string name="island_dismiss_on_outside_title">Dış aktivitedeyken geç</string>
+    <string name="label_reset_battery_stats_title">Batatya istatiklerini sıfırla</string>
+    <string name="duo_auto_detect_title">Kamerayı otomatik bul</string>
+    <string name="duo_auto_detect_desc">Otomatik şekilde ön kamera yerini bulur</string>
+    <string name="duo_ring_radius_title">Yüzük büyüklüğü</string>
+    <string name="duo_arc_thickness_title">Yüzük kalınlığı</string>
+    <string name="duo_dot_size_title">Bilgi noktası büyüklüğü</string>
+    <string name="duo_show_battery_percentage_title">Batarya yüzdesi</string>
+    <string name="cat_networks">Ağlar</string>
+    <string name="duo_show_progress_title">İlerleme bildirimi</string>
+    <string name="keep_in_full_screen_title">Tam ekranda görünsün</string>
+    <string name="duo_battery_critical_color_title">Kritik biçimde düşük batarya</string>
+    <string name="duo_battery_critical_level_title">Kritik batarya seviyesi</string>
+    <string name="duo_battery_power_save_color_title">Batarya tasarufu</string>
+    <string name="duo_battery_low_color_title">Düşük batarya</string>
+    <string name="duo_battery_low_level_title">Düşük batarya seviyesi</string>
+    <string name="duo_battery_options_title">Batarya seçenekleri</string>
+    <string name="duo_time_options_title">Zaman seçenekleri</string>
 </resources>
