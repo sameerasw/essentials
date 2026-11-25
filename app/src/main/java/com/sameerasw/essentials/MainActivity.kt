@@ -343,6 +343,7 @@ class MainActivity : AppCompatActivity() {
 
                     var showGitHubAuthSheet by remember { mutableStateOf(false) }
                     var showNewAutomationSheet by remember { mutableStateOf(false) }
+                    var showNewModeSheet by remember { mutableStateOf(false) }
                     var isSearchActive by remember { mutableStateOf(false) }
                     var freezeSearchQuery by remember { mutableStateOf("") }
                     var freezeSearchSubmitSignal by remember { androidx.compose.runtime.mutableIntStateOf(0) }
@@ -715,7 +716,9 @@ class MainActivity : AppCompatActivity() {
                                     viewModel = viewModel,
                                     modifier = Modifier.fillMaxSize(),
                                     contentPadding = contentPadding,
-                                    onNewModeClick = { navViewModel.navigate(AppRoute.ModeEditor()) },
+                                    showNewModeSheet = showNewModeSheet,
+                                    onDismissNewModeSheet = { showNewModeSheet = false },
+                                    onNewModeClick = { showNewModeSheet = true },
                                     onModeClick = { navViewModel.navigate(AppRoute.ModeEditor(it)) },
                                 )
                             }
@@ -969,7 +972,7 @@ class MainActivity : AppCompatActivity() {
                                                                         }
 
                                                                         DIYTabs.MODES -> {
-                                                                            navViewModel.navigate(AppRoute.ModeEditor())
+                                                                            showNewModeSheet = true
                                                                         }
                                                                     }
                                                                 },
@@ -1248,7 +1251,7 @@ class MainActivity : AppCompatActivity() {
                                                                             when (route.tab) {
                                                                                 DIYTabs.FREEZE -> { { isSearchActive = true } }
                                                                                 DIYTabs.DIY -> { { showNewAutomationSheet = true } }
-                                                                                DIYTabs.MODES -> { { navViewModel.navigate(AppRoute.ModeEditor()) } }
+                                                                                DIYTabs.MODES -> { { showNewModeSheet = true } }
                                                                                 DIYTabs.YOUR_ANDROID -> {
                                                                                     {
                                                                                         if (gitHubUser != null) {

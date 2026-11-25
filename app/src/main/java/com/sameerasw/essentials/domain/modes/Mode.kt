@@ -28,7 +28,25 @@ data class Mode(
     @SerializedName("freezeCategories") val freezeCategories: Set<Int> = emptySet(),
     @SerializedName("entryActions") val entryActions: List<Action> = emptyList(),
     @SerializedName("exitActions") val exitActions: List<Action> = emptyList(),
+    @SerializedName("linkedModeId") val linkedModeId: String? = null,
+    @SerializedName("linkedModeName") val linkedModeName: String? = null,
+    @SerializedName("linkedIconPackage") val linkedIconPackage: String? = null,
+    @SerializedName("linkedIconName") val linkedIconName: String? = null,
+    @SerializedName("linkedType") val linkedType: Int? = null,
 ) {
+    val isLinked: Boolean
+        get() = linkedModeId != null
+
+    fun linkedTo(systemMode: SystemMode): Mode =
+        copy(
+            name = systemMode.name,
+            linkedModeId = systemMode.id,
+            linkedModeName = systemMode.name,
+            linkedIconPackage = systemMode.iconPackage,
+            linkedIconName = systemMode.iconName,
+            linkedType = systemMode.type,
+        )
+
     val featureOverrides: Map<ModeFeature, Boolean>
         get() = features.mapNotNull { (key, value) -> ModeFeature.fromKey(key)?.let { it to value } }.toMap()
 

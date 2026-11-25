@@ -30,14 +30,22 @@ internal object ZenModeController {
         val name: String,
         val isEnabled: Boolean,
         val type: Int = AutomaticZenRule.TYPE_UNKNOWN,
+        val iconResId: Int = 0,
+        val packageName: String? = null,
     )
 
     enum class Result { DONE, NOT_FOUND, NO_CONDITION }
 
     fun getModes(): List<Mode> =
         modeRules()
-            .map { (id, rule) -> Mode(id, rule.name?.toString().orEmpty(), rule.isEnabled, rule.type) }
-            .sortedBy { it.name.lowercase() }
+            .map { (id, rule) ->
+                Mode(id, rule.name?.toString().orEmpty(), rule.isEnabled, rule.type, rule.iconResId, packageOf(rule))
+            }.sortedBy { it.name.lowercase() }
+
+    private fun packageOf(rule: AutomaticZenRule): String? =
+        runCatching { AutomaticZenRule::class.java.getMethod("getPackageName").invoke(rule) as? String }.getOrNull()
+            ?: rule.owner?.packageName
+            ?: rule.configurationActivity?.packageName
 
     fun activeModes(): List<Mode> =
         modeRules()

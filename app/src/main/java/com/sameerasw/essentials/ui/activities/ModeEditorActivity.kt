@@ -13,6 +13,7 @@ import android.app.Activity
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
@@ -23,24 +24,19 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -48,7 +44,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.toColorInt
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -60,16 +55,16 @@ import com.sameerasw.essentials.domain.modes.Mode
 import com.sameerasw.essentials.domain.modes.ModeIcons
 import com.sameerasw.essentials.domain.modes.ModesController
 import com.sameerasw.essentials.domain.modes.ModesRepository
-import com.sameerasw.essentials.translation.TranslatableText
-import com.sameerasw.essentials.ui.components.FreezeTagColorPicker
-import com.sameerasw.essentials.ui.components.FreezeTagIconPicker
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.sheets.PRESET_PASTEL_COLORS
 import com.sameerasw.essentials.ui.core.sheets.PermissionsBottomSheet
+import com.sameerasw.essentials.ui.features.modes.ModeAppearanceFields
 import com.sameerasw.essentials.ui.features.modes.ModeFeaturesSection
 import com.sameerasw.essentials.ui.features.modes.ModeFreezeSection
 import com.sameerasw.essentials.ui.features.modes.ModeSectionTitle
+import com.sameerasw.essentials.ui.features.modes.SystemModePickerSheet
+import com.sameerasw.essentials.ui.features.modes.rememberModeIconPainter
 import com.sameerasw.essentials.ui.features.system.ActionSequenceEditor
 import com.sameerasw.essentials.ui.navigation.AppRoute
 import com.sameerasw.essentials.ui.navigation.AppRoutes
@@ -78,8 +73,6 @@ import com.sameerasw.essentials.ui.navigation.ProvideBottomBar
 import com.sameerasw.essentials.utils.AutomationFailureNotifier
 import com.sameerasw.essentials.utils.PermissionUIHelper
 import com.sameerasw.essentials.viewmodels.MainViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 @Composable
 fun ModeEditorScreen(
@@ -88,7 +81,6 @@ fun ModeEditorScreen(
 ) {
     val context = LocalContext.current
     val appContext = context.applicationContext
-    val scope = rememberCoroutineScope()
     val viewModel: MainViewModel = viewModel()
     LaunchedEffect(Unit) { viewModel.check(context) }
 
@@ -106,6 +98,8 @@ fun ModeEditorScreen(
     var entryActions by remember { mutableStateOf(existing?.entryActions ?: emptyList()) }
     var exitActions by remember { mutableStateOf(existing?.exitActions ?: emptyList()) }
     var missingPermissions by remember { mutableStateOf<List<AppPermission>>(emptyList()) }
+    var linkBase by remember { mutableStateOf(existing?.takeIf { it.isLinked }) }
+    var showSystemModePicker by remember { mutableStateOf(false) }
     val actionCategories = remember { ActionRegistry.getCategories() }
 
     fun requirePermissionsFor(action: Action) {
@@ -117,8 +111,8 @@ fun ModeEditorScreen(
 
     fun save() {
         val mode =
-            (existing ?: Mode()).copy(
-                name = name.trim(),
+            (linkBase ?: existing ?: Mode()).copy(
+                name = linkBase?.name ?: name.trim(),
                 colorHex = colorHex,
                 iconName = iconName,
                 features = features,
@@ -128,13 +122,13 @@ fun ModeEditorScreen(
                 exitActions = exitActions,
             )
         ModesRepository.upsert(mode)
-        scope.launch(Dispatchers.IO) { ModesController.sync(appContext, reapply = true) }
+        ModesController.requestSync(appContext, reapply = true)
         onBack()
     }
 
     fun delete(mode: Mode) {
         ModesRepository.remove(mode.id)
-        scope.launch(Dispatchers.IO) { ModesController.sync(appContext) }
+        ModesController.requestSync(appContext)
         onBack()
     }
 
@@ -169,61 +163,37 @@ fun ModeEditorScreen(
                 contentAlignment = Alignment.Center,
             ) {
                 Icon(
-                    painter = painterResource(ModeIcons.resolve(iconName)),
+                    painter = linkBase?.let { rememberModeIconPainter(it) } ?: painterResource(ModeIcons.resolve(iconName)),
                     contentDescription = null,
                     tint = Color.Black.copy(alpha = 0.7f),
                     modifier = Modifier.size(40.dp),
                 )
             }
 
-            RoundedCardContainer(spacing = 2.dp) {
-                Box(
-                    modifier =
-                        Modifier
-                            .fillMaxWidth()
-                            .background(MaterialTheme.colorScheme.surfaceBright, MaterialTheme.shapes.extraSmall)
-                            .padding(12.dp),
-                ) {
-                    OutlinedTextField(
-                        value = name,
-                        onValueChange = { name = it },
-                        placeholder = { TranslatableText(R.string.mode_name_hint) },
-                        modifier = Modifier.fillMaxWidth(),
-                        singleLine = true,
-                        shape = MaterialTheme.shapes.medium,
-                        colors =
-                            OutlinedTextFieldDefaults.colors(
-                                focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-                                unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-                            ),
-                        keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Words),
-                    )
-                }
+            ModeAppearanceFields(
+                name = name,
+                onNameChange = { name = it },
+                colorHex = colorHex,
+                onColorChange = { colorHex = it },
+                iconName = iconName,
+                onIconChange = { iconName = it },
+                identityLocked = linkBase != null,
+            )
 
-                Box(
-                    modifier =
-                        Modifier
-                            .fillMaxWidth()
-                            .background(MaterialTheme.colorScheme.surfaceBright, MaterialTheme.shapes.extraSmall)
-                            .padding(16.dp),
-                ) {
-                    FreezeTagColorPicker(
-                        selectedColorHex = colorHex,
-                        onColorSelected = { colorHex = it },
-                    )
-                }
-
-                Box(
-                    modifier =
-                        Modifier
-                            .fillMaxWidth()
-                            .background(MaterialTheme.colorScheme.surfaceBright, MaterialTheme.shapes.extraSmall)
-                            .padding(16.dp),
-                ) {
-                    FreezeTagIconPicker(
-                        selectedIconName = iconName,
-                        onIconSelected = { iconName = it },
-                        icons = ModeIcons.names,
+            linkBase?.linkedModeName?.let { linkedName ->
+                ModeSectionTitle(R.string.mode_section_system)
+                RoundedCardContainer(spacing = 2.dp) {
+                    IconToggleItem(
+                        iconRes = R.drawable.rounded_link_24,
+                        title = linkedName,
+                        showToggle = false,
+                        onClick = {
+                            if (ModesController.canLinkSystemModes()) {
+                                showSystemModePicker = true
+                            } else {
+                                missingPermissions = listOf(AppPermission.SHIZUKU)
+                            }
+                        },
                     )
                 }
             }
@@ -290,6 +260,26 @@ fun ModeEditorScreen(
                     )
                 }
             }
+        }
+
+        if (showSystemModePicker && Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
+            val takenIds =
+                remember {
+                    ModesRepository.modes.value
+                        .filter { it.id != existing?.id }
+                        .mapNotNull { it.linkedModeId }
+                        .toSet()
+                }
+            SystemModePickerSheet(
+                selectedId = linkBase?.linkedModeId,
+                excludedIds = takenIds,
+                onDismiss = { showSystemModePicker = false },
+                onSelect = { systemMode ->
+                    linkBase = (linkBase ?: existing ?: Mode()).linkedTo(systemMode)
+                    name = systemMode.name
+                    showSystemModePicker = false
+                },
+            )
         }
 
         if (missingPermissions.isNotEmpty()) {

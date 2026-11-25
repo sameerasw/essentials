@@ -170,6 +170,8 @@ fun initPermissionRegistry() {
     // Notification policy permission
     PermissionRegistry.register("NOTIFICATION_POLICY", R.string.feat_sound_modes_title)
     PermissionRegistry.register("NOTIFICATION_POLICY", R.string.tab_modes)
+    PermissionRegistry.register("SHIZUKU", R.string.tab_modes)
+    PermissionRegistry.register("ROOT", R.string.tab_modes)
 
     // Default browser permission
     PermissionRegistry.register("DEFAULT_BROWSER", R.string.feat_link_actions_title)
