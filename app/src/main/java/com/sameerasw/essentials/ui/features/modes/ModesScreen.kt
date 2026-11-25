@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -28,6 +29,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Switch
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -174,13 +177,32 @@ private fun ModeRow(
         remember(mode.colorHex) { runCatching { Color(mode.colorHex.toColorInt()) }.getOrNull() }
             ?: MaterialTheme.colorScheme.primaryContainer
 
+    val view = LocalView.current
+    val canToggle = mode.isEnabled && canSwitch
+
     IconToggleItem(
         title = mode.name,
-        isChecked = isActive,
-        onCheckedChange = onActiveChange,
-        enabled = mode.isEnabled && canSwitch,
+        showToggle = false,
         onClick = onClick,
-        onDisabledClick = onClick,
+        trailingContent = {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+            ) {
+                VerticalDivider(
+                    modifier = Modifier.height(32.dp),
+                    color = MaterialTheme.colorScheme.outlineVariant,
+                )
+                Switch(
+                    checked = isActive,
+                    onCheckedChange = {
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        onActiveChange(it)
+                    },
+                    enabled = canToggle,
+                )
+            }
+        },
         leadingIcon = {
             Box(
                 modifier =

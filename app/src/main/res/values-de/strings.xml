@@ -37,6 +37,7 @@
     <string name="mode_section_system">System mode</string>
     <string name="mode_link_title">Link a system mode</string>
     <string name="mode_link_none">No system modes left to link</string>
+    <string name="mode_unlink">Unlink</string>
     <string name="toolbar_tab_your_android_desc">Specs and track app updates</string>
     <string name="toolbar_tab_freeze_no_apps">No apps</string>
     <!-- App Lock -->
