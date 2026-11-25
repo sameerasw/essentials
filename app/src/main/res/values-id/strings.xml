@@ -323,6 +323,14 @@ Anda dapat menyesuaikan gaya animasi, warna, dan perilakunya. Fitur ini berfungs
     <string name="label_toolbar">Customize toolbar</string>
     <string name="toolbar_section_hidden">Hidden from toolbar</string>
     <string name="toolbar_hidden_hint">Drag items here to remove them from the toolbar. They will show up in the Essentials tab.</string>
+    <string name="tab_modes">Modes</string>
+    <string name="modes_active_count">%1$d active</string>
+    <string name="modes_empty">No modes yet</string>
+    <string name="modes_unsupported">Modes need Android 15 or newer</string>
+    <string name="action_new_mode">New mode</string>
+    <string name="mode_editor_edit_title">Edit mode</string>
+    <string name="mode_name_hint">Mode name</string>
+    <string name="mode_system_settings">Open in system settings</string>
     <string name="toolbar_tab_your_android_desc">Specs and track app updates</string>
     <string name="toolbar_tab_freeze_no_apps">No apps</string>
 </resources>

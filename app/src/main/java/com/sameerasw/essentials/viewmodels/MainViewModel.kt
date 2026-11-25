@@ -57,6 +57,8 @@ import com.sameerasw.essentials.domain.HapticFeedbackType
 import com.sameerasw.essentials.domain.MapsState
 import com.sameerasw.essentials.domain.controller.CaffeinateController
 import com.sameerasw.essentials.domain.diy.Action
+import com.sameerasw.essentials.domain.modes.ModesController
+import com.sameerasw.essentials.domain.modes.ModesRepository
 import com.sameerasw.essentials.domain.model.AppIcon
 import com.sameerasw.essentials.domain.model.AppSelection
 import com.sameerasw.essentials.domain.model.BackGestureAppConfig
@@ -9894,6 +9896,8 @@ class MainViewModel : ViewModel() {
             settingsRepository.syncSystemSettingsWithSaved()
             com.sameerasw.essentials.domain.diy.DIYRepository
                 .reloadAutomations()
+            ModesRepository.reload()
+            viewModelScope.launch(Dispatchers.IO) { ModesController.sync(context.applicationContext) }
             refreshFreezePickedApps(context, silent = true)
             check(context)
         }

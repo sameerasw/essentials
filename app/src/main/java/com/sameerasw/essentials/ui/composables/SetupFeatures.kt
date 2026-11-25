@@ -54,6 +54,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
@@ -70,6 +71,7 @@ import androidx.core.net.toUri
 import androidx.fragment.app.FragmentActivity
 import com.sameerasw.essentials.FeatureSettingsActivity
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.domain.modes.ModesController
 import com.sameerasw.essentials.domain.registry.FeatureRegistry
 import com.sameerasw.essentials.domain.registry.PermissionRegistry
 import com.sameerasw.essentials.domain.registry.QSTileRegistry
@@ -1180,6 +1182,8 @@ fun SetupFeatures(
                                             freezePickedApps.count { FreezeManager.isAppFrozen(context, it.packageName) }
                                         }
                                 }
+                                val activeModeIds by ModesController.activeModeIds.collectAsState()
+                                val activeModeCount = activeModeIds.size
                                 hiddenTabs.forEach { tab ->
                                     FeatureCard(
                                         title = tab.displayTitle,
@@ -1187,6 +1191,7 @@ fun SetupFeatures(
                                             when (tab) {
                                                 DIYTabs.YOUR_ANDROID -> stringResource(R.string.toolbar_tab_your_android_desc)
                                                 DIYTabs.DIY -> stringResource(R.string.automation_channel_name)
+                                                DIYTabs.MODES -> stringResource(R.string.modes_active_count, activeModeCount)
                                                 DIYTabs.FREEZE ->
                                                     if (freezePickedApps.isEmpty()) {
                                                         stringResource(R.string.toolbar_tab_freeze_no_apps)

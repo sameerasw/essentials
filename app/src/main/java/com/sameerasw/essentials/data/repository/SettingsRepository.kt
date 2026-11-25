@@ -22,6 +22,7 @@ import com.sameerasw.essentials.domain.controller.BackGestureController
 import com.sameerasw.essentials.domain.controller.BackGestureStore
 import com.sameerasw.essentials.domain.diy.Action
 import com.sameerasw.essentials.domain.diy.ActionGsonAdapter
+import com.sameerasw.essentials.domain.modes.ModesRepository
 import com.sameerasw.essentials.domain.model.AppIcon
 import com.sameerasw.essentials.domain.model.AppSelection
 import com.sameerasw.essentials.domain.model.BackGestureAppConfig
@@ -988,6 +989,7 @@ class SettingsRepository(
                 "link_prefs",
                 "diy_automations_prefs",
                 "live_wallpaper_prefs",
+                ModesRepository.PREFS_NAME,
             )
     }
 
@@ -1453,7 +1455,7 @@ class SettingsRepository(
 
     fun getToolbarTabs(): List<DIYTabs> {
         val movable = DIYTabs.MOVABLE
-        val raw = prefs.getString(KEY_TOOLBAR_TABS, null) ?: return movable
+        val raw = prefs.getString(KEY_TOOLBAR_TABS, null) ?: return DIYTabs.DEFAULT_VISIBLE
         return raw
             .split(",")
             .mapNotNull { name -> movable.find { it.name == name } }
