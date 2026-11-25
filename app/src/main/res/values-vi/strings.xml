@@ -17,6 +17,9 @@
     <string name="check_pre_releases_label">Kiểm tra các bản phát hành trước</string>
     <string name="check_pre_releases_desc">Có thể không ổn định</string>
     <string name="label_default_tab">Thẻ mặc định</string>
+    <string name="label_toolbar">Customize toolbar</string>
+    <string name="toolbar_section_hidden">Hidden from toolbar</string>
+    <string name="toolbar_hidden_hint">Drag items here to remove them from the toolbar. They will show up in the Essentials tab.</string>
     <!-- App Lock -->
     <string name="settings_section_security">Bảo vệ</string>
     <string name="app_lock_enable_title">Bật khóa ứng dụng</string>

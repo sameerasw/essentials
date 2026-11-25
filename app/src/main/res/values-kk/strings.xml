@@ -36,6 +36,9 @@
     <string name="check_pre_releases_label">Алдын ала нұсқаларды тексеру</string>
     <string name="check_pre_releases_desc">Тұрақсыз болуы мүмкін</string>
     <string name="label_default_tab">Әдепкі қойынды</string>
+    <string name="label_toolbar">Customize toolbar</string>
+    <string name="toolbar_section_hidden">Hidden from toolbar</string>
+    <string name="toolbar_hidden_hint">Drag items here to remove them from the toolbar. They will show up in the Essentials tab.</string>
     <string name="label_open_with">Көмегімен ашу</string>
     <string name="label_share_with">Бөлісу</string>
 

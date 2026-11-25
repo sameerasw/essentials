@@ -26,4 +26,15 @@ enum class DIYTabs(
     YOUR_ANDROID(R.string.tab_your_android, "", R.drawable.rounded_mobile_24),
     DIY(R.string.tab_diy, R.string.tab_diy_subtitle, R.drawable.rounded_experiment_24),
     SETTINGS(R.string.label_settings, "", R.drawable.rounded_settings_24),
+    ;
+
+    @get:StringRes
+    val displayTitle: Int
+        get() = if (this == FREEZE) R.string.tab_freeze_title else title
+
+    companion object {
+        val MOVABLE = listOf(FREEZE, YOUR_ANDROID, DIY)
+
+        fun toolbarTabs(middle: List<DIYTabs>): List<DIYTabs> = listOf(ESSENTIALS) + middle + SETTINGS
+    }
 }

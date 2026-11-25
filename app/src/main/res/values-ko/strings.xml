@@ -17,6 +17,9 @@
     <string name="check_pre_releases_label">개발 버전 확인</string>
     <string name="check_pre_releases_desc">불안정할 수도 있음</string>
     <string name="label_default_tab">기본 탭</string>
+    <string name="label_toolbar">Customize toolbar</string>
+    <string name="toolbar_section_hidden">Hidden from toolbar</string>
+    <string name="toolbar_hidden_hint">Drag items here to remove them from the toolbar. They will show up in the Essentials tab.</string>
     <!-- App Lock -->
     <string name="settings_section_security">보안</string>
     <string name="app_lock_enable_title">앱 잠금 활성화</string>

@@ -21,6 +21,9 @@
     <string name="check_pre_releases_label">Tjek for pre-releases</string>
     <string name="check_pre_releases_desc">Kan være ustabil</string>
     <string name="label_default_tab">Default tab</string>
+    <string name="label_toolbar">Customize toolbar</string>
+    <string name="toolbar_section_hidden">Hidden from toolbar</string>
+    <string name="toolbar_hidden_hint">Drag items here to remove them from the toolbar. They will show up in the Essentials tab.</string>
     <!-- App Lock -->
     <string name="settings_section_security">Sikkerhed</string>
     <string name="app_lock_enable_title">Aktiver applås</string>

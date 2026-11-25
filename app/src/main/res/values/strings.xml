@@ -48,6 +48,9 @@
     <string name="pre_release_restart_notice">The app must restart to apply this update channel change cleanly.</string>
     <string name="action_restart_app">Restart app</string>
     <string name="label_default_tab">Default tab</string>
+    <string name="label_toolbar">Customize toolbar</string>
+    <string name="toolbar_section_hidden">Hidden from toolbar</string>
+    <string name="toolbar_hidden_hint">Drag items here to remove them from the toolbar. They will show up in the Essentials tab.</string>
     <string name="setting_app_icon_title">App icon</string>
     <string name="setting_app_icon_desc">Customize the home screen launcher icon</string>
     <string name="app_icon_default">Default</string>
