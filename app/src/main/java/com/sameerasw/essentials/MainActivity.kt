@@ -142,6 +142,8 @@ import com.sameerasw.essentials.ui.composables.FreezeGridUI
 import com.sameerasw.essentials.ui.composables.SetupFeatures
 import com.sameerasw.essentials.ui.composables.WelcomeScreen
 import com.sameerasw.essentials.ui.features.modes.ModesScreen
+import com.sameerasw.essentials.ui.core.sheets.FeatureHelpSheet
+import com.sameerasw.essentials.domain.registry.TabHelpFeatures
 import com.sameerasw.essentials.ui.core.sheets.AddRepoBottomSheet
 import com.sameerasw.essentials.ui.core.sheets.GitHubAuthSheet
 import com.sameerasw.essentials.ui.core.sheets.InstructionsBottomSheet
@@ -344,6 +346,10 @@ class MainActivity : AppCompatActivity() {
                     var showGitHubAuthSheet by remember { mutableStateOf(false) }
                     var showNewAutomationSheet by remember { mutableStateOf(false) }
                     var showNewModeSheet by remember { mutableStateOf(false) }
+                    var helpTab by remember { mutableStateOf<DIYTabs?>(null) }
+                    helpTab?.let { tab ->
+                        FeatureHelpSheet(TabHelpFeatures.forTab(tab), viewModel) { helpTab = null }
+                    }
                     var isSearchActive by remember { mutableStateOf(false) }
                     var freezeSearchQuery by remember { mutableStateOf("") }
                     var freezeSearchSubmitSignal by remember { androidx.compose.runtime.mutableIntStateOf(0) }
@@ -694,6 +700,7 @@ class MainActivity : AppCompatActivity() {
                                     },
                                     searchQuery = freezeSearchQuery,
                                     searchSubmitSignal = freezeSearchSubmitSignal,
+                                    onHelpClick = { helpTab = DIYTabs.FREEZE },
                                 )
                             }
 
@@ -708,6 +715,7 @@ class MainActivity : AppCompatActivity() {
                                     onNewAutomationClick = {
                                         showNewAutomationSheet = true
                                     },
+                                    onHelpClick = { helpTab = DIYTabs.DIY },
                                 )
                             }
 
@@ -720,6 +728,7 @@ class MainActivity : AppCompatActivity() {
                                     onDismissNewModeSheet = { showNewModeSheet = false },
                                     onNewModeClick = { showNewModeSheet = true },
                                     onModeClick = { navViewModel.navigate(AppRoute.ModeEditor(it)) },
+                                    onHelpClick = { helpTab = DIYTabs.MODES },
                                 )
                             }
 
@@ -736,6 +745,7 @@ class MainActivity : AppCompatActivity() {
                                     onAddRepoClick = { showAddRepoSheet = true },
                                     onShowReleaseNotes = { repoToShowReleaseNotesFullName = it },
                                     modifier = Modifier.fillMaxSize(),
+                                    onHelpClick = { helpTab = DIYTabs.YOUR_ANDROID },
                                 )
                             }
 
@@ -1230,6 +1240,7 @@ class MainActivity : AppCompatActivity() {
                                                                     BottomBarSpec(
                                                                         title = stringResource(route.tab.displayTitle),
                                                                         onBack = { navViewModel.pop() },
+                                                                        onHelpClick = { helpTab = route.tab },
                                                                         fabIconRes =
                                                                             when (route.tab) {
                                                                                 DIYTabs.FREEZE -> R.drawable.rounded_search_24
