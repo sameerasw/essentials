@@ -34,8 +34,10 @@ import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -56,8 +58,10 @@ import com.sameerasw.essentials.ui.components.PullTitleHeader
 import com.sameerasw.essentials.ui.components.rememberPullTitleHeaderState
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
+import com.sameerasw.essentials.ui.core.sheets.PermissionsBottomSheet
 import com.sameerasw.essentials.ui.modifiers.scrollMotionBlur
 import com.sameerasw.essentials.utils.HapticUtil
+import com.sameerasw.essentials.utils.PermissionUIHelper
 import com.sameerasw.essentials.viewmodels.MainViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -80,6 +84,20 @@ fun ModesScreen(
     val modes by ModesRepository.modes.collectAsState()
     val activeIds by ModesController.activeModeIds.collectAsState()
     val hasAccess by viewModel.isNotificationPolicyAccessGranted
+    val shizukuGranted by viewModel.isShizukuPermissionGranted
+    val canLink = remember(shizukuGranted) { ModesController.canLinkSystemModes() }
+    var missingPermissions by remember { mutableStateOf<List<AppPermission>>(emptyList()) }
+
+    if (missingPermissions.isNotEmpty()) {
+        PermissionsBottomSheet(
+            onDismissRequest = {
+                missingPermissions = emptyList()
+                viewModel.check(context)
+            },
+            featureTitle = R.string.tab_modes,
+            permissions = PermissionUIHelper.getPermissionItems(missingPermissions, context, viewModel),
+        )
+    }
 
     LifecycleResumeEffect(hasAccess) {
         ModesController.requestSync(appContext)
@@ -152,8 +170,12 @@ fun ModesScreen(
                         ModeRow(
                             mode = mode,
                             isActive = mode.id in activeIds,
-                            canSwitch = if (mode.isLinked) ModesController.canLinkSystemModes() else hasAccess,
+                            canSwitch = if (mode.isLinked) canLink else hasAccess,
                             onClick = { onModeClick(mode.id) },
+                            onMissingPermission = {
+                                missingPermissions =
+                                    listOf(if (mode.isLinked) AppPermission.SHIZUKU else AppPermission.NOTIFICATION_POLICY)
+                            },
                             onActiveChange = { active ->
                                 scope.launch(Dispatchers.IO) { ModesController.setActive(appContext, mode.id, active) }
                             },
@@ -171,6 +193,7 @@ private fun ModeRow(
     isActive: Boolean,
     canSwitch: Boolean,
     onClick: () -> Unit,
+    onMissingPermission: () -> Unit,
     onActiveChange: (Boolean) -> Unit,
 ) {
     val color =
@@ -178,7 +201,6 @@ private fun ModeRow(
             ?: MaterialTheme.colorScheme.primaryContainer
 
     val view = LocalView.current
-    val canToggle = mode.isEnabled && canSwitch
 
     IconToggleItem(
         title = mode.name,
@@ -197,9 +219,9 @@ private fun ModeRow(
                     checked = isActive,
                     onCheckedChange = {
                         HapticUtil.performVirtualKeyHaptic(view)
-                        onActiveChange(it)
+                        if (canSwitch) onActiveChange(it) else onMissingPermission()
                     },
-                    enabled = canToggle,
+                    enabled = mode.isEnabled,
                 )
             }
         },
