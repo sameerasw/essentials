@@ -57,6 +57,7 @@ object ModeEffects {
             val toUnfreeze = claimed - stillWanted
             if (toUnfreeze.isNotEmpty()) run(context, listOf(Action.UnfreezeApps(toUnfreeze.toList())))
             modes.find { it.id == modeId }?.exitActions?.takeIf { it.isNotEmpty() }?.let { run(context, it) }
+            modes.find { it.id == modeId }?.takeIf { !it.tripOnStart }?.exitTripAlarmId?.let { ModeTripStarter.start(context, it) }
         }
 
         entered.forEach { modeId ->
@@ -78,7 +79,9 @@ object ModeEffects {
         applyFeatures(context, prefs, modes.filter { it.id in activeIds })
 
         entered.forEach { modeId ->
-            modes.find { it.id == modeId }?.entryActions?.takeIf { it.isNotEmpty() }?.let { run(context, it) }
+            val mode = modes.find { it.id == modeId } ?: return@forEach
+            mode.entryActions.takeIf { it.isNotEmpty() }?.let { run(context, it) }
+            if (mode.tripOnStart) mode.exitTripAlarmId?.let { ModeTripStarter.start(context, it) }
         }
 
         prefs

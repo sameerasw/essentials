@@ -35,6 +35,8 @@ data class Mode(
     @SerializedName("linkedType") val linkedType: Int? = null,
     @SerializedName("conditions") val conditions: List<ModeCondition> = emptyList(),
     @SerializedName("askBeforeActivating") val askBeforeActivating: Boolean = false,
+    @SerializedName("exitTripAlarmId") val exitTripAlarmId: String? = null,
+    @SerializedName("tripOnStart") val tripOnStart: Boolean = false,
 ) {
     val isLinked: Boolean
         get() = linkedModeId != null

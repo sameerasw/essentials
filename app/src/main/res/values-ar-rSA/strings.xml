@@ -50,6 +50,10 @@
     <string name="mode_ask_before_activating">Ask before turning on</string>
     <string name="mode_confirm_title">Turn on %1$s?</string>
     <string name="mode_confirm_decline">Not now</string>
+    <string name="mode_exit_trip">Start a trip to</string>
+    <string name="mode_exit_trip_empty">No saved destinations yet. Add one in Are we there yet?</string>
+    <string name="mode_trip_on_start">When it starts</string>
+    <string name="mode_trip_on_end">When it ends</string>
     <string name="diy_calendar_match">Match</string>
     <string name="diy_calendar_title_contains">Event title contains</string>
     <string name="diy_calendar_working_location">Working location only</string>

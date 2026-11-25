@@ -63,6 +63,7 @@ import com.sameerasw.essentials.ui.core.sheets.PermissionsBottomSheet
 import com.sameerasw.essentials.ui.features.modes.ModeAppearanceFields
 import com.sameerasw.essentials.ui.features.modes.findActivity
 import com.sameerasw.essentials.ui.features.modes.ModeConditionsSection
+import com.sameerasw.essentials.ui.features.modes.ModeExitTripRow
 import com.sameerasw.essentials.ui.features.modes.ModeFeaturesSection
 import com.sameerasw.essentials.ui.features.modes.ModeFreezeSection
 import com.sameerasw.essentials.ui.features.modes.ModeSectionTitle
@@ -104,6 +105,8 @@ fun ModeEditorScreen(
     var linkBase by remember { mutableStateOf(existing?.takeIf { it.isLinked }) }
     var conditions by remember { mutableStateOf(existing?.conditions ?: emptyList()) }
     var askBeforeActivating by remember { mutableStateOf(existing?.askBeforeActivating ?: false) }
+    var exitTripAlarmId by remember { mutableStateOf(existing?.exitTripAlarmId) }
+    var tripOnStart by remember { mutableStateOf(existing?.tripOnStart ?: false) }
     var showSystemModePicker by remember { mutableStateOf(false) }
     val actionCategories = remember { ActionRegistry.getCategories() }
 
@@ -127,6 +130,8 @@ fun ModeEditorScreen(
                 exitActions = exitActions,
                 conditions = conditions,
                 askBeforeActivating = askBeforeActivating,
+                exitTripAlarmId = exitTripAlarmId,
+                tripOnStart = tripOnStart,
             )
         if (existing != null && (existing.conditions != conditions || existing.askBeforeActivating != askBeforeActivating)) {
             ModeAutomation.resetHold(appContext, existing.id)
@@ -236,6 +241,14 @@ fun ModeEditorScreen(
                     freezeCategories = if (checked) freezeCategories + category else freezeCategories - category
                     if (checked) requirePermissionsFor(Action.FreezeApps())
                 },
+            )
+
+            ModeExitTripRow(
+                alarmId = exitTripAlarmId,
+                onAlarmChange = { exitTripAlarmId = it },
+                onStart = tripOnStart,
+                onOnStartChange = { tripOnStart = it },
+                viewModel = viewModel,
             )
 
             ModeSectionTitle(R.string.mode_section_start_actions)
