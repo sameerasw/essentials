@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials.ui.composables
 
+import com.sameerasw.essentials.ui.core.sheets.WhatIsThisButton
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.SplitButtonDefaults
@@ -112,6 +113,7 @@ fun FreezeGridUI(
     onSettingsClick: (() -> Unit)? = null,
     searchQuery: String = "",
     searchSubmitSignal: Int = 0,
+    onHelpClick: (() -> Unit)? = null,
 ) {
     val context = LocalContext.current
     val view = LocalView.current
@@ -537,6 +539,7 @@ fun FreezeGridUI(
                     }
                 }
 
+                onHelpClick?.let { WhatIsThisButton(onClick = it, modifier = Modifier.padding(top = 24.dp)) }
                 Spacer(modifier = Modifier.height(contentPadding.calculateBottomPadding()))
             }
         }

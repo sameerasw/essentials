@@ -16,9 +16,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.content.pm.PackageManager
 import android.content.res.Configuration
-import android.database.ContentObserver
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.PixelFormat
@@ -36,16 +34,16 @@ import android.os.Handler
 import android.os.Looper
 import android.os.PowerManager
 import android.os.SystemClock
-import android.provider.CalendarContract
 import android.text.format.DateFormat
 import android.view.Gravity
 import android.view.View
 import android.view.WindowManager
-import androidx.core.content.ContextCompat
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.data.repository.CalendarRepository
 import com.sameerasw.essentials.data.repository.SettingsRepository
+import com.sameerasw.essentials.utils.CalendarEventUtil
 import com.sameerasw.essentials.domain.model.AppSelection
 import com.sameerasw.essentials.services.NotificationListener
 import com.sameerasw.essentials.utils.StatusGlanceView
@@ -99,7 +97,7 @@ class StatusGlanceHandler(
     private var isBatteryReceiverRegistered = false
 
     private val handlerScope = CoroutineScope(Dispatchers.Main + Job())
-    private var calendarObserver: ContentObserver? = null
+    private var calendarObserverRegistered = false
 
     private var isFlashlightOn = false
     private var isTorchCallbackRegistered = false
@@ -524,130 +522,26 @@ class StatusGlanceHandler(
     }
 
     private fun queryUpcomingCalendarEvent() {
-        if (ContextCompat.checkSelfPermission(service, android.Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
-            cachedEventTitle = ""
-            cachedIsEventToday = false
-            glanceView?.nextEventTitle = ""
-            glanceView?.isEventToday = false
-            return
-        }
-
         handlerScope.launch(Dispatchers.IO) {
-            try {
-                val now = System.currentTimeMillis()
-                val timeframe = settingsRepository.getStatusGlanceCalendarTimeframe()
-                val selectedCalIds = settingsRepository.getStatusGlanceCalendarSelectedCalendars()
-                    .mapNotNull { it.toLongOrNull() }.toSet()
-                val showAllDay = settingsRepository.isStatusGlanceCalendarShowAllDayEnabled()
-
-                val maxTimeMillis: Long = when (timeframe) {
-                    "15m" -> now + (15 * 60 * 1000L)
-                    "30m" -> now + (30 * 60 * 1000L)
-                    "1h" -> now + (60 * 60 * 1000L)
-                    "2h" -> now + (2 * 60 * 60 * 1000L)
-                    "6h" -> now + (6 * 60 * 60 * 1000L)
-                    "24h" -> now + (24 * 60 * 60 * 1000L)
-                    "today" -> {
-                        val calendar = Calendar.getInstance().apply {
-                            set(Calendar.HOUR_OF_DAY, 23)
-                            set(Calendar.MINUTE, 59)
-                            set(Calendar.SECOND, 59)
-                            set(Calendar.MILLISECOND, 999)
-                        }
-                        calendar.timeInMillis
-                    }
-                    "next" -> now + (30 * 24 * 60 * 60 * 1000L)
-                    else -> {
-                        val calendar = Calendar.getInstance().apply {
-                            set(Calendar.HOUR_OF_DAY, 23)
-                            set(Calendar.MINUTE, 59)
-                            set(Calendar.SECOND, 59)
-                            set(Calendar.MILLISECOND, 999)
-                        }
-                        calendar.timeInMillis
-                    }
-                }
-
-                val builder = CalendarContract.Instances.CONTENT_URI.buildUpon()
-                android.content.ContentUris.appendId(builder, now)
-                android.content.ContentUris.appendId(builder, maxTimeMillis)
-
-                val projection = arrayOf(
-                    CalendarContract.Instances.EVENT_ID,
-                    CalendarContract.Instances.TITLE,
-                    CalendarContract.Instances.BEGIN,
-                    CalendarContract.Instances.END,
-                    CalendarContract.Instances.ALL_DAY,
-                    CalendarContract.Instances.SELF_ATTENDEE_STATUS,
-                    CalendarContract.Instances.CALENDAR_ID
+            val now = System.currentTimeMillis()
+            val next =
+                CalendarEventUtil.queryNextUpcomingEvent(
+                    service,
+                    settingsRepository.getStatusGlanceCalendarTimeframe(),
+                    settingsRepository.getStatusGlanceCalendarSelectedCalendars().mapNotNull { it.toLongOrNull() }.toSet(),
+                    settingsRepository.isStatusGlanceCalendarShowAllDayEnabled(),
                 )
-
-                val cursor = service.contentResolver.query(
-                    builder.build(),
-                    projection,
-                    null,
-                    null,
-                    "${CalendarContract.Instances.BEGIN} ASC"
-                )
-
-                var foundTitle: String? = null
-                var foundBegin: Long = 0L
-
-                cursor?.use {
-                    val titleIndex = it.getColumnIndex(CalendarContract.Instances.TITLE)
-                    val beginIndex = it.getColumnIndex(CalendarContract.Instances.BEGIN)
-                    val statusIndex = it.getColumnIndex(CalendarContract.Instances.SELF_ATTENDEE_STATUS)
-                    val calIdIndex = it.getColumnIndex(CalendarContract.Instances.CALENDAR_ID)
-                    val allDayIndex = it.getColumnIndex(CalendarContract.Instances.ALL_DAY)
-
-                    while (it.moveToNext()) {
-                        val calId = it.getLong(calIdIndex)
-                        if (selectedCalIds.isNotEmpty() && !selectedCalIds.contains(calId)) {
-                            continue
-                        }
-
-                        if (statusIndex != -1 && it.getInt(statusIndex) == CalendarContract.Attendees.ATTENDEE_STATUS_DECLINED) {
-                            continue
-                        }
-
-                        if (!showAllDay && allDayIndex != -1 && it.getInt(allDayIndex) != 0) {
-                            continue
-                        }
-
-                        val rawTitle = it.getString(titleIndex)
-                        if (rawTitle.isNullOrBlank()) {
-                            continue
-                        }
-
-                        val begin = it.getLong(beginIndex)
-                        if (begin >= now && begin <= maxTimeMillis) {
-                            foundTitle = rawTitle.trim()
-                            foundBegin = begin
-                            break
-                        }
-                    }
+            if (next != null) {
+                val fullTitle = "${next.title} ${formatRelativeEventTime(next.startTimeMillis, now)}"
+                cachedEventTitle = fullTitle
+                cachedEventTimeMillis = next.startTimeMillis
+                cachedIsEventToday = true
+                withContext(Dispatchers.Main) {
+                    glanceView?.nextEventTitle = fullTitle
+                    glanceView?.nextEventTimeMillis = next.startTimeMillis
+                    glanceView?.isEventToday = true
                 }
-
-                if (foundTitle != null) {
-                    val inTimeStr = formatRelativeEventTime(foundBegin, now)
-                    val fullTitle = "$foundTitle $inTimeStr"
-                    cachedEventTitle = fullTitle
-                    cachedEventTimeMillis = foundBegin
-                    cachedIsEventToday = true
-                    withContext(Dispatchers.Main) {
-                        glanceView?.nextEventTitle = fullTitle
-                        glanceView?.nextEventTimeMillis = foundBegin
-                        glanceView?.isEventToday = true
-                    }
-                } else {
-                    cachedEventTitle = ""
-                    cachedIsEventToday = false
-                    withContext(Dispatchers.Main) {
-                        glanceView?.nextEventTitle = ""
-                        glanceView?.isEventToday = false
-                    }
-                }
-            } catch (e: Exception) {
+            } else {
                 cachedEventTitle = ""
                 cachedIsEventToday = false
                 withContext(Dispatchers.Main) {
@@ -658,34 +552,18 @@ class StatusGlanceHandler(
         }
     }
 
+    private val onCalendarChanged: () -> Unit = { queryUpcomingCalendarEvent() }
+
     private fun registerCalendarObserver() {
-        if (calendarObserver != null) return
-        try {
-            calendarObserver = object : ContentObserver(mainHandler) {
-                override fun onChange(selfChange: Boolean) {
-                    queryUpcomingCalendarEvent()
-                }
-            }
-            service.contentResolver.registerContentObserver(
-                CalendarContract.Events.CONTENT_URI,
-                true,
-                calendarObserver!!
-            )
-            service.contentResolver.registerContentObserver(
-                CalendarContract.Instances.CONTENT_URI,
-                true,
-                calendarObserver!!
-            )
-        } catch (_: Exception) {}
+        if (calendarObserverRegistered) return
+        CalendarRepository.addListener(service, onCalendarChanged)
+        calendarObserverRegistered = true
     }
 
     private fun unregisterCalendarObserver() {
-        calendarObserver?.let {
-            try {
-                service.contentResolver.unregisterContentObserver(it)
-            } catch (_: Exception) {}
-        }
-        calendarObserver = null
+        if (!calendarObserverRegistered) return
+        CalendarRepository.removeListener(onCalendarChanged)
+        calendarObserverRegistered = false
     }
 
     private fun registerTimeReceiver() {

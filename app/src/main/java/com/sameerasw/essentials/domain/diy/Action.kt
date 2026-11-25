@@ -274,6 +274,17 @@ sealed interface Action {
         override val isConfigurable: Boolean get() = true
     }
 
+    // Fired by the automation modules for mode conditions; never offered in the action picker
+    @Keep
+    data class ModeConditionChanged(
+        @SerializedName("modeId") val modeId: String = "",
+        @SerializedName("conditionKey") val conditionKey: String = "",
+        @SerializedName("active") val active: Boolean = false,
+    ) : Action {
+        override val title: Int get() = R.string.tab_modes
+        override val icon: Int get() = R.drawable.rounded_photo_filter_24
+    }
+
     @Keep
     data object OpenCamera : Action {
         override val title: Int = R.string.diy_action_open_camera

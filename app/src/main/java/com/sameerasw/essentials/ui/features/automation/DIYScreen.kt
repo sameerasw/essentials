@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials.ui.composables
 
+import com.sameerasw.essentials.ui.core.sheets.WhatIsThisButton
 import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.navigation.LocalOpenAutomationId
 import androidx.compose.ui.graphics.graphicsLayer
@@ -80,6 +81,7 @@ fun DIYScreen(
     showNewAutomationSheet: Boolean = false,
     onDismissNewAutomationSheet: () -> Unit = {},
     onNewAutomationClick: (() -> Unit)? = null,
+    onHelpClick: (() -> Unit)? = null,
 ) {
     val context = LocalContext.current
     val automations by viewModel.automations.collectAsState()
@@ -333,6 +335,10 @@ fun DIYScreen(
                                 }
                             }
                         }
+                    }
+
+                    onHelpClick?.let { help ->
+                        item { WhatIsThisButton(onClick = help, modifier = Modifier.padding(top = 8.dp)) }
                     }
                 }
             }

@@ -20,6 +20,8 @@ import android.os.Looper
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.sameerasw.essentials.data.repository.SettingsRepository
+import com.sameerasw.essentials.domain.modes.ModesController
+import com.sameerasw.essentials.domain.modes.ModesRepository
 import com.sameerasw.essentials.services.receivers.SecurityReceiver
 import com.sameerasw.essentials.services.widgets.BatteriesWidgetReceiver
 import com.sameerasw.essentials.utils.ShizukuUtils
@@ -71,8 +73,11 @@ class EssentialsApp : Application() {
         // Init Automation
         com.sameerasw.essentials.domain.diy.DIYRepository
             .init(this)
+        ModesRepository.init(this)
         com.sameerasw.essentials.services.automation.AutomationManager
             .init(this)
+        ModesController.startWatching(this)
+        CoroutineScope(Dispatchers.IO).launch { ModesController.sync(this@EssentialsApp) }
         com.sameerasw.essentials.services.CalendarSyncManager
             .init(this)
         kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {

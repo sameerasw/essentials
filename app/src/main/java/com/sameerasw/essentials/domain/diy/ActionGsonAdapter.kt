@@ -56,7 +56,7 @@ object ActionGsonAdapter {
         }
     }
 
-    private val gson =
+    val gson =
         GsonBuilder()
             .registerTypeAdapter(Action::class.java, SealedAdapter(Action::class))
             .create()

@@ -359,6 +359,20 @@ fun AutomationEditorScreen(
         // Tab for State Actions
         var selectedActionTab by remember { mutableIntStateOf(0) } // 0: In, 1: Out
 
+        fun editorSnapshot(): List<Any?> =
+            listOf(
+                automationType,
+                selectedTrigger,
+                selectedState,
+                selectedApps,
+                selectedAccessibilitySlot,
+                selectedActions,
+                selectedInActions,
+                selectedOutActions,
+            )
+        val initialSnapshot = remember { editorSnapshot() }
+        val hasUnsavedChanges = editorSnapshot() != initialSnapshot
+
         // Menu State
         var showMenu by remember { mutableStateOf(false) }
 
@@ -442,7 +456,7 @@ fun AutomationEditorScreen(
         val isBlurEnabled by viewModel.isBlurEnabled
 
         val handleBackClick = {
-            showDiscardDialog = true
+            if (hasUnsavedChanges) showDiscardDialog = true else onBack()
         }
 
         BackHandler {

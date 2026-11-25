@@ -14,6 +14,8 @@ import android.content.Intent
 import com.sameerasw.essentials.domain.diy.Automation
 import com.sameerasw.essentials.domain.diy.DIYRepository
 import com.sameerasw.essentials.domain.diy.Trigger
+import com.sameerasw.essentials.domain.modes.ModeAutomation
+import com.sameerasw.essentials.domain.modes.ModesRepository
 import com.sameerasw.essentials.services.automation.executors.CombinedActionExecutor
 import com.sameerasw.essentials.services.automation.modules.AndroidAutoModule
 import com.sameerasw.essentials.services.automation.modules.AutomationModule
@@ -27,6 +29,7 @@ import com.sameerasw.essentials.services.automation.modules.CalendarModule
 import com.sameerasw.essentials.services.automation.modules.WifiModule
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import java.util.concurrent.ConcurrentHashMap
 import com.sameerasw.essentials.domain.diy.State as DIYState
@@ -42,19 +45,17 @@ object AutomationManager {
     fun init(context: Context) {
         applicationContext = context.applicationContext
 
-        // Observe repository
         scope.launch {
-            DIYRepository.automations.collect { automations ->
-                refreshModules(automations)
-            }
+            combine(DIYRepository.automations, ModesRepository.modes) { automations, modes ->
+                ModeAutomation.onModesChanged(context, modes)
+                automations + ModeAutomation.automationsFor(modes)
+            }.collect { refreshModules(it) }
         }
     }
 
     fun onServiceConnected(serviceInstance: AutomationService) {
         service = serviceInstance
-        // Re-apply modules if needed
-        val automations = DIYRepository.automations.value
-        refreshModules(automations)
+        refreshModules(DIYRepository.automations.value + ModeAutomation.automationsFor(ModesRepository.modes.value))
     }
 
     fun onServiceDisconnected(serviceInstance: AutomationService) {

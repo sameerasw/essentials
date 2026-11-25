@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials.viewmodels
 
+import com.sameerasw.essentials.domain.DIYTabs
 import android.Manifest
 import android.app.Activity
 import android.app.ActivityManager
@@ -26,7 +27,6 @@ import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.os.PowerManager
-import android.provider.CalendarContract
 import android.provider.Settings
 import android.util.Log
 import android.view.WindowManager
@@ -49,6 +49,7 @@ import androidx.work.WorkManager
 import com.sameerasw.essentials.EssentialsApp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.island.service.CameraGeometryResolver
+import com.sameerasw.essentials.data.repository.CalendarRepository
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.data.repository.UpdateRepository
 import com.sameerasw.essentials.utils.LogManager
@@ -56,6 +57,8 @@ import com.sameerasw.essentials.domain.HapticFeedbackType
 import com.sameerasw.essentials.domain.MapsState
 import com.sameerasw.essentials.domain.controller.CaffeinateController
 import com.sameerasw.essentials.domain.diy.Action
+import com.sameerasw.essentials.domain.modes.ModesController
+import com.sameerasw.essentials.domain.modes.ModesRepository
 import com.sameerasw.essentials.domain.model.AppIcon
 import com.sameerasw.essentials.domain.model.AppSelection
 import com.sameerasw.essentials.domain.model.BackGestureAppConfig
@@ -135,6 +138,7 @@ class MainViewModel : ViewModel() {
     val isNotificationLightingAccessibilityEnabled = mutableStateOf(false)
     val hapticFeedbackType = mutableStateOf(HapticFeedbackType.SUBTLE)
     val defaultTab = mutableStateOf(com.sameerasw.essentials.domain.DIYTabs.ESSENTIALS)
+    val toolbarTabs = mutableStateOf(DIYTabs.MOVABLE)
     val selectedAppIcon = mutableStateOf(AppIcon.DEFAULT)
     val isDefaultBrowserSet = mutableStateOf(false)
     val onlyShowWhenScreenOff = mutableStateOf(true)
@@ -2177,7 +2181,9 @@ class MainViewModel : ViewModel() {
         isWriteSettingsEnabled.value = PermissionUtils.canWriteSystemSettings(context)
         isNotificationPolicyAccessGranted.value =
             PermissionUtils.hasNotificationPolicyAccess(context)
-        isCalendarPermissionGranted.value = PermissionUtils.hasReadCalendarPermission(context)
+        val calendarGranted = PermissionUtils.hasReadCalendarPermission(context)
+        if (calendarGranted != isCalendarPermissionGranted.value) CalendarRepository.onPermissionChanged(context)
+        isCalendarPermissionGranted.value = calendarGranted
         isUsageStatsPermissionGranted.value = PermissionUtils.hasUsageStatsPermission(context)
 
         isBluetoothPermissionGranted.value = PermissionUtils.hasBluetoothPermission(context)
@@ -2437,7 +2443,9 @@ class MainViewModel : ViewModel() {
 
         MapsState.isEnabled = isMapsPowerSavingEnabled.value
         hapticFeedbackType.value = settingsRepository.getHapticFeedbackType()
+        toolbarTabs.value = settingsRepository.getToolbarTabs()
         defaultTab.value = settingsRepository.getDIYTab()
+        ensureDefaultTabVisible()
         selectedAppIcon.value = settingsRepository.getAppIcon()
         isSwipeTabsEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_SWIPE_TABS, true)
@@ -6862,41 +6870,15 @@ class MainViewModel : ViewModel() {
                 statusGlanceSelectedCalendarIds.value = savedSelected
             }
 
-            val calendars = mutableListOf<CalendarAccount>()
-            val projection =
-                arrayOf(
-                    CalendarContract.Calendars._ID,
-                    CalendarContract.Calendars.CALENDAR_DISPLAY_NAME,
-                    CalendarContract.Calendars.ACCOUNT_NAME,
-                    CalendarContract.Calendars.CALENDAR_COLOR,
-                )
-
-            context.contentResolver
-                .query(
-                    CalendarContract.Calendars.CONTENT_URI,
-                    projection,
-                    null,
-                    null,
-                    null,
-                )?.use { cursor ->
-                    val idColumn = cursor.getColumnIndex(CalendarContract.Calendars._ID)
-                    val nameColumn = cursor.getColumnIndex(CalendarContract.Calendars.CALENDAR_DISPLAY_NAME)
-                    val accountColumn = cursor.getColumnIndex(CalendarContract.Calendars.ACCOUNT_NAME)
-
-                    while (cursor.moveToNext()) {
-                        val id = cursor.getLong(idColumn)
-                        val name = cursor.getString(nameColumn) ?: context.getString(R.string.calendar_unnamed)
-                        val account = cursor.getString(accountColumn) ?: context.getString(R.string.calendar_local)
-
-                        calendars.add(
-                            CalendarAccount(
-                                id,
-                                name,
-                                account,
-                                savedSelected.isEmpty() || savedSelected.contains(id.toString()),
-                            ),
-                        )
-                    }
+            val calendars =
+                CalendarRepository.queryCalendars(context).map { calendar ->
+                    val id = calendar.id
+                    CalendarAccount(
+                        id,
+                        calendar.name.ifBlank { context.getString(R.string.calendar_unnamed) },
+                        calendar.accountName.ifBlank { context.getString(R.string.calendar_local) },
+                        savedSelected.isEmpty() || savedSelected.contains(id.toString()),
+                    )
                 }
 
             withContext(Dispatchers.Main) {
@@ -7780,41 +7762,15 @@ class MainViewModel : ViewModel() {
                 selectedCalendarIds.value = savedSelected
             }
 
-            val calendars = mutableListOf<CalendarAccount>()
-            val projection =
-                arrayOf(
-                    CalendarContract.Calendars._ID,
-                    CalendarContract.Calendars.CALENDAR_DISPLAY_NAME,
-                    CalendarContract.Calendars.ACCOUNT_NAME,
-                    CalendarContract.Calendars.CALENDAR_COLOR,
-                )
-
-            context.contentResolver
-                .query(
-                    CalendarContract.Calendars.CONTENT_URI,
-                    projection,
-                    null,
-                    null,
-                    null,
-                )?.use { cursor ->
-                    val idColumn = cursor.getColumnIndex(CalendarContract.Calendars._ID)
-                    val nameColumn = cursor.getColumnIndex(CalendarContract.Calendars.CALENDAR_DISPLAY_NAME)
-                    val accountColumn = cursor.getColumnIndex(CalendarContract.Calendars.ACCOUNT_NAME)
-
-                    while (cursor.moveToNext()) {
-                        val id = cursor.getLong(idColumn)
-                        val name = cursor.getString(nameColumn) ?: context.getString(R.string.calendar_unnamed)
-                        val account = cursor.getString(accountColumn) ?: context.getString(R.string.calendar_local)
-
-                        calendars.add(
-                            CalendarAccount(
-                                id,
-                                name,
-                                account,
-                                selectedCalendarIds.value.contains(id.toString()),
-                            ),
-                        )
-                    }
+            val calendars =
+                CalendarRepository.queryCalendars(context).map { calendar ->
+                    val id = calendar.id
+                    CalendarAccount(
+                        id,
+                        calendar.name.ifBlank { context.getString(R.string.calendar_unnamed) },
+                        calendar.accountName.ifBlank { context.getString(R.string.calendar_local) },
+                        selectedCalendarIds.value.contains(id.toString()),
+                    )
                 }
 
             withContext(Dispatchers.Main) {
@@ -8400,8 +8356,25 @@ class MainViewModel : ViewModel() {
         tab: com.sameerasw.essentials.domain.DIYTabs,
         context: Context,
     ) {
-        defaultTab.value = tab
-        settingsRepository.saveDIYTab(tab)
+        val target = if (isTabInToolbar(tab)) tab else DIYTabs.ESSENTIALS
+        defaultTab.value = target
+        settingsRepository.saveDIYTab(target)
+    }
+
+    private fun isTabInToolbar(tab: DIYTabs): Boolean = tab !in DIYTabs.MOVABLE || tab in toolbarTabs.value
+
+    private fun ensureDefaultTabVisible() {
+        if (!isTabInToolbar(defaultTab.value)) {
+            defaultTab.value = DIYTabs.ESSENTIALS
+            settingsRepository.saveDIYTab(DIYTabs.ESSENTIALS)
+        }
+    }
+
+    fun setToolbarTabs(tabs: List<DIYTabs>) {
+        val sanitized = tabs.filter { it in DIYTabs.MOVABLE }.distinct()
+        settingsRepository.saveToolbarTabs(sanitized)
+        toolbarTabs.value = sanitized
+        ensureDefaultTabVisible()
     }
 
     fun setAppIcon(
@@ -9873,6 +9846,8 @@ class MainViewModel : ViewModel() {
             settingsRepository.syncSystemSettingsWithSaved()
             com.sameerasw.essentials.domain.diy.DIYRepository
                 .reloadAutomations()
+            ModesRepository.reload()
+            viewModelScope.launch(Dispatchers.IO) { ModesController.sync(context.applicationContext) }
             refreshFreezePickedApps(context, silent = true)
             check(context)
         }

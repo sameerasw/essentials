@@ -9,15 +9,13 @@
 
 package com.sameerasw.essentials.services.automation.modules
 
-import android.Manifest
-import android.content.ContentUris
 import android.content.Context
-import android.content.pm.PackageManager
-import android.database.ContentObserver
 import android.os.Handler
 import android.os.Looper
 import android.provider.CalendarContract
 import android.util.Log
+import com.sameerasw.essentials.data.repository.CalendarInstance
+import com.sameerasw.essentials.data.repository.CalendarRepository
 import com.sameerasw.essentials.domain.diy.Automation
 import com.sameerasw.essentials.services.automation.executors.CombinedActionExecutor
 import kotlinx.coroutines.CoroutineScope
@@ -32,15 +30,6 @@ class CalendarModule : AutomationModule {
         private const val MAX_WAIT_MS = 15 * 60 * 1000L
     }
 
-    private class Instance(
-        val begin: Long,
-        val end: Long,
-        val allDay: Boolean,
-        val status: Int,
-        val availability: Int,
-        val calendarId: Long,
-    )
-
     override val id: String = ID
     private var automations: List<Automation> = emptyList()
     private val scope = CoroutineScope(Dispatchers.IO)
@@ -49,28 +38,16 @@ class CalendarModule : AutomationModule {
     private var appContext: Context? = null
 
     private val recheck = Runnable { evaluate() }
-
-    private val observer = object : ContentObserver(handler) {
-        override fun onChange(selfChange: Boolean) {
-            evaluate()
-        }
-    }
+    private val onCalendarChanged: () -> Unit = { evaluate() }
 
     override fun start(context: Context) {
-        val appCtx = context.applicationContext
-        appContext = appCtx
-        try {
-            appCtx.contentResolver.registerContentObserver(CalendarContract.CONTENT_URI, true, observer)
-        } catch (_: Exception) {
-        }
+        appContext = context.applicationContext
+        CalendarRepository.addListener(context, onCalendarChanged)
     }
 
     override fun stop(context: Context) {
         handler.removeCallbacks(recheck)
-        try {
-            (appContext ?: context.applicationContext).contentResolver.unregisterContentObserver(observer)
-        } catch (_: Exception) {
-        }
+        CalendarRepository.removeListener(onCalendarChanged)
         appContext = null
     }
 
@@ -84,79 +61,72 @@ class CalendarModule : AutomationModule {
         handler.removeCallbacks(recheck)
         scope.launch {
             val now = System.currentTimeMillis()
-            val instances = queryInstances(context, now, now + LOOKAHEAD_MS)
+            val states = automations.filter { it.type == Automation.Type.STATE && it.isEnabled && it.state is DIYState.CalendarEvent }
+            val needsTypes = states.any { (it.state as DIYState.CalendarEvent).workingLocationOnly }
+            val instances = CalendarRepository.queryInstancesOrNull(context, now - LOOKAHEAD_MS, now + LOOKAHEAD_MS, needsTypes)
+            if (instances == null) {
+                // Unreadable is not the same as "no events", so leave every state as it is and try again later
+                Log.w(ID, "Calendar unavailable, keeping current states")
+                handler.postDelayed(recheck, MAX_WAIT_MS)
+                return@launch
+            }
             var nextBoundary = now + MAX_WAIT_MS
 
-            automations
-                .filter { it.type == Automation.Type.STATE && it.isEnabled }
-                .forEach { automation ->
-                    val state = automation.state as? DIYState.CalendarEvent ?: return@forEach
-                    val matching = instances.filter { matches(it, state) }
-                    val isActive = matching.any { now in it.begin until it.end }
-                    matching.forEach { instance ->
-                        if (instance.begin > now) nextBoundary = minOf(nextBoundary, instance.begin)
-                        if (instance.end > now) nextBoundary = minOf(nextBoundary, instance.end)
+            states.forEach { automation ->
+                val state = automation.state as DIYState.CalendarEvent
+                val matching =
+                    if (state.workingLocationOnly) {
+                        instances.filter { isWorkingLocation(it, state) }
+                    } else {
+                        instances.filter { matches(it, state) }
                     }
-
-                    val wasActive = activeStateAutomations.contains(automation.id)
-                    if (isActive && !wasActive) {
-                        Log.d(ID, "State ${automation.id} became active")
-                        activeStateAutomations.add(automation.id)
-                        CombinedActionExecutor.executeAll(context, automation.entryActionList)
-                    } else if (!isActive && wasActive) {
-                        Log.d(ID, "State ${automation.id} became inactive")
-                        activeStateAutomations.remove(automation.id)
-                        CombinedActionExecutor.executeAll(context, automation.exitActionList)
+                val isActive =
+                    if (state.workingLocationOnly) {
+                        effectiveWorkingLocation(matching, now)?.let { titleMatches(it, state) } ?: false
+                    } else {
+                        matching.any { it.isOngoing(now) }
                     }
+                matching.forEach { instance ->
+                    if (instance.begin > now) nextBoundary = minOf(nextBoundary, instance.begin)
+                    if (instance.end > now) nextBoundary = minOf(nextBoundary, instance.end)
                 }
+
+                val wasActive = activeStateAutomations.contains(automation.id)
+                if (isActive && !wasActive) {
+                    Log.d(ID, "State ${automation.id} became active")
+                    activeStateAutomations.add(automation.id)
+                    CombinedActionExecutor.executeAll(context, automation.entryActionList)
+                } else if (!isActive && wasActive) {
+                    Log.d(ID, "State ${automation.id} became inactive")
+                    activeStateAutomations.remove(automation.id)
+                    CombinedActionExecutor.executeAll(context, automation.exitActionList)
+                }
+            }
 
             handler.postDelayed(recheck, (nextBoundary - System.currentTimeMillis()).coerceAtLeast(1000L) + 500L)
         }
     }
 
-    private fun matches(instance: Instance, state: DIYState.CalendarEvent): Boolean {
+    private fun matches(instance: CalendarInstance, state: DIYState.CalendarEvent): Boolean {
         if (state.calendarIds.isNotEmpty() && instance.calendarId !in state.calendarIds) return false
+        if (!titleMatches(instance, state)) return false
         if (instance.allDay && !state.includeAllDay) return false
-        if (instance.status == CalendarContract.Attendees.ATTENDEE_STATUS_DECLINED && !state.includeDeclined) return false
-        if (instance.status == CalendarContract.Attendees.ATTENDEE_STATUS_TENTATIVE && !state.includeTentative) return false
+        if (instance.isDeclined && !state.includeDeclined) return false
+        if (instance.selfStatus == CalendarContract.Attendees.ATTENDEE_STATUS_TENTATIVE && !state.includeTentative) return false
         if (instance.availability == CalendarContract.Events.AVAILABILITY_FREE && !state.includeFree) return false
         return true
     }
 
-    private fun queryInstances(context: Context, from: Long, to: Long): List<Instance> {
-        if (context.checkSelfPermission(Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
-            return emptyList()
-        }
-        val uri = CalendarContract.Instances.CONTENT_URI.buildUpon().also {
-            ContentUris.appendId(it, from - LOOKAHEAD_MS)
-            ContentUris.appendId(it, to)
-        }.build()
-        val projection = arrayOf(
-            CalendarContract.Instances.BEGIN,
-            CalendarContract.Instances.END,
-            CalendarContract.Instances.ALL_DAY,
-            CalendarContract.Instances.SELF_ATTENDEE_STATUS,
-            CalendarContract.Instances.AVAILABILITY,
-            CalendarContract.Instances.CALENDAR_ID,
-        )
-        val result = mutableListOf<Instance>()
-        try {
-            context.contentResolver.query(uri, projection, null, null, null)?.use { c ->
-                while (c.moveToNext()) {
-                    val instance = Instance(
-                        begin = c.getLong(0),
-                        end = c.getLong(1),
-                        allDay = c.getInt(2) == 1,
-                        status = c.getInt(3),
-                        availability = c.getInt(4),
-                        calendarId = c.getLong(5),
-                    )
-                    if (instance.end > from) result += instance
-                }
-            }
-        } catch (e: Exception) {
-            Log.e(ID, "Failed to query calendar instances", e)
-        }
-        return result
+    private fun titleMatches(instance: CalendarInstance, state: DIYState.CalendarEvent): Boolean =
+        state.titleContains.isBlank() || instance.title.contains(state.titleContains.trim(), ignoreCase = true)
+
+    // Working location entries are free and often all day, so they skip the usual event filters
+    private fun isWorkingLocation(instance: CalendarInstance, state: DIYState.CalendarEvent): Boolean =
+        instance.isWorkingLocation && (state.calendarIds.isEmpty() || instance.calendarId in state.calendarIds)
+
+    // A timed working location overrides the all-day one for its span, the way Google Calendar shows it
+    private fun effectiveWorkingLocation(instances: List<CalendarInstance>, now: Long): CalendarInstance? {
+        val current = instances.filter { it.isOngoing(now) }
+        return current.filterNot { it.allDay }.maxByOrNull { it.begin } ?: current.maxByOrNull { it.begin }
     }
 }

@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials.data.repository
 
+import com.sameerasw.essentials.domain.DIYTabs
 import com.sameerasw.essentials.ui.core.pickers.NetworkType
 import android.content.Context
 import android.content.SharedPreferences
@@ -21,6 +22,7 @@ import com.sameerasw.essentials.domain.controller.BackGestureController
 import com.sameerasw.essentials.domain.controller.BackGestureStore
 import com.sameerasw.essentials.domain.diy.Action
 import com.sameerasw.essentials.domain.diy.ActionGsonAdapter
+import com.sameerasw.essentials.domain.modes.ModesRepository
 import com.sameerasw.essentials.domain.model.AppIcon
 import com.sameerasw.essentials.domain.model.AppSelection
 import com.sameerasw.essentials.domain.model.BackGestureAppConfig
@@ -385,6 +387,7 @@ class SettingsRepository(
         const val KEY_DEVELOPER_MODE_ENABLED = "developer_mode_enabled"
         const val KEY_HAPTIC_FEEDBACK_TYPE = "haptic_feedback_type"
         const val KEY_DEFAULT_TAB = "default_tab"
+        const val KEY_TOOLBAR_TABS = "toolbar_tabs"
         const val KEY_APP_ICON = "app_icon_style"
         const val KEY_USE_ROOT = "use_root"
         const val KEY_PRIVILEGED_MODE = "privileged_mode"
@@ -986,6 +989,7 @@ class SettingsRepository(
                 "link_prefs",
                 "diy_automations_prefs",
                 "live_wallpaper_prefs",
+                ModesRepository.PREFS_NAME,
             )
     }
 
@@ -1447,6 +1451,19 @@ class SettingsRepository(
      */
     fun saveDIYTab(tab: com.sameerasw.essentials.domain.DIYTabs) {
         putString(KEY_DEFAULT_TAB, tab.name)
+    }
+
+    fun getToolbarTabs(): List<DIYTabs> {
+        val movable = DIYTabs.MOVABLE
+        val raw = prefs.getString(KEY_TOOLBAR_TABS, null) ?: return DIYTabs.DEFAULT_VISIBLE
+        return raw
+            .split(",")
+            .mapNotNull { name -> movable.find { it.name == name } }
+            .distinct()
+    }
+
+    fun saveToolbarTabs(tabs: List<DIYTabs>) {
+        putString(KEY_TOOLBAR_TABS, tabs.joinToString(",") { it.name })
     }
 
     fun getAppIcon(): AppIcon {

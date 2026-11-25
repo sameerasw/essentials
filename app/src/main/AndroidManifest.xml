@@ -376,6 +376,13 @@
         </activity>
 
         <activity
+            android:name=".ui.activities.ModeEditorActivity"
+            android:exported="true"
+            android:label="@string/tab_modes"
+            android:theme="@android:style/Theme.NoDisplay"
+            android:excludeFromRecents="true" />
+
+        <activity
             android:name=".ui.activities.AutomationEditorActivity"
             android:exported="false"
             android:label="@string/diy_editor_new_title"
@@ -1592,6 +1599,18 @@
                 <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
                 <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
                 <action android:name="android.intent.action.BATTERY_CHANGED" />
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name=".services.receivers.ModeConfirmReceiver"
+            android:exported="false" />
+
+        <receiver
+            android:name=".services.receivers.ModeStatusReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.app.action.AUTOMATIC_ZEN_RULE_STATUS_CHANGED" />
             </intent-filter>
         </receiver>
 

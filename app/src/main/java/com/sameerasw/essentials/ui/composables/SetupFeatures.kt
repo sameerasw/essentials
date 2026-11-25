@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials.ui.composables
 
+import com.sameerasw.essentials.domain.DIYTabs
 import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.navigation.LocalSelectedFeatureIds
 import com.sameerasw.essentials.ui.navigation.LocalListPaneWidth
@@ -53,8 +54,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -68,6 +71,7 @@ import androidx.core.net.toUri
 import androidx.fragment.app.FragmentActivity
 import com.sameerasw.essentials.FeatureSettingsActivity
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.domain.modes.ModesController
 import com.sameerasw.essentials.domain.registry.FeatureRegistry
 import com.sameerasw.essentials.domain.registry.PermissionRegistry
 import com.sameerasw.essentials.domain.registry.QSTileRegistry
@@ -90,7 +94,9 @@ import com.sameerasw.essentials.ui.modifiers.scrollMotionBlur
 import com.sameerasw.essentials.utils.BiometricSecurityHelper
 import com.sameerasw.essentials.utils.PermissionUtils
 import com.sameerasw.essentials.viewmodels.MainViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.withContext
 
 @Composable
 fun SetupFeatures(
@@ -117,6 +123,7 @@ fun SetupFeatures(
 
     viewModel.isScreenLockedSecurityEnabled.value
     val pinnedFeatureKeys by viewModel.pinnedFeatureKeys
+    val toolbarTabs by viewModel.toolbarTabs
     val context = LocalContext.current
 
     var showSheet by remember { mutableStateOf(false) }
@@ -1152,6 +1159,52 @@ fun SetupFeatures(
                                                 null
                                             },
                                         hasBadge = if (feature.id == "Watch") isWearUpdateRequired else false,
+                                    )
+                                }
+                            }
+                        }
+                    }
+
+                    val hiddenTabs = DIYTabs.MOVABLE.filter { it !in toolbarTabs }
+                    if (hiddenTabs.isNotEmpty()) {
+                        item {
+                            RoundedCardContainer(
+                                modifier =
+                                    Modifier
+                                        .padding(horizontal = 16.dp)
+                                        .padding(bottom = 12.dp),
+                            ) {
+                                val freezePickedApps by viewModel.freezePickedApps
+                                val frozenCount by produceState(0, freezePickedApps, DIYTabs.FREEZE in hiddenTabs) {
+                                    if (DIYTabs.FREEZE !in hiddenTabs) return@produceState
+                                    value =
+                                        withContext(Dispatchers.IO) {
+                                            freezePickedApps.count { FreezeManager.isAppFrozen(context, it.packageName) }
+                                        }
+                                }
+                                val activeModeIds by ModesController.activeModeIds.collectAsState()
+                                val activeModeCount = activeModeIds.size
+                                hiddenTabs.forEach { tab ->
+                                    FeatureCard(
+                                        title = tab.displayTitle,
+                                        description =
+                                            when (tab) {
+                                                DIYTabs.YOUR_ANDROID -> stringResource(R.string.toolbar_tab_your_android_desc)
+                                                DIYTabs.DIY -> stringResource(R.string.automation_channel_name)
+                                                DIYTabs.MODES -> stringResource(R.string.modes_active_count, activeModeCount)
+                                                DIYTabs.FREEZE ->
+                                                    if (freezePickedApps.isEmpty()) {
+                                                        stringResource(R.string.toolbar_tab_freeze_no_apps)
+                                                    } else {
+                                                        stringResource(R.string.freeze_header_caption, frozenCount, freezePickedApps.size)
+                                                    }
+                                                else -> null
+                                            },
+                                        isEnabled = true,
+                                        onToggle = {},
+                                        showToggle = false,
+                                        onClick = { onNavigateToTab?.invoke(tab) },
+                                        iconRes = tab.iconRes,
                                     )
                                 }
                             }

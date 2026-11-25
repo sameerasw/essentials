@@ -35,31 +35,32 @@ import com.sameerasw.essentials.R
 import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.utils.HapticUtil
 
+private val FREEZE_TAG_ICONS =
+    listOf(
+        "rounded_interests_24",
+        "rounded_work_24",
+        "rounded_school_24",
+        "rounded_camera_24",
+        "rounded_favorite_24",
+        "rounded_shopping_cart_24",
+        "rounded_music_note_24",
+        "rounded_videogame_asset_24",
+        "rounded_apartment_24",
+        "rounded_beach_access_24",
+        "rounded_local_pizza_24",
+        "rounded_train_24",
+        "rounded_flight_24",
+        "rounded_directions_boat_24",
+    )
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FreezeTagIconPicker(
     selectedIconName: String,
     onIconSelected: (String) -> Unit,
     modifier: Modifier = Modifier,
+    icons: List<String> = FREEZE_TAG_ICONS,
 ) {
-    val icons =
-        listOf(
-            "rounded_interests_24",
-            "rounded_work_24",
-            "rounded_school_24",
-            "rounded_camera_24",
-            "rounded_favorite_24",
-            "rounded_shopping_cart_24",
-            "rounded_music_note_24",
-            "rounded_videogame_asset_24",
-            "rounded_apartment_24",
-            "rounded_beach_access_24",
-            "rounded_local_pizza_24",
-            "rounded_train_24",
-            "rounded_flight_24",
-            "rounded_directions_boat_24",
-        )
-
     val carouselState = rememberCarouselState { icons.size }
     val context = LocalContext.current
     val view = LocalView.current

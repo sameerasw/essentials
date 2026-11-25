@@ -88,6 +88,7 @@ fun EssentialsFloatingToolbar(
     // Tabbed Mode
     items: List<ToolbarItem> = emptyList(),
     selectedIndex: Int = -1,
+    itemSlots: Int = items.size,
     // Standard Mode
     title: String? = null,
     isBeta: Boolean = false,
@@ -262,12 +263,21 @@ fun EssentialsFloatingToolbar(
                         } else {
                             // TABBED MODE
                             val itemGap = 2.dp
+                            val slots = maxOf(itemSlots, items.size, 1)
+                            val tabbedWidth = 48.dp * slots + itemGap * (slots - 1)
+                            val fullItemWidth =
+                                if (items.isEmpty()) 48.dp else (tabbedWidth - itemGap * (items.size - 1)) / items.size
 
                             items.forEachIndexed { index, item ->
                                 val isSelected = selectedIndex == index
 
                                 val itemWidth by animateDpAsState(
-                                    targetValue = if (expanded || isSelected) 48.dp else 0.dp,
+                                    targetValue =
+                                        when {
+                                            expanded -> fullItemWidth
+                                            isSelected -> 48.dp
+                                            else -> 0.dp
+                                        },
                                     animationSpec =
                                         spring(
                                             dampingRatio = Spring.DampingRatioMediumBouncy,

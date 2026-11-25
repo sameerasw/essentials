@@ -19,6 +19,7 @@ import com.sameerasw.essentials.ui.components.PullTitleHeader
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.ui.activities.WallpaperStagingActivity
 import com.sameerasw.essentials.ui.core.cards.ConfigPickerItem
+import com.sameerasw.essentials.ui.core.sheets.ToolbarConfigBottomSheet
 import android.Manifest
 import android.content.ClipData
 import android.content.ClipboardManager
@@ -222,6 +223,14 @@ fun SettingsContent(
     var showHiddenDebuggingHelpSheet by remember { mutableStateOf(false) }
     var showResetAllInfo by remember { mutableStateOf(false) }
     var showUnsupportedFeaturesSheet by remember { mutableStateOf(false) }
+    var showToolbarConfigSheet by remember { mutableStateOf(false) }
+
+    if (showToolbarConfigSheet) {
+        ToolbarConfigBottomSheet(
+            viewModel = viewModel,
+            onDismissRequest = { showToolbarConfigSheet = false },
+        )
+    }
     var showPreReleaseConfirmSheet by remember { mutableStateOf(false) }
     var pendingPreReleaseState by remember { mutableStateOf(false) }
     var showImportConfirmSheet by remember { mutableStateOf(false) }
@@ -620,8 +629,18 @@ fun SettingsContent(
                 onLanguageSelected = { viewModel.setAppLanguage(it) },
             )
 
+            IconToggleItem(
+                iconRes = R.drawable.rounded_bottom_navigation_24,
+                title = stringResource(R.string.label_toolbar),
+                showToggle = false,
+                onClick = {
+                    showToolbarConfigSheet = true
+                },
+            )
+
             val defaultTab by viewModel.defaultTab
-            val availableTabs = remember { DIYTabs.entries.filter { it != DIYTabs.SETTINGS } }
+            val toolbarTabs by viewModel.toolbarTabs
+            val availableTabs = remember(toolbarTabs) { listOf(DIYTabs.ESSENTIALS) + toolbarTabs }
             DefaultTabPicker(
                 selectedTab = defaultTab,
                 onTabSelected = { viewModel.setDefaultTab(it, context) },

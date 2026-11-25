@@ -1,6 +1,7 @@
 package com.sameerasw.essentials.ui.navigation
 
 import android.app.Activity
+import android.app.NotificationManager
 import android.content.Context
 import android.content.ContextWrapper
 import android.content.Intent
@@ -15,6 +16,7 @@ import com.sameerasw.essentials.SettingsActivity
 import com.sameerasw.essentials.domain.DIYTabs
 import com.sameerasw.essentials.domain.registry.FeatureRegistry
 import com.sameerasw.essentials.ui.activities.AutomationEditorActivity
+import com.sameerasw.essentials.ui.activities.ModeEditorActivity
 import com.sameerasw.essentials.ui.activities.PixelSearchbarSettingsActivity
 import com.sameerasw.essentials.ui.activities.WallpaperActivity
 import com.sameerasw.essentials.ui.activities.YourAndroidActivity
@@ -32,6 +34,10 @@ sealed interface AppRoute {
         val highlightSetting: String? = null,
     ) : AppRoute
 
+    data class TabPage(
+        val tab: DIYTabs,
+    ) : AppRoute
+
     data object PixelSearchbarSettings : AppRoute
 
     data class Wallpaper(
@@ -41,6 +47,10 @@ sealed interface AppRoute {
     data class AutomationEditor(
         val automationId: String? = null,
         val automationType: String? = null,
+    ) : AppRoute
+
+    data class ModeEditor(
+        val modeId: String? = null,
     ) : AppRoute
 }
 
@@ -108,6 +118,14 @@ object AppRoutes {
                     intent.getStringExtra(AutomationEditorActivity.EXTRA_AUTOMATION_ID),
                     intent.getStringExtra(AutomationEditorActivity.EXTRA_AUTOMATION_TYPE),
                 )
+            ModeEditorActivity::class.java.name -> {
+                val modeId = intent.getStringExtra(ModeEditorActivity.EXTRA_MODE_ID)
+                if (modeId == null && intent.hasExtra(NotificationManager.EXTRA_AUTOMATIC_RULE_ID)) {
+                    AppRoute.TabPage(DIYTabs.MODES)
+                } else {
+                    AppRoute.ModeEditor(modeId)
+                }
+            }
             YourAndroidActivity::class.java.name -> AppRoute.HomeTab(DIYTabs.YOUR_ANDROID)
             SettingsActivity::class.java.name ->
                 AppRoute.HomeTab(DIYTabs.SETTINGS, intent.getBooleanExtra("expand_permissions", false))
