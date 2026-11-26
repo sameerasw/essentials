@@ -47,8 +47,9 @@ import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.os.Build
 import android.os.Bundle
+import android.os.SystemClock
 import android.util.Log
-import android.view.animation.AnticipateInterpolator
+import android.view.animation.PathInterpolator
 import android.widget.Toast
 import androidx.activity.compose.PredictiveBackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -96,6 +97,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
@@ -135,6 +137,7 @@ import com.sameerasw.essentials.ui.activities.ModeEditorScreen
 import com.sameerasw.essentials.ui.activities.YourAndroidContent
 import com.sameerasw.essentials.domain.registry.initPermissionRegistry
 import com.sameerasw.essentials.ui.components.EssentialsFloatingToolbar
+import com.sameerasw.essentials.ui.components.SplashLogoHandoff
 import com.sameerasw.essentials.ui.components.ToolbarItem
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenu
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
@@ -167,6 +170,9 @@ import com.sameerasw.essentials.viewmodels.LocationReachedViewModel
 import com.sameerasw.essentials.viewmodels.MainViewModel
 import kotlinx.coroutines.launch
 
+private const val SPLASH_LOGO_MIN_MS = 1450L
+private const val SPLASH_EXIT_MS = 700L
+
 class MainActivity : AppCompatActivity() {
     val viewModel: MainViewModel by viewModels()
     val updatesViewModel: AppUpdatesViewModel by viewModels()
@@ -175,11 +181,14 @@ class MainActivity : AppCompatActivity() {
     private val navViewModel: AppNavigationViewModel by viewModels()
     private val bottomBarHost = BottomBarHost()
     private var isAppReady = false
+    private val splashLogoHandoff = SplashLogoHandoff()
 
     @OptIn(ExperimentalSharedTransitionApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         // Install and configure the splash screen
+        val splashStart = SystemClock.uptimeMillis()
         val splashScreen = installSplashScreen()
+        val splashMinMs = if (savedInstanceState == null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) SPLASH_LOGO_MIN_MS else 0L
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
         super.onCreate(savedInstanceState)
@@ -192,10 +201,10 @@ class MainActivity : AppCompatActivity() {
         }
 
         // Keep splash screen visible while app is loading
-        splashScreen.setKeepOnScreenCondition { !isAppReady }
+        splashScreen.setKeepOnScreenCondition {
+            !isAppReady || SystemClock.uptimeMillis() - splashStart < splashMinMs
+        }
 
-        // Customize the exit animation - scale up and fade out
-        // Safe implementation for OEM devices that may not provide iconView
         splashScreen.setOnExitAnimationListener { splashScreenViewProvider ->
             try {
                 val splashScreenView = splashScreenViewProvider.view
@@ -206,87 +215,47 @@ class MainActivity : AppCompatActivity() {
                         null
                     }
 
-                // Animate the splash screen view fade out
+                val exitInterpolator = PathInterpolator(0.4f, 0f, 0.2f, 1f)
                 val fadeOut =
                     ObjectAnimator.ofFloat(splashScreenView, "alpha", 1f, 0f).apply {
-                        interpolator = AnticipateInterpolator()
-                        duration = 750
+                        interpolator = exitInterpolator
+                        duration = SPLASH_EXIT_MS
                     }
                 fadeOut.doOnEnd {
                     splashScreenViewProvider.remove()
-                    // Re-apply edge to edge AFTER the splash screen view is removed
-                    // to ensure it's not overridden by splash screen cleanup
+                    // Re-apply after removal, splash cleanup can reset it
                     enableEdgeToEdge()
                 }
 
-                // Safely animate the icon if it exists
-                // Known issue: Some OEM devices (Samsung One UI 8, Xiaomi on Android 16)
-                // may not provide iconView, causing NullPointerException
+                val handedOff =
+                    Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
+                        splashIcon != null &&
+                        splashLogoHandoff.animate(splashScreenViewProvider, splashIcon, SPLASH_EXIT_MS) {
+                            splashScreenViewProvider.remove()
+                            enableEdgeToEdge()
+                        }
+                if (handedOff) return@setOnExitAnimationListener
+
+                // Some OEMs (One UI 8, Xiaomi on Android 16) don't provide iconView
                 try {
                     @Suppress("SENSELESS_COMPARISON")
                     if (splashIcon != null) {
-                        // Scale down animation
-                        val scaleUp =
-                            ObjectAnimator.ofFloat(splashIcon, "scaleX", 1f, 0.5f).apply {
-                                interpolator = AnticipateInterpolator()
-                                duration = 750
-                            }
-
-                        val scaleUpY =
-                            ObjectAnimator.ofFloat(splashIcon, "scaleY", 1f, 0.5f).apply {
-                                interpolator = AnticipateInterpolator()
-                                duration = 750
-                            }
-
-                        // rotate
-                        val rotate360 =
-                            ObjectAnimator.ofFloat(splashIcon, "rotation", 0f, -90f).apply {
-                                interpolator = AnticipateInterpolator()
-                                duration = 750
-                            }
-
-                        scaleUp.start()
-                        scaleUpY.start()
-                        rotate360.start()
+                        splashIcon
+                            .animate()
+                            .scaleX(1.25f)
+                            .scaleY(1.25f)
+                            .setInterpolator(exitInterpolator)
+                            .setDuration(SPLASH_EXIT_MS)
+                            .start()
                     } else {
                         Log.w("SplashScreen", "iconView is null - OEM device detected")
                     }
                 } catch (e: NullPointerException) {
-                    // Handle the edge case where iconView becomes null between check and animation
-                    Log.w(
-                        "SplashScreen",
-                        "NullPointerException on iconView animation - likely OEM device",
-                        e,
-                    )
-                }
-
-                // Animate the branding icon if it exists
-                val brandingViewId =
-                    resources.getIdentifier("splashscreen_branding_view", "id", "android")
-                val brandingView =
-                    if (brandingViewId != 0) {
-                        splashScreenView.findViewById<android.view.View>(brandingViewId)
-                    } else {
-                        null
-                    }
-
-                if (brandingView != null) {
-                    ObjectAnimator
-                        .ofFloat(
-                            brandingView,
-                            "translationY",
-                            0f,
-                            -brandingView.height.toFloat(),
-                        ).apply {
-                            interpolator = AnticipateInterpolator()
-                            duration = 750
-                            start()
-                        }
+                    Log.w("SplashScreen", "NullPointerException on iconView animation - likely OEM device", e)
                 }
 
                 fadeOut.start()
             } catch (e: Exception) {
-                // Fallback for any unexpected exceptions during animation
                 Log.e("SplashScreen", "Exception during splash screen animation", e)
                 try {
                     splashScreenViewProvider.remove()
@@ -675,6 +644,9 @@ class MainActivity : AppCompatActivity() {
                     }
 
                     val tabContent: @Composable (DIYTabs, PaddingValues) -> Unit = { tab, contentPadding ->
+                        val tabNameInToolbar =
+                            tab !in tabs ||
+                                (viewModel.isToolbarShowLabels.value && tabs.size <= DIYTabs.MAX_LABELED_TOOLBAR_ITEMS)
                         when (tab) {
                             DIYTabs.ESSENTIALS -> {
                                 SetupFeatures(
@@ -684,6 +656,7 @@ class MainActivity : AppCompatActivity() {
                                     isSearchActive = isSearchActive,
                                     onHelpClick = { showInstructionsSheet = true },
                                     onNavigateToTab = openTab,
+                                    tabNameInToolbar = tabNameInToolbar,
                                 )
                             }
 
@@ -715,6 +688,7 @@ class MainActivity : AppCompatActivity() {
                                     searchQuery = freezeSearchQuery,
                                     searchSubmitSignal = freezeSearchSubmitSignal,
                                     onHelpClick = { helpTab = DIYTabs.FREEZE },
+                                    tabNameInToolbar = tabNameInToolbar,
                                 )
                             }
 
@@ -730,6 +704,7 @@ class MainActivity : AppCompatActivity() {
                                         showNewAutomationSheet = true
                                     },
                                     onHelpClick = { helpTab = DIYTabs.DIY },
+                                    tabNameInToolbar = tabNameInToolbar,
                                 )
                             }
 
@@ -743,6 +718,7 @@ class MainActivity : AppCompatActivity() {
                                     onNewModeClick = { showNewModeSheet = true },
                                     onModeClick = { navViewModel.navigate(AppRoute.ModeEditor(it)) },
                                     onHelpClick = { helpTab = DIYTabs.MODES },
+                                    tabNameInToolbar = tabNameInToolbar,
                                 )
                             }
 
@@ -773,6 +749,7 @@ class MainActivity : AppCompatActivity() {
                                     onRippleToggleEnabledWithPosition = AppRipple::fire,
                                     onAppColorSelectedWithPosition = AppRipple::fire,
                                     modifier = Modifier.fillMaxSize(),
+                                    tabNameInToolbar = tabNameInToolbar,
                                 )
                             }
                         }
@@ -934,11 +911,17 @@ class MainActivity : AppCompatActivity() {
                                                     )
                                                 }
                                             } else {
+                                                DisposableEffect(isDetail) {
+                                                    if (isDetail) splashLogoHandoff.targetBounds = null
+                                                    onDispose { splashLogoHandoff.targetBounds = null }
+                                                }
                                                 TourAnchor(TourStep.TOOLBAR to !isDetail, modifier = morphBounds) {
                                                     EssentialsFloatingToolbar(
                                                         selectedIndex = pagerState.currentPage,
                                                         itemSlots = DIYTabs.entries.size,
                                                         onLongClick = { showToolbarConfigSheet = true },
+                                                        isCustomizing = showToolbarConfigSheet,
+                                                        showLabels = viewModel.isToolbarShowLabels.value && tabs.size <= DIYTabs.MAX_LABELED_TOOLBAR_ITEMS,
                                                         title = if (isDetail) detailSpec?.title ?: routeTitle else null,
                                                         isBeta = isDetail && detailSpec?.isBeta == true,
                                                         onBackClick = if (isDetail) detailSpec?.onBack ?: { navViewModel.pop() } else null,
@@ -961,6 +944,9 @@ class MainActivity : AppCompatActivity() {
                                                                             null
                                                                         },
                                                                     iconScale = if (tab == DIYTabs.ESSENTIALS) 1.2f else 1f,
+                                                                    onIconPlaced = if (tab == DIYTabs.ESSENTIALS) { bounds -> splashLogoHandoff.targetBounds = bounds } else null,
+                                                                    iconAlpha = if (tab == DIYTabs.ESSENTIALS) { { splashLogoHandoff.toolbarLogoAlpha.floatValue } } else null,
+                                                                    iconSlot = if (tab == DIYTabs.ESSENTIALS) { { splashLogoHandoff.toolbarLogoSlot.floatValue } } else null,
                                                                     effect =
                                                                         when (tab) {
                                                                             DIYTabs.ESSENTIALS -> ToolbarIconEffect.LOGO

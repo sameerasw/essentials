@@ -20,6 +20,12 @@
     <string name="label_toolbar">Customize toolbar</string>
     <string name="toolbar_section_hidden">Hidden from toolbar</string>
     <string name="toolbar_hidden_hint">Drag items here to remove them from the toolbar. They will show up in the Essentials tab.</string>
+    <string name="toolbar_show_tab_names">Show tab names</string>
+    <string name="toolbar_show_tab_names_unavailable">Tab names can only be shown when the toolbar has up to %1$d items. Hide some tabs to make room for their names.</string>
+    <string name="action_customize">Customize</string>
+    <string name="header_greeting_name">Hello %1$s!</string>
+    <string name="label_your_name">Your name</string>
+    <string name="modes_none_active">None active</string>
     <string name="tab_modes">Modes</string>
     <string name="modes_active_count">%1$d active</string>
     <string name="modes_empty">No modes yet</string>
@@ -1468,6 +1474,11 @@
     <string name="feat_disable_rotation_suggestion_desc">自动旋转关闭时不显示旋转按钮</string>
     <string name="shut_up_toast_active">App got shut up</string>
     <string name="shut_up_toast_restored">Shut up features returned</string>
+    <string name="shut_up_custom_settings">Custom settings</string>
+    <string name="shut_up_custom_setting_add">Add setting</string>
+    <string name="shut_up_custom_setting_launch">On launch</string>
+    <string name="shut_up_custom_setting_restore">On restore</string>
+    <string name="shut_up_custom_setting_original">Original</string>
     <string name="shut_up_auto_archive_notif_title">Auto Freeze</string>
     <string name="shut_up_auto_archive_notif_text">%1$s will be archived in %2$d seconds</string>
     <string name="shut_up_auto_archive_action_freeze">Freeze now</string>

@@ -29,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.lifecycle.lifecycleScope
 import com.sameerasw.essentials.data.repository.SettingsRepository
+import com.sameerasw.essentials.domain.diy.Action
 import com.sameerasw.essentials.domain.model.ShutUpAppConfig
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
 import com.sameerasw.essentials.utils.PermissionUtils
@@ -262,6 +263,22 @@ class ShutUpShortcutActivity : ComponentActivity() {
                 }
             }
 
+            config.activeCustomSettings.forEach { setting ->
+                val table =
+                    when (setting.table) {
+                        Action.SettingsTable.SYSTEM -> SettingsTable.SYSTEM
+                        Action.SettingsTable.SECURE -> SettingsTable.SECURE
+                        Action.SettingsTable.GLOBAL -> SettingsTable.GLOBAL
+                    }
+                val prefixedKey = "${table.name.lowercase()}:${setting.key}"
+                val current = safeReadSetting(contentResolver, table, setting.key)
+                when {
+                    setting.valueOnRestore.isNotBlank() -> originalSettings[prefixedKey] = setting.valueOnRestore
+                    current != null && !originalSettings.containsKey(prefixedKey) -> originalSettings[prefixedKey] = current
+                }
+                safeWriteSetting(contentResolver, table, setting.key, setting.valueOnLaunch)
+            }
+
             if (originalSettings.isNotEmpty()) {
                 repository.saveShutUpOriginalSettings(originalSettings)
             }
@@ -287,6 +304,23 @@ class ShutUpShortcutActivity : ComponentActivity() {
             Log.w("ShutUpShortcut", "Skipping unreadable setting $table:$key", e)
             null
         }
+
+    private fun safeWriteSetting(
+        resolver: ContentResolver,
+        table: SettingsTable,
+        key: String,
+        value: String,
+    ) {
+        try {
+            when (table) {
+                SettingsTable.SYSTEM -> Settings.System.putString(resolver, key, value)
+                SettingsTable.SECURE -> Settings.Secure.putString(resolver, key, value)
+                SettingsTable.GLOBAL -> Settings.Global.putString(resolver, key, value)
+            }
+        } catch (e: Exception) {
+            Log.w("ShutUpShortcut", "Failed to write custom setting $table:$key", e)
+        }
+    }
 
     private fun launchApp(packageName: String) {
         val intent = packageManager.getLaunchIntentForPackage(packageName)

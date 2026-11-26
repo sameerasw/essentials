@@ -5,8 +5,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.PathFillType
 import androidx.compose.ui.graphics.drawscope.clipPath
 import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.graphics.drawscope.scale
@@ -22,6 +24,8 @@ private const val FLASK_OUTLINE_PATH =
 
 private const val FLASK_LIQUID_PATH = "M280,720L680,720L544,560L416,560L280,720Z"
 
+private const val LOGO_RING_HOLE_RADIUS = 42.8f
+
 private val LOGO_LAYER_ANGLES = floatArrayOf(30f, 24f, 18f, 12f, 6f)
 private val LOGO_LAYER_ALPHAS = floatArrayOf(0.1f, 0.2f, 0.3f, 0.4f, 0.5f)
 
@@ -32,6 +36,13 @@ fun LayeredLogoIcon(
     modifier: Modifier = Modifier,
 ) {
     val path = remember { PathParser().parsePathString(LOGO_PATH).toPath() }
+    val ring =
+        remember {
+            PathParser().parsePathString(LOGO_PATH.substringBefore('Z') + "Z").toPath().apply {
+                addOval(Rect(Offset(96f, 96f), LOGO_RING_HOLE_RADIUS))
+                fillType = PathFillType.EvenOdd
+            }
+        }
     Canvas(modifier = modifier) {
         val s = size.minDimension / 140f
         translate(left = size.width / 2f - 96f * s, top = size.height / 2f - 96f * s) {
@@ -42,7 +53,7 @@ fun LayeredLogoIcon(
                     val eased = 1f - (1f - local) * (1f - local) * (1f - local)
                     val overshoot = sin(PI * local).toFloat() * 0.25f
                     rotate(degrees = angle * (eased + overshoot), pivot = Offset(96f, 96f)) {
-                        drawPath(path, tint.copy(alpha = tint.alpha * LOGO_LAYER_ALPHAS[i]))
+                        drawPath(ring, tint.copy(alpha = tint.alpha * LOGO_LAYER_ALPHAS[i]))
                     }
                 }
                 drawPath(path, tint)

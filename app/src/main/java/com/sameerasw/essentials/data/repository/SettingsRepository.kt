@@ -62,7 +62,7 @@ class SettingsRepository(
         migrateRemapStringToAction()
         migratePixelSearchbarType()
         migrateDebugUiMarginOverlayReset()
-        migrateStatusBarAwareWidthReset()
+        removeLegacyStatusBarAwareWidth()
     }
 
     private fun migrateUsageAccessKey() {
@@ -111,13 +111,17 @@ class SettingsRepository(
         putBoolean(KEY_BUTTON_REMAP_MIGRATION_DONE, true)
     }
 
-    private fun migrateStatusBarAwareWidthReset() {
-        if (prefs.getBoolean(KEY_ISLAND_STATUSBAR_AWARE_WIDTH_RESET_V1, false)) return
+    private fun removeLegacyStatusBarAwareWidth() {
+        val legacyKeys =
+            prefs.all.keys.filter {
+                it == LEGACY_KEY_ISLAND_STATUSBAR_AWARE_WIDTH ||
+                    it.startsWith("$LEGACY_KEY_ISLAND_STATUSBAR_AWARE_WIDTH@") ||
+                    it == LEGACY_KEY_ISLAND_STATUSBAR_AWARE_WIDTH_RESET_V1
+            }
+        if (legacyKeys.isEmpty()) return
         val editor = prefs.edit()
-        prefs.all.keys
-            .filter { it == KEY_ISLAND_STATUSBAR_AWARE_WIDTH || it.startsWith("$KEY_ISLAND_STATUSBAR_AWARE_WIDTH@") }
-            .forEach { editor.putBoolean(it, false) }
-        editor.putBoolean(KEY_ISLAND_STATUSBAR_AWARE_WIDTH_RESET_V1, true).apply()
+        legacyKeys.forEach { editor.remove(it) }
+        editor.apply()
     }
 
     private fun migrateDebugUiMarginOverlayReset() {
@@ -388,6 +392,8 @@ class SettingsRepository(
         const val KEY_HAPTIC_FEEDBACK_TYPE = "haptic_feedback_type"
         const val KEY_DEFAULT_TAB = "default_tab"
         const val KEY_TOOLBAR_TABS = "toolbar_tabs"
+        const val KEY_TOOLBAR_SHOW_LABELS = "toolbar_show_labels"
+        const val KEY_USER_DISPLAY_NAME = "user_display_name"
         const val KEY_APP_ICON = "app_icon_style"
         const val KEY_USE_ROOT = "use_root"
         const val KEY_PRIVILEGED_MODE = "privileged_mode"
@@ -711,8 +717,9 @@ class SettingsRepository(
         const val KEY_ISLAND_BACKDROP_BLUR = "island_backdrop_blur"
         const val KEY_ISLAND_BACKDROP_BLUR_RADIUS = "island_backdrop_blur_radius"
         const val KEY_ISLAND_PROGRESSIVE_BLUR = "island_progressive_blur"
-        const val KEY_ISLAND_STATUSBAR_AWARE_WIDTH = "island_statusbar_aware_width"
-        const val KEY_ISLAND_STATUSBAR_AWARE_WIDTH_RESET_V1 = "island_statusbar_aware_width_reset_v1"
+        const val KEY_ISLAND_STATUSBAR_AWARE_WIDTH = "island_statusbar_aware_width_v2"
+        private const val LEGACY_KEY_ISLAND_STATUSBAR_AWARE_WIDTH = "island_statusbar_aware_width"
+        private const val LEGACY_KEY_ISLAND_STATUSBAR_AWARE_WIDTH_RESET_V1 = "island_statusbar_aware_width_reset_v1"
         const val KEY_DEBUG_UI_MARGIN_OVERLAY = "debug_ui_margin_overlay"
         const val KEY_DEBUG_UI_MARGIN_OVERLAY_RESET_V1 = "debug_ui_margin_overlay_reset_v1"
         const val KEY_ISLAND_STATUSBAR_IGNORE_NOTIFICATIONS = "island_statusbar_ignore_notifications"
@@ -758,6 +765,7 @@ class SettingsRepository(
         const val KEY_ISLAND_SHOW_NETWORK = "island_show_network"
         const val KEY_ISLAND_SHOW_SIGNAL = "island_show_signal"
         const val KEY_ISLAND_NETWORK_ACTIVITY = "island_network_activity"
+        const val KEY_ISLAND_NETWORK_VPN = "island_network_vpn"
         const val KEY_ISLAND_SIGNAL_WIFI = "island_signal_wifi"
         const val KEY_ISLAND_PRIORITY_ORDER = "island_priority_order"
         const val KEY_ISLAND_HIDDEN_ENTRIES = "island_hidden_entries"
@@ -1465,6 +1473,18 @@ class SettingsRepository(
 
     fun saveToolbarTabs(tabs: List<DIYTabs>) {
         putString(KEY_TOOLBAR_TABS, tabs.joinToString(",") { it.name })
+    }
+
+    fun getToolbarShowLabels(): Boolean = getBoolean(KEY_TOOLBAR_SHOW_LABELS, false)
+
+    fun setToolbarShowLabels(enabled: Boolean) {
+        putBoolean(KEY_TOOLBAR_SHOW_LABELS, enabled)
+    }
+
+    fun getUserDisplayName(): String = prefs.getString(KEY_USER_DISPLAY_NAME, null).orEmpty()
+
+    fun setUserDisplayName(name: String) {
+        putString(KEY_USER_DISPLAY_NAME, name)
     }
 
     fun getAppIcon(): AppIcon {
@@ -4460,6 +4480,8 @@ class SettingsRepository(
     fun setIslandShowNetworkEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_SHOW_NETWORK, enabled)
     fun isIslandNetworkActivityEnabled(): Boolean = getBoolean(KEY_ISLAND_NETWORK_ACTIVITY, true)
     fun setIslandNetworkActivityEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_NETWORK_ACTIVITY, enabled)
+    fun isIslandNetworkVpnEnabled(): Boolean = getBoolean(KEY_ISLAND_NETWORK_VPN, true)
+    fun setIslandNetworkVpnEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_NETWORK_VPN, enabled)
     fun isIslandSignalLowOnlyEnabled(): Boolean = getBoolean(KEY_ISLAND_SIGNAL_LOW_ONLY, false)
     fun setIslandSignalLowOnlyEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_SIGNAL_LOW_ONLY, enabled)
     fun getIslandPriorityOrder(): List<String>? =

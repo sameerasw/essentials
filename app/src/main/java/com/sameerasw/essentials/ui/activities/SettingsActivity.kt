@@ -178,6 +178,7 @@ fun SettingsContent(
     onAvatarLongClickWithPosition: ((Offset) -> Unit)? = null,
     onRippleToggleEnabledWithPosition: ((Offset) -> Unit)? = null,
     onAppColorSelectedWithPosition: ((Offset) -> Unit)? = null,
+    tabNameInToolbar: Boolean = false,
 ) {
     val isAccessibilityEnabled by viewModel.isAccessibilityEnabled
     val isWriteSecureSettingsEnabled by viewModel.isWriteSecureSettingsEnabled
@@ -505,8 +506,8 @@ fun SettingsContent(
         val view = LocalView.current
 
         PullTitleHeader(
-            title = stringResource(R.string.label_settings),
-            caption = appVersion,
+            title = if (tabNameInToolbar) appVersion else stringResource(R.string.label_settings),
+            caption = if (tabNameInToolbar) null else appVersion,
             state = headerState,
         )
 
