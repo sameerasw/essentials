@@ -69,7 +69,7 @@ private fun OneUiCardContainer(
     containerColor: Color,
     content: @Composable ColumnScope.() -> Unit,
 ) {
-    val dividerColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.25f)
+    val dividerColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.35f)
     val arrangement = remember { DividerArrangement() }
     Column(
         modifier =

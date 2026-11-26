@@ -66,12 +66,17 @@ private fun Color.monochrome(): Color {
     return Color(gray, gray, gray, alpha)
 }
 
-private fun ColorScheme.asMonochromeSurfaces(): ColorScheme =
+private fun ColorScheme.asMonochromeSurfaces(darkTheme: Boolean): ColorScheme =
     copy(
-        background = background.monochrome(),
-        surface = surface.monochrome(),
+        background = if (darkTheme) background.monochrome() else surfaceContainer,
+        surface = if (darkTheme) surface.monochrome() else surfaceContainer,
         surfaceDim = surfaceDim.monochrome(),
-        surfaceBright = lerp(surfaceBright.monochrome(), primary, 0.08f),
+        surfaceBright =
+            if (darkTheme) {
+                lerp(surfaceBright.monochrome(), primary, 0.08f)
+            } else {
+                lerp(surfaceContainerLowest.monochrome(), primary, 0.02f)
+            },
         surfaceContainerLowest = surfaceContainerLowest.monochrome(),
         surfaceContainerLow = surfaceContainerLow.monochrome(),
         surfaceContainer = surfaceContainer.monochrome(),
@@ -163,7 +168,7 @@ fun EssentialsTheme(
             darkTheme -> DarkColorScheme
             else -> LightColorScheme
         }
-    val designScheme = if (uiDesign == UiDesign.ONE_UI) baseScheme.asMonochromeSurfaces() else baseScheme
+    val designScheme = if (uiDesign == UiDesign.ONE_UI) baseScheme.asMonochromeSurfaces(darkTheme) else baseScheme
     val colorScheme =
         if (darkTheme && pitchBlackTheme) designScheme.asPitchBlack() else designScheme
 
