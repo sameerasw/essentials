@@ -10,6 +10,16 @@
 package com.sameerasw.essentials.ui.components
 
 import androidx.compose.ui.unit.Dp
+import androidx.compose.foundation.background
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.ui.graphics.lerp
+import androidx.compose.ui.layout.onPlaced
+import androidx.compose.ui.layout.positionInParent
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.IntOffset
+import kotlin.math.roundToInt
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Brush
@@ -98,6 +108,18 @@ private const val HOLD_ARM_MS = 650L
 private val TITLE_BLEED_START = 56.dp
 private val TITLE_BLEED_END = 4.dp
 private val TITLE_FADE = 12.dp
+
+private fun pillCoverage(
+    bounds: Pair<Float, Float>?,
+    pillLeft: Float,
+    pillRight: Float,
+): Float {
+    if (bounds == null) return 0f
+    val width = bounds.second - bounds.first
+    if (width <= 0f) return 0f
+    val overlap = (minOf(bounds.second, pillRight) - maxOf(bounds.first, pillLeft)).coerceAtLeast(0f)
+    return (overlap / width).coerceIn(0f, 1f)
+}
 
 data class ToolbarItem(
     val iconRes: Int,
@@ -379,112 +401,143 @@ fun EssentialsFloatingToolbar(
                             val fullItemWidth =
                                 if (items.isEmpty()) 48.dp else (tabbedWidth - itemGap * (items.size - 1)) / items.size
 
-                            items.forEachIndexed { index, item ->
-                                val isSelected = selectedIndex == index
+                            val density = LocalDensity.current
+                            val itemBounds = remember { mutableStateMapOf<Int, Pair<Float, Float>>() }
+                            val pillLeft = remember { Animatable(0f) }
+                            val pillRight = remember { Animatable(0f) }
+                            var pillPlaced by remember { mutableStateOf(false) }
 
-                                val itemWidth by animateDpAsState(
-                                    targetValue =
-                                        when {
-                                            expanded -> fullItemWidth
-                                            isSelected -> 48.dp
-                                            else -> 0.dp
-                                        },
-                                    animationSpec =
-                                        spring(
-                                            dampingRatio = Spring.DampingRatioMediumBouncy,
-                                            stiffness = Spring.StiffnessLow,
-                                        ),
-                                    label = "item_width_$index",
-                                )
+                            val selectedBounds = itemBounds[selectedIndex]
+                            val targetLeft = selectedBounds?.first
+                            val targetRight = selectedBounds?.second
+                            val snapPill = holdProgress.value > 0f
 
-                                val spacerWidth by animateDpAsState(
-                                    targetValue = if (index < items.size - 1) itemGap else 0.dp,
-                                    animationSpec =
-                                        spring(
-                                            dampingRatio = Spring.DampingRatioMediumBouncy,
-                                            stiffness = Spring.StiffnessLow,
-                                        ),
-                                    label = "spacer_width_$index",
-                                )
+                            LaunchedEffect(targetLeft, targetRight, snapPill) {
+                                if (targetLeft == null || targetRight == null) return@LaunchedEffect
+                                if (!pillPlaced || snapPill) {
+                                    pillLeft.snapTo(targetLeft)
+                                    pillRight.snapTo(targetRight)
+                                    pillPlaced = true
+                                    return@LaunchedEffect
+                                }
+                                val movingRight = targetLeft > pillLeft.value
+                                val lead = spring<Float>(dampingRatio = Spring.DampingRatioNoBouncy, stiffness = Spring.StiffnessMediumLow)
+                                val trail = spring<Float>(dampingRatio = 0.6f, stiffness = Spring.StiffnessLow)
+                                launch { pillLeft.animateTo(targetLeft, if (movingRight) trail else lead) }
+                                launch { pillRight.animateTo(targetRight, if (movingRight) lead else trail) }
+                            }
 
-                                val hold = holdProgress.value
-                                val shownWidth =
-                                    if (isSelected) {
-                                        itemWidth + (tabbedWidth - itemWidth) * hold
-                                    } else {
-                                        itemWidth * (1f - hold)
-                                    }
-
-                                if (itemWidth > 0.dp || isSelected) {
-                                    IconButton(
-                                        onClick = {
-                                            HapticUtil.performVirtualKeyHaptic(view)
-                                            item.onClick()
-                                        },
+                            Box(contentAlignment = Alignment.CenterStart) {
+                                if (pillPlaced) {
+                                    Box(
                                         modifier =
                                             Modifier
-                                                .then(
-                                                    if (isSelected) {
-                                                        Modifier.sharedBounds(
-                                                            rememberSharedContentState(key = "toolbar_pill"),
-                                                            this@AnimatedContent,
-                                                            resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds,
-                                                        )
-                                                    } else {
-                                                        Modifier
-                                                    },
+                                                .offset { IntOffset(pillLeft.value.roundToInt(), 0) }
+                                                .sharedBounds(
+                                                    rememberSharedContentState(key = "toolbar_pill"),
+                                                    this@AnimatedContent,
+                                                    resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds,
                                                 )
-                                                .width(shownWidth)
-                                                .height(48.dp),
-                                        colors =
-                                            if (isSelected) {
-                                                IconButtonDefaults.filledIconButtonColors(
-                                                    contentColor = MaterialTheme.colorScheme.primary,
-                                                    containerColor = MaterialTheme.colorScheme.background,
-                                                )
-                                            } else {
+                                                .width(with(density) { (pillRight.value - pillLeft.value).coerceAtLeast(0f).toDp() })
+                                                .height(48.dp)
+                                                .background(MaterialTheme.colorScheme.background, CircleShape),
+                                    )
+                                }
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                items.forEachIndexed { index, item ->
+                                    val isSelected = selectedIndex == index
+
+                                    val itemWidth by animateDpAsState(
+                                        targetValue =
+                                            when {
+                                                expanded -> fullItemWidth
+                                                isSelected -> 48.dp
+                                                else -> 0.dp
+                                            },
+                                        animationSpec =
+                                            spring(
+                                                dampingRatio = Spring.DampingRatioMediumBouncy,
+                                                stiffness = Spring.StiffnessLow,
+                                            ),
+                                        label = "item_width_$index",
+                                    )
+
+                                    val spacerWidth by animateDpAsState(
+                                        targetValue = if (index < items.size - 1) itemGap else 0.dp,
+                                        animationSpec =
+                                            spring(
+                                                dampingRatio = Spring.DampingRatioMediumBouncy,
+                                                stiffness = Spring.StiffnessLow,
+                                            ),
+                                        label = "spacer_width_$index",
+                                    )
+
+                                    val hold = holdProgress.value
+                                    val shownWidth =
+                                        if (isSelected) {
+                                            itemWidth + (tabbedWidth - itemWidth) * hold
+                                        } else {
+                                            itemWidth * (1f - hold)
+                                        }
+
+                                    if (itemWidth > 0.dp || isSelected) {
+                                        IconButton(
+                                            onClick = {
+                                                HapticUtil.performVirtualKeyHaptic(view)
+                                                item.onClick()
+                                            },
+                                            modifier =
+                                                Modifier
+                                                    .onPlaced { coords ->
+                                                        val x = coords.positionInParent().x
+                                                        itemBounds[index] = x to x + coords.size.width
+                                                    }
+                                                    .width(shownWidth)
+                                                    .height(48.dp),
+                                            colors =
                                                 IconButtonDefaults.iconButtonColors(
                                                     contentColor = MaterialTheme.colorScheme.background,
-                                                    containerColor = MaterialTheme.colorScheme.primary,
-                                                )
-                                            },
-                                    ) {
-                                        Row(
-                                            verticalAlignment = Alignment.CenterVertically,
-                                            horizontalArrangement = Arrangement.Center,
+                                                    containerColor = Color.Transparent,
+                                                ),
                                         ) {
-                                            Box {
-                                                AnimatedToolbarIcon(
-                                                    iconRes = if (isSelected && holdProgress.value > 0.5f) R.drawable.rounded_edit_24 else item.iconRes,
-                                                    contentDescription = stringResource(id = item.labelRes),
-                                                    tint =
-                                                        if (isSelected) {
-                                                            MaterialTheme.colorScheme.primary
-                                                        } else {
-                                                            MaterialTheme.colorScheme.background
-                                                        },
-                                                    selected = isSelected,
-                                                    effect = if (isSelected && holdProgress.value > 0.5f) null else item.effect,
-                                                    modifier = Modifier.size(24.dp * item.iconScale),
-                                                )
-                                                if (item.badge != null) {
-                                                    Box(
-                                                        modifier =
-                                                            Modifier
-                                                                .align(Alignment.TopEnd)
-                                                                .offset(x = 7.dp, y = (-7).dp),
-                                                    ) {
-                                                        item.badge.invoke()
+                                            Row(
+                                                verticalAlignment = Alignment.CenterVertically,
+                                                horizontalArrangement = Arrangement.Center,
+                                            ) {
+                                                Box {
+                                                    AnimatedToolbarIcon(
+                                                        iconRes = if (isSelected && holdProgress.value > 0.5f) R.drawable.rounded_edit_24 else item.iconRes,
+                                                        contentDescription = stringResource(id = item.labelRes),
+                                                        tint =
+                                                            lerp(
+                                                                MaterialTheme.colorScheme.background,
+                                                                MaterialTheme.colorScheme.primary,
+                                                                pillCoverage(itemBounds[index], pillLeft.value, pillRight.value),
+                                                            ),
+                                                        selected = isSelected,
+                                                        effect = if (isSelected && holdProgress.value > 0.5f) null else item.effect,
+                                                        modifier = Modifier.size(24.dp * item.iconScale),
+                                                    )
+                                                    if (item.badge != null) {
+                                                        Box(
+                                                            modifier =
+                                                                Modifier
+                                                                    .align(Alignment.TopEnd)
+                                                                    .offset(x = 7.dp, y = (-7).dp),
+                                                        ) {
+                                                            item.badge.invoke()
+                                                        }
                                                     }
                                                 }
                                             }
                                         }
-                                    }
 
-                                    // Animated spacing between buttons
-                                    if (index < items.size - 1) {
-                                        Spacer(modifier = Modifier.width(spacerWidth * (1f - holdProgress.value)))
+                                        // Animated spacing between buttons
+                                        if (index < items.size - 1) {
+                                            Spacer(modifier = Modifier.width(spacerWidth * (1f - holdProgress.value)))
+                                        }
                                     }
+                                }
                                 }
                             }
                         }
