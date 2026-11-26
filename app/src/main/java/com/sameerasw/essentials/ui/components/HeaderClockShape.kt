@@ -1,6 +1,6 @@
 package com.sameerasw.essentials.ui.components
 
-import com.sameerasw.essentials.ui.theme.accentColor
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
@@ -40,7 +40,7 @@ fun HeaderClockShape(
         label = "clock_shape_rotation",
     )
     val shape = MaterialShapes.Cookie12Sided.toShape()
-    val color = accentColor()
+    val color = MaterialTheme.colorScheme.primary
     val offset = -size * (1f - visibleFraction)
 
     Canvas(

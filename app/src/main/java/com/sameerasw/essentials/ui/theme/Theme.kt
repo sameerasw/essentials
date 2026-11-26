@@ -28,6 +28,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.text.font.FontFamily
 import com.materialkolor.PaletteStyle
 import com.materialkolor.dynamicColorScheme
@@ -70,7 +71,7 @@ private fun ColorScheme.asMonochromeSurfaces(): ColorScheme =
         background = background.monochrome(),
         surface = surface.monochrome(),
         surfaceDim = surfaceDim.monochrome(),
-        surfaceBright = surfaceBright.monochrome(),
+        surfaceBright = lerp(surfaceBright.monochrome(), primary, 0.08f),
         surfaceContainerLowest = surfaceContainerLowest.monochrome(),
         surfaceContainerLow = surfaceContainerLow.monochrome(),
         surfaceContainer = surfaceContainer.monochrome(),
