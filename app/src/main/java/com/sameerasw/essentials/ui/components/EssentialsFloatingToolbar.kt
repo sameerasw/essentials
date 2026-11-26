@@ -19,10 +19,13 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.PathOperation
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.unit.IntSize
+import androidx.compose.ui.unit.toSize
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.ui.graphics.lerp
+import androidx.compose.ui.layout.positionInWindow
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.onPlaced
 import androidx.compose.ui.layout.positionInParent
 import androidx.compose.ui.platform.LocalDensity
@@ -142,6 +145,9 @@ data class ToolbarItem(
     val badge: (@Composable () -> Unit)? = null,
     val iconScale: Float = 1f,
     val effect: ToolbarIconEffect = ToolbarIconEffect.POP,
+    val onIconPlaced: ((Rect) -> Unit)? = null,
+    val iconAlpha: (() -> Float)? = null,
+    val iconSlot: (() -> Float)? = null,
 )
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class, ExperimentalSharedTransitionApi::class)
@@ -592,24 +598,54 @@ fun EssentialsFloatingToolbar(
                                                     if (pillPlaced) pillCoverage(itemBounds[index], pillLeft.value, pillRight.value) else if (isSelected) 1f else 0f,
                                                 )
                                             val labelShown = labelsActive && expanded && isSelected
+                                            val iconSlot = if (labelShown) item.iconSlot else null
                                             Row(
                                                 verticalAlignment = Alignment.CenterVertically,
                                                 horizontalArrangement = Arrangement.Center,
                                                 modifier =
-                                                    if (labelShown) {
-                                                        Modifier.padding(start = LABEL_START_PADDING, end = LABEL_END_PADDING)
-                                                    } else {
-                                                        Modifier
+                                                    when {
+                                                        iconSlot != null -> Modifier.padding(start = LABEL_END_PADDING, end = LABEL_END_PADDING)
+                                                        labelShown -> Modifier.padding(start = LABEL_START_PADDING, end = LABEL_END_PADDING)
+                                                        else -> Modifier
                                                     },
                                             ) {
-                                                Box {
+                                                Box(
+                                                    modifier =
+                                                        if (iconSlot != null) {
+                                                            Modifier.layout { measurable, constraints ->
+                                                                val placeable = measurable.measure(constraints)
+                                                                val gap = (LABEL_START_PADDING - LABEL_END_PADDING).roundToPx()
+                                                                val width = ((placeable.width + gap) * iconSlot().coerceIn(0f, 1f)).roundToInt()
+                                                                layout(width, placeable.height) {
+                                                                    placeable.place(width - placeable.width, 0)
+                                                                }
+                                                            }
+                                                        } else {
+                                                            Modifier
+                                                        },
+                                                ) {
                                                     AnimatedToolbarIcon(
                                                         iconRes = if (isSelected && holdProgress.value > 0.5f) R.drawable.rounded_edit_24 else item.iconRes,
                                                         contentDescription = stringResource(id = item.labelRes),
                                                         tint = tint,
                                                         selected = isSelected,
                                                         effect = if (isSelected && holdProgress.value > 0.5f) null else item.effect,
-                                                        modifier = Modifier.size(24.dp * item.iconScale),
+                                                        modifier =
+                                                            Modifier
+                                                                .size(24.dp * item.iconScale)
+                                                                .then(
+                                                                    if (item.onIconPlaced != null) {
+                                                                        Modifier.onGloballyPositioned { item.onIconPlaced.invoke(Rect(it.positionInWindow(), it.size.toSize())) }
+                                                                    } else {
+                                                                        Modifier
+                                                                    },
+                                                                ).then(
+                                                                    if (item.iconAlpha != null) {
+                                                                        Modifier.graphicsLayer { alpha = item.iconAlpha.invoke() }
+                                                                    } else {
+                                                                        Modifier
+                                                                    },
+                                                                ),
                                                     )
                                                     if (item.badge != null) {
                                                         Box(
