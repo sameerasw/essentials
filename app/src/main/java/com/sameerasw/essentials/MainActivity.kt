@@ -97,6 +97,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -149,12 +150,17 @@ import com.sameerasw.essentials.ui.core.sheets.GitHubAuthSheet
 import com.sameerasw.essentials.ui.core.sheets.InstructionsBottomSheet
 import com.sameerasw.essentials.ui.core.sheets.PrankBottomSheet
 import com.sameerasw.essentials.ui.core.sheets.ShakeForHelp
+import com.sameerasw.essentials.ui.core.sheets.ToolbarConfigBottomSheet
+import com.sameerasw.essentials.ui.components.ToolbarIconEffect
 import com.sameerasw.essentials.ui.core.sheets.UpdateBottomSheet
 import com.sameerasw.essentials.ui.modifiers.BlurDirection
 import com.sameerasw.essentials.ui.modifiers.progressiveBlur
 import com.sameerasw.essentials.ui.modifiers.scrollMotionBlur
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
 import com.sameerasw.essentials.utils.HapticUtil
+import com.sameerasw.essentials.ui.components.TourAnchor
+import com.sameerasw.essentials.ui.state.AppTour
+import com.sameerasw.essentials.ui.state.TourStep
 import com.sameerasw.essentials.viewmodels.AppUpdatesViewModel
 import com.sameerasw.essentials.viewmodels.GitHubAuthViewModel
 import com.sameerasw.essentials.viewmodels.LocationReachedViewModel
@@ -302,6 +308,7 @@ class MainActivity : AppCompatActivity() {
         initPermissionRegistry()
         // Initialize viewModel state early for correct initial composition
         viewModel.check(this)
+        AppTour.init(viewModel.settingsRepository)
         setContent {
             val isPitchBlackThemeEnabled by viewModel.isPitchBlackThemeEnabled
             val isBlurEnabled by viewModel.isBlurEnabled
@@ -345,6 +352,13 @@ class MainActivity : AppCompatActivity() {
 
                     var showGitHubAuthSheet by remember { mutableStateOf(false) }
                     var showNewAutomationSheet by remember { mutableStateOf(false) }
+                    var showToolbarConfigSheet by remember { mutableStateOf(false) }
+                    if (showToolbarConfigSheet) {
+                        ToolbarConfigBottomSheet(
+                            viewModel = viewModel,
+                            onDismissRequest = { showToolbarConfigSheet = false },
+                        )
+                    }
                     var showNewModeSheet by remember { mutableStateOf(false) }
                     var helpTab by remember { mutableStateOf<DIYTabs?>(null) }
                     helpTab?.let { tab ->
@@ -800,6 +814,11 @@ class MainActivity : AppCompatActivity() {
                                             ?: DIYTabs.ESSENTIALS
                                     }
 
+                                SideEffect {
+                                    AppTour.enabled = isOnboardingCompleted && !isWhatsNewVisible && !isSearchActive
+                                    AppTour.homeTab = if (barAtHome) currentTab else null
+                                }
+
                                 val focusManager = androidx.compose.ui.platform.LocalFocusManager.current
                                 val searchFocusRequester = remember { FocusRequester() }
                                 val pageTab = (barRoute as? AppRoute.TabPage)?.tab
@@ -915,198 +934,214 @@ class MainActivity : AppCompatActivity() {
                                                     )
                                                 }
                                             } else {
-                                                EssentialsFloatingToolbar(
-                                                    modifier = morphBounds,
-                                                    selectedIndex = pagerState.currentPage,
-                                                    itemSlots = DIYTabs.entries.size,
-                                                    title = if (isDetail) detailSpec?.title ?: routeTitle else null,
-                                                    isBeta = isDetail && detailSpec?.isBeta == true,
-                                                    onBackClick = if (isDetail) detailSpec?.onBack ?: { navViewModel.pop() } else null,
-                                                backCollapsed = isDetail && bottomBarHost.dismissProgress >= AppNavTransitions.thresholdProgress,
-                                                    items =
-                                                        tabs.mapIndexed { index, tab ->
-                                                            ToolbarItem(
-                                                                iconRes = tab.iconRes,
-                                                                labelRes = tab.title,
-                                                                onClick = {
-                                                                    HapticUtil.performUIHaptic(view)
-                                                                    scope.launch {
-                                                                        jumpToTab(index)
-                                                                    }
-                                                                },
-                                                                badge =
-                                                                    if (tab == DIYTabs.SETTINGS && (isTranslationModeActive || isUpdateAvailable)) {
-                                                                        { SettingsTabBadge(isTranslationModeActive) }
-                                                                    } else {
-                                                                        null
+                                                TourAnchor(TourStep.TOOLBAR to !isDetail, modifier = morphBounds) {
+                                                    EssentialsFloatingToolbar(
+                                                        selectedIndex = pagerState.currentPage,
+                                                        itemSlots = DIYTabs.entries.size,
+                                                        onLongClick = { showToolbarConfigSheet = true },
+                                                        title = if (isDetail) detailSpec?.title ?: routeTitle else null,
+                                                        isBeta = isDetail && detailSpec?.isBeta == true,
+                                                        onBackClick = if (isDetail) detailSpec?.onBack ?: { navViewModel.pop() } else null,
+                                                    backCollapsed = isDetail && bottomBarHost.dismissProgress >= AppNavTransitions.thresholdProgress,
+                                                        items =
+                                                            tabs.mapIndexed { index, tab ->
+                                                                ToolbarItem(
+                                                                    iconRes = tab.iconRes,
+                                                                    labelRes = tab.title,
+                                                                    onClick = {
+                                                                        HapticUtil.performUIHaptic(view)
+                                                                        scope.launch {
+                                                                            jumpToTab(index)
+                                                                        }
                                                                     },
-                                                                iconScale = if (tab == DIYTabs.ESSENTIALS) 1.2f else 1f,
-                                                            )
-                                                        },
-                                                    floatingActionButton = {
-                                                        var fabCenter by remember { mutableStateOf(androidx.compose.ui.geometry.Offset.Zero) }
-                                                        Box(
-                                                            Modifier.onGloballyPositioned { fabCenter = it.boundsInRoot().center },
-                                                        ) {
-                                                            // Menu anchor
-                                                            FloatingActionButton(
-                                                                onClick = {
-                                                                    HapticUtil.performVirtualKeyHaptic(view)
-                                                                    if (isDetail) {
-                                                                        (detailSpec?.fabAction ?: detailSpec?.onHelpClick)?.invoke()
-                                                                    } else when (currentTab) {
-                                                                        DIYTabs.ESSENTIALS -> {
-                                                                            AppRipple.fire(fabCenter)
-                                                                            isSearchActive = true
-                                                                        }
-
-                                                                        DIYTabs.YOUR_ANDROID -> {
-                                                                            if (gitHubUser != null) {
-                                                                                showFabProfileMenu = true
-                                                                            } else {
-                                                                                showGitHubAuthSheet = true
-                                                                            }
-                                                                        }
-
-                                                                        DIYTabs.SETTINGS -> {
-                                                                            showBugReportSheet = true
-                                                                        }
-
-                                                                        DIYTabs.FREEZE -> {
-                                                                            AppRipple.fire(fabCenter)
-                                                                            isSearchActive = true
-                                                                        }
-
-                                                                        DIYTabs.DIY -> {
-                                                                            showNewAutomationSheet = true
-                                                                        }
-
-                                                                        DIYTabs.MODES -> {
-                                                                            showNewModeSheet = true
-                                                                        }
-                                                                    }
-                                                                },
-                                                                containerColor = MaterialTheme.colorScheme.primaryContainer,
-                                                                contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                                                                shape = MaterialTheme.shapes.large,
-                                                                elevation =
-                                                                    androidx.compose.material3.FloatingActionButtonDefaults.elevation(
-                                                                        0.dp,
-                                                                        0.dp,
-                                                                        0.dp,
-                                                                        0.dp,
-                                                                    ),
+                                                                    badge =
+                                                                        if (tab == DIYTabs.SETTINGS && (isTranslationModeActive || isUpdateAvailable)) {
+                                                                            { SettingsTabBadge(isTranslationModeActive) }
+                                                                        } else {
+                                                                            null
+                                                                        },
+                                                                    iconScale = if (tab == DIYTabs.ESSENTIALS) 1.2f else 1f,
+                                                                    effect =
+                                                                        when (tab) {
+                                                                            DIYTabs.ESSENTIALS -> ToolbarIconEffect.LOGO
+                                                                            DIYTabs.FREEZE -> ToolbarIconEffect.REVEAL
+                                                                            DIYTabs.YOUR_ANDROID -> ToolbarIconEffect.SHAKE
+                                                                            DIYTabs.DIY -> ToolbarIconEffect.FILL
+                                                                            DIYTabs.MODES -> ToolbarIconEffect.SHINE
+                                                                            DIYTabs.SETTINGS -> ToolbarIconEffect.SPIN
+                                                                        },
+                                                                )
+                                                            },
+                                                        floatingActionButton = {
+                                                            var fabCenter by remember { mutableStateOf(androidx.compose.ui.geometry.Offset.Zero) }
+                                                            Box(
+                                                                Modifier.onGloballyPositioned { fabCenter = it.boundsInRoot().center },
                                                             ) {
-                                                                val fabKey: Any = if (isDetail) "detail:${detailSpec?.fabIconRes}" else currentTab
-                                                                AnimatedContent(
-                                                                    targetState = fabKey,
-                                                                    transitionSpec = {
-                                                                        (fadeIn() + androidx.compose.animation.scaleIn(initialScale = 0.6f)) togetherWith
-                                                                            (fadeOut() + androidx.compose.animation.scaleOut(targetScale = 0.6f))
-                                                                    },
-                                                                    label = "fab_icon",
-                                                                ) { key ->
-                                                                    if (key !is DIYTabs) {
-                                                                        Icon(
-                                                                            painter = painterResource(id = detailSpec?.fabIconRes ?: R.drawable.rounded_help_24),
-                                                                            contentDescription = detailSpec?.fabContentDescription ?: stringResource(R.string.action_help_guide),
-                                                                        )
-                                                                    } else {
-                                                                        when (key) {
-                                                                            DIYTabs.ESSENTIALS -> {
-                                                                                Icon(
-                                                                                    painter = painterResource(id = R.drawable.rounded_search_24),
-                                                                                    contentDescription = stringResource(R.string.label_search_content_description),
-                                                                                )
-                                                                            }
+                                                                TourAnchor(
+                                                                    TourStep.SEARCH_FAB to (!isDetail && currentTab == DIYTabs.ESSENTIALS),
+                                                                    TourStep.BUG_REPORT_FAB to (!isDetail && currentTab == DIYTabs.SETTINGS),
+                                                                    TourStep.HELP_FAB to (isDetail && detailSpec?.fabIconRes == null),
+                                                                ) {
+                                                                    FloatingActionButton(
+                                                                        onClick = {
+                                                                            HapticUtil.performVirtualKeyHaptic(view)
+                                                                            if (isDetail) {
+                                                                                (detailSpec?.fabAction ?: detailSpec?.onHelpClick)?.invoke()
+                                                                            } else when (currentTab) {
+                                                                                DIYTabs.ESSENTIALS -> {
+                                                                                    AppRipple.fire(fabCenter)
+                                                                                    isSearchActive = true
+                                                                                }
 
-                                                                            DIYTabs.YOUR_ANDROID -> {
-                                                                                if (gitHubUser != null) {
-                                                                                    coil.compose.AsyncImage(
-                                                                                        model = gitHubUser!!.avatarUrl,
-                                                                                        contentDescription = stringResource(R.string.action_profile),
-                                                                                        contentScale = androidx.compose.ui.layout.ContentScale.Crop,
-                                                                                        modifier =
-                                                                                            Modifier
-                                                                                                .size(24.dp)
-                                                                                                .clip(androidx.compose.foundation.shape.CircleShape),
-                                                                                        placeholder = painterResource(id = R.drawable.brand_github),
-                                                                                        error = painterResource(id = R.drawable.brand_github),
-                                                                                    )
-                                                                                } else {
-                                                                                    Icon(
-                                                                                        painter = painterResource(id = R.drawable.brand_github),
-                                                                                        contentDescription = stringResource(R.string.action_sign_in_github),
-                                                                                    )
+                                                                                DIYTabs.YOUR_ANDROID -> {
+                                                                                    if (gitHubUser != null) {
+                                                                                        showFabProfileMenu = true
+                                                                                    } else {
+                                                                                        showGitHubAuthSheet = true
+                                                                                    }
+                                                                                }
+
+                                                                                DIYTabs.SETTINGS -> {
+                                                                                    showBugReportSheet = true
+                                                                                }
+
+                                                                                DIYTabs.FREEZE -> {
+                                                                                    AppRipple.fire(fabCenter)
+                                                                                    isSearchActive = true
+                                                                                }
+
+                                                                                DIYTabs.DIY -> {
+                                                                                    showNewAutomationSheet = true
+                                                                                }
+
+                                                                                DIYTabs.MODES -> {
+                                                                                    showNewModeSheet = true
                                                                                 }
                                                                             }
-
-                                                                            DIYTabs.SETTINGS -> {
+                                                                        },
+                                                                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+                                                                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                                                                        shape = MaterialTheme.shapes.large,
+                                                                        elevation =
+                                                                            androidx.compose.material3.FloatingActionButtonDefaults.elevation(
+                                                                                0.dp,
+                                                                                0.dp,
+                                                                                0.dp,
+                                                                                0.dp,
+                                                                            ),
+                                                                    ) {
+                                                                        val fabKey: Any = if (isDetail) "detail:${detailSpec?.fabIconRes}" else currentTab
+                                                                        AnimatedContent(
+                                                                            targetState = fabKey,
+                                                                            transitionSpec = {
+                                                                                (fadeIn() + androidx.compose.animation.scaleIn(initialScale = 0.6f)) togetherWith
+                                                                                    (fadeOut() + androidx.compose.animation.scaleOut(targetScale = 0.6f))
+                                                                            },
+                                                                            label = "fab_icon",
+                                                                        ) { key ->
+                                                                            if (key !is DIYTabs) {
                                                                                 Icon(
-                                                                                    painter = painterResource(id = R.drawable.rounded_bug_report_24),
-                                                                                    contentDescription = stringResource(R.string.action_report_bug),
+                                                                                    painter = painterResource(id = detailSpec?.fabIconRes ?: R.drawable.rounded_help_24),
+                                                                                    contentDescription = detailSpec?.fabContentDescription ?: stringResource(R.string.action_help_guide),
                                                                                 )
-                                                                            }
+                                                                            } else {
+                                                                                when (key) {
+                                                                                    DIYTabs.ESSENTIALS -> {
+                                                                                        Icon(
+                                                                                            painter = painterResource(id = R.drawable.rounded_search_24),
+                                                                                            contentDescription = stringResource(R.string.label_search_content_description),
+                                                                                        )
+                                                                                    }
 
-                                                                            DIYTabs.FREEZE -> {
-                                                                                Icon(
-                                                                                    painter = painterResource(id = R.drawable.rounded_search_24),
-                                                                                    contentDescription = stringResource(R.string.label_search_content_description),
-                                                                                )
-                                                                            }
+                                                                                    DIYTabs.YOUR_ANDROID -> {
+                                                                                        if (gitHubUser != null) {
+                                                                                            coil.compose.AsyncImage(
+                                                                                                model = gitHubUser!!.avatarUrl,
+                                                                                                contentDescription = stringResource(R.string.action_profile),
+                                                                                                contentScale = androidx.compose.ui.layout.ContentScale.Crop,
+                                                                                                modifier =
+                                                                                                    Modifier
+                                                                                                        .size(24.dp)
+                                                                                                        .clip(androidx.compose.foundation.shape.CircleShape),
+                                                                                                placeholder = painterResource(id = R.drawable.brand_github),
+                                                                                                error = painterResource(id = R.drawable.brand_github),
+                                                                                            )
+                                                                                        } else {
+                                                                                            Icon(
+                                                                                                painter = painterResource(id = R.drawable.brand_github),
+                                                                                                contentDescription = stringResource(R.string.action_sign_in_github),
+                                                                                            )
+                                                                                        }
+                                                                                    }
 
-                                                                            DIYTabs.DIY -> {
-                                                                                Icon(
-                                                                                    painter = painterResource(id = R.drawable.rounded_add_24),
-                                                                                    contentDescription = stringResource(R.string.diy_editor_new_title),
-                                                                                )
-                                                                            }
+                                                                                    DIYTabs.SETTINGS -> {
+                                                                                        Icon(
+                                                                                            painter = painterResource(id = R.drawable.rounded_bug_report_24),
+                                                                                            contentDescription = stringResource(R.string.action_report_bug),
+                                                                                        )
+                                                                                    }
 
-                                                                            DIYTabs.MODES -> {
-                                                                                Icon(
-                                                                                    painter = painterResource(id = R.drawable.rounded_add_24),
-                                                                                    contentDescription = stringResource(R.string.action_new_mode),
-                                                                                )
+                                                                                    DIYTabs.FREEZE -> {
+                                                                                        Icon(
+                                                                                            painter = painterResource(id = R.drawable.rounded_search_24),
+                                                                                            contentDescription = stringResource(R.string.label_search_content_description),
+                                                                                        )
+                                                                                    }
+
+                                                                                    DIYTabs.DIY -> {
+                                                                                        Icon(
+                                                                                            painter = painterResource(id = R.drawable.rounded_add_24),
+                                                                                            contentDescription = stringResource(R.string.diy_editor_new_title),
+                                                                                        )
+                                                                                    }
+
+                                                                                    DIYTabs.MODES -> {
+                                                                                        Icon(
+                                                                                            painter = painterResource(id = R.drawable.rounded_add_24),
+                                                                                            contentDescription = stringResource(R.string.action_new_mode),
+                                                                                        )
+                                                                                    }
+                                                                                }
                                                                             }
                                                                         }
                                                                     }
                                                                 }
-                                                            }
 
-                                                            if (((!isDetail && currentTab == DIYTabs.YOUR_ANDROID) || pageTab == DIYTabs.YOUR_ANDROID) && gitHubUser != null) {
-                                                                SegmentedDropdownMenu(
-                                                                    expanded = showFabProfileMenu,
-                                                                    onDismissRequest = { showFabProfileMenu = false },
-                                                                ) {
-                                                                    SegmentedDropdownMenuItem(
-                                                                        text = { Text(gitHubUser!!.name ?: gitHubUser!!.login) },
-                                                                        onClick = { showFabProfileMenu = false },
-                                                                        leadingIcon = {
-                                                                            Icon(
-                                                                                painter = painterResource(id = R.drawable.brand_github),
-                                                                                contentDescription = null,
-                                                                            )
-                                                                        },
-                                                                    )
-                                                                    SegmentedDropdownMenuItem(
-                                                                        text = { TranslatableText(R.string.action_sign_out) },
-                                                                        onClick = {
-                                                                            gitHubAuthViewModel.signOut(context)
-                                                                            showFabProfileMenu = false
-                                                                        },
-                                                                        leadingIcon = {
-                                                                            Icon(
-                                                                                painter = painterResource(id = R.drawable.rounded_logout_24),
-                                                                                contentDescription = null,
-                                                                            )
-                                                                        },
-                                                                    )
+                                                                if (((!isDetail && currentTab == DIYTabs.YOUR_ANDROID) || pageTab == DIYTabs.YOUR_ANDROID) && gitHubUser != null) {
+                                                                    SegmentedDropdownMenu(
+                                                                        expanded = showFabProfileMenu,
+                                                                        onDismissRequest = { showFabProfileMenu = false },
+                                                                    ) {
+                                                                        SegmentedDropdownMenuItem(
+                                                                            text = { Text(gitHubUser!!.name ?: gitHubUser!!.login) },
+                                                                            onClick = { showFabProfileMenu = false },
+                                                                            leadingIcon = {
+                                                                                Icon(
+                                                                                    painter = painterResource(id = R.drawable.brand_github),
+                                                                                    contentDescription = null,
+                                                                                )
+                                                                            },
+                                                                        )
+                                                                        SegmentedDropdownMenuItem(
+                                                                            text = { TranslatableText(R.string.action_sign_out) },
+                                                                            onClick = {
+                                                                                gitHubAuthViewModel.signOut(context)
+                                                                                showFabProfileMenu = false
+                                                                            },
+                                                                            leadingIcon = {
+                                                                                Icon(
+                                                                                    painter = painterResource(id = R.drawable.rounded_logout_24),
+                                                                                    contentDescription = null,
+                                                                                )
+                                                                            },
+                                                                        )
+                                                                    }
                                                                 }
-                                                            }
 
-                                                        }
-                                                    },
-                                                )
+                                                            }
+                                                        },
+                                                    )
+                                                }
                                             }
                                         }
                                     }

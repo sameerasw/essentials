@@ -459,7 +459,7 @@ fun AutomationEditorScreen(
             if (hasUnsavedChanges) showDiscardDialog = true else onBack()
         }
 
-        BackHandler {
+        BackHandler(enabled = hasUnsavedChanges) {
             handleBackClick()
         }
 

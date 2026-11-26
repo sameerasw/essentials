@@ -10,6 +10,42 @@
 package com.sameerasw.essentials.ui.components
 
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.geometry.RoundRect
+import androidx.compose.ui.geometry.toRect
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.PathOperation
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.unit.IntSize
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.ui.graphics.lerp
+import androidx.compose.ui.layout.onPlaced
+import androidx.compose.ui.layout.positionInParent
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.IntOffset
+import kotlin.math.roundToInt
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.graphics.BlendMode
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.CompositingStrategy
+import androidx.compose.ui.layout.layout
+import androidx.compose.ui.zIndex
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.ui.platform.LocalContext
+import kotlinx.coroutines.launch
+import androidx.compose.foundation.gestures.awaitEachGesture
+import androidx.compose.foundation.gestures.awaitFirstDown
+import androidx.compose.foundation.gestures.waitForUpOrCancellation
+import androidx.compose.ui.input.pointer.PointerEventPass
+import androidx.compose.ui.input.pointer.pointerInput
+import kotlinx.coroutines.withTimeoutOrNull
 import androidx.compose.foundation.layout.offset
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.SharedTransitionLayout
@@ -40,6 +76,7 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -73,12 +110,32 @@ import com.sameerasw.essentials.R
 import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.utils.HapticUtil
 
+private const val HOLD_START_MS = 350L
+private const val HOLD_ARM_MS = 650L
+
+private val TITLE_BLEED_START = 56.dp
+private val TITLE_BLEED_END = 4.dp
+private val TITLE_FADE = 12.dp
+
+private fun pillCoverage(
+    bounds: Pair<Float, Float>?,
+    pillLeft: Float,
+    pillRight: Float,
+): Float {
+    if (bounds == null) return 0f
+    val width = bounds.second - bounds.first
+    if (width <= 0f) return 0f
+    val overlap = (minOf(bounds.second, pillRight) - maxOf(bounds.first, pillLeft)).coerceAtLeast(0f)
+    return (overlap / width).coerceIn(0f, 1f)
+}
+
 data class ToolbarItem(
     val iconRes: Int,
     val labelRes: Int,
     val onClick: () -> Unit,
     val badge: (@Composable () -> Unit)? = null,
     val iconScale: Float = 1f,
+    val effect: ToolbarIconEffect = ToolbarIconEffect.POP,
 )
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class, ExperimentalSharedTransitionApi::class)
@@ -104,10 +161,30 @@ fun EssentialsFloatingToolbar(
     expanded: Boolean = true,
     backCollapsed: Boolean = false,
     availableWidth: Dp? = null,
+    onLongClick: (() -> Unit)? = null,
 ) {
     val view = LocalView.current
+    val context = LocalContext.current
+    val holdProgress = remember { Animatable(0f) }
+    val itemBounds = remember { mutableStateMapOf<Int, Pair<Float, Float>>() }
+    val pillLeft = remember { Animatable(0f) }
+    val pillRight = remember { Animatable(0f) }
+    var pillPlaced by remember { mutableStateOf(false) }
+    val holdScope = rememberCoroutineScope()
+    val currentOnLongClick by rememberUpdatedState(onLongClick)
     val screenWidth = availableWidth ?: LocalConfiguration.current.screenWidthDp.dp
-    val titleWidth = (screenWidth - 32.dp - 56.dp - 8.dp - 16.dp - 48.dp - 8.dp).coerceIn(0.dp, 192.dp)
+    val itemGap = 2.dp
+    val slots = maxOf(itemSlots, items.size, 1)
+    val hasFab = floatingActionButton != null || onHelpClick != null || (fabAction != null && fabIconRes != null)
+    val maxTabbedWidth =
+        (screenWidth - 32.dp - 8.dp - if (hasFab) 64.dp else 0.dp).coerceAtLeast(48.dp)
+    val tabbedWidth = (48.dp * slots + itemGap * (slots - 1)).coerceAtMost(maxTabbedWidth)
+    val titleWidth =
+        if (itemSlots > 0 || items.isNotEmpty()) {
+            (tabbedWidth - 48.dp - 8.dp).coerceAtLeast(0.dp)
+        } else {
+            (screenWidth - 32.dp - 56.dp - 8.dp - 16.dp - 48.dp - 8.dp).coerceIn(0.dp, 192.dp)
+        }
     val collapse by animateFloatAsState(
         targetValue = if (backCollapsed) 1f else 0f,
         animationSpec = tween(380, easing = CubicBezierEasing(0.2f, 0f, 0f, 1f)),
@@ -168,8 +245,10 @@ fun EssentialsFloatingToolbar(
         modifier =
             modifier
                 .windowInsetsPadding(WindowInsets.navigationBars)
-                .padding(start = 16.dp, end = 16.dp, bottom = 0.dp),
+                .padding(start = 16.dp, end = 16.dp, bottom = 0.dp)
+                .height(56.dp),
         expanded = expanded,
+        contentPadding = PaddingValues(4.dp),
         floatingActionButton = finalFab ?: {},
         scrollBehavior = scrollBehavior,
         colors =
@@ -188,7 +267,52 @@ fun EssentialsFloatingToolbar(
                     contentAlignment = Alignment.Center,
                     label = "toolbar_mode",
                 ) { isBackMode ->
-                    Row(verticalAlignment = Alignment.CenterVertically) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier =
+                            if (!isBackMode && onLongClick != null) {
+                                Modifier.pointerInput(Unit) {
+                                    awaitEachGesture {
+                                        awaitFirstDown(requireUnconsumed = false, pass = PointerEventPass.Initial)
+                                        val early =
+                                            withTimeoutOrNull(HOLD_START_MS) {
+                                                waitForUpOrCancellation(PointerEventPass.Initial)
+                                            }
+                                        if (early != null) return@awaitEachGesture
+                                        HapticUtil.startTickRampHaptic(context, HOLD_ARM_MS)
+                                        val armJob =
+                                            holdScope.launch {
+                                                holdProgress.animateTo(1f, tween(HOLD_ARM_MS.toInt(), easing = FastOutSlowInEasing))
+                                            }
+                                        val released =
+                                            withTimeoutOrNull(HOLD_ARM_MS) {
+                                                while (true) {
+                                                    val event = awaitPointerEvent(PointerEventPass.Initial)
+                                                    if (event.changes.none { it.pressed }) {
+                                                        event.changes.forEach { it.consume() }
+                                                        break
+                                                    }
+                                                }
+                                            }
+                                        if (released != null) {
+                                            armJob.cancel()
+                                            HapticUtil.stopHoldHaptic(context)
+                                            holdScope.launch { holdProgress.animateTo(0f, spring(dampingRatio = Spring.DampingRatioMediumBouncy)) }
+                                            return@awaitEachGesture
+                                        }
+                                        HapticUtil.performOpenClickHaptic(context)
+                                        currentOnLongClick?.invoke()
+                                        do {
+                                            val event = awaitPointerEvent(PointerEventPass.Initial)
+                                            event.changes.forEach { it.consume() }
+                                        } while (event.changes.any { it.pressed })
+                                        holdScope.launch { holdProgress.animateTo(0f, spring(dampingRatio = Spring.DampingRatioMediumBouncy)) }
+                                    }
+                                }
+                            } else {
+                                Modifier
+                            },
+                    ) {
                         if (isBackMode) {
                             // BACK BUTTON - Unified with Tabbed style (pop-out effect)
                             IconButton(
@@ -198,6 +322,7 @@ fun EssentialsFloatingToolbar(
                                 },
                                 modifier =
                                     Modifier
+                                        .zIndex(1f)
                                         .sharedBounds(
                                             rememberSharedContentState(key = "toolbar_pill"),
                                             this@AnimatedContent,
@@ -225,10 +350,36 @@ fun EssentialsFloatingToolbar(
                                     horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
                                     modifier =
                                         Modifier
-                                            .width(titleWidth * (1f - collapse))
-                                            .clipToBounds()
-                                            .graphicsLayer { alpha = 1f - collapse }
-                                            .padding(horizontal = 8.dp)
+                                            .layout { measurable, constraints ->
+                                                val visible = (titleWidth * (1f - collapse)).roundToPx()
+                                                val start = TITLE_BLEED_START.roundToPx()
+                                                val end = TITLE_BLEED_END.roundToPx()
+                                                val placeable =
+                                                    measurable.measure(
+                                                        constraints.copy(minWidth = visible + start + end, maxWidth = visible + start + end),
+                                                    )
+                                                layout(visible, placeable.height) {
+                                                    placeable.place(-start, 0)
+                                                }
+                                            }
+                                            .graphicsLayer {
+                                                alpha = 1f - collapse
+                                                compositingStrategy = CompositingStrategy.Offscreen
+                                            }
+                                            .drawWithContent {
+                                                drawContent()
+                                                val fade = TITLE_FADE.toPx() / size.width
+                                                drawRect(
+                                                    brush =
+                                                        Brush.horizontalGradient(
+                                                            0f to Color.Transparent,
+                                                            fade to Color.Black,
+                                                            1f - fade to Color.Black,
+                                                            1f to Color.Transparent,
+                                                        ),
+                                                    blendMode = BlendMode.DstIn,
+                                                )
+                                            }
                                             .align(Alignment.CenterVertically),
                                 ) {
                                     AnimatedContent(
@@ -247,7 +398,10 @@ fun EssentialsFloatingToolbar(
                                             color = MaterialTheme.colorScheme.background,
                                             maxLines = 1,
                                             textAlign = TextAlign.Center,
-                                            modifier = Modifier.basicMarquee(),
+                                            modifier =
+                                                Modifier
+                                                    .basicMarquee()
+                                                    .padding(start = TITLE_BLEED_START - TITLE_BLEED_END),
                                         )
                                     }
                                     if (isBeta) {
@@ -262,108 +416,167 @@ fun EssentialsFloatingToolbar(
                             }
                         } else {
                             // TABBED MODE
-                            val itemGap = 2.dp
-                            val slots = maxOf(itemSlots, items.size, 1)
-                            val tabbedWidth = 48.dp * slots + itemGap * (slots - 1)
                             val fullItemWidth =
                                 if (items.isEmpty()) 48.dp else (tabbedWidth - itemGap * (items.size - 1)) / items.size
 
-                            items.forEachIndexed { index, item ->
-                                val isSelected = selectedIndex == index
+                            val density = LocalDensity.current
 
-                                val itemWidth by animateDpAsState(
-                                    targetValue =
-                                        when {
-                                            expanded -> fullItemWidth
-                                            isSelected -> 48.dp
-                                            else -> 0.dp
-                                        },
-                                    animationSpec =
-                                        spring(
-                                            dampingRatio = Spring.DampingRatioMediumBouncy,
-                                            stiffness = Spring.StiffnessLow,
-                                        ),
-                                    label = "item_width_$index",
-                                )
+                            val selectedBounds = itemBounds[selectedIndex]
+                            val targetLeft = selectedBounds?.first
+                            val targetRight = selectedBounds?.second
+                            val snapPill = holdProgress.value > 0f
 
-                                val spacerWidth by animateDpAsState(
-                                    targetValue = if (index < items.size - 1) itemGap else 0.dp,
-                                    animationSpec =
-                                        spring(
-                                            dampingRatio = Spring.DampingRatioMediumBouncy,
-                                            stiffness = Spring.StiffnessLow,
-                                        ),
-                                    label = "spacer_width_$index",
-                                )
+                            LaunchedEffect(targetLeft, targetRight, snapPill) {
+                                if (targetLeft == null || targetRight == null) return@LaunchedEffect
+                                if (!pillPlaced || snapPill) {
+                                    pillLeft.snapTo(targetLeft)
+                                    pillRight.snapTo(targetRight)
+                                    pillPlaced = true
+                                    return@LaunchedEffect
+                                }
+                                val movingRight = targetLeft > pillLeft.value
+                                val lead = spring<Float>(dampingRatio = Spring.DampingRatioNoBouncy, stiffness = Spring.StiffnessMediumLow)
+                                val trail = spring<Float>(dampingRatio = 0.6f, stiffness = Spring.StiffnessLow)
+                                launch { pillLeft.animateTo(targetLeft, if (movingRight) trail else lead) }
+                                launch { pillRight.animateTo(targetRight, if (movingRight) lead else trail) }
+                            }
 
-                                if (itemWidth > 0.dp || isSelected) {
-                                    IconButton(
-                                        onClick = {
-                                            HapticUtil.performVirtualKeyHaptic(view)
-                                            item.onClick()
-                                        },
+                            val pillColor = MaterialTheme.colorScheme.background
+                            var rowSize by remember { mutableStateOf(IntSize.Zero) }
+                            var pillPosition by remember { mutableStateOf(Offset.Zero) }
+                            Box(
+                                contentAlignment = Alignment.CenterStart,
+                                modifier = Modifier.onSizeChanged { rowSize = it },
+                            ) {
+                                if (pillPlaced) {
+                                    Box(
                                         modifier =
                                             Modifier
-                                                .then(
-                                                    if (isSelected) {
-                                                        Modifier.sharedBounds(
-                                                            rememberSharedContentState(key = "toolbar_pill"),
-                                                            this@AnimatedContent,
-                                                            resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds,
+                                                .offset { IntOffset(pillLeft.value.roundToInt(), 0) }
+                                                .sharedBounds(
+                                                    rememberSharedContentState(key = "toolbar_pill"),
+                                                    this@AnimatedContent,
+                                                    resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds,
+                                                    renderInOverlayDuringTransition = false,
+                                                )
+                                                .width(with(density) { (pillRight.value - pillLeft.value).coerceAtLeast(0f).toDp() })
+                                                .height(48.dp)
+                                                .onPlaced { pillPosition = it.positionInParent() }
+                                                .drawBehind {
+                                                    val pill =
+                                                        Path().apply {
+                                                            addRoundRect(RoundRect(size.toRect(), CornerRadius(size.height / 2f)))
+                                                        }
+                                                    val rowRect =
+                                                        Rect(
+                                                            -pillPosition.x,
+                                                            -pillPosition.y,
+                                                            rowSize.width - pillPosition.x,
+                                                            rowSize.height - pillPosition.y,
                                                         )
-                                                    } else {
-                                                        Modifier
-                                                    },
-                                                )
-                                                .width(itemWidth)
-                                                .height(48.dp),
-                                        colors =
-                                            if (isSelected) {
-                                                IconButtonDefaults.filledIconButtonColors(
-                                                    contentColor = MaterialTheme.colorScheme.primary,
-                                                    containerColor = MaterialTheme.colorScheme.background,
-                                                )
-                                            } else {
+                                                    val row =
+                                                        Path().apply {
+                                                            addRoundRect(RoundRect(rowRect, CornerRadius(rowRect.height / 2f)))
+                                                        }
+                                                    drawPath(Path.combine(PathOperation.Intersect, pill, row), pillColor)
+                                                },
+                                    )
+                                }
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                items.forEachIndexed { index, item ->
+                                    val isSelected = selectedIndex == index
+
+                                    val itemWidth by animateDpAsState(
+                                        targetValue =
+                                            when {
+                                                expanded -> fullItemWidth
+                                                isSelected -> 48.dp
+                                                else -> 0.dp
+                                            },
+                                        animationSpec =
+                                            spring(
+                                                dampingRatio = Spring.DampingRatioMediumBouncy,
+                                                stiffness = Spring.StiffnessLow,
+                                            ),
+                                        label = "item_width_$index",
+                                    )
+
+                                    val spacerWidth by animateDpAsState(
+                                        targetValue = if (index < items.size - 1) itemGap else 0.dp,
+                                        animationSpec =
+                                            spring(
+                                                dampingRatio = Spring.DampingRatioMediumBouncy,
+                                                stiffness = Spring.StiffnessLow,
+                                            ),
+                                        label = "spacer_width_$index",
+                                    )
+
+                                    val hold = holdProgress.value
+                                    val shownWidth =
+                                        if (isSelected) {
+                                            itemWidth + (tabbedWidth - itemWidth) * hold
+                                        } else {
+                                            itemWidth * (1f - hold)
+                                        }
+
+                                    if (itemWidth > 0.dp || isSelected) {
+                                        IconButton(
+                                            onClick = {
+                                                HapticUtil.performVirtualKeyHaptic(view)
+                                                item.onClick()
+                                            },
+                                            modifier =
+                                                Modifier
+                                                    .onPlaced { coords ->
+                                                        val x = coords.positionInParent().x
+                                                        itemBounds[index] = x to x + coords.size.width
+                                                    }
+                                                    .width(shownWidth)
+                                                    .height(48.dp),
+                                            colors =
                                                 IconButtonDefaults.iconButtonColors(
                                                     contentColor = MaterialTheme.colorScheme.background,
-                                                    containerColor = MaterialTheme.colorScheme.primary,
-                                                )
-                                            },
-                                    ) {
-                                        Row(
-                                            verticalAlignment = Alignment.CenterVertically,
-                                            horizontalArrangement = Arrangement.Center,
+                                                    containerColor = Color.Transparent,
+                                                ),
                                         ) {
-                                            Box {
-                                                Icon(
-                                                    painter = painterResource(id = item.iconRes),
-                                                    contentDescription = stringResource(id = item.labelRes),
-                                                    tint =
-                                                        if (isSelected) {
-                                                            MaterialTheme.colorScheme.primary
-                                                        } else {
-                                                            MaterialTheme.colorScheme.background
-                                                        },
-                                                    modifier = Modifier.size(24.dp * item.iconScale),
-                                                )
-                                                if (item.badge != null) {
-                                                    Box(
-                                                        modifier =
-                                                            Modifier
-                                                                .align(Alignment.TopEnd)
-                                                                .offset(x = 7.dp, y = (-7).dp),
-                                                    ) {
-                                                        item.badge.invoke()
+                                            Row(
+                                                verticalAlignment = Alignment.CenterVertically,
+                                                horizontalArrangement = Arrangement.Center,
+                                            ) {
+                                                Box {
+                                                    AnimatedToolbarIcon(
+                                                        iconRes = if (isSelected && holdProgress.value > 0.5f) R.drawable.rounded_edit_24 else item.iconRes,
+                                                        contentDescription = stringResource(id = item.labelRes),
+                                                        tint =
+                                                            lerp(
+                                                                MaterialTheme.colorScheme.background,
+                                                                MaterialTheme.colorScheme.primary,
+                                                                if (pillPlaced) pillCoverage(itemBounds[index], pillLeft.value, pillRight.value) else if (isSelected) 1f else 0f,
+                                                            ),
+                                                        selected = isSelected,
+                                                        effect = if (isSelected && holdProgress.value > 0.5f) null else item.effect,
+                                                        modifier = Modifier.size(24.dp * item.iconScale),
+                                                    )
+                                                    if (item.badge != null) {
+                                                        Box(
+                                                            modifier =
+                                                                Modifier
+                                                                    .align(Alignment.TopEnd)
+                                                                    .offset(x = 7.dp, y = (-7).dp),
+                                                        ) {
+                                                            item.badge.invoke()
+                                                        }
                                                     }
                                                 }
                                             }
                                         }
-                                    }
 
-                                    // Animated spacing between buttons
-                                    if (index < items.size - 1) {
-                                        Spacer(modifier = Modifier.width(spacerWidth))
+                                        // Animated spacing between buttons
+                                        if (index < items.size - 1) {
+                                            Spacer(modifier = Modifier.width(spacerWidth * (1f - holdProgress.value)))
+                                        }
                                     }
+                                }
                                 }
                             }
                         }

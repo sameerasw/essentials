@@ -142,6 +142,7 @@ import com.sameerasw.essentials.utils.AppResetHelper
 import com.sameerasw.essentials.ui.features.consciousgate.HoldToContinueButton
 import com.sameerasw.essentials.ui.core.pickers.SegmentedPicker
 import com.sameerasw.essentials.utils.AppHapticMode
+import com.sameerasw.essentials.ui.state.AppTour
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.utils.PermissionGrantUtil
 import kotlinx.coroutines.withContext
@@ -1512,6 +1513,40 @@ fun SettingsContent(
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         TranslatableText(R.string.btn_clear_search_history)
+                    }
+                }
+
+                Row(
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .background(
+                                color = MaterialTheme.colorScheme.surfaceBright,
+                                shape = Shapes.extraSmall,
+                            ).padding(16.dp),
+                ) {
+                    Button(
+                        onClick = {
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            AppTour.reset()
+                            Toast.makeText(context, context.getString(R.string.tour_reset_toast), Toast.LENGTH_SHORT).show()
+                        },
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .defaultMinSize(minHeight = 44.dp),
+                        shape = ButtonDefaults.shape,
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.rounded_tour_24),
+                            contentDescription = null,
+                            modifier = Modifier.size(20.dp),
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        TranslatableText(
+                            stringResId = R.string.action_reset_tour,
+                            style = MaterialTheme.typography.labelLarge,
+                        )
                     }
                 }
 
