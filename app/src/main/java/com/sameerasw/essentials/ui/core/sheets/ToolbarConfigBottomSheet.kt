@@ -24,6 +24,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -32,8 +33,11 @@ import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -47,6 +51,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.DIYTabs
+import com.sameerasw.essentials.ui.core.cards.IconToggleItem
+import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.viewmodels.MainViewModel
@@ -88,6 +94,12 @@ fun ToolbarConfigBottomSheet(
     val dividerIndex = entries.indexOf(HIDDEN_DIVIDER)
     val visibleTabs = entries.subList(0, dividerIndex).filterIsInstance<DIYTabs>()
     val hiddenTabs = entries.subList(dividerIndex + 1, entries.size).filterIsInstance<DIYTabs>()
+    val canShowLabels = visibleTabs.size + 2 <= DIYTabs.MAX_LABELED_TOOLBAR_ITEMS
+    var showLabelsInfo by remember { mutableStateOf(false) }
+
+    if (showLabelsInfo) {
+        ToolbarLabelsInfoBottomSheet(onDismissRequest = { showLabelsInfo = false })
+    }
 
     fun commit() {
         val index = entries.indexOf(HIDDEN_DIVIDER)
@@ -209,6 +221,64 @@ fun ToolbarConfigBottomSheet(
                         }
                     }
                 }
+
+                item(key = "show_labels") {
+                    RoundedCardContainer(
+                        modifier = Modifier.padding(top = 22.dp),
+                    ) {
+                        IconToggleItem(
+                            iconRes = R.drawable.rounded_label_24,
+                            title = stringResource(R.string.toolbar_show_tab_names),
+                            isChecked = canShowLabels && viewModel.isToolbarShowLabels.value,
+                            onCheckedChange = { viewModel.setToolbarShowLabels(it) },
+                            enabled = canShowLabels,
+                            onDisabledClick = { showLabelsInfo = true },
+                            onInfoClick = if (canShowLabels) null else ({ showLabelsInfo = true }),
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun ToolbarLabelsInfoBottomSheet(onDismissRequest: () -> Unit) {
+    val view = LocalView.current
+    EssentialsBottomSheet(onDismissRequest = onDismissRequest) {
+        Column(
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 24.dp)
+                    .padding(bottom = 32.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+        ) {
+            TranslatableText(
+                stringResId = R.string.toolbar_show_tab_names,
+                style = MaterialTheme.typography.headlineSmall,
+                color = MaterialTheme.colorScheme.onSurface,
+            )
+            TranslatableText(
+                stringResId = R.string.toolbar_show_tab_names_unavailable,
+                formatArgs = listOf(DIYTabs.MAX_LABELED_TOOLBAR_ITEMS),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .background(MaterialTheme.colorScheme.surfaceBright, RoundedCornerShape(24.dp))
+                        .padding(16.dp),
+            )
+            Button(
+                onClick = {
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    onDismissRequest()
+                },
+                modifier = Modifier.fillMaxWidth(),
+            ) {
+                TranslatableText(R.string.action_got_it)
             }
         }
     }
