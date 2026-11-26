@@ -2504,4 +2504,14 @@
     <string name="feat_text_snippets_title">Фрагменты текста</string>
     <string name="snippets_empty_title">Пока что нет фрагментов</string>
     <string name="snippets_empty_subtitle">Нажмите + ниже, чтобы создать свой первый ярлык</string>
+    <string name="widget_stack_add_to_home">Добавить стопку на главный экран</string>
+    <string name="widget_stack_add_to_home_desc">Затем выберите виджеты, которые он должен содержать</string>
+    <string name="screen_off_method_title">Способ выключения экрана</string>
+    <string name="screen_off_method_accessibility">Спец. возможности</string>
+    <string name="screen_off_method_input">Ввод</string>
+    <string name="title_battery_saver_network">Синхронизация и связь</string>
+    <string name="title_battery_saver_display">Экран и яркость</string>
+    <string name="title_battery_saver_power">Питание и производительность</string>
+    <string name="title_battery_saver_location">Местоположение и GPS</string>
+    <string name="action_reset_battery_saver">Сброс параметров</string>
 </resources>
