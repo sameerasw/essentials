@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials.ui.core.sheets
 
+import com.sameerasw.essentials.ui.core.controls.Switch
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -623,7 +624,7 @@ fun AddRepoBottomSheet(
                                         style = MaterialTheme.typography.bodyMedium,
                                         color = MaterialTheme.colorScheme.onSurface,
                                     )
-                                    androidx.compose.material3.Switch(
+                                    Switch(
                                         checked = allowPreReleases,
                                         onCheckedChange = {
                                             HapticUtil.performUIHaptic(view)
@@ -654,7 +655,7 @@ fun AddRepoBottomSheet(
                                         style = MaterialTheme.typography.bodyMedium,
                                         color = MaterialTheme.colorScheme.onSurface,
                                     )
-                                    androidx.compose.material3.Switch(
+                                    Switch(
                                         checked = notificationsEnabled,
                                         onCheckedChange = {
                                             HapticUtil.performUIHaptic(view)

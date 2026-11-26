@@ -74,7 +74,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SplitButtonDefaults
 import androidx.compose.material3.SplitButtonLayout
-import androidx.compose.material3.Switch
+import com.sameerasw.essentials.ui.core.controls.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.ToggleButton
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
