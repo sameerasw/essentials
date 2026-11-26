@@ -2564,4 +2564,5 @@
     <string name="app_ops_user_app">User app</string>
     <string name="app_ops_search_apps">Search apps</string>
     <string name="app_ops_search_ops">Search operations</string>
+    <string name="shorten_copy_link">Копировать</string>
 </resources>
