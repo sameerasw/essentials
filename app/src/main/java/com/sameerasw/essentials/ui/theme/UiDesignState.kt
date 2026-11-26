@@ -33,7 +33,7 @@ object UiDesignState {
     val resolved: UiDesign
         get() = resolve(selected)
 
-    private val isSamsung: Boolean by lazy { Build.MANUFACTURER.equals("samsung", ignoreCase = true) }
+    val isSamsung: Boolean by lazy { Build.MANUFACTURER.equals("samsung", ignoreCase = true) }
 
     private var listener: SharedPreferences.OnSharedPreferenceChangeListener? = null
 

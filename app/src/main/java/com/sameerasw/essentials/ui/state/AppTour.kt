@@ -27,6 +27,7 @@ enum class TourStep(
     SEARCH_FAB(R.string.tour_search_fab),
     BUG_REPORT_FAB(R.string.tour_bug_report_fab),
     HELP_FAB(R.string.tour_help_fab),
+    DESIGN_SWITCH(R.string.tour_design_switch),
 }
 
 object AppTour {

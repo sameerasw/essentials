@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials.ui.components
 
+import com.sameerasw.essentials.ui.state.TourStep
 import com.sameerasw.essentials.ui.theme.fabContentColor
 import com.sameerasw.essentials.ui.theme.fabContainerColor
 import com.sameerasw.essentials.ui.theme.toolbarPillColor
@@ -154,6 +155,7 @@ data class ToolbarItem(
     val onIconPlaced: ((Rect) -> Unit)? = null,
     val iconAlpha: (() -> Float)? = null,
     val iconSlot: (() -> Float)? = null,
+    val tourSteps: List<Pair<TourStep, Boolean>> = emptyList(),
 )
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class, ExperimentalSharedTransitionApi::class)
@@ -578,139 +580,143 @@ fun EssentialsFloatingToolbar(
                                         }
 
                                     if (itemWidth > 0.dp || isSelected) {
-                                        IconButton(
-                                            onClick = {
-                                                HapticUtil.performVirtualKeyHaptic(view)
-                                                item.onClick()
-                                            },
+                                        TourAnchor(
+                                            *item.tourSteps.toTypedArray(),
                                             modifier =
-                                                Modifier
-                                                    .onPlaced { coords ->
-                                                        val x = coords.positionInParent().x
-                                                        itemBounds[index] = x to x + coords.size.width
-                                                    }
-                                                    .width(shownWidth)
-                                                    .height(48.dp),
-                                            colors =
-                                                IconButtonDefaults.iconButtonColors(
-                                                    contentColor = toolbarContentColor(),
-                                                    containerColor = Color.Transparent,
-                                                ),
+                                                Modifier.onPlaced { coords ->
+                                                    val x = coords.positionInParent().x
+                                                    itemBounds[index] = x to x + coords.size.width
+                                                },
                                         ) {
-                                            val tint =
-                                                lerp(
-                                                    toolbarContentColor(),
-                                                    toolbarSelectedContentColor(),
-                                                    if (pillPlaced) pillCoverage(itemBounds[index], pillLeft.value, pillRight.value) else if (isSelected) 1f else 0f,
-                                                )
-                                            val labelShown = labelsActive && expanded && isSelected
-                                            val iconSlot = if (labelShown) item.iconSlot else null
-                                            Row(
-                                                verticalAlignment = Alignment.CenterVertically,
-                                                horizontalArrangement = Arrangement.Center,
+                                            IconButton(
+                                                onClick = {
+                                                    HapticUtil.performVirtualKeyHaptic(view)
+                                                    item.onClick()
+                                                },
                                                 modifier =
-                                                    when {
-                                                        iconSlot != null -> Modifier.padding(start = LABEL_END_PADDING, end = LABEL_END_PADDING)
-                                                        labelShown -> Modifier.padding(start = LABEL_START_PADDING, end = LABEL_END_PADDING)
-                                                        else -> Modifier
-                                                    },
+                                                    Modifier
+                                                        .width(shownWidth)
+                                                        .height(48.dp),
+                                                colors =
+                                                    IconButtonDefaults.iconButtonColors(
+                                                        contentColor = toolbarContentColor(),
+                                                        containerColor = Color.Transparent,
+                                                    ),
                                             ) {
-                                                Box(
+                                                val tint =
+                                                    lerp(
+                                                        toolbarContentColor(),
+                                                        toolbarSelectedContentColor(),
+                                                        if (pillPlaced) pillCoverage(itemBounds[index], pillLeft.value, pillRight.value) else if (isSelected) 1f else 0f,
+                                                    )
+                                                val labelShown = labelsActive && expanded && isSelected
+                                                val iconSlot = if (labelShown) item.iconSlot else null
+                                                Row(
+                                                    verticalAlignment = Alignment.CenterVertically,
+                                                    horizontalArrangement = Arrangement.Center,
                                                     modifier =
-                                                        if (iconSlot != null) {
-                                                            Modifier.layout { measurable, constraints ->
-                                                                val placeable = measurable.measure(constraints)
-                                                                val gap = (LABEL_START_PADDING - LABEL_END_PADDING).roundToPx()
-                                                                val width = ((placeable.width + gap) * iconSlot().coerceIn(0f, 1f)).roundToInt()
-                                                                layout(width, placeable.height) {
-                                                                    placeable.place(width - placeable.width, 0)
-                                                                }
-                                                            }
-                                                        } else {
-                                                            Modifier
+                                                        when {
+                                                            iconSlot != null -> Modifier.padding(start = LABEL_END_PADDING, end = LABEL_END_PADDING)
+                                                            labelShown -> Modifier.padding(start = LABEL_START_PADDING, end = LABEL_END_PADDING)
+                                                            else -> Modifier
                                                         },
                                                 ) {
-                                                    AnimatedToolbarIcon(
-                                                        iconRes = if (isSelected && holdProgress.value > 0.5f) R.drawable.rounded_edit_24 else item.iconRes,
-                                                        contentDescription = stringResource(id = item.labelRes),
-                                                        tint = tint,
-                                                        selected = isSelected,
-                                                        effect = if (isSelected && holdProgress.value > 0.5f) null else item.effect,
+                                                    Box(
                                                         modifier =
-                                                            Modifier
-                                                                .size(24.dp * item.iconScale)
-                                                                .then(
-                                                                    if (item.onIconPlaced != null) {
-                                                                        Modifier.onGloballyPositioned { item.onIconPlaced.invoke(Rect(it.positionInWindow(), it.size.toSize())) }
-                                                                    } else {
-                                                                        Modifier
-                                                                    },
-                                                                ).then(
-                                                                    if (item.iconAlpha != null) {
-                                                                        Modifier.graphicsLayer { alpha = item.iconAlpha.invoke() }
-                                                                    } else {
-                                                                        Modifier
-                                                                    },
-                                                                ),
-                                                    )
-                                                    if (item.badge != null) {
+                                                            if (iconSlot != null) {
+                                                                Modifier.layout { measurable, constraints ->
+                                                                    val placeable = measurable.measure(constraints)
+                                                                    val gap = (LABEL_START_PADDING - LABEL_END_PADDING).roundToPx()
+                                                                    val width = ((placeable.width + gap) * iconSlot().coerceIn(0f, 1f)).roundToInt()
+                                                                    layout(width, placeable.height) {
+                                                                        placeable.place(width - placeable.width, 0)
+                                                                    }
+                                                                }
+                                                            } else {
+                                                                Modifier
+                                                            },
+                                                    ) {
+                                                        AnimatedToolbarIcon(
+                                                            iconRes = if (isSelected && holdProgress.value > 0.5f) R.drawable.rounded_edit_24 else item.iconRes,
+                                                            contentDescription = stringResource(id = item.labelRes),
+                                                            tint = tint,
+                                                            selected = isSelected,
+                                                            effect = if (isSelected && holdProgress.value > 0.5f) null else item.effect,
+                                                            modifier =
+                                                                Modifier
+                                                                    .size(24.dp * item.iconScale)
+                                                                    .then(
+                                                                        if (item.onIconPlaced != null) {
+                                                                            Modifier.onGloballyPositioned { item.onIconPlaced.invoke(Rect(it.positionInWindow(), it.size.toSize())) }
+                                                                        } else {
+                                                                            Modifier
+                                                                        },
+                                                                    ).then(
+                                                                        if (item.iconAlpha != null) {
+                                                                            Modifier.graphicsLayer { alpha = item.iconAlpha.invoke() }
+                                                                        } else {
+                                                                            Modifier
+                                                                        },
+                                                                    ),
+                                                        )
+                                                        if (item.badge != null) {
+                                                            Box(
+                                                                modifier =
+                                                                    Modifier
+                                                                        .align(Alignment.TopEnd)
+                                                                        .offset(x = 7.dp, y = (-7).dp),
+                                                            ) {
+                                                                item.badge.invoke()
+                                                            }
+                                                        }
+                                                    }
+                                                    if (labelShown) {
                                                         Box(
                                                             modifier =
                                                                 Modifier
-                                                                    .align(Alignment.TopEnd)
-                                                                    .offset(x = 7.dp, y = (-7).dp),
+                                                                    .weight(1f, fill = false)
+                                                                    .graphicsLayer { compositingStrategy = CompositingStrategy.Offscreen }
+                                                                    .drawWithContent {
+                                                                        drawContent()
+                                                                        val fade = LABEL_FADE.toPx() / size.width
+                                                                        drawRect(
+                                                                            brush =
+                                                                                Brush.horizontalGradient(
+                                                                                    0f to Color.Transparent,
+                                                                                    fade to Color.Black,
+                                                                                    1f - fade to Color.Black,
+                                                                                    1f to Color.Transparent,
+                                                                                ),
+                                                                            blendMode = BlendMode.DstIn,
+                                                                        )
+                                                                    },
                                                         ) {
-                                                            item.badge.invoke()
-                                                        }
-                                                    }
-                                                }
-                                                if (labelShown) {
-                                                    Box(
-                                                        modifier =
-                                                            Modifier
-                                                                .weight(1f, fill = false)
-                                                                .graphicsLayer { compositingStrategy = CompositingStrategy.Offscreen }
-                                                                .drawWithContent {
-                                                                    drawContent()
-                                                                    val fade = LABEL_FADE.toPx() / size.width
-                                                                    drawRect(
-                                                                        brush =
-                                                                            Brush.horizontalGradient(
-                                                                                0f to Color.Transparent,
-                                                                                fade to Color.Black,
-                                                                                1f - fade to Color.Black,
-                                                                                1f to Color.Transparent,
-                                                                            ),
-                                                                        blendMode = BlendMode.DstIn,
-                                                                    )
+                                                            AnimatedContent(
+                                                                targetState = if (holdProgress.value > 0.5f) R.string.action_customize else item.labelRes,
+                                                                transitionSpec = {
+                                                                    (fadeIn() + slideInVertically { it / 2 }) togetherWith
+                                                                        (fadeOut() + slideOutVertically { -it / 2 }) using SizeTransform(clip = false)
                                                                 },
-                                                    ) {
-                                                        AnimatedContent(
-                                                            targetState = if (holdProgress.value > 0.5f) R.string.action_customize else item.labelRes,
-                                                            transitionSpec = {
-                                                                (fadeIn() + slideInVertically { it / 2 }) togetherWith
-                                                                    (fadeOut() + slideOutVertically { -it / 2 }) using SizeTransform(clip = false)
-                                                            },
-                                                            contentAlignment = Alignment.CenterStart,
-                                                            label = "toolbar_item_label",
-                                                        ) { labelRes ->
-                                                            Text(
-                                                                text = stringResource(id = labelRes),
-                                                                style = labelStyle,
-                                                                color = tint,
-                                                                maxLines = 1,
-                                                                softWrap = false,
-                                                                modifier =
-                                                                    Modifier
-                                                                        .basicMarquee(iterations = Int.MAX_VALUE)
-                                                                        .padding(horizontal = LABEL_FADE),
-                                                            )
+                                                                contentAlignment = Alignment.CenterStart,
+                                                                label = "toolbar_item_label",
+                                                            ) { labelRes ->
+                                                                Text(
+                                                                    text = stringResource(id = labelRes),
+                                                                    style = labelStyle,
+                                                                    color = tint,
+                                                                    maxLines = 1,
+                                                                    softWrap = false,
+                                                                    modifier =
+                                                                        Modifier
+                                                                            .basicMarquee(iterations = Int.MAX_VALUE)
+                                                                            .padding(horizontal = LABEL_FADE),
+                                                                )
+                                                            }
                                                         }
                                                     }
                                                 }
                                             }
                                         }
-
                                         // Animated spacing between buttons
                                         if (index < items.size - 1) {
                                             Spacer(modifier = Modifier.width(spacerWidth * (1f - holdProgress.value)))

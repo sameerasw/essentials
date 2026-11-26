@@ -2512,6 +2512,7 @@ Mẹo: từ khóa chỉ được mở rộng khi nằm ở đầu một từ, v�
     <string name="tour_search_fab">Search anything in Essentials</string>
     <string name="tour_bug_report_fab">Something not right? Report a bug from here</string>
     <string name="tour_help_fab">Use this anytime for help</string>
+    <string name="tour_design_switch">Prefer the Material Expressive design? Switch in settings</string>
     <string name="action_reset_tour">Reset tour</string>
     <string name="tour_reset_toast">Tour reset</string>
     <string name="duo_section_position">Vị trí và kích thước</string>
