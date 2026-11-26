@@ -150,6 +150,7 @@ import com.sameerasw.essentials.ui.core.sheets.InstructionsBottomSheet
 import com.sameerasw.essentials.ui.core.sheets.PrankBottomSheet
 import com.sameerasw.essentials.ui.core.sheets.ShakeForHelp
 import com.sameerasw.essentials.ui.core.sheets.ToolbarConfigBottomSheet
+import com.sameerasw.essentials.ui.components.ToolbarIconEffect
 import com.sameerasw.essentials.ui.core.sheets.UpdateBottomSheet
 import com.sameerasw.essentials.ui.modifiers.BlurDirection
 import com.sameerasw.essentials.ui.modifiers.progressiveBlur
@@ -950,6 +951,15 @@ class MainActivity : AppCompatActivity() {
                                                                         null
                                                                     },
                                                                 iconScale = if (tab == DIYTabs.ESSENTIALS) 1.2f else 1f,
+                                                                effect =
+                                                                    when (tab) {
+                                                                        DIYTabs.ESSENTIALS -> ToolbarIconEffect.LOGO
+                                                                        DIYTabs.FREEZE -> ToolbarIconEffect.REVEAL
+                                                                        DIYTabs.YOUR_ANDROID -> ToolbarIconEffect.SHAKE
+                                                                        DIYTabs.DIY -> ToolbarIconEffect.FILL
+                                                                        DIYTabs.MODES -> ToolbarIconEffect.SHINE
+                                                                        DIYTabs.SETTINGS -> ToolbarIconEffect.SPIN
+                                                                    },
                                                             )
                                                         },
                                                     floatingActionButton = {

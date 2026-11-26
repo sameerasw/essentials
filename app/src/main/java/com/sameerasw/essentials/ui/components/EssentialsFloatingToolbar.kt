@@ -94,6 +94,7 @@ data class ToolbarItem(
     val onClick: () -> Unit,
     val badge: (@Composable () -> Unit)? = null,
     val iconScale: Float = 1f,
+    val effect: ToolbarIconEffect = ToolbarIconEffect.POP,
 )
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class, ExperimentalSharedTransitionApi::class)
@@ -410,11 +411,8 @@ fun EssentialsFloatingToolbar(
                                             horizontalArrangement = Arrangement.Center,
                                         ) {
                                             Box {
-                                                Icon(
-                                                    painter =
-                                                        painterResource(
-                                                            id = if (isSelected && holdProgress.value > 0.5f) R.drawable.rounded_edit_24 else item.iconRes,
-                                                        ),
+                                                AnimatedToolbarIcon(
+                                                    iconRes = if (isSelected && holdProgress.value > 0.5f) R.drawable.rounded_edit_24 else item.iconRes,
                                                     contentDescription = stringResource(id = item.labelRes),
                                                     tint =
                                                         if (isSelected) {
@@ -422,6 +420,8 @@ fun EssentialsFloatingToolbar(
                                                         } else {
                                                             MaterialTheme.colorScheme.background
                                                         },
+                                                    selected = isSelected,
+                                                    effect = if (isSelected && holdProgress.value > 0.5f) null else item.effect,
                                                     modifier = Modifier.size(24.dp * item.iconScale),
                                                 )
                                                 if (item.badge != null) {
