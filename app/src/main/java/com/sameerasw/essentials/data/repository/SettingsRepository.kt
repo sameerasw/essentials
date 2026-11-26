@@ -388,6 +388,7 @@ class SettingsRepository(
         const val KEY_HAPTIC_FEEDBACK_TYPE = "haptic_feedback_type"
         const val KEY_DEFAULT_TAB = "default_tab"
         const val KEY_TOOLBAR_TABS = "toolbar_tabs"
+        const val KEY_TOOLBAR_SHOW_LABELS = "toolbar_show_labels"
         const val KEY_APP_ICON = "app_icon_style"
         const val KEY_USE_ROOT = "use_root"
         const val KEY_PRIVILEGED_MODE = "privileged_mode"
@@ -1465,6 +1466,12 @@ class SettingsRepository(
 
     fun saveToolbarTabs(tabs: List<DIYTabs>) {
         putString(KEY_TOOLBAR_TABS, tabs.joinToString(",") { it.name })
+    }
+
+    fun getToolbarShowLabels(): Boolean = getBoolean(KEY_TOOLBAR_SHOW_LABELS, false)
+
+    fun setToolbarShowLabels(enabled: Boolean) {
+        putBoolean(KEY_TOOLBAR_SHOW_LABELS, enabled)
     }
 
     fun getAppIcon(): AppIcon {

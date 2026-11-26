@@ -139,6 +139,7 @@ class MainViewModel : ViewModel() {
     val hapticFeedbackType = mutableStateOf(HapticFeedbackType.SUBTLE)
     val defaultTab = mutableStateOf(com.sameerasw.essentials.domain.DIYTabs.ESSENTIALS)
     val toolbarTabs = mutableStateOf(DIYTabs.MOVABLE)
+    val isToolbarShowLabels = mutableStateOf(false)
     val selectedAppIcon = mutableStateOf(AppIcon.DEFAULT)
     val isDefaultBrowserSet = mutableStateOf(false)
     val onlyShowWhenScreenOff = mutableStateOf(true)
@@ -2444,6 +2445,7 @@ class MainViewModel : ViewModel() {
         MapsState.isEnabled = isMapsPowerSavingEnabled.value
         hapticFeedbackType.value = settingsRepository.getHapticFeedbackType()
         toolbarTabs.value = settingsRepository.getToolbarTabs()
+        isToolbarShowLabels.value = settingsRepository.getToolbarShowLabels()
         defaultTab.value = settingsRepository.getDIYTab()
         ensureDefaultTabVisible()
         selectedAppIcon.value = settingsRepository.getAppIcon()
@@ -8375,6 +8377,11 @@ class MainViewModel : ViewModel() {
         settingsRepository.saveToolbarTabs(sanitized)
         toolbarTabs.value = sanitized
         ensureDefaultTabVisible()
+    }
+
+    fun setToolbarShowLabels(enabled: Boolean) {
+        settingsRepository.setToolbarShowLabels(enabled)
+        isToolbarShowLabels.value = enabled
     }
 
     fun setAppIcon(

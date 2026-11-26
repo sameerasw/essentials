@@ -939,6 +939,7 @@ class MainActivity : AppCompatActivity() {
                                                         selectedIndex = pagerState.currentPage,
                                                         itemSlots = DIYTabs.entries.size,
                                                         onLongClick = { showToolbarConfigSheet = true },
+                                                        showLabels = viewModel.isToolbarShowLabels.value && tabs.size <= DIYTabs.MAX_LABELED_TOOLBAR_ITEMS,
                                                         title = if (isDetail) detailSpec?.title ?: routeTitle else null,
                                                         isBeta = isDetail && detailSpec?.isBeta == true,
                                                         onBackClick = if (isDetail) detailSpec?.onBack ?: { navViewModel.pop() } else null,

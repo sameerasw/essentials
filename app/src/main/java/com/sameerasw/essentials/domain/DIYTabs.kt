@@ -36,6 +36,7 @@ enum class DIYTabs(
     companion object {
         val MOVABLE = listOf(FREEZE, YOUR_ANDROID, DIY, MODES)
         val DEFAULT_VISIBLE = listOf(FREEZE, YOUR_ANDROID, DIY)
+        const val MAX_LABELED_TOOLBAR_ITEMS = 4
 
         fun toolbarTabs(middle: List<DIYTabs>): List<DIYTabs> = listOf(ESSENTIALS) + middle + SETTINGS
     }

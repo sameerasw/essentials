@@ -36,6 +36,7 @@ import androidx.compose.ui.layout.layout
 import androidx.compose.ui.zIndex
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.platform.LocalContext
@@ -56,6 +57,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.mutableStateOf
@@ -97,6 +99,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -116,6 +119,9 @@ private const val HOLD_ARM_MS = 650L
 private val TITLE_BLEED_START = 56.dp
 private val TITLE_BLEED_END = 4.dp
 private val TITLE_FADE = 12.dp
+private val LABEL_START_PADDING = 12.dp
+private val LABEL_END_PADDING = 4.dp
+private val LABEL_FADE = 8.dp
 
 private fun pillCoverage(
     bounds: Pair<Float, Float>?,
@@ -162,6 +168,7 @@ fun EssentialsFloatingToolbar(
     backCollapsed: Boolean = false,
     availableWidth: Dp? = null,
     onLongClick: (() -> Unit)? = null,
+    showLabels: Boolean = false,
 ) {
     val view = LocalView.current
     val context = LocalContext.current
@@ -178,7 +185,34 @@ fun EssentialsFloatingToolbar(
     val hasFab = floatingActionButton != null || onHelpClick != null || (fabAction != null && fabIconRes != null)
     val maxTabbedWidth =
         (screenWidth - 32.dp - 8.dp - if (hasFab) 64.dp else 0.dp).coerceAtLeast(48.dp)
-    val tabbedWidth = (48.dp * slots + itemGap * (slots - 1)).coerceAtMost(maxTabbedWidth)
+    val density = LocalDensity.current
+    val textMeasurer = rememberTextMeasurer()
+    val labelStyle = MaterialTheme.typography.labelLarge
+    val selectedItem = items.getOrNull(selectedIndex)
+    val selectedLabel = selectedItem?.let { stringResource(it.labelRes) }
+    val labelsActive = showLabels && selectedItem != null && selectedLabel != null
+    val iconSlotsWidth = (48.dp + itemGap) * (items.size - 1).coerceAtLeast(0)
+    val selectedLabelTextWidth =
+        remember(selectedLabel, labelStyle, density) {
+            if (selectedLabel == null) {
+                0.dp
+            } else {
+                with(density) { textMeasurer.measure(selectedLabel, labelStyle, maxLines = 1, softWrap = false).size.width.toDp() }
+            }
+        }
+    val selectedLabeledWidth =
+        if (labelsActive) {
+            (LABEL_START_PADDING + 24.dp * selectedItem!!.iconScale + LABEL_FADE * 2 + selectedLabelTextWidth + LABEL_END_PADDING)
+                .coerceIn(48.dp, (maxTabbedWidth - iconSlotsWidth).coerceAtLeast(48.dp))
+        } else {
+            48.dp
+        }
+    val tabbedWidth =
+        if (labelsActive) {
+            iconSlotsWidth + selectedLabeledWidth
+        } else {
+            (48.dp * slots + itemGap * (slots - 1)).coerceAtMost(maxTabbedWidth)
+        }
     val titleWidth =
         if (itemSlots > 0 || items.isNotEmpty()) {
             (tabbedWidth - 48.dp - 8.dp).coerceAtLeast(0.dp)
@@ -419,16 +453,14 @@ fun EssentialsFloatingToolbar(
                             val fullItemWidth =
                                 if (items.isEmpty()) 48.dp else (tabbedWidth - itemGap * (items.size - 1)) / items.size
 
-                            val density = LocalDensity.current
-
                             val selectedBounds = itemBounds[selectedIndex]
                             val targetLeft = selectedBounds?.first
                             val targetRight = selectedBounds?.second
                             val snapPill = holdProgress.value > 0f
 
-                            LaunchedEffect(targetLeft, targetRight, snapPill) {
+                            LaunchedEffect(targetLeft, targetRight, snapPill, labelsActive) {
                                 if (targetLeft == null || targetRight == null) return@LaunchedEffect
-                                if (!pillPlaced || snapPill) {
+                                if (!pillPlaced || snapPill || labelsActive) {
                                     pillLeft.snapTo(targetLeft)
                                     pillRight.snapTo(targetRight)
                                     pillPlaced = true
@@ -489,15 +521,20 @@ fun EssentialsFloatingToolbar(
                                     val itemWidth by animateDpAsState(
                                         targetValue =
                                             when {
+                                                expanded && labelsActive -> if (isSelected) selectedLabeledWidth else 48.dp
                                                 expanded -> fullItemWidth
                                                 isSelected -> 48.dp
                                                 else -> 0.dp
                                             },
                                         animationSpec =
-                                            spring(
-                                                dampingRatio = Spring.DampingRatioMediumBouncy,
-                                                stiffness = Spring.StiffnessLow,
-                                            ),
+                                            if (labelsActive) {
+                                                tween(durationMillis = 300, easing = LinearOutSlowInEasing)
+                                            } else {
+                                                spring(
+                                                    dampingRatio = Spring.DampingRatioMediumBouncy,
+                                                    stiffness = Spring.StiffnessLow,
+                                                )
+                                            },
                                         label = "item_width_$index",
                                     )
 
@@ -539,20 +576,28 @@ fun EssentialsFloatingToolbar(
                                                     containerColor = Color.Transparent,
                                                 ),
                                         ) {
+                                            val tint =
+                                                lerp(
+                                                    MaterialTheme.colorScheme.background,
+                                                    MaterialTheme.colorScheme.primary,
+                                                    if (pillPlaced) pillCoverage(itemBounds[index], pillLeft.value, pillRight.value) else if (isSelected) 1f else 0f,
+                                                )
+                                            val labelShown = labelsActive && expanded && isSelected
                                             Row(
                                                 verticalAlignment = Alignment.CenterVertically,
                                                 horizontalArrangement = Arrangement.Center,
+                                                modifier =
+                                                    if (labelShown) {
+                                                        Modifier.padding(start = LABEL_START_PADDING, end = LABEL_END_PADDING)
+                                                    } else {
+                                                        Modifier
+                                                    },
                                             ) {
                                                 Box {
                                                     AnimatedToolbarIcon(
                                                         iconRes = if (isSelected && holdProgress.value > 0.5f) R.drawable.rounded_edit_24 else item.iconRes,
                                                         contentDescription = stringResource(id = item.labelRes),
-                                                        tint =
-                                                            lerp(
-                                                                MaterialTheme.colorScheme.background,
-                                                                MaterialTheme.colorScheme.primary,
-                                                                if (pillPlaced) pillCoverage(itemBounds[index], pillLeft.value, pillRight.value) else if (isSelected) 1f else 0f,
-                                                            ),
+                                                        tint = tint,
                                                         selected = isSelected,
                                                         effect = if (isSelected && holdProgress.value > 0.5f) null else item.effect,
                                                         modifier = Modifier.size(24.dp * item.iconScale),
@@ -566,6 +611,40 @@ fun EssentialsFloatingToolbar(
                                                         ) {
                                                             item.badge.invoke()
                                                         }
+                                                    }
+                                                }
+                                                if (labelShown) {
+                                                    Box(
+                                                        modifier =
+                                                            Modifier
+                                                                .weight(1f, fill = false)
+                                                                .graphicsLayer { compositingStrategy = CompositingStrategy.Offscreen }
+                                                                .drawWithContent {
+                                                                    drawContent()
+                                                                    val fade = LABEL_FADE.toPx() / size.width
+                                                                    drawRect(
+                                                                        brush =
+                                                                            Brush.horizontalGradient(
+                                                                                0f to Color.Transparent,
+                                                                                fade to Color.Black,
+                                                                                1f - fade to Color.Black,
+                                                                                1f to Color.Transparent,
+                                                                            ),
+                                                                        blendMode = BlendMode.DstIn,
+                                                                    )
+                                                                },
+                                                    ) {
+                                                        Text(
+                                                            text = stringResource(id = item.labelRes),
+                                                            style = labelStyle,
+                                                            color = tint,
+                                                            maxLines = 1,
+                                                            softWrap = false,
+                                                            modifier =
+                                                                Modifier
+                                                                    .basicMarquee(iterations = Int.MAX_VALUE)
+                                                                    .padding(horizontal = LABEL_FADE),
+                                                        )
                                                     }
                                                 }
                                             }
