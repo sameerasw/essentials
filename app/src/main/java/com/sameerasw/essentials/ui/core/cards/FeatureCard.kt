@@ -10,6 +10,13 @@
 
 package com.sameerasw.essentials.ui.core.cards
 
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.lerp
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import com.sameerasw.essentials.ui.theme.OneUiSquircle
+import com.sameerasw.essentials.ui.theme.UiDesign
+import com.sameerasw.essentials.ui.theme.LocalUiDesign
 import com.sameerasw.essentials.ui.theme.cardListItemColors
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
@@ -92,7 +99,9 @@ fun FeatureCard(
     iconSize: androidx.compose.ui.unit.Dp = 24.dp,
     hasIconBackground: Boolean = true,
     iconTint: androidx.compose.ui.graphics.Color? = null,
+    oneUiAppIcon: Boolean = false,
 ) {
+    val useAppIcon = oneUiAppIcon && LocalUiDesign.current == UiDesign.ONE_UI
     val selectedContainer by androidx.compose.animation.animateColorAsState(
         targetValue =
             if (isSelected) {
@@ -140,6 +149,15 @@ fun FeatureCard(
             is String -> title
             else -> ""
         }
+    val appIconBrush =
+        remember(resolvedTitle) {
+            val base = ColorUtil.getAppIconColorFor(resolvedTitle)
+            Brush.linearGradient(
+                colors = listOf(lerp(base, Color.White, 0.22f), base),
+                start = Offset.Zero,
+                end = Offset.Infinite,
+            )
+        }
 
     androidx.compose.material3.ListItem(
         onClick = {
@@ -168,7 +186,14 @@ fun FeatureCard(
                 {
                     Box {
                         val containerModifier =
-                            if (hasIconBackground) {
+                            if (useAppIcon) {
+                                Modifier
+                                    .size(40.dp)
+                                    .background(
+                                        brush = appIconBrush,
+                                        shape = OneUiSquircle,
+                                    )
+                            } else if (hasIconBackground) {
                                 Modifier
                                     .size(40.dp)
                                     .background(
@@ -209,7 +234,7 @@ fun FeatureCard(
                                         contentDescription = resolvedTitle,
                                         modifier = Modifier.size(iconSize),
                                         colorFilter = ColorFilter.tint(
-                                            iconTint ?: ColorUtil.iconTintColor(resolvedTitle)
+                                            if (useAppIcon) Color.White else iconTint ?: ColorUtil.iconTintColor(resolvedTitle)
                                         ),
                                     )
                                 } else {
@@ -217,7 +242,7 @@ fun FeatureCard(
                                         painter = painterResource(id = R.drawable.rounded_settings_24),
                                         contentDescription = resolvedTitle,
                                         modifier = Modifier.size(iconSize),
-                                        tint = iconTint ?: ColorUtil.iconTintColor(resolvedTitle),
+                                        tint = if (useAppIcon) Color.White else iconTint ?: ColorUtil.iconTintColor(resolvedTitle),
                                     )
                                 }
                             }

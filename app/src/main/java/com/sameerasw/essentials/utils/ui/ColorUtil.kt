@@ -71,6 +71,14 @@ object ColorUtil {
         return toRichColor(baseColor)
     }
 
+    fun getAppIconColorFor(key: Any): Color {
+        val hsv = FloatArray(3)
+        android.graphics.Color.colorToHSV(getPastelColorFor(key).toArgb(), hsv)
+        hsv[1] = 0.78f
+        hsv[2] = 0.88f
+        return Color(android.graphics.Color.HSVToColor(hsv))
+    }
+
     @Composable
     fun iconContainerColor(key: Any): Color =
         if (LocalUiDesign.current == UiDesign.ONE_UI) Color.Transparent else getPastelColorFor(key)
