@@ -97,6 +97,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
@@ -136,6 +137,7 @@ import com.sameerasw.essentials.ui.activities.ModeEditorScreen
 import com.sameerasw.essentials.ui.activities.YourAndroidContent
 import com.sameerasw.essentials.domain.registry.initPermissionRegistry
 import com.sameerasw.essentials.ui.components.EssentialsFloatingToolbar
+import com.sameerasw.essentials.ui.components.SplashLogoHandoff
 import com.sameerasw.essentials.ui.components.ToolbarItem
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenu
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
@@ -168,8 +170,8 @@ import com.sameerasw.essentials.viewmodels.LocationReachedViewModel
 import com.sameerasw.essentials.viewmodels.MainViewModel
 import kotlinx.coroutines.launch
 
-private const val SPLASH_LOGO_MIN_MS = 1900L
-private const val SPLASH_EXIT_MS = 900L
+private const val SPLASH_LOGO_MIN_MS = 1450L
+private const val SPLASH_EXIT_MS = 700L
 
 class MainActivity : AppCompatActivity() {
     val viewModel: MainViewModel by viewModels()
@@ -179,6 +181,7 @@ class MainActivity : AppCompatActivity() {
     private val navViewModel: AppNavigationViewModel by viewModels()
     private val bottomBarHost = BottomBarHost()
     private var isAppReady = false
+    private val splashLogoHandoff = SplashLogoHandoff()
 
     @OptIn(ExperimentalSharedTransitionApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -223,6 +226,15 @@ class MainActivity : AppCompatActivity() {
                     // Re-apply after removal, splash cleanup can reset it
                     enableEdgeToEdge()
                 }
+
+                val handedOff =
+                    Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
+                        splashIcon != null &&
+                        splashLogoHandoff.animate(splashScreenViewProvider, splashIcon, SPLASH_EXIT_MS) {
+                            splashScreenViewProvider.remove()
+                            enableEdgeToEdge()
+                        }
+                if (handedOff) return@setOnExitAnimationListener
 
                 // Some OEMs (One UI 8, Xiaomi on Android 16) don't provide iconView
                 try {
@@ -891,6 +903,10 @@ class MainActivity : AppCompatActivity() {
                                                     )
                                                 }
                                             } else {
+                                                DisposableEffect(isDetail) {
+                                                    if (isDetail) splashLogoHandoff.targetBounds = null
+                                                    onDispose { splashLogoHandoff.targetBounds = null }
+                                                }
                                                 TourAnchor(TourStep.TOOLBAR to !isDetail, modifier = morphBounds) {
                                                     EssentialsFloatingToolbar(
                                                         selectedIndex = pagerState.currentPage,
@@ -920,6 +936,9 @@ class MainActivity : AppCompatActivity() {
                                                                             null
                                                                         },
                                                                     iconScale = if (tab == DIYTabs.ESSENTIALS) 1.2f else 1f,
+                                                                    onIconPlaced = if (tab == DIYTabs.ESSENTIALS) { bounds -> splashLogoHandoff.targetBounds = bounds } else null,
+                                                                    iconAlpha = if (tab == DIYTabs.ESSENTIALS) { { splashLogoHandoff.toolbarLogoAlpha.floatValue } } else null,
+                                                                    iconSlot = if (tab == DIYTabs.ESSENTIALS) { { splashLogoHandoff.toolbarLogoSlot.floatValue } } else null,
                                                                     effect =
                                                                         when (tab) {
                                                                             DIYTabs.ESSENTIALS -> ToolbarIconEffect.LOGO
