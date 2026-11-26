@@ -54,6 +54,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import com.sameerasw.essentials.utils.rememberDeviceUserFirstName
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
@@ -110,7 +111,10 @@ fun SetupFeatures(
     isSearchActive: Boolean = false,
     onHelpClick: () -> Unit = {},
     onNavigateToTab: ((com.sameerasw.essentials.domain.DIYTabs) -> Unit)? = null,
+    tabNameInToolbar: Boolean = false,
 ) {
+    val deviceUserName = rememberDeviceUserFirstName()
+    val userFirstName = viewModel.userDisplayName.value.trim().ifBlank { deviceUserName }
     val isAccessibilityEnabled by viewModel.isAccessibilityEnabled
     val isWriteSecureSettingsEnabled by viewModel.isWriteSecureSettingsEnabled
     val isWriteSettingsEnabled by viewModel.isWriteSettingsEnabled
@@ -966,7 +970,12 @@ fun SetupFeatures(
                     Box {
                         HeaderClockShape(progress = headerState.fraction)
                         PullTitleHeader(
-                            title = stringResource(R.string.app_name),
+                            title =
+                                if (tabNameInToolbar && userFirstName != null) {
+                                    stringResource(R.string.header_greeting_name, userFirstName)
+                                } else {
+                                    stringResource(R.string.app_name)
+                                },
                             caption = appVersion,
                             state = headerState,
                         )

@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -31,6 +32,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -47,14 +49,16 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.DIYTabs
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
-import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.utils.HapticUtil
+import com.sameerasw.essentials.utils.rememberDeviceUserFirstName
 import com.sameerasw.essentials.viewmodels.MainViewModel
 import sh.calvin.reorderable.ReorderableCollectionItemScope
 import sh.calvin.reorderable.ReorderableItem
@@ -96,6 +100,7 @@ fun ToolbarConfigBottomSheet(
     val hiddenTabs = entries.subList(dividerIndex + 1, entries.size).filterIsInstance<DIYTabs>()
     val canShowLabels = visibleTabs.size + 2 <= DIYTabs.MAX_LABELED_TOOLBAR_ITEMS
     var showLabelsInfo by remember { mutableStateOf(false) }
+    val deviceUserName = rememberDeviceUserFirstName()
 
     if (showLabelsInfo) {
         ToolbarLabelsInfoBottomSheet(onDismissRequest = { showLabelsInfo = false })
@@ -223,8 +228,9 @@ fun ToolbarConfigBottomSheet(
                 }
 
                 item(key = "show_labels") {
-                    RoundedCardContainer(
+                    Column(
                         modifier = Modifier.padding(top = 22.dp),
+                        verticalArrangement = Arrangement.spacedBy(2.dp),
                     ) {
                         IconToggleItem(
                             iconRes = R.drawable.rounded_label_24,
@@ -234,7 +240,27 @@ fun ToolbarConfigBottomSheet(
                             enabled = canShowLabels,
                             onDisabledClick = { showLabelsInfo = true },
                             onInfoClick = if (canShowLabels) null else ({ showLabelsInfo = true }),
+                            modifier = Modifier.clip(segmentShape(0, 2)),
                         )
+                        Box(
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .clip(segmentShape(1, 2))
+                                    .background(MaterialTheme.colorScheme.surfaceBright)
+                                    .padding(horizontal = 16.dp, vertical = 12.dp),
+                        ) {
+                            OutlinedTextField(
+                                value = viewModel.userDisplayName.value,
+                                onValueChange = { viewModel.setUserDisplayName(it) },
+                                label = { TranslatableText(R.string.label_your_name) },
+                                placeholder = if (deviceUserName != null) { { Text(deviceUserName) } } else null,
+                                singleLine = true,
+                                shape = RoundedCornerShape(16.dp),
+                                keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Words, imeAction = ImeAction.Done),
+                                modifier = Modifier.fillMaxWidth(),
+                            )
+                        }
                     }
                 }
             }

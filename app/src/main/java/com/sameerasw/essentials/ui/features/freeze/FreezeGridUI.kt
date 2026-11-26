@@ -114,6 +114,7 @@ fun FreezeGridUI(
     searchQuery: String = "",
     searchSubmitSignal: Int = 0,
     onHelpClick: (() -> Unit)? = null,
+    tabNameInToolbar: Boolean = false,
 ) {
     val context = LocalContext.current
     val view = LocalView.current
@@ -282,9 +283,14 @@ fun FreezeGridUI(
                 Spacer(modifier = Modifier.height(contentPadding.calculateTopPadding()))
 
                 PullTitleHeader(
-                    title = stringResource(R.string.tab_freeze),
+                    title =
+                        if (tabNameInToolbar) {
+                            stringResource(R.string.freeze_header_caption, frozenCount, pickedApps.size)
+                        } else {
+                            stringResource(R.string.tab_freeze)
+                        },
                     state = headerState,
-                    caption = stringResource(R.string.freeze_header_caption, frozenCount, pickedApps.size),
+                    caption = if (tabNameInToolbar) null else stringResource(R.string.freeze_header_caption, frozenCount, pickedApps.size),
                 )
 
                 SubcomposeLayout(

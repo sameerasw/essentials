@@ -78,6 +78,7 @@ fun ModesScreen(
     onNewModeClick: () -> Unit,
     onModeClick: (String) -> Unit,
     onHelpClick: (() -> Unit)? = null,
+    tabNameInToolbar: Boolean = false,
 ) {
     val context = LocalContext.current
     val appContext = context.applicationContext
@@ -135,10 +136,23 @@ fun ModesScreen(
             ),
     ) {
         item {
+            val activeCount =
+                if (activeIds.isEmpty()) {
+                    stringResource(R.string.modes_none_active)
+                } else {
+                    stringResource(R.string.modes_active_count, activeIds.size)
+                }
+            val singleActiveName =
+                if (activeIds.size == 1) modes.firstOrNull { it.id in activeIds }?.name?.takeIf { it.isNotBlank() } else null
             PullTitleHeader(
-                title = stringResource(R.string.tab_modes),
+                title =
+                    when {
+                        !tabNameInToolbar -> stringResource(R.string.tab_modes)
+                        singleActiveName != null -> singleActiveName
+                        else -> activeCount
+                    },
                 state = headerState,
-                caption = stringResource(R.string.modes_active_count, activeIds.size),
+                caption = if (tabNameInToolbar && singleActiveName == null) null else activeCount,
             )
         }
 

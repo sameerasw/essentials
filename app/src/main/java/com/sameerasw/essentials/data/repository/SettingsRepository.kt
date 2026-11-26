@@ -389,6 +389,7 @@ class SettingsRepository(
         const val KEY_DEFAULT_TAB = "default_tab"
         const val KEY_TOOLBAR_TABS = "toolbar_tabs"
         const val KEY_TOOLBAR_SHOW_LABELS = "toolbar_show_labels"
+        const val KEY_USER_DISPLAY_NAME = "user_display_name"
         const val KEY_APP_ICON = "app_icon_style"
         const val KEY_USE_ROOT = "use_root"
         const val KEY_PRIVILEGED_MODE = "privileged_mode"
@@ -1472,6 +1473,12 @@ class SettingsRepository(
 
     fun setToolbarShowLabels(enabled: Boolean) {
         putBoolean(KEY_TOOLBAR_SHOW_LABELS, enabled)
+    }
+
+    fun getUserDisplayName(): String = prefs.getString(KEY_USER_DISPLAY_NAME, null).orEmpty()
+
+    fun setUserDisplayName(name: String) {
+        putString(KEY_USER_DISPLAY_NAME, name)
     }
 
     fun getAppIcon(): AppIcon {
