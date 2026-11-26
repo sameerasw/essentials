@@ -17,7 +17,7 @@
     <string name="check_pre_releases_label">Controlla le pre-release</string>
     <string name="check_pre_releases_desc">Potrebbe essere instabile</string>
     <string name="label_default_tab">Scheda predefinita</string>
-    <string name="label_toolbar">Customize toolbar</string>
+    <string name="label_toolbar">Personalizza la barra degli strumenti </string>
     <string name="toolbar_section_hidden">Hidden from toolbar</string>
     <string name="toolbar_hidden_hint">Drag items here to remove them from the toolbar. They will show up in the Essentials tab.</string>
     <string name="toolbar_show_tab_names">Show tab names</string>
@@ -79,7 +79,7 @@
     <string name="app_lock_warning">Tieni presente che questa non è una soluzione definitiva poiché è solo un\'app di terze parti. Se hai bisogno di una sicurezza elevata, considera l\'utilizzo di Spazio Privato o altre funzionalità simili.</string>
     <string name="app_lock_biometric_note">Un\'altra nota: la richiesta di autenticazione biometrica ti consente solo di utilizzare metodi di classe sicura STRONG. I metodi di sicurezza di sblocco facciale nella classe WEAK in dispositivi come Pixel 7 saranno in grado di utilizzare solo gli altri metodi di autenticazione STRONG disponibili come l\'impronta digitale o il PIN.</string>
     <string name="setting_use_usage_access_title">Usa accesso utilizzo</string>
-    <string name="setting_use_usage_access_desc">Invece di Accessibilità (Freeze, App Lock, Dynamic Night Light)</string>
+    <string name="setting_use_usage_access_desc">Invece di Accessibilità (Congela, Blocco App, Luce Notturna Dinamica)</string>
     <!-- Button Remap -->
     <string name="button_remap_enable_title">Abilita rimappatura pulsanti</string>
     <string name="button_remap_use_shizuku_title">Usa Shizuku</string>
@@ -92,11 +92,11 @@
     <string name="flashlight_options_title">Impostazioni torcia</string>
     <string name="flashlight_options_desc">Regola la dissolvenza e altre impostazioni</string>
     <string name="setting_pitch_black_theme_title">Tema scuro OLED</string>
-    <string name="setting_app_color_title">App color</string>
-    <string name="setting_use_system_font_title">Use system font</string>
-    <string name="app_color_variant_soft">Soft</string>
-    <string name="app_color_variant_bright">Bright</string>
-    <string name="app_color_variant_neutral">Neutral</string>
+    <string name="setting_app_color_title">Colore app</string>
+    <string name="setting_use_system_font_title">Usa font di sistema</string>
+    <string name="app_color_variant_soft">Soffice</string>
+    <string name="app_color_variant_bright">Luminoso</string>
+    <string name="app_color_variant_neutral">Neutrale</string>
     <string name="setting_pitch_black_theme_desc">Utilizza lo sfondo nero puro in modalità scura</string>
     <string name="settings_section_haptic">Feedback Aptico</string>
     <string name="button_remap_section_long_press">Rimappa pressione prolungata</string>
@@ -1554,7 +1554,7 @@ con il ❤️ da 🇱🇰</string>
     <string name="watch_notif_sync_title">Notifiche</string>
     <string name="setting_app_icon_title">Icona app</string>
     <string name="setting_app_icon_desc">Personalizza l\'icona del launcher schermata home</string>
-    <string name="settings_translate_mode_desc">Mantieni premuto ogni testo per tradurre e contribuire alla comunità</string>
+    <string name="settings_translate_mode_desc">Mantieni premuto un testo qualsiasi per tradurre e contribuire alla comunità</string>
     <string name="settings_genai_automation_title">Abilità GenAI</string>
     <string name="qs_secure_sensitive_tiles_desc">Richiedi lo sblocco prima di attivare i riquadri QS sensibili mentre sono bloccati</string>
     <string name="tile_url_shortener">Accorcia URL</string>
@@ -1818,7 +1818,7 @@ con il ❤️ da 🇱🇰</string>
     <string name="island_backdrop_blur_available_title">Blur is reported as supported on this device</string>
     <string name="island_backdrop_blur_available_note">It may still not work on some devices. Battery Saver, system settings such as \"Disable window blurs\" in Developer options, and manufacturer limits can turn window blur off at any time.</string>
     <string name="island_backdrop_blur_radius_title">Blur amount</string>
-    <string name="what_is_this">Cos\'è?</string>
+    <string name="what_is_this">Cos\'è questo?</string>
     <string name="label_feature_designed_by">Designed by</string>
     <string name="label_how_to_use">How to use</string>
     <string name="shut_up_how_to_use">1. Grant Write secure settings and Usage access from the permissions prompt. Shizuku is needed for freezing apps.\n\n2. Tap Select Apps and pick the apps that refuse to run with developer options, debugging or accessibility turned on, such as banking or payment apps.\n\n3. Tap an app to choose what gets hidden for it: Developer Options, USB Debugging, Wireless Debugging and Accessibility Services. You can also turn on Auto Freeze to freeze the app after you leave it, and Restore keyboard to switch back to your keyboard afterwards.\n\n4. Tap Create shortcut for each app and add it to your home screen. Always open the app from this shortcut, never from its normal icon, so the settings are turned off before the app starts and can check them.\n\n5. When you leave the app, Shut-Up! waits for the Restoration Delay and then shows a notification. Tap it to turn everything back on. Set Restore mode to Auto if you would rather have the settings restored on their own.\n\nTips: if wireless debugging was turned off, Shizuku may stop working, so enable Attempt Shizuku restart. Use the Keyboard option to pick the keyboard to restore, or leave it on Skip. With Auto Freeze, a notification counts down and lets you freeze now or abort.</string>
@@ -1828,7 +1828,7 @@ con il ❤️ da 🇱🇰</string>
     <string name="label_notify_new_updates">Notifica per nuovi aggiornamenti</string>
     <string name="btn_import_config">Importa Configurazione</string>
     <string name="btn_export_config">Esporta Configurazione</string>
-    <string name="translation_logged_in_as">Accesso eseguito come%1$s</string>
+    <string name="translation_logged_in_as">Accesso eseguito come %1$s</string>
     <string name="auto_backup_title">Backup automatico configurazioni</string>
     <string name="auto_backup_folder">Cartella di backup</string>
     <string name="btn_grant_all_permissions">Consenti tutte le autorizzazioni</string>
@@ -1838,8 +1838,8 @@ con il ❤️ da 🇱🇰</string>
     <string name="action_licenses_and_credits">Licenze</string>
     <string name="external_control_token_title">Token controllo esterno</string>
     <string name="shizuku_auth_token_label">Token autorizz. Shizuku</string>
-    <string name="setting_privileged_mode_title">Privilegi di accesso</string>
-    <string name="settings_permissions_all">Tutti i permessi</string>
+    <string name="setting_privileged_mode_title">Accesso privilegiato</string>
+    <string name="settings_permissions_all">Tutte le autorizzazioni</string>
     <string name="label_haptics_title">Aptica</string>
     <string name="diy_no_automations">Ancora nessuna automazione</string>
     <string name="action_backup_app_list">Backup lista app</string>
@@ -1872,10 +1872,10 @@ con il ❤️ da 🇱🇰</string>
     <string name="island_action_show">Show</string>
     <string name="island_gesture_hints_title">Show gesture hints</string>
     <string name="wallpaper_staging_not_set">Not set yet</string>
-    <string name="settings_section_more">Di più</string>
+    <string name="settings_section_more">Altro</string>
     <string name="settings_translations_section">Traduzioni</string>
     <string name="permission_required_for">Richiesto per:</string>
-    <string name="btn_reset_update_note">Resetta note aggiornamenti</string>
+    <string name="btn_reset_update_note">Reimposta note aggiornamenti</string>
     <string name="label_top_contributors">Contributori Migliori</string>
     <string name="settings_section_permissions">Autorizzazioni</string>
     <string name="settings_section_customizations">Personalizzazione</string>
@@ -1977,7 +1977,7 @@ con il ❤️ da 🇱🇰</string>
     <string name="tour_bug_report_fab">Something not right? Report a bug from here</string>
     <string name="tour_help_fab">Use this anytime for help</string>
     <string name="tour_design_switch">Prefer the Material Expressive design? Switch in settings</string>
-    <string name="action_reset_tour">Reset tour</string>
+    <string name="action_reset_tour">Reimposta tour</string>
     <string name="tour_reset_toast">Tour reset</string>
     <string name="instruction_section_genai_title">IA Generativa sul dispositivo (Gemini Nano)</string>
     <string name="label_motion_blur_amount">Quantità</string>
