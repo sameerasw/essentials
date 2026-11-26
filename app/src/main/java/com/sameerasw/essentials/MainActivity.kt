@@ -149,6 +149,7 @@ import com.sameerasw.essentials.ui.core.sheets.GitHubAuthSheet
 import com.sameerasw.essentials.ui.core.sheets.InstructionsBottomSheet
 import com.sameerasw.essentials.ui.core.sheets.PrankBottomSheet
 import com.sameerasw.essentials.ui.core.sheets.ShakeForHelp
+import com.sameerasw.essentials.ui.core.sheets.ToolbarConfigBottomSheet
 import com.sameerasw.essentials.ui.core.sheets.UpdateBottomSheet
 import com.sameerasw.essentials.ui.modifiers.BlurDirection
 import com.sameerasw.essentials.ui.modifiers.progressiveBlur
@@ -345,6 +346,13 @@ class MainActivity : AppCompatActivity() {
 
                     var showGitHubAuthSheet by remember { mutableStateOf(false) }
                     var showNewAutomationSheet by remember { mutableStateOf(false) }
+                    var showToolbarConfigSheet by remember { mutableStateOf(false) }
+                    if (showToolbarConfigSheet) {
+                        ToolbarConfigBottomSheet(
+                            viewModel = viewModel,
+                            onDismissRequest = { showToolbarConfigSheet = false },
+                        )
+                    }
                     var showNewModeSheet by remember { mutableStateOf(false) }
                     var helpTab by remember { mutableStateOf<DIYTabs?>(null) }
                     helpTab?.let { tab ->
@@ -919,6 +927,7 @@ class MainActivity : AppCompatActivity() {
                                                     modifier = morphBounds,
                                                     selectedIndex = pagerState.currentPage,
                                                     itemSlots = DIYTabs.entries.size,
+                                                    onLongClick = { showToolbarConfigSheet = true },
                                                     title = if (isDetail) detailSpec?.title ?: routeTitle else null,
                                                     isBeta = isDetail && detailSpec?.isBeta == true,
                                                     onBackClick = if (isDetail) detailSpec?.onBack ?: { navViewModel.pop() } else null,

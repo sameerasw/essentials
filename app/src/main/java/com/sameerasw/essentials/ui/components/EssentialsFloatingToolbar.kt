@@ -10,6 +10,18 @@
 package com.sameerasw.essentials.ui.components
 
 import androidx.compose.ui.unit.Dp
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.ui.platform.LocalContext
+import kotlinx.coroutines.launch
+import androidx.compose.foundation.gestures.awaitEachGesture
+import androidx.compose.foundation.gestures.awaitFirstDown
+import androidx.compose.foundation.gestures.waitForUpOrCancellation
+import androidx.compose.ui.input.pointer.PointerEventPass
+import androidx.compose.ui.input.pointer.pointerInput
+import kotlinx.coroutines.withTimeoutOrNull
 import androidx.compose.foundation.layout.offset
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.SharedTransitionLayout
@@ -73,6 +85,9 @@ import com.sameerasw.essentials.R
 import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.utils.HapticUtil
 
+private const val HOLD_START_MS = 350L
+private const val HOLD_ARM_MS = 650L
+
 data class ToolbarItem(
     val iconRes: Int,
     val labelRes: Int,
@@ -104,8 +119,13 @@ fun EssentialsFloatingToolbar(
     expanded: Boolean = true,
     backCollapsed: Boolean = false,
     availableWidth: Dp? = null,
+    onLongClick: (() -> Unit)? = null,
 ) {
     val view = LocalView.current
+    val context = LocalContext.current
+    val holdProgress = remember { Animatable(0f) }
+    val holdScope = rememberCoroutineScope()
+    val currentOnLongClick by rememberUpdatedState(onLongClick)
     val screenWidth = availableWidth ?: LocalConfiguration.current.screenWidthDp.dp
     val titleWidth = (screenWidth - 32.dp - 56.dp - 8.dp - 16.dp - 48.dp - 8.dp).coerceIn(0.dp, 192.dp)
     val collapse by animateFloatAsState(
@@ -188,7 +208,52 @@ fun EssentialsFloatingToolbar(
                     contentAlignment = Alignment.Center,
                     label = "toolbar_mode",
                 ) { isBackMode ->
-                    Row(verticalAlignment = Alignment.CenterVertically) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier =
+                            if (!isBackMode && onLongClick != null) {
+                                Modifier.pointerInput(Unit) {
+                                    awaitEachGesture {
+                                        awaitFirstDown(requireUnconsumed = false, pass = PointerEventPass.Initial)
+                                        val early =
+                                            withTimeoutOrNull(HOLD_START_MS) {
+                                                waitForUpOrCancellation(PointerEventPass.Initial)
+                                            }
+                                        if (early != null) return@awaitEachGesture
+                                        HapticUtil.startTickRampHaptic(context, HOLD_ARM_MS)
+                                        val armJob =
+                                            holdScope.launch {
+                                                holdProgress.animateTo(1f, tween(HOLD_ARM_MS.toInt(), easing = FastOutSlowInEasing))
+                                            }
+                                        val released =
+                                            withTimeoutOrNull(HOLD_ARM_MS) {
+                                                while (true) {
+                                                    val event = awaitPointerEvent(PointerEventPass.Initial)
+                                                    if (event.changes.none { it.pressed }) {
+                                                        event.changes.forEach { it.consume() }
+                                                        break
+                                                    }
+                                                }
+                                            }
+                                        if (released != null) {
+                                            armJob.cancel()
+                                            HapticUtil.stopHoldHaptic(context)
+                                            holdScope.launch { holdProgress.animateTo(0f, spring(dampingRatio = Spring.DampingRatioMediumBouncy)) }
+                                            return@awaitEachGesture
+                                        }
+                                        HapticUtil.performOpenClickHaptic(context)
+                                        currentOnLongClick?.invoke()
+                                        do {
+                                            val event = awaitPointerEvent(PointerEventPass.Initial)
+                                            event.changes.forEach { it.consume() }
+                                        } while (event.changes.any { it.pressed })
+                                        holdScope.launch { holdProgress.animateTo(0f, spring(dampingRatio = Spring.DampingRatioMediumBouncy)) }
+                                    }
+                                }
+                            } else {
+                                Modifier
+                            },
+                    ) {
                         if (isBackMode) {
                             // BACK BUTTON - Unified with Tabbed style (pop-out effect)
                             IconButton(
@@ -298,6 +363,14 @@ fun EssentialsFloatingToolbar(
                                     label = "spacer_width_$index",
                                 )
 
+                                val hold = holdProgress.value
+                                val shownWidth =
+                                    if (isSelected) {
+                                        itemWidth + (tabbedWidth - itemWidth) * hold
+                                    } else {
+                                        itemWidth * (1f - hold)
+                                    }
+
                                 if (itemWidth > 0.dp || isSelected) {
                                     IconButton(
                                         onClick = {
@@ -317,7 +390,7 @@ fun EssentialsFloatingToolbar(
                                                         Modifier
                                                     },
                                                 )
-                                                .width(itemWidth)
+                                                .width(shownWidth)
                                                 .height(48.dp),
                                         colors =
                                             if (isSelected) {
@@ -338,7 +411,10 @@ fun EssentialsFloatingToolbar(
                                         ) {
                                             Box {
                                                 Icon(
-                                                    painter = painterResource(id = item.iconRes),
+                                                    painter =
+                                                        painterResource(
+                                                            id = if (isSelected && holdProgress.value > 0.5f) R.drawable.rounded_edit_24 else item.iconRes,
+                                                        ),
                                                     contentDescription = stringResource(id = item.labelRes),
                                                     tint =
                                                         if (isSelected) {
@@ -364,7 +440,7 @@ fun EssentialsFloatingToolbar(
 
                                     // Animated spacing between buttons
                                     if (index < items.size - 1) {
-                                        Spacer(modifier = Modifier.width(spacerWidth))
+                                        Spacer(modifier = Modifier.width(spacerWidth * (1f - holdProgress.value)))
                                     }
                                 }
                             }
