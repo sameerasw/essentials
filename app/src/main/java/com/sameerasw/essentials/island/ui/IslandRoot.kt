@@ -812,11 +812,12 @@ private fun IslandRootContent(
     }
     val focusedItem = state.focused
     
-    val foreignStack = if (focusedItem != null && focusedItem.stack.isEmpty()) {
-        state.items.values.firstOrNull { it.key != focusedItem.key && it.stack.isNotEmpty() && !it.expandedQueueOnly }?.stack.orEmpty()
+    val foreignStackOwner = if (focusedItem != null && focusedItem.stack.isEmpty()) {
+        state.items.values.firstOrNull { it.key != focusedItem.key && it.stack.isNotEmpty() && !it.expandedQueueOnly }
     } else {
-        emptyList()
+        null
     }
+    val foreignStack = foreignStackOwner?.stack.orEmpty()
     val fullStack = focusedItem?.stack?.takeIf { it.isNotEmpty() } ?: foreignStack.map { StackIcon(it.key, current = false, onSelect = it.onSelect, content = it.content) }
     val queuedIcons = when {
         stage == IslandStage.Expanded && focusedItem?.hideExpandedQueue == true -> emptyList()
@@ -1110,8 +1111,8 @@ private fun IslandRootContent(
                     bond = pillBond,
                     accent = focusedItem?.queueAccent,
                     reversed = bubbleRight,
-                    onClearAll = focusedItem?.onClearAll,
-                    onSnoozeAll = focusedItem?.onSnoozeAll,
+                    onClearAll = if (foreignStack.isNotEmpty()) foreignStackOwner?.onClearAll else focusedItem?.onClearAll,
+                    onSnoozeAll = if (foreignStack.isNotEmpty()) null else focusedItem?.onSnoozeAll,
                     onInteraction = actions::onInteraction,
                     modifier = Modifier
                         .queueSlot(0.5f, 1f, slides = true) { k -> ((k - 0.3f) / 0.7f).coerceIn(0f, 1f) }
