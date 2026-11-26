@@ -10,8 +10,16 @@
 package com.sameerasw.essentials.ui.components
 
 import androidx.compose.ui.unit.Dp
-import androidx.compose.foundation.background
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.geometry.RoundRect
+import androidx.compose.ui.geometry.toRect
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.PathOperation
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.unit.IntSize
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.ui.graphics.lerp
@@ -158,6 +166,10 @@ fun EssentialsFloatingToolbar(
     val view = LocalView.current
     val context = LocalContext.current
     val holdProgress = remember { Animatable(0f) }
+    val itemBounds = remember { mutableStateMapOf<Int, Pair<Float, Float>>() }
+    val pillLeft = remember { Animatable(0f) }
+    val pillRight = remember { Animatable(0f) }
+    var pillPlaced by remember { mutableStateOf(false) }
     val holdScope = rememberCoroutineScope()
     val currentOnLongClick by rememberUpdatedState(onLongClick)
     val screenWidth = availableWidth ?: LocalConfiguration.current.screenWidthDp.dp
@@ -408,10 +420,6 @@ fun EssentialsFloatingToolbar(
                                 if (items.isEmpty()) 48.dp else (tabbedWidth - itemGap * (items.size - 1)) / items.size
 
                             val density = LocalDensity.current
-                            val itemBounds = remember { mutableStateMapOf<Int, Pair<Float, Float>>() }
-                            val pillLeft = remember { Animatable(0f) }
-                            val pillRight = remember { Animatable(0f) }
-                            var pillPlaced by remember { mutableStateOf(false) }
 
                             val selectedBounds = itemBounds[selectedIndex]
                             val targetLeft = selectedBounds?.first
@@ -433,7 +441,13 @@ fun EssentialsFloatingToolbar(
                                 launch { pillRight.animateTo(targetRight, if (movingRight) lead else trail) }
                             }
 
-                            Box(contentAlignment = Alignment.CenterStart) {
+                            val pillColor = MaterialTheme.colorScheme.background
+                            var rowSize by remember { mutableStateOf(IntSize.Zero) }
+                            var pillPosition by remember { mutableStateOf(Offset.Zero) }
+                            Box(
+                                contentAlignment = Alignment.CenterStart,
+                                modifier = Modifier.onSizeChanged { rowSize = it },
+                            ) {
                                 if (pillPlaced) {
                                     Box(
                                         modifier =
@@ -443,10 +457,29 @@ fun EssentialsFloatingToolbar(
                                                     rememberSharedContentState(key = "toolbar_pill"),
                                                     this@AnimatedContent,
                                                     resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds,
+                                                    renderInOverlayDuringTransition = false,
                                                 )
                                                 .width(with(density) { (pillRight.value - pillLeft.value).coerceAtLeast(0f).toDp() })
                                                 .height(48.dp)
-                                                .background(MaterialTheme.colorScheme.background, CircleShape),
+                                                .onPlaced { pillPosition = it.positionInParent() }
+                                                .drawBehind {
+                                                    val pill =
+                                                        Path().apply {
+                                                            addRoundRect(RoundRect(size.toRect(), CornerRadius(size.height / 2f)))
+                                                        }
+                                                    val rowRect =
+                                                        Rect(
+                                                            -pillPosition.x,
+                                                            -pillPosition.y,
+                                                            rowSize.width - pillPosition.x,
+                                                            rowSize.height - pillPosition.y,
+                                                        )
+                                                    val row =
+                                                        Path().apply {
+                                                            addRoundRect(RoundRect(rowRect, CornerRadius(rowRect.height / 2f)))
+                                                        }
+                                                    drawPath(Path.combine(PathOperation.Intersect, pill, row), pillColor)
+                                                },
                                     )
                                 }
                                 Row(verticalAlignment = Alignment.CenterVertically) {
@@ -518,7 +551,7 @@ fun EssentialsFloatingToolbar(
                                                             lerp(
                                                                 MaterialTheme.colorScheme.background,
                                                                 MaterialTheme.colorScheme.primary,
-                                                                pillCoverage(itemBounds[index], pillLeft.value, pillRight.value),
+                                                                if (pillPlaced) pillCoverage(itemBounds[index], pillLeft.value, pillRight.value) else if (isSelected) 1f else 0f,
                                                             ),
                                                         selected = isSelected,
                                                         effect = if (isSelected && holdProgress.value > 0.5f) null else item.effect,
