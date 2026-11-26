@@ -40,6 +40,7 @@ fun IslandSignalOptionsBottomSheet(onDismissRequest: () -> Unit) {
     val settings = remember { SettingsRepository(context) }
     var showPermissionSheet by remember { mutableStateOf(false) }
     var activity by remember { mutableStateOf(settings.isIslandNetworkActivityEnabled()) }
+    var vpn by remember { mutableStateOf(settings.isIslandNetworkVpnEnabled()) }
     var enabled by remember { mutableStateOf(settings.isIslandShowSignalEnabled()) }
     var lowOnly by remember { mutableStateOf(settings.isIslandSignalLowOnlyEnabled()) }
     var wifi by remember { mutableStateOf(settings.isIslandSignalWifiEnabled()) }
@@ -70,6 +71,16 @@ fun IslandSignalOptionsBottomSheet(onDismissRequest: () -> Unit) {
                         HapticUtil.performVirtualKeyHaptic(view)
                         activity = it
                         settings.setIslandNetworkActivityEnabled(it)
+                    },
+                )
+                IconToggleItem(
+                    iconRes = R.drawable.rounded_vpn_key_24,
+                    title = stringResource(R.string.icon_vpn),
+                    isChecked = vpn,
+                    onCheckedChange = {
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        vpn = it
+                        settings.setIslandNetworkVpnEnabled(it)
                     },
                 )
                 IconToggleItem(

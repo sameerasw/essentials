@@ -765,6 +765,7 @@ class SettingsRepository(
         const val KEY_ISLAND_SHOW_NETWORK = "island_show_network"
         const val KEY_ISLAND_SHOW_SIGNAL = "island_show_signal"
         const val KEY_ISLAND_NETWORK_ACTIVITY = "island_network_activity"
+        const val KEY_ISLAND_NETWORK_VPN = "island_network_vpn"
         const val KEY_ISLAND_SIGNAL_WIFI = "island_signal_wifi"
         const val KEY_ISLAND_PRIORITY_ORDER = "island_priority_order"
         const val KEY_ISLAND_HIDDEN_ENTRIES = "island_hidden_entries"
@@ -4479,6 +4480,8 @@ class SettingsRepository(
     fun setIslandShowNetworkEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_SHOW_NETWORK, enabled)
     fun isIslandNetworkActivityEnabled(): Boolean = getBoolean(KEY_ISLAND_NETWORK_ACTIVITY, true)
     fun setIslandNetworkActivityEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_NETWORK_ACTIVITY, enabled)
+    fun isIslandNetworkVpnEnabled(): Boolean = getBoolean(KEY_ISLAND_NETWORK_VPN, true)
+    fun setIslandNetworkVpnEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_NETWORK_VPN, enabled)
     fun isIslandSignalLowOnlyEnabled(): Boolean = getBoolean(KEY_ISLAND_SIGNAL_LOW_ONLY, false)
     fun setIslandSignalLowOnlyEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_SIGNAL_LOW_ONLY, enabled)
     fun getIslandPriorityOrder(): List<String>? =
