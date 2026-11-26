@@ -161,7 +161,18 @@ fun EssentialsFloatingToolbar(
     val holdScope = rememberCoroutineScope()
     val currentOnLongClick by rememberUpdatedState(onLongClick)
     val screenWidth = availableWidth ?: LocalConfiguration.current.screenWidthDp.dp
-    val titleWidth = (screenWidth - 32.dp - 56.dp - 8.dp - 16.dp - 48.dp - 8.dp).coerceIn(0.dp, 192.dp)
+    val itemGap = 2.dp
+    val slots = maxOf(itemSlots, items.size, 1)
+    val hasFab = floatingActionButton != null || onHelpClick != null || (fabAction != null && fabIconRes != null)
+    val maxTabbedWidth =
+        (screenWidth - 32.dp - 8.dp - if (hasFab) 64.dp else 0.dp).coerceAtLeast(48.dp)
+    val tabbedWidth = (48.dp * slots + itemGap * (slots - 1)).coerceAtMost(maxTabbedWidth)
+    val titleWidth =
+        if (itemSlots > 0 || items.isNotEmpty()) {
+            (tabbedWidth - 48.dp - 8.dp).coerceAtLeast(0.dp)
+        } else {
+            (screenWidth - 32.dp - 56.dp - 8.dp - 16.dp - 48.dp - 8.dp).coerceIn(0.dp, 192.dp)
+        }
     val collapse by animateFloatAsState(
         targetValue = if (backCollapsed) 1f else 0f,
         animationSpec = tween(380, easing = CubicBezierEasing(0.2f, 0f, 0f, 1f)),
@@ -393,11 +404,6 @@ fun EssentialsFloatingToolbar(
                             }
                         } else {
                             // TABBED MODE
-                            val itemGap = 2.dp
-                            val slots = maxOf(itemSlots, items.size, 1)
-                            val maxTabbedWidth =
-                                (screenWidth - 32.dp - 8.dp - if (finalFab != null) 64.dp else 0.dp).coerceAtLeast(48.dp)
-                            val tabbedWidth = (48.dp * slots + itemGap * (slots - 1)).coerceAtMost(maxTabbedWidth)
                             val fullItemWidth =
                                 if (items.isEmpty()) 48.dp else (tabbedWidth - itemGap * (items.size - 1)) / items.size
 
