@@ -1632,6 +1632,11 @@
     <string name="feat_pixel_searchbar_desc">Set Essentials as the default search provider for the home screen search bar in Pixel Launcher.</string>
     <string name="shut_up_toast_active">L\'app è stata zittita</string>
     <string name="shut_up_toast_restored">Funzionalità di Taci! ripristinate</string>
+    <string name="shut_up_custom_settings">Custom settings</string>
+    <string name="shut_up_custom_setting_add">Add setting</string>
+    <string name="shut_up_custom_setting_launch">On launch</string>
+    <string name="shut_up_custom_setting_restore">On restore</string>
+    <string name="shut_up_custom_setting_original">Original</string>
     <string name="shut_up_auto_archive_notif_title">Congelamento automatico</string>
     <string name="shut_up_auto_archive_notif_text">%1$s verrà archiviata tra %2$d secondi</string>
     <string name="shut_up_auto_archive_action_freeze">Congela ora</string>

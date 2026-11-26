@@ -1634,6 +1634,11 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla s
     <string name="feat_pixel_searchbar_desc">Reemplazar la barra de búsqueda predeterminada de Pixel Launcher.</string>
     <string name="shut_up_toast_active">La aplicación fue silenciada</string>
     <string name="shut_up_toast_restored">Las funciones de Cállate han regresado</string>
+    <string name="shut_up_custom_settings">Custom settings</string>
+    <string name="shut_up_custom_setting_add">Add setting</string>
+    <string name="shut_up_custom_setting_launch">On launch</string>
+    <string name="shut_up_custom_setting_restore">On restore</string>
+    <string name="shut_up_custom_setting_original">Original</string>
     <string name="shut_up_auto_archive_notif_title">Congelación automática</string>
     <string name="shut_up_auto_archive_notif_text">%1$s se archivará en %2$d segundos</string>
     <string name="shut_up_auto_archive_action_freeze">Congelar ahora</string>

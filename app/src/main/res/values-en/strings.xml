@@ -1466,6 +1466,11 @@
     <string name="feat_disable_rotation_suggestion_desc">Do not show the rotation button when auto-rotate is off</string>
     <string name="shut_up_toast_active">App got shut up</string>
     <string name="shut_up_toast_restored">Shut up features returned</string>
+    <string name="shut_up_custom_settings">Custom settings</string>
+    <string name="shut_up_custom_setting_add">Add setting</string>
+    <string name="shut_up_custom_setting_launch">On launch</string>
+    <string name="shut_up_custom_setting_restore">On restore</string>
+    <string name="shut_up_custom_setting_original">Original</string>
     <string name="shut_up_auto_archive_notif_title">Auto Freeze</string>
     <string name="shut_up_auto_archive_notif_text">%1$s will be archived in %2$d seconds</string>
     <string name="shut_up_auto_archive_action_freeze">Freeze now</string>

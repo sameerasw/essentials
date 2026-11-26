@@ -9,6 +9,24 @@
 
 package com.sameerasw.essentials.ui.core.sheets
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.SegmentedButton
+import androidx.compose.material3.SegmentedButtonDefaults
+import androidx.compose.material3.SingleChoiceSegmentedButtonRow
+import androidx.compose.material3.Switch
+import androidx.compose.material3.Text
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.res.painterResource
+import com.sameerasw.essentials.domain.diy.Action
+import com.sameerasw.essentials.domain.model.ShutUpCustomSetting
+import com.sameerasw.essentials.utils.HapticUtil
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -199,6 +217,15 @@ fun ShutUpPerAppSettingsSheet(
                 )
             }
 
+            ShutUpCustomSettingsSection(
+                settings = currentConfig.customSettings.orEmpty(),
+                onSettingsChanged = { updated ->
+                    val newConfig = currentConfig.copy(customSettings = updated)
+                    currentConfig = newConfig
+                    onConfigChanged(newConfig)
+                },
+            )
+
             Button(
                 onClick = {
                     onCreateShortcut(currentConfig)
@@ -224,4 +251,139 @@ fun ShutUpPerAppSettingsSheet(
             Spacer(modifier = Modifier.height(32.dp))
         }
     }
+}
+
+@Composable
+private fun ShutUpCustomSettingsSection(
+    settings: List<ShutUpCustomSetting>,
+    onSettingsChanged: (List<ShutUpCustomSetting>) -> Unit,
+) {
+    val view = LocalView.current
+    val count = settings.size + 1
+
+    Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+        TranslatableText(
+            stringResId = R.string.shut_up_custom_settings,
+            style = MaterialTheme.typography.titleSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.padding(start = 16.dp, bottom = 8.dp),
+        )
+        settings.forEachIndexed { index, setting ->
+            ShutUpCustomSettingRow(
+                setting = setting,
+                shape = groupedShape(index, count),
+                onChange = { updated ->
+                    onSettingsChanged(settings.toMutableList().also { it[index] = updated })
+                },
+                onDelete = {
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    onSettingsChanged(settings.toMutableList().also { it.removeAt(index) })
+                },
+            )
+        }
+        IconToggleItem(
+            iconRes = R.drawable.rounded_add_24,
+            title = stringResource(R.string.shut_up_custom_setting_add),
+            showToggle = false,
+            onClick = { onSettingsChanged(settings + ShutUpCustomSetting()) },
+            modifier = Modifier.clip(groupedShape(count - 1, count)),
+        )
+    }
+}
+
+@Composable
+private fun ShutUpCustomSettingRow(
+    setting: ShutUpCustomSetting,
+    shape: Shape,
+    onChange: (ShutUpCustomSetting) -> Unit,
+    onDelete: () -> Unit,
+) {
+    val view = LocalView.current
+    val tables =
+        listOf(
+            Action.SettingsTable.GLOBAL to R.string.diy_custom_settings_table_global,
+            Action.SettingsTable.SECURE to R.string.diy_custom_settings_table_secure,
+            Action.SettingsTable.SYSTEM to R.string.diy_custom_settings_table_system,
+        )
+
+    Column(
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .clip(shape)
+                .background(MaterialTheme.colorScheme.surfaceBright)
+                .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(10.dp),
+    ) {
+        SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
+            tables.forEachIndexed { index, (table, labelRes) ->
+                SegmentedButton(
+                    selected = setting.table == table,
+                    onClick = {
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        onChange(setting.copy(table = table))
+                    },
+                    shape = SegmentedButtonDefaults.itemShape(index, tables.size),
+                    label = { Text(stringResource(labelRes), maxLines = 1) },
+                )
+            }
+        }
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            OutlinedTextField(
+                value = setting.key,
+                onValueChange = { onChange(setting.copy(key = it.trim())) },
+                label = { TranslatableText(R.string.diy_custom_settings_key_label) },
+                singleLine = true,
+                shape = RoundedCornerShape(12.dp),
+                modifier = Modifier.weight(1f),
+            )
+            Switch(
+                checked = setting.isEnabled,
+                onCheckedChange = {
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    onChange(setting.copy(isEnabled = it))
+                },
+            )
+            IconButton(onClick = onDelete) {
+                Icon(
+                    painter = painterResource(R.drawable.rounded_delete_24),
+                    contentDescription = stringResource(R.string.action_delete),
+                    tint = MaterialTheme.colorScheme.error,
+                )
+            }
+        }
+
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            OutlinedTextField(
+                value = setting.valueOnLaunch,
+                onValueChange = { onChange(setting.copy(valueOnLaunch = it)) },
+                label = { TranslatableText(R.string.shut_up_custom_setting_launch) },
+                singleLine = true,
+                shape = RoundedCornerShape(12.dp),
+                modifier = Modifier.weight(1f),
+            )
+            OutlinedTextField(
+                value = setting.valueOnRestore,
+                onValueChange = { onChange(setting.copy(valueOnRestore = it)) },
+                label = { TranslatableText(R.string.shut_up_custom_setting_restore) },
+                placeholder = { TranslatableText(R.string.shut_up_custom_setting_original) },
+                singleLine = true,
+                shape = RoundedCornerShape(12.dp),
+                modifier = Modifier.weight(1f),
+            )
+        }
+    }
+}
+
+private fun groupedShape(
+    index: Int,
+    count: Int,
+): Shape {
+    val top = if (index == 0) 24.dp else 4.dp
+    val bottom = if (index == count - 1) 24.dp else 4.dp
+    return RoundedCornerShape(topStart = top, topEnd = top, bottomStart = bottom, bottomEnd = bottom)
 }
