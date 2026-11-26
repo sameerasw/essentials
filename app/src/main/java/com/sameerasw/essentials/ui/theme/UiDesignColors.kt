@@ -14,6 +14,7 @@ import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.luminance
 
 @Composable
 fun cardListItemColors(containerColor: Color = MaterialTheme.colorScheme.surfaceBright): ListItemColors {
@@ -46,7 +47,11 @@ private fun isOneUi(): Boolean = LocalUiDesign.current == UiDesign.ONE_UI
 
 @Composable
 fun toolbarContainerColor(): Color =
-    if (isOneUi()) MaterialTheme.colorScheme.surfaceContainerHighest.copy(alpha = 0.85f) else MaterialTheme.colorScheme.primary
+    if (isOneUi()) {
+        MaterialTheme.colorScheme.surfaceContainerHighest.copy(alpha = if (LocalBlurEnabled.current) 0.6f else 1f)
+    } else {
+        MaterialTheme.colorScheme.primary
+    }
 
 @Composable
 fun toolbarContentColor(): Color =
@@ -57,8 +62,11 @@ fun toolbarSelectedContentColor(): Color =
     if (isOneUi()) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.primary
 
 @Composable
-fun toolbarPillColor(): Color =
-    if (isOneUi()) MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f) else MaterialTheme.colorScheme.background
+fun toolbarPillColor(): Color {
+    if (!isOneUi()) return MaterialTheme.colorScheme.background
+    val scheme = MaterialTheme.colorScheme
+    return if (scheme.background.luminance() < 0.5f) scheme.surfaceContainerLow else scheme.surfaceContainerLowest
+}
 
 @Composable
 fun fabContainerColor(): Color =

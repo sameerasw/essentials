@@ -26,12 +26,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import com.materialkolor.PaletteStyle
 import com.materialkolor.dynamicColorScheme
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import androidx.compose.ui.platform.LocalHapticFeedback
+import com.sameerasw.essentials.utils.DeviceUtils
 import com.sameerasw.essentials.utils.HapticUtil
 import androidx.compose.ui.platform.LocalContext
 
@@ -85,6 +87,28 @@ private fun ColorScheme.asMonochromeSurfaces(): ColorScheme =
         inverseOnSurface = inverseOnSurface.monochrome(),
     )
 
+val LocalBlurEnabled = staticCompositionLocalOf { false }
+
+@Composable
+private fun rememberBlurEnabled(): Boolean {
+    val context = LocalContext.current
+    val prefs = remember { context.getSharedPreferences(SettingsRepository.PREFS_NAME, Context.MODE_PRIVATE) }
+    fun read() =
+        prefs.getBoolean(SettingsRepository.KEY_USE_BLUR, true) &&
+            !DeviceUtils.isBlurProblematicDevice() &&
+            !DeviceUtils.isPowerSaveMode(context)
+    var enabled by remember { mutableStateOf(read()) }
+    DisposableEffect(prefs) {
+        val listener =
+            SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
+                if (key == SettingsRepository.KEY_USE_BLUR) enabled = read()
+            }
+        prefs.registerOnSharedPreferenceChangeListener(listener)
+        onDispose { prefs.unregisterOnSharedPreferenceChangeListener(listener) }
+    }
+    return enabled
+}
+
 @Composable
 private fun rememberAppColor(): Pair<Int, PaletteStyle> {
     val context = LocalContext.current
@@ -118,6 +142,7 @@ fun EssentialsTheme(
     UiDesignState.init(LocalContext.current)
     val useSystemFont = SystemFontState.enabled
     val uiDesign = UiDesignState.resolved
+    val blurEnabled = rememberBlurEnabled()
     val baseScheme =
         when {
             dynamicColor && seed != 0 ->
@@ -145,6 +170,7 @@ fun EssentialsTheme(
     CompositionLocalProvider(
         LocalHapticFeedback provides gatedHaptics,
         LocalUiDesign provides uiDesign,
+        LocalBlurEnabled provides blurEnabled,
     ) {
         MaterialTheme(
             colorScheme = colorScheme,
