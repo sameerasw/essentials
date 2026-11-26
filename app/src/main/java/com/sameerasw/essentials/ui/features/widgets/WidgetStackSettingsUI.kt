@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials.ui.features.widgets
 
+import com.sameerasw.essentials.ui.theme.cardListItemColors
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.content.ComponentName
@@ -22,7 +23,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
-import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -87,7 +87,7 @@ fun WidgetStackSettingsUI(modifier: Modifier = Modifier) {
                 },
                 headlineContent = { TranslatableText(R.string.widget_stack_add_to_home) },
                 supportingContent = { TranslatableText(R.string.widget_stack_add_to_home_desc) },
-                colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceBright),
+                colors = cardListItemColors(),
             )
         }
 
@@ -120,7 +120,7 @@ fun WidgetStackSettingsUI(modifier: Modifier = Modifier) {
                         },
                         headlineContent = { Text(stackTitle(context, stack)) },
                         supportingContent = { Text(stackCount(context, stack)) },
-                        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceBright),
+                        colors = cardListItemColors(),
                     )
                 }
             }

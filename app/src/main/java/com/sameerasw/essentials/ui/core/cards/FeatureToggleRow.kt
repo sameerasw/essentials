@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials.ui.core.cards
 
+import com.sameerasw.essentials.ui.theme.cardListItemColors
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -21,7 +22,6 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
-import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.runtime.Composable
@@ -62,13 +62,13 @@ fun FeatureToggleRow(
                         Modifier
                             .size(36.dp)
                             .clip(CircleShape)
-                            .background(ColorUtil.getPastelColorFor(title)),
+                            .background(ColorUtil.iconContainerColor(title)),
                     contentAlignment = Alignment.Center,
                 ) {
                     Icon(
                         painter = painterResource(iconRes),
                         contentDescription = null,
-                        tint = ColorUtil.getVibrantColorFor(title),
+                        tint = ColorUtil.iconTintColor(title),
                         modifier = Modifier.size(20.dp),
                     )
                 }
@@ -82,9 +82,7 @@ fun FeatureToggleRow(
             )
         },
         colors =
-            ListItemDefaults.colors(
-                containerColor = MaterialTheme.colorScheme.surfaceBright,
-            ),
+            cardListItemColors(),
         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
         content = {
             TranslatableText(

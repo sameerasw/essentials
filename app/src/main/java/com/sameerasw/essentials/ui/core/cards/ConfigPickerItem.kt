@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials.ui.core.cards
 
+import com.sameerasw.essentials.ui.theme.cardListItemColors
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
@@ -19,7 +20,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
-import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -161,9 +161,7 @@ fun ConfigPickerItem(
             }
         },
         colors =
-            ListItemDefaults.colors(
-                containerColor = MaterialTheme.colorScheme.surfaceBright,
-            ),
+            cardListItemColors(),
         content = {
             Text(
                 text = title,

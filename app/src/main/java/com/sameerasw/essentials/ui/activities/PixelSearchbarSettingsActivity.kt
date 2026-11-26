@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials.ui.activities
 
+import com.sameerasw.essentials.ui.theme.cardListItemColors
 import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.navigation.ProvideBottomBar
 import com.sameerasw.essentials.ui.navigation.BottomBarSpec
@@ -48,7 +49,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
-import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
@@ -538,9 +538,7 @@ fun PixelSearchbarSettingsUI(
                                     )
                                 },
                                 colors =
-                                    ListItemDefaults.colors(
-                                        containerColor = MaterialTheme.colorScheme.surfaceBright,
-                                    ),
+                                    cardListItemColors(),
                             ) {
                                 Text(
                                     text =
@@ -574,9 +572,7 @@ fun PixelSearchbarSettingsUI(
                                         )
                                     },
                                     colors =
-                                        ListItemDefaults.colors(
-                                            containerColor = MaterialTheme.colorScheme.surfaceBright,
-                                        ),
+                                        cardListItemColors(),
                                 ) {
                                     TranslatableText(
                                         stringResId = R.string.pixel_searchbar_widget_remove,
@@ -709,9 +705,7 @@ fun PixelSearchbarSettingsUI(
                                         )
                                     },
                                     colors =
-                                        ListItemDefaults.colors(
-                                            containerColor = MaterialTheme.colorScheme.surfaceBright,
-                                        ),
+                                        cardListItemColors(),
                                 ) {
                                     Text(
                                         text = formattedDate,
@@ -792,9 +786,7 @@ fun PixelSearchbarSettingsUI(
                             )
                         },
                         colors =
-                            ListItemDefaults.colors(
-                                containerColor = MaterialTheme.colorScheme.surfaceBright,
-                            ),
+                            cardListItemColors(),
                     ) {
                         TranslatableText(
                             stringResId = R.string.pixel_searchbar_tap_action_enabled,

@@ -34,6 +34,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import com.sameerasw.essentials.ui.theme.LocalUiDesign
+import com.sameerasw.essentials.ui.theme.UiDesign
 import androidx.compose.material3.Text
 import androidx.compose.material3.carousel.HorizontalMultiBrowseCarousel
 import androidx.compose.material3.carousel.rememberCarouselState
@@ -189,7 +191,9 @@ private fun FavoriteTile(
 
     val isDarkTheme = isSystemInDarkTheme()
     val iconColor =
-        if (isDarkTheme) {
+        if (LocalUiDesign.current == UiDesign.ONE_UI) {
+            MaterialTheme.colorScheme.onSurface
+        } else if (isDarkTheme) {
             ColorUtil.getPastelColorFor(resolvedTitle)
         } else {
             ColorUtil.getVibrantColorFor(resolvedTitle)

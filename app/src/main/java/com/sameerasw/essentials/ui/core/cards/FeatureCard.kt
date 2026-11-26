@@ -10,6 +10,7 @@
 
 package com.sameerasw.essentials.ui.core.cards
 
+import com.sameerasw.essentials.ui.theme.cardListItemColors
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -171,7 +172,7 @@ fun FeatureCard(
                                 Modifier
                                     .size(40.dp)
                                     .background(
-                                        color = ColorUtil.getPastelColorFor(resolvedTitle),
+                                        color = ColorUtil.iconContainerColor(resolvedTitle),
                                         shape = CircleShape,
                                     )
                             } else {
@@ -208,7 +209,7 @@ fun FeatureCard(
                                         contentDescription = resolvedTitle,
                                         modifier = Modifier.size(iconSize),
                                         colorFilter = ColorFilter.tint(
-                                            iconTint ?: ColorUtil.getVibrantColorFor(resolvedTitle)
+                                            iconTint ?: ColorUtil.iconTintColor(resolvedTitle)
                                         ),
                                     )
                                 } else {
@@ -216,7 +217,7 @@ fun FeatureCard(
                                         painter = painterResource(id = R.drawable.rounded_settings_24),
                                         contentDescription = resolvedTitle,
                                         modifier = Modifier.size(iconSize),
-                                        tint = iconTint ?: ColorUtil.getVibrantColorFor(resolvedTitle),
+                                        tint = iconTint ?: ColorUtil.iconTintColor(resolvedTitle),
                                     )
                                 }
                             }
@@ -346,9 +347,7 @@ fun FeatureCard(
             }
         },
         colors =
-            androidx.compose.material3.ListItemDefaults.colors(
-                containerColor = selectedContainer,
-            ),
+            cardListItemColors(selectedContainer),
         contentPadding =
             androidx.compose.foundation.layout.PaddingValues(
                 horizontal = 16.dp,

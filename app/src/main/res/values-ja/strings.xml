@@ -1888,6 +1888,9 @@ Wi-Fi、Bluetooth、モバイルデータなどの個々のアイコンを非表
     <string name="diy_action_hotspot_off">テザリングをオフにする</string>
     <string name="diy_action_hotspot_toggle">テザリングを切り替える</string>
     <string name="haptic_mode_stronger">強め</string>
+    <string name="label_ui_design">UI design</string>
+    <string name="ui_design_expressive">Material Expressive</string>
+    <string name="ui_design_one_ui">One UI</string>
     <string name="settings_genai_automation_desc">デバイス上のGemini Nanoを使用して、説明からオートメーションを作成できます</string>
     <string name="perm_calendar_title">カレンダー</string>
     <string name="perm_storage_title">すべてのファイルへのアクセス</string>

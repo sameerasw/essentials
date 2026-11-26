@@ -156,7 +156,7 @@ fun FeatureHelpBottomSheet(
                         Modifier
                             .size(40.dp)
                             .background(
-                                color = ColorUtil.getPastelColorFor(stringResource(feature.title)),
+                                color = ColorUtil.iconContainerColor(stringResource(feature.title)),
                                 shape = CircleShape,
                             ),
                     contentAlignment = Alignment.Center,
@@ -165,7 +165,7 @@ fun FeatureHelpBottomSheet(
                         painter = painterResource(id = feature.iconRes),
                         contentDescription = null,
                         modifier = Modifier.size(24.dp),
-                        tint = ColorUtil.getVibrantColorFor(stringResource(feature.title)),
+                        tint = ColorUtil.iconTintColor(stringResource(feature.title)),
                     )
                 }
 

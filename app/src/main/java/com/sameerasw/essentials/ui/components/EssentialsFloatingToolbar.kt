@@ -9,6 +9,12 @@
 
 package com.sameerasw.essentials.ui.components
 
+import com.sameerasw.essentials.ui.theme.fabContentColor
+import com.sameerasw.essentials.ui.theme.fabContainerColor
+import com.sameerasw.essentials.ui.theme.toolbarPillColor
+import com.sameerasw.essentials.ui.theme.toolbarSelectedContentColor
+import com.sameerasw.essentials.ui.theme.toolbarContentColor
+import com.sameerasw.essentials.ui.theme.toolbarContainerColor
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.CornerRadius
@@ -252,8 +258,8 @@ fun EssentialsFloatingToolbar(
                             HapticUtil.performUIHaptic(view)
                             onHelpClick()
                         },
-                        containerColor = MaterialTheme.colorScheme.primaryContainer,
-                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                        containerColor = fabContainerColor(),
+                        contentColor = fabContentColor(),
                         shape = MaterialTheme.shapes.large,
                         elevation = FloatingActionButtonDefaults.elevation(0.dp, 0.dp, 0.dp, 0.dp),
                     ) {
@@ -272,8 +278,8 @@ fun EssentialsFloatingToolbar(
                             HapticUtil.performUIHaptic(view)
                             fabAction()
                         },
-                        containerColor = MaterialTheme.colorScheme.primaryContainer,
-                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                        containerColor = fabContainerColor(),
+                        contentColor = fabContentColor(),
                         shape = MaterialTheme.shapes.large,
                         elevation = FloatingActionButtonDefaults.elevation(0.dp, 0.dp, 0.dp, 0.dp),
                     ) {
@@ -300,8 +306,8 @@ fun EssentialsFloatingToolbar(
         scrollBehavior = scrollBehavior,
         colors =
             FloatingToolbarDefaults.vibrantFloatingToolbarColors(
-                toolbarContentColor = MaterialTheme.colorScheme.onSurface,
-                toolbarContainerColor = MaterialTheme.colorScheme.primary,
+                toolbarContentColor = toolbarContentColor(),
+                toolbarContainerColor = toolbarContainerColor(),
             ),
         content = {
             SharedTransitionLayout {
@@ -381,8 +387,8 @@ fun EssentialsFloatingToolbar(
                                         .width(48.dp + (8.dp + titleWidth) * if (latestTitle != null) collapse else 0f),
                                 colors =
                                     IconButtonDefaults.filledIconButtonColors(
-                                        contentColor = MaterialTheme.colorScheme.primary,
-                                        containerColor = MaterialTheme.colorScheme.background,
+                                        contentColor = toolbarSelectedContentColor(),
+                                        containerColor = toolbarPillColor(),
                                     ),
                             ) {
                                 Icon(
@@ -444,7 +450,7 @@ fun EssentialsFloatingToolbar(
                                         TranslatableText(
                                             text = shownTitle ?: "",
                                             style = MaterialTheme.typography.titleMedium,
-                                            color = MaterialTheme.colorScheme.background,
+                                            color = toolbarContentColor(),
                                             maxLines = 1,
                                             textAlign = TextAlign.Center,
                                             modifier =
@@ -456,8 +462,8 @@ fun EssentialsFloatingToolbar(
                                     if (isBeta) {
                                         com.sameerasw.essentials.ui.core.cards.FeatureTagIcon(
                                             iconRes = R.drawable.rounded_science_24,
-                                            containerColor = MaterialTheme.colorScheme.background,
-                                            contentColor = MaterialTheme.colorScheme.primary,
+                                            containerColor = toolbarContentColor(),
+                                            contentColor = toolbarContainerColor(),
                                             contentDescription = stringResource(R.string.label_beta),
                                         )
                                     }
@@ -488,7 +494,7 @@ fun EssentialsFloatingToolbar(
                                 launch { pillRight.animateTo(targetRight, if (movingRight) lead else trail) }
                             }
 
-                            val pillColor = MaterialTheme.colorScheme.background
+                            val pillColor = toolbarPillColor()
                             var rowSize by remember { mutableStateOf(IntSize.Zero) }
                             var pillPosition by remember { mutableStateOf(Offset.Zero) }
                             Box(
@@ -587,14 +593,14 @@ fun EssentialsFloatingToolbar(
                                                     .height(48.dp),
                                             colors =
                                                 IconButtonDefaults.iconButtonColors(
-                                                    contentColor = MaterialTheme.colorScheme.background,
+                                                    contentColor = toolbarContentColor(),
                                                     containerColor = Color.Transparent,
                                                 ),
                                         ) {
                                             val tint =
                                                 lerp(
-                                                    MaterialTheme.colorScheme.background,
-                                                    MaterialTheme.colorScheme.primary,
+                                                    toolbarContentColor(),
+                                                    toolbarSelectedContentColor(),
                                                     if (pillPlaced) pillCoverage(itemBounds[index], pillLeft.value, pillRight.value) else if (isSelected) 1f else 0f,
                                                 )
                                             val labelShown = labelsActive && expanded && isSelected

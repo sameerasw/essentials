@@ -1714,4 +1714,7 @@
     <string name="tour_help_fab">Use this anytime for help</string>
     <string name="action_reset_tour">Reset tour</string>
     <string name="tour_reset_toast">Tour reset</string>
+    <string name="label_ui_design">UI design</string>
+    <string name="ui_design_expressive">Material Expressive</string>
+    <string name="ui_design_one_ui">One UI</string>
 </resources>

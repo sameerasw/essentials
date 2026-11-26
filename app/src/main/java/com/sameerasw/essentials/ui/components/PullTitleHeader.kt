@@ -1,5 +1,6 @@
 package com.sameerasw.essentials.ui.components
 
+import com.sameerasw.essentials.ui.theme.accentColor
 import android.view.View
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
@@ -155,7 +156,7 @@ fun PullTitleHeader(
                     fontFamily = fontFamily,
                     fontSize = baseStyle.fontSize * (1f + fraction * 0.25f),
                 ),
-            color = MaterialTheme.colorScheme.primary,
+            color = accentColor(),
             textAlign = TextAlign.Center,
             maxLines = 1,
             modifier = Modifier.basicMarquee(),

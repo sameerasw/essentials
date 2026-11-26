@@ -9,6 +9,8 @@
 
 package com.sameerasw.essentials
 
+import com.sameerasw.essentials.ui.theme.fabContentColor
+import com.sameerasw.essentials.ui.theme.fabContainerColor
 import androidx.compose.ui.layout.boundsInRoot
 import androidx.compose.ui.layout.onGloballyPositioned
 import com.sameerasw.essentials.translation.TranslatableText
@@ -1005,8 +1007,8 @@ class MainActivity : AppCompatActivity() {
                                                                                 }
                                                                             }
                                                                         },
-                                                                        containerColor = MaterialTheme.colorScheme.primaryContainer,
-                                                                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                                                                        containerColor = fabContainerColor(),
+                                                                        contentColor = fabContentColor(),
                                                                         shape = MaterialTheme.shapes.large,
                                                                         elevation =
                                                                             androidx.compose.material3.FloatingActionButtonDefaults.elevation(

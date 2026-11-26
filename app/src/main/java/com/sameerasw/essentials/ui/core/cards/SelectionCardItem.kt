@@ -9,12 +9,12 @@
 
 package com.sameerasw.essentials.ui.core.cards
 
+import com.sameerasw.essentials.ui.theme.cardListItemColors
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
-import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -65,8 +65,6 @@ fun SelectionCardItem(
                 null
             },
         colors =
-            ListItemDefaults.colors(
-                containerColor = MaterialTheme.colorScheme.surfaceBright,
-            ),
+            cardListItemColors(),
     )
 }

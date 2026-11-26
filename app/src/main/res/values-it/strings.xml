@@ -1734,6 +1734,9 @@ con il ❤️ da 🇱🇰</string>
     <string name="feat_activity_launcher_title">Launcher attività</string>
     <string name="feat_activity_launcher_desc">Apri o fissa qualunque schermata app</string>
     <string name="haptic_mode_stronger">Più forte</string>
+    <string name="label_ui_design">UI design</string>
+    <string name="ui_design_expressive">Material Expressive</string>
+    <string name="ui_design_one_ui">One UI</string>
     <string name="label_device_battery">Batteria</string>
     <string name="watch_complications_title">Complicazioni</string>
     <string name="watch_complications_desc">Personalizza widget delle Complicazioni</string>

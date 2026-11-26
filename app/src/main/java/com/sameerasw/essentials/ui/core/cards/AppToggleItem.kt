@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials.ui.core.cards
 
+import com.sameerasw.essentials.ui.theme.cardListItemColors
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -20,7 +21,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
-import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
@@ -192,9 +192,7 @@ fun AppToggleItem(
                 )
             },
             colors =
-                ListItemDefaults.colors(
-                    containerColor = MaterialTheme.colorScheme.surfaceBright,
-                ),
+                cardListItemColors(),
             contentPadding =
                 androidx.compose.foundation.layout.PaddingValues(
                     horizontal = 16.dp,
@@ -265,9 +263,7 @@ fun AppToggleItem(
                     null
                 },
             colors =
-                ListItemDefaults.colors(
-                    containerColor = MaterialTheme.colorScheme.surfaceBright,
-                ),
+                cardListItemColors(),
             contentPadding =
                 androidx.compose.foundation.layout.PaddingValues(
                     horizontal = 16.dp,

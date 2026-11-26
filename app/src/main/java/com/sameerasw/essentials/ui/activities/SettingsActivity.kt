@@ -142,6 +142,8 @@ import com.sameerasw.essentials.utils.AppResetHelper
 import com.sameerasw.essentials.ui.features.consciousgate.HoldToContinueButton
 import com.sameerasw.essentials.ui.core.pickers.SegmentedPicker
 import com.sameerasw.essentials.utils.AppHapticMode
+import com.sameerasw.essentials.ui.theme.UiDesign
+import com.sameerasw.essentials.ui.theme.UiDesignState
 import com.sameerasw.essentials.ui.state.AppTour
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.utils.PermissionGrantUtil
@@ -705,8 +707,9 @@ fun SettingsContent(
             IconToggleItem(
                 iconRes = R.drawable.rounded_invert_colors_24,
                 title = stringResource(R.string.setting_pitch_black_theme_title),
-                isChecked = viewModel.isPitchBlackThemeEnabled.value,
+                isChecked = viewModel.isPitchBlackThemeEnabled.value || UiDesignState.resolved == UiDesign.ONE_UI,
                 onCheckedChange = { viewModel.setPitchBlackThemeEnabled(it, context) },
+                enabled = UiDesignState.resolved != UiDesign.ONE_UI,
             )
             val isBlurProblematic = remember { DeviceUtils.isBlurProblematicDevice() }
 
@@ -1401,6 +1404,27 @@ fun SettingsContent(
 
             RoundedCardContainer {
                 com.sameerasw.essentials.ui.features.system.AutoBackupSetting()
+
+                val uiDesignLabels = mapOf(
+                    UiDesign.AUTO to stringResource(R.string.label_auto),
+                    UiDesign.EXPRESSIVE to stringResource(R.string.ui_design_expressive),
+                    UiDesign.ONE_UI to stringResource(R.string.ui_design_one_ui),
+                )
+                ConfigPickerItem(
+                    title = stringResource(R.string.label_ui_design),
+                    iconRes = R.drawable.rounded_styler_24,
+                    selectedValue = uiDesignLabels.getValue(UiDesignState.selected),
+                ) {
+                    UiDesign.entries.forEach { design ->
+                        SegmentedDropdownMenuItem(
+                            text = { Text(uiDesignLabels.getValue(design)) },
+                            onClick = {
+                                HapticUtil.performVirtualKeyHaptic(view)
+                                UiDesignState.save(context, design)
+                            },
+                        )
+                    }
+                }
 
                 Column(
                     modifier =

@@ -58,6 +58,33 @@ private fun ColorScheme.asPitchBlack(): ColorScheme =
         surfaceContainerLow = Color.Black,
     )
 
+private fun Color.monochrome(): Color {
+    val gray = 0.2126f * red + 0.7152f * green + 0.0722f * blue
+    return Color(gray, gray, gray, alpha)
+}
+
+private fun ColorScheme.asMonochromeSurfaces(): ColorScheme =
+    copy(
+        background = background.monochrome(),
+        surface = surface.monochrome(),
+        surfaceDim = surfaceDim.monochrome(),
+        surfaceBright = surfaceBright.monochrome(),
+        surfaceContainerLowest = surfaceContainerLowest.monochrome(),
+        surfaceContainerLow = surfaceContainerLow.monochrome(),
+        surfaceContainer = surfaceContainer.monochrome(),
+        surfaceContainerHigh = surfaceContainerHigh.monochrome(),
+        surfaceContainerHighest = surfaceContainerHighest.monochrome(),
+        surfaceVariant = surfaceVariant.monochrome(),
+        surfaceTint = surfaceTint.monochrome(),
+        inverseSurface = inverseSurface.monochrome(),
+        outline = outline.monochrome(),
+        outlineVariant = outlineVariant.monochrome(),
+        onBackground = onBackground.monochrome(),
+        onSurface = onSurface.monochrome(),
+        onSurfaceVariant = onSurfaceVariant.monochrome(),
+        inverseOnSurface = inverseOnSurface.monochrome(),
+    )
+
 @Composable
 private fun rememberAppColor(): Pair<Int, PaletteStyle> {
     val context = LocalContext.current
@@ -88,7 +115,9 @@ fun EssentialsTheme(
 ) {
     val (seed, style) = rememberAppColor()
     SystemFontState.init(LocalContext.current)
+    UiDesignState.init(LocalContext.current)
     val useSystemFont = SystemFontState.enabled
+    val uiDesign = UiDesignState.resolved
     val baseScheme =
         when {
             dynamicColor && seed != 0 ->
@@ -108,10 +137,15 @@ fun EssentialsTheme(
             darkTheme -> DarkColorScheme
             else -> LightColorScheme
         }
-    val colorScheme = if (darkTheme && pitchBlackTheme) baseScheme.asPitchBlack() else baseScheme
+    val designScheme = if (uiDesign == UiDesign.ONE_UI) baseScheme.asMonochromeSurfaces() else baseScheme
+    val colorScheme =
+        if (darkTheme && (pitchBlackTheme || uiDesign == UiDesign.ONE_UI)) designScheme.asPitchBlack() else designScheme
 
     val gatedHaptics = HapticUtil.gate(LocalContext.current, LocalHapticFeedback.current)
-    CompositionLocalProvider(LocalHapticFeedback provides gatedHaptics) {
+    CompositionLocalProvider(
+        LocalHapticFeedback provides gatedHaptics,
+        LocalUiDesign provides uiDesign,
+    ) {
         MaterialTheme(
             colorScheme = colorScheme,
             typography = if (useSystemFont) Typography.withFontFamily(FontFamily.Default) else Typography,

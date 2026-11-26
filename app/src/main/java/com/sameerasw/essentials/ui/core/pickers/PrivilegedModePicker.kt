@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials.ui.core.pickers
 
+import com.sameerasw.essentials.ui.theme.cardListItemColors
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,7 +19,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
-import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -97,7 +97,7 @@ fun PrivilegedModePicker(
                 }
             }
         },
-        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceBright),
+        colors = cardListItemColors(),
         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
         content = {
             TranslatableText(

@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials.ui.activities
 
+import com.sameerasw.essentials.ui.theme.cardListItemColors
 import android.Manifest
 import android.app.Activity
 import android.appwidget.AppWidgetHost
@@ -48,7 +49,6 @@ import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
-import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
@@ -342,7 +342,7 @@ class WidgetStackConfigureActivity : ComponentActivity() {
                                     colors = ButtonDefaults.filledTonalButtonColors(),
                                 ) { TranslatableText(R.string.widget_stack_grant) }
                             },
-                            colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceBright),
+                            colors = cardListItemColors(),
                         )
                     }
                 }
@@ -392,7 +392,7 @@ class WidgetStackConfigureActivity : ComponentActivity() {
                             } else {
                                 null
                             },
-                        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceBright),
+                        colors = cardListItemColors(),
                     )
                 }
 
@@ -417,7 +417,7 @@ class WidgetStackConfigureActivity : ComponentActivity() {
                                     colors = ButtonDefaults.filledTonalButtonColors(),
                                 ) { TranslatableText(R.string.widget_stack_grant) }
                             },
-                            colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceBright),
+                            colors = cardListItemColors(),
                         )
                     }
                     if (config.smart && !calendarAccess) {
@@ -433,7 +433,7 @@ class WidgetStackConfigureActivity : ComponentActivity() {
                                     colors = ButtonDefaults.filledTonalButtonColors(),
                                 ) { TranslatableText(R.string.widget_stack_grant) }
                             },
-                            colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceBright),
+                            colors = cardListItemColors(),
                         )
                     }
                 }
@@ -464,7 +464,7 @@ class WidgetStackConfigureActivity : ComponentActivity() {
                                 }
                             }
                         },
-                        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceBright),
+                        colors = cardListItemColors(),
                     )
                 }
 
@@ -492,7 +492,7 @@ class WidgetStackConfigureActivity : ComponentActivity() {
                             } else {
                                 null
                             },
-                        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceBright),
+                        colors = cardListItemColors(),
                     )
                 }
 
@@ -620,7 +620,7 @@ class WidgetStackConfigureActivity : ComponentActivity() {
                     }
                 }
             },
-            colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceBright),
+            colors = cardListItemColors(),
         )
     }
 

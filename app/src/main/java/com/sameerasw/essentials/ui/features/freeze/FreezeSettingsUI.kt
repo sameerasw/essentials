@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials.ui.features.system
 
+import com.sameerasw.essentials.ui.theme.cardListItemColors
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.animateColorAsState
@@ -562,9 +563,7 @@ fun FreezeSettingsUI(
                             }
                         },
                         colors =
-                            androidx.compose.material3.ListItemDefaults.colors(
-                                containerColor = MaterialTheme.colorScheme.surfaceBright,
-                            ),
+                            cardListItemColors(),
                         modifier =
                             Modifier
                                 .fillMaxWidth()

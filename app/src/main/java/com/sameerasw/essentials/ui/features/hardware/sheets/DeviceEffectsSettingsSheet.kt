@@ -103,7 +103,7 @@ fun DeviceEffectsSettingsSheet(
                             Modifier
                                 .size(40.dp)
                                 .background(
-                                    color = ColorUtil.getPastelColorFor(infoTitle),
+                                    color = ColorUtil.iconContainerColor(infoTitle),
                                     shape = CircleShape,
                                 ),
                         contentAlignment = Alignment.Center,
@@ -111,7 +111,7 @@ fun DeviceEffectsSettingsSheet(
                         Icon(
                             painter = painterResource(R.drawable.rounded_info_24),
                             contentDescription = null,
-                            tint = ColorUtil.getVibrantColorFor(infoTitle),
+                            tint = ColorUtil.iconTintColor(infoTitle),
                             modifier = Modifier.size(24.dp),
                         )
                     }
@@ -163,7 +163,7 @@ fun DeviceEffectsSettingsSheet(
                                     .background(
                                         color =
                                             if (enabled) {
-                                                ColorUtil.getPastelColorFor(
+                                                ColorUtil.iconContainerColor(
                                                     toggleTitle,
                                                 )
                                             } else {
@@ -182,7 +182,7 @@ fun DeviceEffectsSettingsSheet(
                                 modifier = Modifier.size(24.dp),
                                 tint =
                                     if (enabled) {
-                                        ColorUtil.getVibrantColorFor(
+                                        ColorUtil.iconTintColor(
                                             toggleTitle,
                                         )
                                     } else {

@@ -1674,6 +1674,9 @@
     <string name="setting_app_icon_title">Icone de l\'app</string>
     <string name="setting_swipe_tabs_title">Lliscar entre pestanyes</string>
     <string name="haptic_mode_stronger">Intensa</string>
+    <string name="label_ui_design">UI design</string>
+    <string name="ui_design_expressive">Material Expressive</string>
+    <string name="ui_design_one_ui">One UI</string>
     <string name="label_ripple_animation">Animació d\'ona</string>
     <string name="label_online_help_media">Contingut d\'ajuda en línia</string>
     <string name="setting_hidden_debugging_title">Suport de depuració ocult</string>

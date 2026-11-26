@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials.ui.features.battery
 
+import com.sameerasw.essentials.ui.theme.cardListItemColors
 import android.content.Intent
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -26,7 +27,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
-import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
@@ -218,9 +218,7 @@ fun BatteriesSettingsUI(
                         vertical = 16.dp,
                     ),
                 colors =
-                    ListItemDefaults.colors(
-                        containerColor = MaterialTheme.colorScheme.surfaceBright,
-                    ),
+                    cardListItemColors(),
                 content = {
                     TranslatableText(
                         stringResId = R.string.limit_max_devices_summary,

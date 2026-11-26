@@ -94,7 +94,7 @@ fun PixelSearchFileActionSheet(
                             Modifier
                                 .size(52.dp)
                                 .background(
-                                    color = ColorUtil.getPastelColorFor(fileItem.displayName),
+                                    color = ColorUtil.iconContainerColor(fileItem.displayName),
                                     shape = CircleShape,
                                 ),
                         contentAlignment = Alignment.Center,

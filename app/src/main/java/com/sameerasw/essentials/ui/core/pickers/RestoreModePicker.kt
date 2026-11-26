@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials.ui.core.pickers
 
+import com.sameerasw.essentials.ui.theme.cardListItemColors
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -21,7 +22,6 @@ import androidx.compose.material3.ButtonGroupDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
-import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.ToggleButton
@@ -71,9 +71,7 @@ fun RestoreModePicker(
                 ),
             verticalAlignment = Alignment.CenterVertically,
             colors =
-                ListItemDefaults.colors(
-                    containerColor = MaterialTheme.colorScheme.surfaceBright,
-                ),
+                cardListItemColors(),
             content = {
                 TranslatableText(
                     stringResId = R.string.label_restore_mode,
