@@ -23,6 +23,9 @@
     <string name="toolbar_show_tab_names">Show tab names</string>
     <string name="toolbar_show_tab_names_unavailable">Tab names can only be shown when the toolbar has up to %1$d items. Hide some tabs to make room for their names.</string>
     <string name="action_customize">Customize</string>
+    <string name="header_greeting_name">Hello %1$s!</string>
+    <string name="label_your_name">Your name</string>
+    <string name="modes_none_active">None active</string>
     <string name="tab_modes">Modes</string>
     <string name="modes_active_count">%1$d active</string>
     <string name="modes_empty">No modes yet</string>

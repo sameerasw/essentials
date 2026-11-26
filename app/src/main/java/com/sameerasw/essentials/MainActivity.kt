@@ -644,6 +644,9 @@ class MainActivity : AppCompatActivity() {
                     }
 
                     val tabContent: @Composable (DIYTabs, PaddingValues) -> Unit = { tab, contentPadding ->
+                        val tabNameInToolbar =
+                            tab !in tabs ||
+                                (viewModel.isToolbarShowLabels.value && tabs.size <= DIYTabs.MAX_LABELED_TOOLBAR_ITEMS)
                         when (tab) {
                             DIYTabs.ESSENTIALS -> {
                                 SetupFeatures(
@@ -653,6 +656,7 @@ class MainActivity : AppCompatActivity() {
                                     isSearchActive = isSearchActive,
                                     onHelpClick = { showInstructionsSheet = true },
                                     onNavigateToTab = openTab,
+                                    tabNameInToolbar = tabNameInToolbar,
                                 )
                             }
 
@@ -684,6 +688,7 @@ class MainActivity : AppCompatActivity() {
                                     searchQuery = freezeSearchQuery,
                                     searchSubmitSignal = freezeSearchSubmitSignal,
                                     onHelpClick = { helpTab = DIYTabs.FREEZE },
+                                    tabNameInToolbar = tabNameInToolbar,
                                 )
                             }
 
@@ -699,6 +704,7 @@ class MainActivity : AppCompatActivity() {
                                         showNewAutomationSheet = true
                                     },
                                     onHelpClick = { helpTab = DIYTabs.DIY },
+                                    tabNameInToolbar = tabNameInToolbar,
                                 )
                             }
 
@@ -712,6 +718,7 @@ class MainActivity : AppCompatActivity() {
                                     onNewModeClick = { showNewModeSheet = true },
                                     onModeClick = { navViewModel.navigate(AppRoute.ModeEditor(it)) },
                                     onHelpClick = { helpTab = DIYTabs.MODES },
+                                    tabNameInToolbar = tabNameInToolbar,
                                 )
                             }
 
@@ -742,6 +749,7 @@ class MainActivity : AppCompatActivity() {
                                     onRippleToggleEnabledWithPosition = AppRipple::fire,
                                     onAppColorSelectedWithPosition = AppRipple::fire,
                                     modifier = Modifier.fillMaxSize(),
+                                    tabNameInToolbar = tabNameInToolbar,
                                 )
                             }
                         }

@@ -82,6 +82,7 @@ fun DIYScreen(
     onDismissNewAutomationSheet: () -> Unit = {},
     onNewAutomationClick: (() -> Unit)? = null,
     onHelpClick: (() -> Unit)? = null,
+    tabNameInToolbar: Boolean = false,
 ) {
     val context = LocalContext.current
     val automations by viewModel.automations.collectAsState()
@@ -209,9 +210,9 @@ fun DIYScreen(
                     item {
                         Column {
                             PullTitleHeader(
-                                title = stringResource(R.string.tab_diy),
+                                title = stringResource(if (tabNameInToolbar) R.string.automation_channel_name else R.string.tab_diy),
                                 state = headerState,
-                                caption = stringResource(R.string.diy_header_caption),
+                                caption = if (tabNameInToolbar) null else stringResource(R.string.diy_header_caption),
                             )
                             AnimatedVisibility(
                                 visible = selectionMode,
