@@ -10,6 +10,12 @@
 package com.sameerasw.essentials.ui.components
 
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.graphics.BlendMode
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.CompositingStrategy
+import androidx.compose.ui.layout.layout
+import androidx.compose.ui.zIndex
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.runtime.rememberCoroutineScope
@@ -88,6 +94,10 @@ import com.sameerasw.essentials.utils.HapticUtil
 
 private const val HOLD_START_MS = 350L
 private const val HOLD_ARM_MS = 650L
+
+private val TITLE_BLEED_START = 56.dp
+private val TITLE_BLEED_END = 4.dp
+private val TITLE_FADE = 12.dp
 
 data class ToolbarItem(
     val iconRes: Int,
@@ -267,6 +277,7 @@ fun EssentialsFloatingToolbar(
                                 },
                                 modifier =
                                     Modifier
+                                        .zIndex(1f)
                                         .sharedBounds(
                                             rememberSharedContentState(key = "toolbar_pill"),
                                             this@AnimatedContent,
@@ -294,10 +305,36 @@ fun EssentialsFloatingToolbar(
                                     horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
                                     modifier =
                                         Modifier
-                                            .width(titleWidth * (1f - collapse))
-                                            .clipToBounds()
-                                            .graphicsLayer { alpha = 1f - collapse }
-                                            .padding(horizontal = 8.dp)
+                                            .layout { measurable, constraints ->
+                                                val visible = (titleWidth * (1f - collapse)).roundToPx()
+                                                val start = TITLE_BLEED_START.roundToPx()
+                                                val end = TITLE_BLEED_END.roundToPx()
+                                                val placeable =
+                                                    measurable.measure(
+                                                        constraints.copy(minWidth = visible + start + end, maxWidth = visible + start + end),
+                                                    )
+                                                layout(visible, placeable.height) {
+                                                    placeable.place(-start, 0)
+                                                }
+                                            }
+                                            .graphicsLayer {
+                                                alpha = 1f - collapse
+                                                compositingStrategy = CompositingStrategy.Offscreen
+                                            }
+                                            .drawWithContent {
+                                                drawContent()
+                                                val fade = TITLE_FADE.toPx() / size.width
+                                                drawRect(
+                                                    brush =
+                                                        Brush.horizontalGradient(
+                                                            0f to Color.Transparent,
+                                                            fade to Color.Black,
+                                                            1f - fade to Color.Black,
+                                                            1f to Color.Transparent,
+                                                        ),
+                                                    blendMode = BlendMode.DstIn,
+                                                )
+                                            }
                                             .align(Alignment.CenterVertically),
                                 ) {
                                     AnimatedContent(
@@ -316,7 +353,10 @@ fun EssentialsFloatingToolbar(
                                             color = MaterialTheme.colorScheme.background,
                                             maxLines = 1,
                                             textAlign = TextAlign.Center,
-                                            modifier = Modifier.basicMarquee(),
+                                            modifier =
+                                                Modifier
+                                                    .basicMarquee()
+                                                    .padding(start = TITLE_BLEED_START - TITLE_BLEED_END),
                                         )
                                     }
                                     if (isBeta) {
