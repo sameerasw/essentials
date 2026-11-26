@@ -62,7 +62,7 @@ class SettingsRepository(
         migrateRemapStringToAction()
         migratePixelSearchbarType()
         migrateDebugUiMarginOverlayReset()
-        migrateStatusBarAwareWidthReset()
+        removeLegacyStatusBarAwareWidth()
     }
 
     private fun migrateUsageAccessKey() {
@@ -111,13 +111,17 @@ class SettingsRepository(
         putBoolean(KEY_BUTTON_REMAP_MIGRATION_DONE, true)
     }
 
-    private fun migrateStatusBarAwareWidthReset() {
-        if (prefs.getBoolean(KEY_ISLAND_STATUSBAR_AWARE_WIDTH_RESET_V1, false)) return
+    private fun removeLegacyStatusBarAwareWidth() {
+        val legacyKeys =
+            prefs.all.keys.filter {
+                it == LEGACY_KEY_ISLAND_STATUSBAR_AWARE_WIDTH ||
+                    it.startsWith("$LEGACY_KEY_ISLAND_STATUSBAR_AWARE_WIDTH@") ||
+                    it == LEGACY_KEY_ISLAND_STATUSBAR_AWARE_WIDTH_RESET_V1
+            }
+        if (legacyKeys.isEmpty()) return
         val editor = prefs.edit()
-        prefs.all.keys
-            .filter { it == KEY_ISLAND_STATUSBAR_AWARE_WIDTH || it.startsWith("$KEY_ISLAND_STATUSBAR_AWARE_WIDTH@") }
-            .forEach { editor.putBoolean(it, false) }
-        editor.putBoolean(KEY_ISLAND_STATUSBAR_AWARE_WIDTH_RESET_V1, true).apply()
+        legacyKeys.forEach { editor.remove(it) }
+        editor.apply()
     }
 
     private fun migrateDebugUiMarginOverlayReset() {
@@ -713,8 +717,9 @@ class SettingsRepository(
         const val KEY_ISLAND_BACKDROP_BLUR = "island_backdrop_blur"
         const val KEY_ISLAND_BACKDROP_BLUR_RADIUS = "island_backdrop_blur_radius"
         const val KEY_ISLAND_PROGRESSIVE_BLUR = "island_progressive_blur"
-        const val KEY_ISLAND_STATUSBAR_AWARE_WIDTH = "island_statusbar_aware_width"
-        const val KEY_ISLAND_STATUSBAR_AWARE_WIDTH_RESET_V1 = "island_statusbar_aware_width_reset_v1"
+        const val KEY_ISLAND_STATUSBAR_AWARE_WIDTH = "island_statusbar_aware_width_v2"
+        private const val LEGACY_KEY_ISLAND_STATUSBAR_AWARE_WIDTH = "island_statusbar_aware_width"
+        private const val LEGACY_KEY_ISLAND_STATUSBAR_AWARE_WIDTH_RESET_V1 = "island_statusbar_aware_width_reset_v1"
         const val KEY_DEBUG_UI_MARGIN_OVERLAY = "debug_ui_margin_overlay"
         const val KEY_DEBUG_UI_MARGIN_OVERLAY_RESET_V1 = "debug_ui_margin_overlay_reset_v1"
         const val KEY_ISLAND_STATUSBAR_IGNORE_NOTIFICATIONS = "island_statusbar_ignore_notifications"
