@@ -74,7 +74,13 @@ object UiDesignState {
 
     fun save(context: Context, design: UiDesign) {
         selected = design
-        prefs(context).edit().putString(SettingsRepository.KEY_UI_DESIGN, design.name).apply()
+        val editor = prefs(context).edit().putString(SettingsRepository.KEY_UI_DESIGN, design.name)
+        if (design == UiDesign.ONE_UI) {
+            editor
+                .putBoolean(SettingsRepository.KEY_PITCH_BLACK_THEME_ENABLED, true)
+                .putBoolean(SettingsRepository.KEY_USE_SYSTEM_FONT, true)
+        }
+        editor.apply()
     }
 
     private fun prefs(context: Context) =
