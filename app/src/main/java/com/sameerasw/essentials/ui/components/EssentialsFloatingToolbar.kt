@@ -169,6 +169,7 @@ fun EssentialsFloatingToolbar(
     availableWidth: Dp? = null,
     onLongClick: (() -> Unit)? = null,
     showLabels: Boolean = false,
+    isCustomizing: Boolean? = null,
 ) {
     val view = LocalView.current
     val context = LocalContext.current
@@ -179,6 +180,12 @@ fun EssentialsFloatingToolbar(
     var pillPlaced by remember { mutableStateOf(false) }
     val holdScope = rememberCoroutineScope()
     val currentOnLongClick by rememberUpdatedState(onLongClick)
+    val holdUntilCustomized by rememberUpdatedState(isCustomizing != null)
+    LaunchedEffect(isCustomizing) {
+        if (isCustomizing == false && holdProgress.value > 0f) {
+            holdProgress.animateTo(0f, spring(dampingRatio = Spring.DampingRatioMediumBouncy))
+        }
+    }
     val screenWidth = availableWidth ?: LocalConfiguration.current.screenWidthDp.dp
     val itemGap = 2.dp
     val slots = maxOf(itemSlots, items.size, 1)
@@ -335,12 +342,14 @@ fun EssentialsFloatingToolbar(
                                             return@awaitEachGesture
                                         }
                                         HapticUtil.performOpenClickHaptic(context)
-                                        currentOnLongClick?.invoke()
                                         do {
                                             val event = awaitPointerEvent(PointerEventPass.Initial)
                                             event.changes.forEach { it.consume() }
                                         } while (event.changes.any { it.pressed })
-                                        holdScope.launch { holdProgress.animateTo(0f, spring(dampingRatio = Spring.DampingRatioMediumBouncy)) }
+                                        currentOnLongClick?.invoke()
+                                        if (!holdUntilCustomized) {
+                                            holdScope.launch { holdProgress.animateTo(0f, spring(dampingRatio = Spring.DampingRatioMediumBouncy)) }
+                                        }
                                     }
                                 }
                             } else {
@@ -634,17 +643,27 @@ fun EssentialsFloatingToolbar(
                                                                     )
                                                                 },
                                                     ) {
-                                                        Text(
-                                                            text = stringResource(id = item.labelRes),
-                                                            style = labelStyle,
-                                                            color = tint,
-                                                            maxLines = 1,
-                                                            softWrap = false,
-                                                            modifier =
-                                                                Modifier
-                                                                    .basicMarquee(iterations = Int.MAX_VALUE)
-                                                                    .padding(horizontal = LABEL_FADE),
-                                                        )
+                                                        AnimatedContent(
+                                                            targetState = if (holdProgress.value > 0.5f) R.string.action_customize else item.labelRes,
+                                                            transitionSpec = {
+                                                                (fadeIn() + slideInVertically { it / 2 }) togetherWith
+                                                                    (fadeOut() + slideOutVertically { -it / 2 }) using SizeTransform(clip = false)
+                                                            },
+                                                            contentAlignment = Alignment.CenterStart,
+                                                            label = "toolbar_item_label",
+                                                        ) { labelRes ->
+                                                            Text(
+                                                                text = stringResource(id = labelRes),
+                                                                style = labelStyle,
+                                                                color = tint,
+                                                                maxLines = 1,
+                                                                softWrap = false,
+                                                                modifier =
+                                                                    Modifier
+                                                                        .basicMarquee(iterations = Int.MAX_VALUE)
+                                                                        .padding(horizontal = LABEL_FADE),
+                                                            )
+                                                        }
                                                     }
                                                 }
                                             }
