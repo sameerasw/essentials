@@ -157,7 +157,7 @@ fun ModeEditorScreen(
     var showDiscardDialog by remember { mutableStateOf(false) }
     val view = LocalView.current
     val handleBack = { if (hasUnsavedChanges) showDiscardDialog = true else onBack() }
-    BackHandler { handleBack() }
+    BackHandler(enabled = hasUnsavedChanges) { handleBack() }
 
     if (showDiscardDialog) {
         AlertDialog(
