@@ -707,9 +707,8 @@ fun SettingsContent(
             IconToggleItem(
                 iconRes = R.drawable.rounded_invert_colors_24,
                 title = stringResource(R.string.setting_pitch_black_theme_title),
-                isChecked = viewModel.isPitchBlackThemeEnabled.value || UiDesignState.resolved == UiDesign.ONE_UI,
+                isChecked = viewModel.isPitchBlackThemeEnabled.value,
                 onCheckedChange = { viewModel.setPitchBlackThemeEnabled(it, context) },
-                enabled = UiDesignState.resolved != UiDesign.ONE_UI,
             )
             val isBlurProblematic = remember { DeviceUtils.isBlurProblematicDevice() }
 

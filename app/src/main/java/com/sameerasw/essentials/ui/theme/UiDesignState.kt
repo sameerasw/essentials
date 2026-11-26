@@ -57,6 +57,21 @@ object UiDesignState {
         prefs.registerOnSharedPreferenceChangeListener(l)
     }
 
+    fun applyFirstRunDefaults(context: Context) {
+        val prefs = prefs(context)
+        if (prefs.getBoolean(SettingsRepository.KEY_UI_DESIGN_DEFAULTS_APPLIED, false)) return
+        val editor = prefs.edit().putBoolean(SettingsRepository.KEY_UI_DESIGN_DEFAULTS_APPLIED, true)
+        if (resolve(read(prefs)) == UiDesign.ONE_UI) {
+            if (!prefs.contains(SettingsRepository.KEY_PITCH_BLACK_THEME_ENABLED)) {
+                editor.putBoolean(SettingsRepository.KEY_PITCH_BLACK_THEME_ENABLED, true)
+            }
+            if (!prefs.contains(SettingsRepository.KEY_USE_SYSTEM_FONT)) {
+                editor.putBoolean(SettingsRepository.KEY_USE_SYSTEM_FONT, true)
+            }
+        }
+        editor.apply()
+    }
+
     fun save(context: Context, design: UiDesign) {
         selected = design
         prefs(context).edit().putString(SettingsRepository.KEY_UI_DESIGN, design.name).apply()

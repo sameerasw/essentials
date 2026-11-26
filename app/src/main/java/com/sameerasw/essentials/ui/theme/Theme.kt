@@ -164,7 +164,7 @@ fun EssentialsTheme(
         }
     val designScheme = if (uiDesign == UiDesign.ONE_UI) baseScheme.asMonochromeSurfaces() else baseScheme
     val colorScheme =
-        if (darkTheme && (pitchBlackTheme || uiDesign == UiDesign.ONE_UI)) designScheme.asPitchBlack() else designScheme
+        if (darkTheme && pitchBlackTheme) designScheme.asPitchBlack() else designScheme
 
     val gatedHaptics = HapticUtil.gate(LocalContext.current, LocalHapticFeedback.current)
     CompositionLocalProvider(
