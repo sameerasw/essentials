@@ -52,6 +52,7 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -189,8 +190,10 @@ fun EssentialsFloatingToolbar(
         modifier =
             modifier
                 .windowInsetsPadding(WindowInsets.navigationBars)
-                .padding(start = 16.dp, end = 16.dp, bottom = 0.dp),
+                .padding(start = 16.dp, end = 16.dp, bottom = 0.dp)
+                .height(56.dp),
         expanded = expanded,
+        contentPadding = PaddingValues(4.dp),
         floatingActionButton = finalFab ?: {},
         scrollBehavior = scrollBehavior,
         colors =
@@ -331,7 +334,7 @@ fun EssentialsFloatingToolbar(
                             val itemGap = 2.dp
                             val slots = maxOf(itemSlots, items.size, 1)
                             val maxTabbedWidth =
-                                (screenWidth - 32.dp - 16.dp - if (finalFab != null) 64.dp else 0.dp).coerceAtLeast(48.dp)
+                                (screenWidth - 32.dp - 8.dp - if (finalFab != null) 64.dp else 0.dp).coerceAtLeast(48.dp)
                             val tabbedWidth = (48.dp * slots + itemGap * (slots - 1)).coerceAtMost(maxTabbedWidth)
                             val fullItemWidth =
                                 if (items.isEmpty()) 48.dp else (tabbedWidth - itemGap * (items.size - 1)) / items.size
