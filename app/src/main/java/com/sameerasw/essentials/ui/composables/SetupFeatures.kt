@@ -23,6 +23,7 @@ import com.sameerasw.essentials.BuildConfig
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import com.sameerasw.essentials.ui.components.rememberPullTitleHeaderState
 import com.sameerasw.essentials.ui.components.PullTitleHeader
+import com.sameerasw.essentials.ui.components.HeaderClockShape
 import android.app.Activity
 import android.content.ClipData
 import android.content.ClipboardManager
@@ -959,11 +960,14 @@ fun SetupFeatures(
                 ),
         ) {
                 item {
-                    PullTitleHeader(
-                        title = stringResource(R.string.app_name),
-                        caption = appVersion,
-                        state = headerState,
-                    )
+                    Box {
+                        HeaderClockShape(progress = headerState.fraction)
+                        PullTitleHeader(
+                            title = stringResource(R.string.app_name),
+                            caption = appVersion,
+                            state = headerState,
+                        )
+                    }
                 }
                 item {
                     // Favorites
