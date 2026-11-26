@@ -1119,7 +1119,7 @@ con il ❤️ da 🇱🇰</string>
     <string name="app_zero">Zero</string>
     <!-- Help & Guides -->
     <string name="help_guides_title">Aiuto e guide</string>
-    <string name="need_more_support_reach_out">Hai bisogno di più supporto? Raggiungere,</string>
+    <string name="need_more_support_reach_out">Hai bisogno di più supporto? Contattami,</string>
     <string name="action_collapse">Crollo</string>
     <string name="action_expand">Espandere</string>
     <string name="support_group_label">Gruppo di supporto</string>
@@ -1128,7 +1128,7 @@ con il ❤️ da 🇱🇰</string>
     <string name="error_no_email_app">Nessuna app di posta elettronica disponibile</string>
     <string name="instruction_step_image_description">Passo %1$d Immagine</string>
     <!-- Instructions Content -->
-    <string name="instruction_section_perms_title">Autorizzazioni di accessibilità, notifica e sovrapposizione</string>
+    <string name="instruction_section_perms_title">Autorizzazioni di accessibilità, notifica e visualizzazione sopra altre app</string>
     <string name="instruction_step_perms_1">Potresti ricevere questo messaggio di accesso negato se provi a concedere autorizzazioni sensibili come accessibilità, ascoltatore di notifiche o autorizzazioni di sovrapposizione. Per concederlo, controlla i passaggi seguenti.</string>
     <string name="instruction_step_perms_2">1. Vai alla pagina delle informazioni sull\'app di Essentials.</string>
     <string name="instruction_step_perms_3">2. Apri il menu a 3 punti e seleziona \'Consenti impostazioni limitate\'. Potrebbe essere necessario eseguire l\'autenticazione tramite dati biometrici. Una volta terminato, prova a concedere nuovamente l\'autorizzazione.</string>
@@ -1412,7 +1412,7 @@ con il ❤️ da 🇱🇰</string>
     <string name="bug_report_contact_email_label">Email di contatto</string>
     <string name="action_send_feedback">Invia Feedback</string>
     <string name="msg_feedback_sent">Feedback sent successfully! Thanks for helping us improve the app.</string>
-    <string name="label_alternatively">Alternativamente</string>
+    <string name="label_alternatively">In alternativa</string>
     <!-- Pixel Diagnostics -->
     <string name="label_diagnostics">Diagnostics</string>
     <string name="label_device_check">Device Check</string>
@@ -1982,7 +1982,7 @@ con il ❤️ da 🇱🇰</string>
     <string name="instruction_section_genai_title">IA Generativa sul dispositivo (Gemini Nano)</string>
     <string name="label_motion_blur_amount">Quantità</string>
     <string name="bug_report_issue_details">Info sul problema</string>
-    <string name="crash_logs_title">Log di crash</string>
+    <string name="crash_logs_title">Log dei crash</string>
     <string name="btn_clear_all_crash_logs">Elimina tutti</string>
     <string name="diy_type_state">Stato</string>
     <string name="diy_type_action_shortcut">Collegamento azione</string>
@@ -2029,4 +2029,8 @@ con il ❤️ da 🇱🇰</string>
     <string name="app_ops_user_app">User app</string>
     <string name="app_ops_search_apps">Search apps</string>
     <string name="app_ops_search_ops">Search operations</string>
+    <string name="instruction_section_battery_saver_title">Come funzionano le impostazioni di Alimentazione e Batteria?</string>
+    <string name="instruction_section_diy_title">Automazioni Fai-da-te</string>
+    <string name="instruction_section_freezetags_title">Congela App e Congelamento Smart</string>
+    <string name="bug_report_view_existing_pr">Vedi la richiesta di traduzioni esistente/ Pull Request</string>
 </resources>
