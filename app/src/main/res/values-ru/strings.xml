@@ -1291,7 +1291,7 @@
     <string name="watch_no_companion_title">Часы не обнаружены</string>
     <string name="watch_no_companion_desc">Похоже, на ваших часах не установлено сопутствующее приложение Essentials Wear.</string>
     <string name="watch_install_companion_action">Установить дополнение</string>
-    <string name="action_download_from_github">Download from GitHub</string>
+    <string name="action_download_from_github">Скачать с GitHub</string>
     <string name="watch_help_title">Install on Watch</string>
     <string name="watch_help_description">To use Watch features, you need to install the Essentials companion app on your Wear OS watch. Click the button below to open the Play Store directly on your watch.</string>
     <string name="watch_help_open_play_store">Open on Watch</string>
@@ -1792,8 +1792,8 @@
     <string name="island_expanded_dark_theme_warning">Expanded dark theme is on. If the island text or colors look wrong, filter Essentials out of it in Display settings.</string>
     <string name="island_expanded_dark_theme_action">Open display settings</string>
     <string name="settings_reset_all_hold">Hold to reset all data</string>
-    <string name="settings_reset_all_info_title">Сброс данных Essential </string>
-    <string name="settings_reset_all_info_desc">Сбросьте все настройки и данные Essentials к новому старту. Системные настройки, разрешения и все необходимое, изменённое на вашем устройстве, например, безопасные настройки, не возвращаются. </string>
+    <string name="settings_reset_all_info_title">Сбросить данные Essentials</string>
+    <string name="settings_reset_all_info_desc">Позволяет заново выполнить сброс всех настроек и данных Essentials. Системные настройки, разрешения и все, что было изменено в Essentials на вашем устройстве, например настройки безопасности, не восстанавливаются.</string>
     <string name="island_prefer_still_title">Предпочитать меньше анимаций у острова</string>
     <string name="island_prefer_still_info">Stops the island\'s animations after a few seconds without interaction, so the display can drop to a low refresh rate and save battery. Media visualizers, second by second counters and other looping animations pause until you interact with the island again.</string>
     <string name="island_line_peek_desc">Кратко покажите обновления по всему острову, затем вернитесь к компактному</string>
@@ -2499,4 +2499,21 @@
     <string name="tour_help_fab">Use this anytime for help</string>
     <string name="action_reset_tour">Reset tour</string>
     <string name="tour_reset_toast">Tour reset</string>
+    <string name="island_reorder_title">Переупорядочивание </string>
+    <string name="keyboard_user_dictionary_title">Пользовательский словарь</string>
+    <string name="feat_text_snippets_title">Фрагменты текста</string>
+    <string name="snippets_empty_title">Пока что нет фрагментов</string>
+    <string name="snippets_empty_subtitle">Нажмите + ниже, чтобы создать свой первый ярлык</string>
+    <string name="widget_stack_add_to_home">Добавить стопку на главный экран</string>
+    <string name="widget_stack_add_to_home_desc">Затем выберите виджеты, которые он должен содержать</string>
+    <string name="screen_off_method_title">Способ выключения экрана</string>
+    <string name="screen_off_method_accessibility">Спец. возможности</string>
+    <string name="screen_off_method_input">Ввод</string>
+    <string name="title_battery_saver_network">Синхронизация и связь</string>
+    <string name="title_battery_saver_display">Экран и яркость</string>
+    <string name="title_battery_saver_power">Питание и производительность</string>
+    <string name="title_battery_saver_location">Местоположение и GPS</string>
+    <string name="action_reset_battery_saver">Сброс параметров</string>
+    <string name="bug_report_view_existing_pr">Просмотреть существующий PR</string>
+    <string name="auto_backup_title">Автоматическая резервная копия настроек</string>
 </resources>

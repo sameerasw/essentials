@@ -184,8 +184,8 @@
     <string name="action_app_info">App info</string>
     <string name="freeze_mode_description_freeze_title">Cos\'è Blocco App?</string>
     <string name="freeze_mode_description_freeze_body">App freezing disables the app\'s launch activity which removes it from the app list and updates. It will prevent the app from starting at all until it\'s unfrozen which saves resources but you will need to unfreeze from here or manually re-enable.</string>
-    <string name="freeze_mode_description_freeze_warning">DO NOT FREEZE COMMUNICATION APPS</string>
-    <string name="freeze_mode_description_suspend_title">What is Suspend?</string>
+    <string name="freeze_mode_description_freeze_warning">NON CONGELARE LE APP DI COMUNICAZIONE</string>
+    <string name="freeze_mode_description_suspend_title">Cosa è Sospendi?</string>
     <string name="freeze_mode_description_suspend_body">Suspending an app used to pause the app activity and prevent background executions but with recent Android changes, it only pauses the notifications from appearing and that\'s pretty much it. But does allows you to unpause from the launcher app list as they will be still available as grayscale paused app icons.</string>
     <string name="freeze_mode_description_suspend_footer">Should work the same as the native app pause/ focus mode features.</string>
     <string name="content_desc_more_options">Altre opzioni</string>
@@ -209,7 +209,7 @@
     <string name="freeze_automation_hint">Congela le app selezionate quando il dispositivo si blocca. Scegli un ritardo per evitare di congelare le app se sblocchi lo schermo subito dopo averlo spento.</string>
     <string name="freeze_warning">Il congelamento delle app di sistema potrebbe essere pericoloso e causare comportamenti imprevisti.</string>
     <string name="action_enable_in_settings">Abilita nelle Impostazioni</string>
-    <string name="freeze_dont_freeze_active_apps_title">Non non congelare le app attive</string>
+    <string name="freeze_dont_freeze_active_apps_title">Non congelare le app attive</string>
     <string name="perm_usage_stats_title">Statistiche di utilizzo</string>
     <string name="perm_usage_stats_desc">Necessario per rilevare quali app sono attualmente in primo piano per evitare di congelarle</string>
     <string name="perm_usage_stats_desc_app_lock">Required to detect foreground apps for App Lock features when accessibility is not used.</string>
@@ -861,7 +861,7 @@
     <string name="diy_select_action">Seleziona Azione</string>
     <string name="diy_in_action_label">In azione</string>
     <string name="diy_out_action_label">Fuori azione</string>
-    <string name="action_cancel">Cancellare</string>
+    <string name="action_cancel">Annulla</string>
     <string name="action_save">Salva</string>
     <string name="action_edit">Modificare</string>
     <string name="action_delete">Eliminare</string>
@@ -1099,11 +1099,12 @@
     <string name="feature_flashlight_brightness_title">Luminosità della torcia</string>
     <!-- QS / Activities -->
     <!-- About Section -->
-    <string name="developed_by_format">Sviluppato da %1$s\ncon ❤\uFE0F da \uD83C\uDDF1\uD83C\uDDF0</string>
+    <string name="developed_by_format">Sviluppato da %1$s
+con il ❤️ da 🇱🇰</string>
     <string name="action_website">Sito web</string>
     <string name="action_contact">Contatto</string>
     <string name="action_telegram">Telegramma</string>
-    <string name="action_support">Supporto</string>
+    <string name="action_support">Supporta</string>
     <string name="label_other_apps">Altre app</string>
     <string name="app_airsync">AirSync</string>
     <string name="app_zenzero">ZenZero</string>
@@ -1127,7 +1128,7 @@
     <string name="instruction_step_perms_3">2. Apri il menu a 3 punti e seleziona \'Consenti impostazioni limitate\'. Potrebbe essere necessario eseguire l\'autenticazione tramite dati biometrici. Una volta terminato, prova a concedere nuovamente l\'autorizzazione.</string>
     <string name="instruction_section_shizuku_title">Shizuku</string>
     <string name="instruction_section_shizuku_desc">Shizuku è un potente strumento che consente alle app di utilizzare le API di sistema direttamente con permessi ADB o root. È necessario per funzionalità come la modalità Min di Maps e il Congelatore app. E assisterai nel concedere alcune autorizzazioni come WRITE_SECURE_SETTINGS. \n\nMa la versione Play Store di Shizuku potrebbe essere obsoleta e probabilmente inutilizzabile sulle recenti versioni di Android, quindi in tal caso, procurati l\'ultima versione da github o un suo fork aggiornato.</string>
-    <string name="instruction_section_maps_title">Modalità di risparmio energetico della mappa</string>
+    <string name="instruction_section_maps_title">Modalità di risparmio energetico di Maps</string>
     <string name="instruction_section_maps_desc">Questa funzione attiva automaticamente la modalità di risparmio energetico di Google Maps che attualmente è esclusiva della serie Pixel 10. Un membro della comunità ha scoperto che è ancora utilizzabile su qualsiasi dispositivo Android avviando l\'attività minMode delle mappe con privilegi di root. \n\nE poi, l\'ho automatizzato con Tasker per attivarsi automaticamente quando lo schermo si spegne durante una sessione di navigazione e quindi sono riuscito a ottenere lo stesso con i soli permessi Shizuku in runtime. \n\nÈ destinato a essere mostrato su l\'AOD della serie Pixel 10, quindi a causa di ciò potresti visualizzare un messaggio occasionale sul display che informa che non supporta la modalità orizzontale. Ciò non è evitabile dall\'app e puoi ignorarlo.</string>
     <string name="instruction_section_freeze_title">Cos\'è il congelamento?</string>
     <string name="instruction_section_freeze_desc">Metti in pausa e stai lontano dalle distrazioni delle app, risparmiando un po\' di energia e impedendo l\'esecuzione delle app in background. Adatto per app utilizzate raramente. \n\nNon consigliato per nessun servizio di comunicazione poiché non ti avviseranno in caso di emergenza a meno che non le sblocchi. \n\nSi consiglia vivamente di non bloccare le app di sistema poiché possono portare all\'instabilità del sistema. Procedi con cautela, eri avvisato. \n\nInspired by Hail &lt;3</string>
@@ -1401,11 +1402,11 @@
     <string name="action_new_automation">Nuova Automazione</string>
     <string name="action_add_repository">Aggiungi Repository</string>
     <!-- Bug Report Enhancement -->
-    <string name="bug_report_feedback_placeholder">Describe the issue or provide feedback…</string>
-    <string name="bug_report_contact_email_label">Contact email</string>
-    <string name="action_send_feedback">Send Feedback</string>
+    <string name="bug_report_feedback_placeholder">Descrivi il problema o fornisci feedback...</string>
+    <string name="bug_report_contact_email_label">Email di contatto</string>
+    <string name="action_send_feedback">Invia Feedback</string>
     <string name="msg_feedback_sent">Feedback sent successfully! Thanks for helping us improve the app.</string>
-    <string name="label_alternatively">Alternatively</string>
+    <string name="label_alternatively">Alternativamente</string>
     <!-- Pixel Diagnostics -->
     <string name="label_diagnostics">Diagnostics</string>
     <string name="label_device_check">Device Check</string>
@@ -1779,8 +1780,8 @@
     <string name="island_expanded_dark_theme_warning">Expanded dark theme is on. If the island text or colors look wrong, filter Essentials out of it in Display settings.</string>
     <string name="island_expanded_dark_theme_action">Open display settings</string>
     <string name="settings_reset_all_hold">Hold to reset all data</string>
-    <string name="settings_reset_all_info_title">Reset Essentials data</string>
-    <string name="settings_reset_all_info_desc">Resets all Essentials settings and data to a fresh start. System settings, permissions and anything Essentials changed on your device, such as secure settings, are not reverted.</string>
+    <string name="settings_reset_all_info_title">Reimposta i dati di Essentials</string>
+    <string name="settings_reset_all_info_desc">Reimposta tutte le impostazioni di Essentials come una nuova installazione. Le impostazioni di sistema, le autorizzazioni e qualsiasi cosa che Essentials abbia cambiato sul tuo dispositivo, come le impostazioni, non sono reimpostate.</string>
     <string name="island_prefer_still_title">Prefer still island</string>
     <string name="island_prefer_still_info">Stops the island\'s animations after a few seconds without interaction, so the display can drop to a low refresh rate and save battery. Media visualizers, second by second counters and other looping animations pause until you interact with the island again.</string>
     <string name="island_pulse_shadow_title">Pulse for new notifications</string>
@@ -1961,4 +1962,23 @@
     <string name="tour_help_fab">Use this anytime for help</string>
     <string name="action_reset_tour">Reset tour</string>
     <string name="tour_reset_toast">Tour reset</string>
+    <string name="instruction_section_genai_title">IA Generativa sul dispositivo (Gemini Nano)</string>
+    <string name="label_motion_blur_amount">Quantità</string>
+    <string name="bug_report_issue_details">Info sul problema</string>
+    <string name="crash_logs_title">Log di crash</string>
+    <string name="btn_clear_all_crash_logs">Elimina tutti</string>
+    <string name="diy_type_state">Stato</string>
+    <string name="diy_type_action_shortcut">Collegamento azione</string>
+    <string name="diy_type_accessibility_shortcut">Collegamento accessibilità</string>
+    <string name="diy_type_pixel_searchbar">Barra di ricerca</string>
+    <string name="button_remap_add_action">Aggiungi azione</string>
+    <string name="diy_category_connectivity">Connettività e Internet</string>
+    <string name="diy_category_display">Display e Schermo</string>
+    <string name="app_volume_apps_section">App</string>
+    <string name="diy_category_sound_media">Suoni e Media</string>
+    <string name="diy_category_essentials">Miglioram. di Essentials</string>
+    <string name="translation_discard">Annulla modifiche</string>
+    <string name="diy_discard_warning_title">Annullare le modifiche?</string>
+    <string name="diy_discard_warning_desc">Hai delle modifiche non salvate. Sei sicuro che vuoi uscire senza salvare?</string>
+    <string name="freeze_tags_section_title">Tag</string>
 </resources>
