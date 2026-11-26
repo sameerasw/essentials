@@ -9,6 +9,9 @@
 
 package com.sameerasw.essentials.domain.model
 
+import androidx.annotation.Keep
+import com.sameerasw.essentials.domain.diy.Action
+
 data class ShutUpAppConfig(
     val packageName: String,
     val isEnabled: Boolean = true,
@@ -18,4 +21,18 @@ data class ShutUpAppConfig(
     val disableAccessibility: Boolean = false,
     val autoArchive: Boolean = false,
     val restoreKeyboard: Boolean = false,
+    // Nullable since Gson leaves it null for configs saved before custom settings existed
+    val customSettings: List<ShutUpCustomSetting>? = null,
+) {
+    val activeCustomSettings: List<ShutUpCustomSetting>
+        get() = customSettings.orEmpty().filter { it.isEnabled && it.key.isNotBlank() }
+}
+
+@Keep
+data class ShutUpCustomSetting(
+    val table: Action.SettingsTable = Action.SettingsTable.GLOBAL,
+    val key: String = "",
+    val valueOnLaunch: String = "",
+    val valueOnRestore: String = "",
+    val isEnabled: Boolean = true,
 )

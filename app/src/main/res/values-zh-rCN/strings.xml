@@ -1981,6 +1981,11 @@
     <string name="feat_pixel_searchbar_desc">替换 Pixel 启动器默认搜索栏。</string>
     <string name="shut_up_toast_active">应用已被 Shut-Up</string>
     <string name="shut_up_toast_restored">Shut-Up 功能已恢复</string>
+    <string name="shut_up_custom_settings">Custom settings</string>
+    <string name="shut_up_custom_setting_add">Add setting</string>
+    <string name="shut_up_custom_setting_launch">On launch</string>
+    <string name="shut_up_custom_setting_restore">On restore</string>
+    <string name="shut_up_custom_setting_original">Original</string>
     <string name="shut_up_auto_archive_notif_title">自动冻结</string>
     <string name="shut_up_auto_archive_notif_text">%1$s 将在 %2$d 秒后被归档</string>
     <string name="shut_up_auto_archive_action_freeze">立即冻结</string>
