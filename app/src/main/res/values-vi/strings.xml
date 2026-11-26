@@ -2481,4 +2481,11 @@ Tính năng này chỉ được dùng cho trình khởi chạy và không phải
     <string name="island_camera_gap_toggle_title">Camera gap</string>
     <string name="island_starlink_status_color_title">Status colors</string>
     <string name="island_starlink_offline">Offline</string>
+    <string name="tour_toolbar">Long press the toolbar to customize it</string>
+    <string name="tour_feature_item">Long press any feature or category to favorite it or learn more</string>
+    <string name="tour_search_fab">Search anything in Essentials</string>
+    <string name="tour_bug_report_fab">Something not right? Report a bug from here</string>
+    <string name="tour_help_fab">Use this anytime for help</string>
+    <string name="action_reset_tour">Reset tour</string>
+    <string name="tour_reset_toast">Tour reset</string>
 </resources>

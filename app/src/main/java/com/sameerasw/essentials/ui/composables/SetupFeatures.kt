@@ -82,6 +82,9 @@ import com.sameerasw.essentials.ui.activities.YourAndroidActivity
 import com.sameerasw.essentials.ui.components.FavoriteCarousel
 import com.sameerasw.essentials.ui.components.buttons.ListExpandToggleButton
 import com.sameerasw.essentials.ui.core.cards.FeatureCard
+import com.sameerasw.essentials.ui.components.TourAnchor
+import com.sameerasw.essentials.ui.state.AppTour
+import com.sameerasw.essentials.ui.state.TourStep
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.sheets.PermissionItem
 import com.sameerasw.essentials.ui.core.sheets.PermissionsBottomSheet
@@ -1109,61 +1112,63 @@ fun SetupFeatures(
                                         .padding(bottom = 12.dp),
                             ) {
                                 sectionFeatures.forEach { feature ->
-                                    FeatureCard(
-                                        title = feature.title,
-                                        isSelected = feature.id in LocalSelectedFeatureIds.current,
-                                        isEnabled = feature.isEnabled(viewModel),
-                                        onToggle = { enabled ->
-                                            BiometricSecurityHelper.runWithAuth(
-                                                activity = context as FragmentActivity,
-                                                feature = feature,
-                                                isToggle = true,
-                                                action = {
-                                                    feature.onToggle(viewModel, context, enabled)
-                                                },
-                                            )
-                                        },
-                                        onClick = {
-                                            BiometricSecurityHelper.runWithAuth(
-                                                activity = context as FragmentActivity,
-                                                feature = feature,
-                                                action = {
-                                                    feature.onClick(context, viewModel)
-                                                },
-                                            )
-                                        },
-                                        iconRes = feature.iconRes,
-                                        modifier = Modifier.padding(horizontal = 0.dp, vertical = 0.dp),
-                                        isToggleEnabled = feature.isToggleEnabled(viewModel, context),
-                                        showToggle = feature.showToggle,
-                                        hasMoreSettings = feature.hasMoreSettings,
-                                        onDisabledToggleClick = {
-                                            if (feature.id == "Screen locked security") {
-                                                feature.onClick(context, viewModel)
-                                            } else {
-                                                currentFeature = feature.title
-                                                showSheet = true
-                                            }
-                                        },
-                                        description = feature.description,
-                                        isBeta = feature.isBeta,
-                                        isLegacy = feature.isLegacy,
-                                        isUnsupported = !feature.isDeviceSupported(context),
-                                        isPinned = pinnedFeatureKeys.contains(feature.id),
-                                        onPinToggle = {
-                                            viewModel.togglePinFeature(feature.id)
-                                        },
-                                        onHelpClick =
-                                            if (feature.aboutDescription != null) {
-                                                {
-                                                    selectedHelpFeature = feature
-                                                    showHelpSheet = true
-                                                }
-                                            } else {
-                                                null
+                                    TourAnchor(TourStep.FEATURE_ITEM to (feature.id == "Display" && AppTour.homeTab == DIYTabs.ESSENTIALS)) {
+                                        FeatureCard(
+                                            title = feature.title,
+                                            isSelected = feature.id in LocalSelectedFeatureIds.current,
+                                            isEnabled = feature.isEnabled(viewModel),
+                                            onToggle = { enabled ->
+                                                BiometricSecurityHelper.runWithAuth(
+                                                    activity = context as FragmentActivity,
+                                                    feature = feature,
+                                                    isToggle = true,
+                                                    action = {
+                                                        feature.onToggle(viewModel, context, enabled)
+                                                    },
+                                                )
                                             },
-                                        hasBadge = if (feature.id == "Watch") isWearUpdateRequired else false,
-                                    )
+                                            onClick = {
+                                                BiometricSecurityHelper.runWithAuth(
+                                                    activity = context as FragmentActivity,
+                                                    feature = feature,
+                                                    action = {
+                                                        feature.onClick(context, viewModel)
+                                                    },
+                                                )
+                                            },
+                                            iconRes = feature.iconRes,
+                                            modifier = Modifier.padding(horizontal = 0.dp, vertical = 0.dp),
+                                            isToggleEnabled = feature.isToggleEnabled(viewModel, context),
+                                            showToggle = feature.showToggle,
+                                            hasMoreSettings = feature.hasMoreSettings,
+                                            onDisabledToggleClick = {
+                                                if (feature.id == "Screen locked security") {
+                                                    feature.onClick(context, viewModel)
+                                                } else {
+                                                    currentFeature = feature.title
+                                                    showSheet = true
+                                                }
+                                            },
+                                            description = feature.description,
+                                            isBeta = feature.isBeta,
+                                            isLegacy = feature.isLegacy,
+                                            isUnsupported = !feature.isDeviceSupported(context),
+                                            isPinned = pinnedFeatureKeys.contains(feature.id),
+                                            onPinToggle = {
+                                                viewModel.togglePinFeature(feature.id)
+                                            },
+                                            onHelpClick =
+                                                if (feature.aboutDescription != null) {
+                                                    {
+                                                        selectedHelpFeature = feature
+                                                        showHelpSheet = true
+                                                    }
+                                                } else {
+                                                    null
+                                                },
+                                            hasBadge = if (feature.id == "Watch") isWearUpdateRequired else false,
+                                        )
+                                    }
                                 }
                             }
                         }

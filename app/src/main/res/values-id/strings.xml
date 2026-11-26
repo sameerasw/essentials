@@ -364,4 +364,11 @@ Anda dapat menyesuaikan gaya animasi, warna, dan perilakunya. Fitur ini berfungs
     <string name="diy_calendar_working_location_name">Location, like Office</string>
     <string name="toolbar_tab_your_android_desc">Specs and track app updates</string>
     <string name="toolbar_tab_freeze_no_apps">No apps</string>
+    <string name="tour_toolbar">Long press the toolbar to customize it</string>
+    <string name="tour_feature_item">Long press any feature or category to favorite it or learn more</string>
+    <string name="tour_search_fab">Search anything in Essentials</string>
+    <string name="tour_bug_report_fab">Something not right? Report a bug from here</string>
+    <string name="tour_help_fab">Use this anytime for help</string>
+    <string name="action_reset_tour">Reset tour</string>
+    <string name="tour_reset_toast">Tour reset</string>
 </resources>
