@@ -264,7 +264,9 @@ fun EssentialsFloatingToolbar(
                             // TABBED MODE
                             val itemGap = 2.dp
                             val slots = maxOf(itemSlots, items.size, 1)
-                            val tabbedWidth = 48.dp * slots + itemGap * (slots - 1)
+                            val maxTabbedWidth =
+                                (screenWidth - 32.dp - 16.dp - if (finalFab != null) 64.dp else 0.dp).coerceAtLeast(48.dp)
+                            val tabbedWidth = (48.dp * slots + itemGap * (slots - 1)).coerceAtMost(maxTabbedWidth)
                             val fullItemWidth =
                                 if (items.isEmpty()) 48.dp else (tabbedWidth - itemGap * (items.size - 1)) / items.size
 
