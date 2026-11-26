@@ -2026,7 +2026,8 @@ Nút Tiếp tục sẽ bị vô hiệu hóa trong vài giây để bạn có th�
     <string name="haptic_mode_stronger">Mạnh</string>
     <string name="label_ui_design">UI design</string>
     <string name="ui_design_expressive">Material Expressive</string>
-    <string name="ui_design_one_ui">One UI</string>
+    <string name="ui_design_one_ui">OneUI inspired</string>
+    <string name="ui_design_experimental_info">Custom UI styles are experimental and might not be perfect</string>
     <string name="island_border_outline_dynamic_title">Màu sắc sống động</string>
     <string name="island_border_outline_hide_expanded_title">Ẩn khi mở rộng</string>
     <string name="island_border_outline_hide_expanded_desc">Chỉ cần phác thảo đường viền nhỏ gọn và nhìn thoáng qua island</string>

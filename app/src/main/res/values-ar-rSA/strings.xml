@@ -1961,5 +1961,6 @@
     <string name="tour_reset_toast">Tour reset</string>
     <string name="label_ui_design">UI design</string>
     <string name="ui_design_expressive">Material Expressive</string>
-    <string name="ui_design_one_ui">One UI</string>
+    <string name="ui_design_one_ui">OneUI inspired</string>
+    <string name="ui_design_experimental_info">Custom UI styles are experimental and might not be perfect</string>
 </resources>

@@ -685,6 +685,28 @@ fun SettingsContent(
                 )
             }
 
+            val uiDesignLabels = mapOf(
+                UiDesign.AUTO to stringResource(R.string.label_auto),
+                UiDesign.EXPRESSIVE to stringResource(R.string.ui_design_expressive),
+                UiDesign.ONE_UI to stringResource(R.string.ui_design_one_ui),
+            )
+            ConfigPickerItem(
+                title = stringResource(R.string.label_ui_design),
+                iconRes = R.drawable.rounded_styler_24,
+                selectedValue = uiDesignLabels.getValue(UiDesignState.selected),
+                infoText = stringResource(R.string.ui_design_experimental_info),
+            ) {
+                UiDesign.entries.forEach { design ->
+                    SegmentedDropdownMenuItem(
+                        text = { Text(uiDesignLabels.getValue(design)) },
+                        onClick = {
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            UiDesignState.save(context, design)
+                        },
+                    )
+                }
+            }
+
             val appColorSeed by viewModel.appColorSeed
             val appColorStyle by viewModel.appColorStyle
             val appColorVariant by viewModel.appColorVariant
@@ -1403,27 +1425,6 @@ fun SettingsContent(
 
             RoundedCardContainer {
                 com.sameerasw.essentials.ui.features.system.AutoBackupSetting()
-
-                val uiDesignLabels = mapOf(
-                    UiDesign.AUTO to stringResource(R.string.label_auto),
-                    UiDesign.EXPRESSIVE to stringResource(R.string.ui_design_expressive),
-                    UiDesign.ONE_UI to stringResource(R.string.ui_design_one_ui),
-                )
-                ConfigPickerItem(
-                    title = stringResource(R.string.label_ui_design),
-                    iconRes = R.drawable.rounded_styler_24,
-                    selectedValue = uiDesignLabels.getValue(UiDesignState.selected),
-                ) {
-                    UiDesign.entries.forEach { design ->
-                        SegmentedDropdownMenuItem(
-                            text = { Text(uiDesignLabels.getValue(design)) },
-                            onClick = {
-                                HapticUtil.performVirtualKeyHaptic(view)
-                                UiDesignState.save(context, design)
-                            },
-                        )
-                    }
-                }
 
                 Column(
                     modifier =

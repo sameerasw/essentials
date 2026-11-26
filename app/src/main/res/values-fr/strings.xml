@@ -1721,7 +1721,8 @@ Réinitialiser permet d\'effacer les valeurs personnalisées et le système gér
     <string name="haptic_mode_stronger">Très fort</string>
     <string name="label_ui_design">UI design</string>
     <string name="ui_design_expressive">Material Expressive</string>
-    <string name="ui_design_one_ui">One UI</string>
+    <string name="ui_design_one_ui">OneUI inspired</string>
+    <string name="ui_design_experimental_info">Custom UI styles are experimental and might not be perfect</string>
     <string name="conscious_gate_enable_title">Activer la barrière de conscience</string>
     <string name="conscious_gate_select_apps_title">Sélectionnez les applications</string>
     <string name="conscious_gate_select_apps_desc">Choisissez quels applications vont devoir afficher un écran d\'une barrière de conscience avant leurs ouvertures.</string>

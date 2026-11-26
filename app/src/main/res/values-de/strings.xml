@@ -1991,7 +1991,8 @@ Eingeschränkt – Niedrigste Priorität (Android 12+); etwa einmal täglich geb
     <string name="haptic_mode_stronger">Stärker</string>
     <string name="label_ui_design">UI design</string>
     <string name="ui_design_expressive">Material Expressive</string>
-    <string name="ui_design_one_ui">One UI</string>
+    <string name="ui_design_one_ui">OneUI inspired</string>
+    <string name="ui_design_experimental_info">Custom UI styles are experimental and might not be perfect</string>
     <string name="island_secondary_bubble_title">Sekundäre Blase</string>
     <string name="island_balance_compact_title">Visuell ausgewogene, kompakte Insel</string>
     <string name="island_neural_expressive_title">Neural Expressive expanded animations</string>

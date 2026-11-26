@@ -1640,7 +1640,8 @@ Aby ustawienie zadziałało, może być konieczne wielokrotne zastosowanie.</str
     <string name="haptic_mode_stronger">Mocniejsze</string>
     <string name="label_ui_design">UI design</string>
     <string name="ui_design_expressive">Material Expressive</string>
-    <string name="ui_design_one_ui">One UI</string>
+    <string name="ui_design_one_ui">OneUI inspired</string>
+    <string name="ui_design_experimental_info">Custom UI styles are experimental and might not be perfect</string>
     <string name="setting_hidden_debugging_title">Ukryta obsługa debuggowania</string>
     <string name="feat_app_volume_title">Dźwięki aplikacji</string>
     <string name="feat_app_volume_desc">Ustaw osobną głośność dla każdej aplikacji</string>

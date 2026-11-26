@@ -9,6 +9,10 @@
 
 package com.sameerasw.essentials.ui.core.cards
 
+import com.sameerasw.essentials.R
+import androidx.compose.material3.IconButton
+import androidx.compose.foundation.layout.Row
+import android.widget.Toast
 import com.sameerasw.essentials.ui.theme.cardListItemColors
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ColumnScope
@@ -52,6 +56,7 @@ fun ConfigPickerItem(
     isEnabled: Boolean = true,
     onDisabledClick: (() -> Unit)? = null,
     options: List<Any> = emptyList(),
+    infoText: String? = null,
     content: @Composable ColumnScope.() -> Unit,
 ) {
     val view = LocalView.current
@@ -116,6 +121,23 @@ fun ConfigPickerItem(
                 null
             },
         trailingContent = {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+            if (infoText != null) {
+                IconButton(
+                    onClick = {
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        Toast.makeText(context, infoText, Toast.LENGTH_LONG).show()
+                    },
+                    modifier = Modifier.size(36.dp),
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.rounded_info_24),
+                        contentDescription = infoText,
+                        modifier = Modifier.size(20.dp),
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
+            }
             Box {
                 Surface(
                     onClick = {
@@ -158,6 +180,7 @@ fun ConfigPickerItem(
                         content()
                     }
                 }
+            }
             }
         },
         colors =

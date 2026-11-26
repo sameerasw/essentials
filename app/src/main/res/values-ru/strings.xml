@@ -1842,7 +1842,8 @@
     <string name="haptic_mode_stronger">Повышенный</string>
     <string name="label_ui_design">UI design</string>
     <string name="ui_design_expressive">Material Expressive</string>
-    <string name="ui_design_one_ui">One UI</string>
+    <string name="ui_design_one_ui">OneUI inspired</string>
+    <string name="ui_design_experimental_info">Custom UI styles are experimental and might not be perfect</string>
     <string name="island_section_notifications">Уведомления</string>
     <string name="island_show_network_title">Сетевая активность</string>
     <string name="island_section_placement">Расположение</string>
