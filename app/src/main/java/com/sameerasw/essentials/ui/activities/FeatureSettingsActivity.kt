@@ -271,6 +271,7 @@ fun FeatureSettingsScreen(
             var childFeatureForPermissions by remember { mutableStateOf<String?>(null) }
             var standbyAppsSelectedPackages by remember { mutableStateOf(setOf<String>()) }
             var activityLauncherQuery by remember { mutableStateOf("") }
+            var appOpsSearchSignal by remember { mutableStateOf(0) }
             var isStandbyMoveSheetVisible by remember { mutableStateOf(false) }
             var isAddSnippetSheetVisible by remember { mutableStateOf(false) }
             var editingSnippet by remember { mutableStateOf<Snippet?>(null) }
@@ -401,7 +402,7 @@ fun FeatureSettingsScreen(
                         CONSCIOUS_GATE_FEATURE_ID ->
                             !isAccessibilityEnabled ||
                                 (if (viewModel.isUseUsageAccess.value) !viewModel.isUsageStatsPermissionGranted.value else false)
-                        "Freeze" ->
+                        "Freeze", "App Ops" ->
                             !com.sameerasw.essentials.utils.ShellUtils.hasPermission(
                                 context,
                             )
@@ -597,7 +598,8 @@ fun FeatureSettingsScreen(
                         featureId != "Activity launcher" &&
                         featureId != "Quick settings tiles" &&
                         featureId != "Location reached" &&
-                        featureId != "Watch Controls"
+                        featureId != "Watch Controls" &&
+                        featureId != "App Ops"
                 Column(
                     modifier =
                         Modifier
@@ -614,7 +616,7 @@ fun FeatureSettingsScreen(
                             ),
                 ) {
                     // Top padding for status bar
-                    if (featureId != "Quick settings tiles" && featureId != "Location reached" && featureId != "Activity launcher") {
+                    if (featureId != "Quick settings tiles" && featureId != "Location reached" && featureId != "Activity launcher" && featureId != "App Ops") {
                         androidx.compose.foundation.layout.Spacer(
                             modifier =
                                 Modifier.height(
@@ -785,6 +787,7 @@ fun FeatureSettingsScreen(
                                                     "Lockdown mode",
                                                     "Face unlock brightness",
                                                     "Screenshots",
+                                                    "App Ops",
                                                 ),
                                             )
 
@@ -863,7 +866,7 @@ fun FeatureSettingsScreen(
                                                     CONSCIOUS_GATE_FEATURE_ID ->
                                                         !isAccessibilityEnabled ||
                                                             (if (viewModel.isUseUsageAccess.value) !viewModel.isUsageStatsPermissionGranted.value else false)
-                                                    "Freeze" ->
+                                                    "Freeze", "App Ops" ->
                                                         !com.sameerasw.essentials.utils.ShellUtils.hasPermission(
                                                             context,
                                                         )
@@ -1089,6 +1092,14 @@ fun FeatureSettingsScreen(
                                     viewModel = viewModel,
                                     modifier = Modifier.padding(top = 16.dp),
                                     highlightSetting = highlightSetting,
+                                )
+                            }
+
+                            "App Ops" -> {
+                                com.sameerasw.essentials.ui.features.security.AppOpsSettingsUI(
+                                    mainViewModel = viewModel,
+                                    searchToggleSignal = appOpsSearchSignal,
+                                    modifier = Modifier.nestedScroll(nestedScrollConnection),
                                 )
                             }
 
@@ -1529,7 +1540,7 @@ fun FeatureSettingsScreen(
                         )
                     }
                     // Bottom padding for toolbar
-                    if (featureId != "Quick settings tiles" && featureId != "Location reached") {
+                    if (featureId != "Quick settings tiles" && featureId != "Location reached" && featureId != "App Ops") {
                         androidx.compose.foundation.layout.Spacer(
                             modifier =
                                 Modifier.height(
@@ -1564,6 +1575,7 @@ fun FeatureSettingsScreen(
                                     isStandbyMultiSelecting -> R.drawable.rounded_mobiledata_arrows_24
                                     (featureId == "Island" || featureId in ISLAND_SUB_PAGE_IDS) -> R.drawable.rounded_play_arrow_24
                                     featureId == "Text Snippets" -> R.drawable.rounded_add_24
+                                    featureId == "App Ops" -> R.drawable.rounded_search_24
                                     else -> null
                                 },
                             fabAction =
@@ -1580,6 +1592,7 @@ fun FeatureSettingsScreen(
                                             isAddSnippetSheetVisible = true
                                         }
                                     }
+                                    featureId == "App Ops" -> { { appOpsSearchSignal++ } }
                                     else -> null
                                 },
                             fabContentDescription =
@@ -1587,6 +1600,7 @@ fun FeatureSettingsScreen(
                                     isStandbyMultiSelecting -> stringResource(R.string.action_move_bucket)
                                     (featureId == "Island" || featureId in ISLAND_SUB_PAGE_IDS) -> stringResource(R.string.action_preview)
                                     featureId == "Text Snippets" -> stringResource(R.string.snippets_dialog_new_title)
+                                    featureId == "App Ops" -> stringResource(R.string.label_search_content_description)
                                     else -> null
                                 },
                             onHelpClick =
