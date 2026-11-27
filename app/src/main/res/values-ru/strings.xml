@@ -2532,4 +2532,6 @@
     <string name="action_reset_battery_saver">Сброс параметров</string>
     <string name="bug_report_view_existing_pr">Просмотреть существующий PR</string>
     <string name="auto_backup_title">Автоматическая резервная копия настроек</string>
+    <string name="app_volume_ignore_focus_title">Ignore audio focus</string>
+    <string name="app_volume_focus_ignored_summary">%1$s · Ignores audio focus</string>
 </resources>

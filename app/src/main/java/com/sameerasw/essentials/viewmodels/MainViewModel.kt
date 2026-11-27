@@ -170,6 +170,7 @@ class MainViewModel : ViewModel() {
     val isAppVolumeEnabled = mutableStateOf(false)
     val isAppVolumeOverlayEnabled = mutableStateOf(false)
     val appVolumeLevels = mutableStateOf<Map<String, Float>>(emptyMap())
+    val appVolumeFocusIgnored = mutableStateOf<Set<String>>(emptySet())
     val remapHapticType = mutableStateOf(HapticFeedbackType.DOUBLE)
     val isDynamicNightLightEnabled = mutableStateOf(false)
     val isSmartPixelsEnabled = mutableStateOf(false)
@@ -2521,6 +2522,7 @@ class MainViewModel : ViewModel() {
         isAppVolumeEnabled.value = settingsRepository.isAppVolumeEnabled()
         isAppVolumeOverlayEnabled.value = settingsRepository.isAppVolumeOverlayEnabled()
         appVolumeLevels.value = settingsRepository.getAppVolumeLevels()
+        appVolumeFocusIgnored.value = settingsRepository.getAppVolumeFocusIgnored()
         LockscreenShortcutSide.entries.forEach { side ->
             lockscreenShortcutActions[side] = settingsRepository.getRemapActions(side.prefKey)
         }
@@ -5514,6 +5516,25 @@ class MainViewModel : ViewModel() {
     fun removeAppVolumeLevel(packageName: String) {
         appVolumeLevels.value = appVolumeLevels.value - packageName
         settingsRepository.setAppVolumeLevels(appVolumeLevels.value)
+    }
+
+    fun setAppAudioFocusIgnored(
+        context: Context,
+        packageName: String,
+        ignored: Boolean,
+    ) {
+        appVolumeFocusIgnored.value =
+            if (ignored) appVolumeFocusIgnored.value + packageName else appVolumeFocusIgnored.value - packageName
+        settingsRepository.setAppVolumeFocusIgnored(appVolumeFocusIgnored.value)
+        com.sameerasw.essentials.utils.media.AudioFocusController.setIgnored(context, packageName, ignored)
+    }
+
+    fun restoreAllAppAudioFocus(context: Context) {
+        settingsRepository.getAppVolumeFocusIgnored().forEach {
+            com.sameerasw.essentials.utils.media.AudioFocusController.setIgnored(context, it, false)
+        }
+        appVolumeFocusIgnored.value = emptySet()
+        settingsRepository.setAppVolumeFocusIgnored(emptySet())
     }
 
     fun setLockscreenShortcutsEnabled(enabled: Boolean) {

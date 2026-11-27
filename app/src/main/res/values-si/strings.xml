@@ -1726,4 +1726,6 @@
     <string name="ui_design_expressive">Material Expressive</string>
     <string name="ui_design_one_ui">OneUI inspired</string>
     <string name="ui_design_experimental_info">Custom UI styles are experimental and might not be perfect</string>
+    <string name="app_volume_ignore_focus_title">Ignore audio focus</string>
+    <string name="app_volume_focus_ignored_summary">%1$s · Ignores audio focus</string>
 </resources>

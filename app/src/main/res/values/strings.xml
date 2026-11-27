@@ -433,7 +433,8 @@
     <string name="app_volume_add_app_desc">Set a volume before the app starts playing</string>
     <string name="app_volume_playing_summary">Playing now · %1$s</string>
     <string name="app_volume_level_title">Volume</string>
-    <string name="app_volume_sheet_desc">The change is applied while you drag, so you can listen for the right level. 100% is the app\'s normal volume.</string>
+    <string name="app_volume_ignore_focus_title">Ignore audio focus</string>
+    <string name="app_volume_focus_ignored_summary">%1$s · Ignores audio focus</string>
     <string name="app_volume_hint">Apps playing sound show up here automatically. Tap an app to change its volume, or remove it to return to the normal volume.</string>
     <string name="search_app_volume_enable_title">App volume</string>
     <string name="search_app_volume_enable_desc">Set a separate volume for each app</string>

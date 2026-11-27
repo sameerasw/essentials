@@ -472,4 +472,6 @@ Anda dapat menyesuaikan gaya animasi, warna, dan perilakunya. Fitur ini berfungs
     <string name="island_max_width_title">Lebar maksimal</string>
     <string name="duo_camera_size_title">Ukuran kamera</string>
     <string name="feat_location_reached_title">Apakah kita sudah sampai?</string>
+    <string name="app_volume_ignore_focus_title">Ignore audio focus</string>
+    <string name="app_volume_focus_ignored_summary">%1$s · Ignores audio focus</string>
 </resources>

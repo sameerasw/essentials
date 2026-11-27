@@ -2456,4 +2456,6 @@ Bu izin için sadece şunlara ihtiyaç duyulmaktadır: </string>
     <string name="duo_battery_options_title">Batarya seçenekleri</string>
     <string name="duo_time_options_title">Zaman seçenekleri</string>
     <string name="duo_combine_with_island">Adayla birleştir</string>
+    <string name="app_volume_ignore_focus_title">Ignore audio focus</string>
+    <string name="app_volume_focus_ignored_summary">%1$s · Ignores audio focus</string>
 </resources>

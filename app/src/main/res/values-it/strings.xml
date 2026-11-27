@@ -1997,4 +1997,6 @@ con il ❤️ da 🇱🇰</string>
     <string name="diy_discard_warning_title">Annullare le modifiche?</string>
     <string name="diy_discard_warning_desc">Hai delle modifiche non salvate. Sei sicuro che vuoi uscire senza salvare?</string>
     <string name="freeze_tags_section_title">Tag</string>
+    <string name="app_volume_ignore_focus_title">Ignore audio focus</string>
+    <string name="app_volume_focus_ignored_summary">%1$s · Ignores audio focus</string>
 </resources>

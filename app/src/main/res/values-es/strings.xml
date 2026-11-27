@@ -2332,4 +2332,6 @@ Consejos: Las palabras clave solo se expanden al comienzo de una palabra, por lo
     <string name="wallpaper_current_photo_credits">Créditos fotográficos actuales</string>
     <string name="wallpaper_view_collection">Ver la colección de Sameera</string>
     <string name="cat_sync">Sincronizar</string>
+    <string name="app_volume_ignore_focus_title">Ignore audio focus</string>
+    <string name="app_volume_focus_ignored_summary">%1$s · Ignores audio focus</string>
 </resources>

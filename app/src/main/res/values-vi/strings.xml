@@ -2583,4 +2583,6 @@ Nếu bạn sửa đổi các giá trị này, chính sách tiết kiệm pin t�
     <string name="qs_tiles_widget_empty_state">Chưa ghim ô yêu thích nào. Chưa ghim ô nào. Nhấn giữ để ghim một vài ô nhé!!</string>
     <string name="lockscreen_shortcuts_hint">Mỗi bên thực hiện một thao tác. Chạm và giữ một lối tắt trên màn hình khóa để chạy thao tác đó. Các thao tác mở ứng dụng sẽ yêu cầu bạn mở khóa trước.</string>
     <string name="keyboard_user_dictionary_title">Từ điển người dùng (Học từ)</string>
+    <string name="app_volume_ignore_focus_title">Ignore audio focus</string>
+    <string name="app_volume_focus_ignored_summary">%1$s · Ignores audio focus</string>
 </resources>
