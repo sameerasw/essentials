@@ -9,6 +9,8 @@
 
 package com.sameerasw.essentials
 
+import com.sameerasw.essentials.ui.theme.fabContentColor
+import com.sameerasw.essentials.ui.theme.fabContainerColor
 import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
@@ -279,8 +281,8 @@ class AppUpdatesActivity : AppCompatActivity() {
                                 showAddRepoSheet = true
                             },
                             modifier = Modifier.padding(bottom = 16.dp, end = 16.dp),
-                            containerColor = MaterialTheme.colorScheme.primaryContainer,
-                            contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                            containerColor = fabContainerColor(),
+                            contentColor = fabContentColor(),
                             elevation =
                                 androidx.compose.material3.FloatingActionButtonDefaults.elevation(
                                     0.dp,

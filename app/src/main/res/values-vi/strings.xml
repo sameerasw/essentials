@@ -2024,6 +2024,10 @@ Nút Tiếp tục sẽ bị vô hiệu hóa trong vài giây để bạn có th�
     <string name="duo_rotate_album_art_title">Xoay ảnh bìa album</string>
     <string name="duo_hide_when_locked_title">Ẩn khi bị khóa</string>
     <string name="haptic_mode_stronger">Mạnh</string>
+    <string name="label_ui_design">UI design</string>
+    <string name="ui_design_expressive">Material Expressive</string>
+    <string name="ui_design_one_ui">OneUI inspired</string>
+    <string name="ui_design_experimental_info">Custom UI styles are experimental and might not be perfect</string>
     <string name="island_border_outline_dynamic_title">Màu sắc sống động</string>
     <string name="island_border_outline_hide_expanded_title">Ẩn khi mở rộng</string>
     <string name="island_border_outline_hide_expanded_desc">Chỉ cần phác thảo đường viền nhỏ gọn và nhìn thoáng qua island</string>
@@ -2509,6 +2513,7 @@ Mẹo: từ khóa chỉ được mở rộng khi nằm ở đầu một từ, v�
     <string name="tour_search_fab">Search anything in Essentials</string>
     <string name="tour_bug_report_fab">Something not right? Report a bug from here</string>
     <string name="tour_help_fab">Use this anytime for help</string>
+    <string name="tour_design_switch">Prefer the Material Expressive design? Switch in settings</string>
     <string name="action_reset_tour">Reset tour</string>
     <string name="tour_reset_toast">Tour reset</string>
     <string name="duo_section_position">Vị trí và kích thước</string>

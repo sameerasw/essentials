@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials.ui.features.system
 
+import com.sameerasw.essentials.ui.theme.cardListItemColors
 import android.content.Intent
 import android.net.Uri
 import androidx.activity.compose.BackHandler
@@ -25,7 +26,6 @@ import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
-import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -353,7 +353,7 @@ private fun AppStandbyCardItem(
             }
         },
         colors =
-            ListItemDefaults.colors(
+            cardListItemColors(
                 containerColor =
                     if (isSelected) {
                         MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.35f)

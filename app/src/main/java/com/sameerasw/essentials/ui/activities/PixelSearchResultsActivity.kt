@@ -888,13 +888,13 @@ fun PixelSearchResultsScreen(
                                                 modifier = Modifier
                                                     .size(40.dp)
                                                     .clip(CircleShape)
-                                                    .background(ColorUtil.getPastelColorFor(contact.name)),
+                                                    .background(ColorUtil.iconContainerColor(contact.name)),
                                                 contentAlignment = Alignment.Center,
                                             ) {
                                                 Text(
                                                     text = contact.name.take(1).uppercase(),
                                                     style = MaterialTheme.typography.titleMedium,
-                                                    color = ColorUtil.getVibrantColorFor(contact.name),
+                                                    color = ColorUtil.iconTintColor(contact.name),
                                                 )
                                             }
                                         }
@@ -1109,13 +1109,13 @@ fun PixelSearchResultsScreen(
                                             modifier = Modifier
                                                 .size(40.dp)
                                                 .clip(CircleShape)
-                                                .background(ColorUtil.getPastelColorFor(file.displayName)),
+                                                .background(ColorUtil.iconContainerColor(file.displayName)),
                                             contentAlignment = Alignment.Center,
                                         ) {
                                             Icon(
                                                 painter = painterResource(file.iconRes),
                                                 contentDescription = null,
-                                                tint = ColorUtil.getVibrantColorFor(file.displayName),
+                                                tint = ColorUtil.iconTintColor(file.displayName),
                                                 modifier = Modifier.size(22.dp),
                                             )
                                         }

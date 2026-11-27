@@ -1286,6 +1286,9 @@ class MainViewModel : ViewModel() {
                         isPitchBlackThemeEnabled.value =
                             settingsRepository.getBoolean(key)
 
+                    SettingsRepository.KEY_USE_SYSTEM_FONT ->
+                        useSystemFont.value = settingsRepository.getBoolean(key)
+
                     SettingsRepository.KEY_LOCATION_REACHED_FULL_SCREEN_ALARM_ENABLED ->
                         isLocationReachedFullScreenAlarmEnabled.value =
                             settingsRepository.getLocationReachedFullScreenAlarmEnabled()

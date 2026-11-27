@@ -10,6 +10,14 @@
 
 package com.sameerasw.essentials.ui.core.cards
 
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.lerp
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import com.sameerasw.essentials.ui.theme.OneUiSquircle
+import com.sameerasw.essentials.ui.theme.UiDesign
+import com.sameerasw.essentials.ui.theme.LocalUiDesign
+import com.sameerasw.essentials.ui.theme.cardListItemColors
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -29,7 +37,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Switch
+import com.sameerasw.essentials.ui.core.controls.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
@@ -91,7 +99,9 @@ fun FeatureCard(
     iconSize: androidx.compose.ui.unit.Dp = 24.dp,
     hasIconBackground: Boolean = true,
     iconTint: androidx.compose.ui.graphics.Color? = null,
+    oneUiAppIcon: Boolean = false,
 ) {
+    val useAppIcon = oneUiAppIcon && LocalUiDesign.current == UiDesign.ONE_UI
     val selectedContainer by androidx.compose.animation.animateColorAsState(
         targetValue =
             if (isSelected) {
@@ -139,6 +149,15 @@ fun FeatureCard(
             is String -> title
             else -> ""
         }
+    val appIconBrush =
+        remember(resolvedTitle) {
+            val base = ColorUtil.getAppIconColorFor(resolvedTitle)
+            Brush.linearGradient(
+                colors = listOf(lerp(base, Color.White, 0.22f), base),
+                start = Offset.Zero,
+                end = Offset.Infinite,
+            )
+        }
 
     androidx.compose.material3.ListItem(
         onClick = {
@@ -167,11 +186,18 @@ fun FeatureCard(
                 {
                     Box {
                         val containerModifier =
-                            if (hasIconBackground) {
+                            if (useAppIcon) {
                                 Modifier
                                     .size(40.dp)
                                     .background(
-                                        color = ColorUtil.getPastelColorFor(resolvedTitle),
+                                        brush = appIconBrush,
+                                        shape = OneUiSquircle,
+                                    )
+                            } else if (hasIconBackground) {
+                                Modifier
+                                    .size(40.dp)
+                                    .background(
+                                        color = ColorUtil.iconContainerColor(resolvedTitle),
                                         shape = CircleShape,
                                     )
                             } else {
@@ -208,7 +234,7 @@ fun FeatureCard(
                                         contentDescription = resolvedTitle,
                                         modifier = Modifier.size(iconSize),
                                         colorFilter = ColorFilter.tint(
-                                            iconTint ?: ColorUtil.getVibrantColorFor(resolvedTitle)
+                                            if (useAppIcon) Color.White else iconTint ?: ColorUtil.iconTintColor(resolvedTitle)
                                         ),
                                     )
                                 } else {
@@ -216,7 +242,7 @@ fun FeatureCard(
                                         painter = painterResource(id = R.drawable.rounded_settings_24),
                                         contentDescription = resolvedTitle,
                                         modifier = Modifier.size(iconSize),
-                                        tint = iconTint ?: ColorUtil.getVibrantColorFor(resolvedTitle),
+                                        tint = if (useAppIcon) Color.White else iconTint ?: ColorUtil.iconTintColor(resolvedTitle),
                                     )
                                 }
                             }
@@ -346,9 +372,7 @@ fun FeatureCard(
             }
         },
         colors =
-            androidx.compose.material3.ListItemDefaults.colors(
-                containerColor = selectedContainer,
-            ),
+            cardListItemColors(selectedContainer),
         contentPadding =
             androidx.compose.foundation.layout.PaddingValues(
                 horizontal = 16.dp,

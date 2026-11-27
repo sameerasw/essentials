@@ -9,8 +9,12 @@
 
 package com.sameerasw.essentials.utils
 
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import com.sameerasw.essentials.ui.theme.LocalUiDesign
+import com.sameerasw.essentials.ui.theme.UiDesign
 import kotlin.math.abs
 
 object ColorUtil {
@@ -66,4 +70,20 @@ object ColorUtil {
         val baseColor = getPastelColorFor(key)
         return toRichColor(baseColor)
     }
+
+    fun getAppIconColorFor(key: Any): Color {
+        val hsv = FloatArray(3)
+        android.graphics.Color.colorToHSV(getPastelColorFor(key).toArgb(), hsv)
+        hsv[1] = 0.78f
+        hsv[2] = 0.88f
+        return Color(android.graphics.Color.HSVToColor(hsv))
+    }
+
+    @Composable
+    fun iconContainerColor(key: Any): Color =
+        if (LocalUiDesign.current == UiDesign.ONE_UI) Color.Transparent else getPastelColorFor(key)
+
+    @Composable
+    fun iconTintColor(key: Any): Color =
+        if (LocalUiDesign.current == UiDesign.ONE_UI) MaterialTheme.colorScheme.onSurface else getVibrantColorFor(key)
 }

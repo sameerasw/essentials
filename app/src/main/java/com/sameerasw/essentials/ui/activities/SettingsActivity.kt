@@ -142,6 +142,8 @@ import com.sameerasw.essentials.utils.AppResetHelper
 import com.sameerasw.essentials.ui.features.consciousgate.HoldToContinueButton
 import com.sameerasw.essentials.ui.core.pickers.SegmentedPicker
 import com.sameerasw.essentials.utils.AppHapticMode
+import com.sameerasw.essentials.ui.theme.UiDesign
+import com.sameerasw.essentials.ui.theme.UiDesignState
 import com.sameerasw.essentials.ui.state.AppTour
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.utils.PermissionGrantUtil
@@ -681,6 +683,28 @@ fun SettingsContent(
                     modifier = Modifier.fillMaxWidth(),
                     title = stringResource(R.string.label_haptic_feedback),
                 )
+            }
+
+            val uiDesignLabels = mapOf(
+                UiDesign.AUTO to stringResource(R.string.label_auto),
+                UiDesign.EXPRESSIVE to stringResource(R.string.ui_design_expressive),
+                UiDesign.ONE_UI to stringResource(R.string.ui_design_one_ui),
+            )
+            ConfigPickerItem(
+                title = stringResource(R.string.label_ui_design),
+                iconRes = R.drawable.rounded_styler_24,
+                selectedValue = uiDesignLabels.getValue(UiDesignState.selected),
+                infoText = stringResource(R.string.ui_design_experimental_info),
+            ) {
+                UiDesign.entries.forEach { design ->
+                    SegmentedDropdownMenuItem(
+                        text = { Text(uiDesignLabels.getValue(design)) },
+                        onClick = {
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            UiDesignState.save(context, design)
+                        },
+                    )
+                }
             }
 
             val appColorSeed by viewModel.appColorSeed

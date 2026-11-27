@@ -1989,6 +1989,10 @@ Eingeschränkt – Niedrigste Priorität (Android 12+); etwa einmal täglich geb
     <string name="face_unlock_light_tint_title">Leichte Tönung</string>
     <string name="label_online_help_media">Online-Hilfemedien</string>
     <string name="haptic_mode_stronger">Stärker</string>
+    <string name="label_ui_design">UI design</string>
+    <string name="ui_design_expressive">Material Expressive</string>
+    <string name="ui_design_one_ui">OneUI inspired</string>
+    <string name="ui_design_experimental_info">Custom UI styles are experimental and might not be perfect</string>
     <string name="island_secondary_bubble_title">Sekundäre Blase</string>
     <string name="island_balance_compact_title">Visuell ausgewogene, kompakte Insel</string>
     <string name="island_neural_expressive_title">Neural Expressive expanded animations</string>
@@ -2276,6 +2280,7 @@ Die Stufen können nur von der normalen Lautstärke abwärts, niemals darüber h
     <string name="tour_search_fab">Search anything in Essentials</string>
     <string name="tour_bug_report_fab">Something not right? Report a bug from here</string>
     <string name="tour_help_fab">Use this anytime for help</string>
+    <string name="tour_design_switch">Prefer the Material Expressive design? Switch in settings</string>
     <string name="action_reset_tour">Reset tour</string>
     <string name="tour_reset_toast">Tour reset</string>
 </resources>

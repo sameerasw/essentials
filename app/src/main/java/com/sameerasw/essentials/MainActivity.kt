@@ -9,6 +9,10 @@
 
 package com.sameerasw.essentials
 
+import com.sameerasw.essentials.ui.theme.UiDesign
+import com.sameerasw.essentials.ui.theme.UiDesignState
+import com.sameerasw.essentials.ui.theme.fabContentColor
+import com.sameerasw.essentials.ui.theme.fabContainerColor
 import androidx.compose.ui.layout.boundsInRoot
 import androidx.compose.ui.layout.onGloballyPositioned
 import com.sameerasw.essentials.translation.TranslatableText
@@ -947,6 +951,12 @@ class MainActivity : AppCompatActivity() {
                                                                     onIconPlaced = if (tab == DIYTabs.ESSENTIALS) { bounds -> splashLogoHandoff.targetBounds = bounds } else null,
                                                                     iconAlpha = if (tab == DIYTabs.ESSENTIALS) { { splashLogoHandoff.toolbarLogoAlpha.floatValue } } else null,
                                                                     iconSlot = if (tab == DIYTabs.ESSENTIALS) { { splashLogoHandoff.toolbarLogoSlot.floatValue } } else null,
+                                                                    tourSteps =
+                                                                        if (tab == DIYTabs.SETTINGS) {
+                                                                            listOf(TourStep.DESIGN_SWITCH to (!isDetail && UiDesignState.isSamsung && UiDesignState.resolved == UiDesign.ONE_UI))
+                                                                        } else {
+                                                                            emptyList()
+                                                                        },
                                                                     effect =
                                                                         when (tab) {
                                                                             DIYTabs.ESSENTIALS -> ToolbarIconEffect.LOGO
@@ -1005,8 +1015,8 @@ class MainActivity : AppCompatActivity() {
                                                                                 }
                                                                             }
                                                                         },
-                                                                        containerColor = MaterialTheme.colorScheme.primaryContainer,
-                                                                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                                                                        containerColor = fabContainerColor(),
+                                                                        contentColor = fabContentColor(),
                                                                         shape = MaterialTheme.shapes.large,
                                                                         elevation =
                                                                             androidx.compose.material3.FloatingActionButtonDefaults.elevation(

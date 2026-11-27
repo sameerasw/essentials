@@ -85,7 +85,7 @@ fun PixelSearchAppActionSheet(
                             Modifier
                                 .size(52.dp)
                                 .background(
-                                    color = ColorUtil.getPastelColorFor(appItem.appName),
+                                    color = ColorUtil.iconContainerColor(appItem.appName),
                                     shape = CircleShape,
                                 ),
                         contentAlignment = Alignment.Center,

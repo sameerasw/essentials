@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials.ui.core.pickers
 
+import com.sameerasw.essentials.ui.theme.cardListItemColors
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -26,7 +27,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
-import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
@@ -109,9 +109,7 @@ fun AppIconPicker(
                 ),
             verticalAlignment = Alignment.CenterVertically,
             colors =
-                ListItemDefaults.colors(
-                    containerColor = MaterialTheme.colorScheme.surfaceBright,
-                ),
+                cardListItemColors(),
             content = {
                 Box {
                     Column {

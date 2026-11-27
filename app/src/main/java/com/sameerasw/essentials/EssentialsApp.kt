@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials
 
+import com.sameerasw.essentials.ui.theme.UiDesignState
 import android.app.Application
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -50,6 +51,7 @@ class EssentialsApp : Application() {
         super.onCreate()
         com.sameerasw.essentials.data.repository.SettingsRepository(this).syncTorchRestriction()
         context = applicationContext
+        UiDesignState.applyFirstRunDefaults(this)
         com.sameerasw.essentials.ui.theme.SystemFontState.init(this)
         com.sameerasw.essentials.utils.HapticUtil.initialize(this)
 

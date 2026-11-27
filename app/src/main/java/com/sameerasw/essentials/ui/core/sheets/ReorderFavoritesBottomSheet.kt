@@ -121,7 +121,7 @@ fun ReorderFavoritesBottomSheet(
                                         Modifier
                                             .size(40.dp)
                                             .background(
-                                                color = ColorUtil.getPastelColorFor(resolvedTitle),
+                                                color = ColorUtil.iconContainerColor(resolvedTitle),
                                                 shape = CircleShape,
                                             ),
                                     contentAlignment = Alignment.Center,
@@ -133,7 +133,7 @@ fun ReorderFavoritesBottomSheet(
                                             ),
                                         contentDescription = resolvedTitle,
                                         modifier = Modifier.size(24.dp),
-                                        tint = ColorUtil.getVibrantColorFor(resolvedTitle),
+                                        tint = ColorUtil.iconTintColor(resolvedTitle),
                                     )
                                 }
                             },

@@ -1,5 +1,6 @@
 package com.sameerasw.essentials.ui.features.apps.sheets
 
+import com.sameerasw.essentials.ui.theme.cardListItemColors
 import android.content.Context
 import android.os.Build
 import android.provider.Settings
@@ -18,7 +19,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ListItem
-import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
@@ -174,9 +174,7 @@ fun KeyboardSelectionSheet(
                                     )
                                 },
                                 colors =
-                                    ListItemDefaults.colors(
-                                        containerColor = MaterialTheme.colorScheme.surfaceBright,
-                                    ),
+                                    cardListItemColors(),
                                 contentPadding =
                                     PaddingValues(
                                         horizontal = 16.dp,

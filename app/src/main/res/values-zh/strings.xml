@@ -1958,6 +1958,10 @@
  • 目標規則：為關鍵應用程式分配「禁止自動凍結」保護，使其保持活躍。
  • 自動化整合：根據裝置觸發器、時間視窗或應用程式啟動自動觸發整個標籤的凍結或解凍操作。</string>
     <string name="haptic_mode_stronger">更強烈</string>
+    <string name="label_ui_design">UI design</string>
+    <string name="ui_design_expressive">Material Expressive</string>
+    <string name="ui_design_one_ui">OneUI inspired</string>
+    <string name="ui_design_experimental_info">Custom UI styles are experimental and might not be perfect</string>
     <string name="label_haptics_title">觸控震動</string>
     <string name="label_motion_blur_amount">強度</string>
     <string name="settings_permissions_all">所有權限</string>
@@ -2118,6 +2122,7 @@
     <string name="tour_search_fab">Search anything in Essentials</string>
     <string name="tour_bug_report_fab">Something not right? Report a bug from here</string>
     <string name="tour_help_fab">Use this anytime for help</string>
+    <string name="tour_design_switch">Prefer the Material Expressive design? Switch in settings</string>
     <string name="action_reset_tour">Reset tour</string>
     <string name="tour_reset_toast">Tour reset</string>
 </resources>

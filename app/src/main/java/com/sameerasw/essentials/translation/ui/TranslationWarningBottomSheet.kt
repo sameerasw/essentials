@@ -79,7 +79,7 @@ fun TranslationWarningBottomSheet(
                         Modifier
                             .size(40.dp)
                             .background(
-                                color = ColorUtil.getPastelColorFor("TranslationMode"),
+                                color = ColorUtil.iconContainerColor("TranslationMode"),
                                 shape = CircleShape,
                             ),
                     contentAlignment = Alignment.Center,
@@ -88,7 +88,7 @@ fun TranslationWarningBottomSheet(
                         painter = painterResource(id = R.drawable.rounded_translate_24),
                         contentDescription = null,
                         modifier = Modifier.size(24.dp),
-                        tint = ColorUtil.getVibrantColorFor("TranslationMode"),
+                        tint = ColorUtil.iconTintColor("TranslationMode"),
                     )
                 }
 
