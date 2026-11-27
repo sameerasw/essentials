@@ -1775,4 +1775,6 @@
     <string name="app_ops_shell_required">App Ops needs Shizuku or root to read and change what apps are allowed to do.</string>
     <string name="app_ops_system_app">System app</string>
     <string name="app_ops_user_app">User app</string>
+    <string name="app_ops_search_apps">Search apps</string>
+    <string name="app_ops_search_ops">Search operations</string>
 </resources>

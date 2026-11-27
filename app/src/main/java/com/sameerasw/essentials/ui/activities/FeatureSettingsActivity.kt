@@ -41,6 +41,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.text.input.clearText
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialTheme
@@ -271,7 +272,13 @@ fun FeatureSettingsScreen(
             var childFeatureForPermissions by remember { mutableStateOf<String?>(null) }
             var standbyAppsSelectedPackages by remember { mutableStateOf(setOf<String>()) }
             var activityLauncherQuery by remember { mutableStateOf("") }
-            var appOpsSearchSignal by remember { mutableStateOf(0) }
+            var appOpsSearchActive by remember { mutableStateOf(false) }
+            val appOpsSearchState = androidx.compose.foundation.text.input.rememberTextFieldState()
+            var appOpsPage by remember { mutableStateOf(0) }
+            androidx.activity.compose.BackHandler(enabled = featureId == "App Ops" && appOpsSearchActive) {
+                appOpsSearchActive = false
+                appOpsSearchState.clearText()
+            }
             var isStandbyMoveSheetVisible by remember { mutableStateOf(false) }
             var isAddSnippetSheetVisible by remember { mutableStateOf(false) }
             var editingSnippet by remember { mutableStateOf<Snippet?>(null) }
@@ -1098,7 +1105,11 @@ fun FeatureSettingsScreen(
                             "App Ops" -> {
                                 com.sameerasw.essentials.ui.features.security.AppOpsSettingsUI(
                                     mainViewModel = viewModel,
-                                    searchToggleSignal = appOpsSearchSignal,
+                                    query = appOpsSearchState.text.toString(),
+                                    onPageChange = { page ->
+                                        if (page != appOpsPage) appOpsSearchState.clearText()
+                                        appOpsPage = page
+                                    },
                                     modifier = Modifier.nestedScroll(nestedScrollConnection),
                                 )
                             }
@@ -1592,7 +1603,7 @@ fun FeatureSettingsScreen(
                                             isAddSnippetSheetVisible = true
                                         }
                                     }
-                                    featureId == "App Ops" -> { { appOpsSearchSignal++ } }
+                                    featureId == "App Ops" -> { { appOpsSearchActive = true } }
                                     else -> null
                                 },
                             fabContentDescription =
@@ -1603,6 +1614,21 @@ fun FeatureSettingsScreen(
                                     featureId == "App Ops" -> stringResource(R.string.label_search_content_description)
                                     else -> null
                                 },
+                            search =
+                                if (featureId == "App Ops" && appOpsSearchActive) {
+                                    com.sameerasw.essentials.ui.navigation.BottomBarSearch(
+                                        state = appOpsSearchState,
+                                        placeholder =
+                                            stringResource(if (appOpsPage == 0) R.string.app_ops_search_apps else R.string.app_ops_search_ops),
+                                        onClose = {
+                                            appOpsSearchActive = false
+                                            appOpsSearchState.clearText()
+                                        },
+                                    )
+                                } else {
+                                    null
+                                },
+                            bottomBlurHeight = if (featureId == "App Ops") 130.dp else null,
                             onHelpClick =
                                 if (isStandbyMultiSelecting || (featureId == "Island" || featureId in ISLAND_SUB_PAGE_IDS)) {
                                     null

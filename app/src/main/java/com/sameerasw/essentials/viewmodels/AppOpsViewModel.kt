@@ -39,6 +39,7 @@ class AppOpsViewModel : ViewModel() {
     val showSystemApps = mutableStateOf(false)
 
     private var catalog: List<AppOpInfo> = emptyList()
+    private var opCodes: Map<String, Int> = emptyMap()
 
     fun load(context: Context) {
         val appContext = context.applicationContext
@@ -46,6 +47,7 @@ class AppOpsViewModel : ViewModel() {
             if (apps.value == null) {
                 val loaded = AppUtil.getInstalledApps(appContext, includeSelf = true)
                 catalog = withContext(Dispatchers.Default) { AppOpsCatalog.load() }
+                opCodes = catalog.filter { it.code >= 0 }.associate { it.name to it.code }
                 apps.value = loaded
                 ops.value = catalog
             }
@@ -76,7 +78,7 @@ class AppOpsViewModel : ViewModel() {
                                         AppOpsParser.batchCommand(chunk),
                                         notifyOnError = false,
                                     )
-                                output?.let(AppOpsParser::parseBatch).orEmpty()
+                                output?.let { AppOpsParser.parseBatch(it, opCodes) }.orEmpty()
                             }
                         }
                     }.awaitAll()
@@ -107,7 +109,7 @@ class AppOpsViewModel : ViewModel() {
             withContext(Dispatchers.IO) {
                 ShellUtils.runCommandWithOutput(context, AppOpsParser.batchCommand(listOf(packageName)), notifyOnError = false)
             } ?: return
-        val parsed = AppOpsParser.parseBatch(output)[packageName] ?: emptyMap()
+        val parsed = AppOpsParser.parseBatch(output, opCodes)[packageName] ?: emptyMap()
         entries.value = entries.value + (packageName to parsed)
     }
 

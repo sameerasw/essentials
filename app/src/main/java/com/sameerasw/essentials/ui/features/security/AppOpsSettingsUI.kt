@@ -37,8 +37,6 @@ import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.carousel.HorizontalMultiBrowseCarousel
@@ -48,14 +46,13 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
@@ -88,7 +85,8 @@ import com.sameerasw.essentials.viewmodels.MainViewModel
 @Composable
 fun AppOpsSettingsUI(
     mainViewModel: MainViewModel,
-    searchToggleSignal: Int,
+    query: String,
+    onPageChange: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
@@ -110,10 +108,6 @@ fun AppOpsSettingsUI(
     val isScanning = viewModel.isScanning.value
     val showSystemApps = viewModel.showSystemApps.value
 
-    var appsSearchOpen by rememberSaveable { mutableStateOf(false) }
-    var opsSearchOpen by rememberSaveable { mutableStateOf(false) }
-    var appsQuery by rememberSaveable { mutableStateOf("") }
-    var opsQuery by rememberSaveable { mutableStateOf("") }
     var expandedOp by rememberSaveable { mutableStateOf<String?>(null) }
     var selectedPackage by remember { mutableStateOf<String?>(null) }
     var pinnedOp by remember { mutableStateOf<String?>(null) }
@@ -121,24 +115,18 @@ fun AppOpsSettingsUI(
     var showPermissionSheet by remember { mutableStateOf(false) }
 
     val carouselState = rememberCarouselState { 2 }
+    val currentOnPageChange by rememberUpdatedState(onPageChange)
 
     LaunchedEffect(carouselState) {
         var isFirst = true
         snapshotFlow { carouselState.currentItem }.collect {
+            currentOnPageChange(it)
             if (isFirst) isFirst = false else HapticUtil.performHeavyHaptic(view)
         }
     }
 
-    LaunchedEffect(searchToggleSignal) {
-        if (searchToggleSignal == 0) return@LaunchedEffect
-        if (carouselState.currentItem == 0) {
-            appsSearchOpen = !appsSearchOpen
-            if (!appsSearchOpen) appsQuery = ""
-        } else {
-            opsSearchOpen = !opsSearchOpen
-            if (!opsSearchOpen) opsQuery = ""
-        }
-    }
+    val appsQuery = if (carouselState.currentItem == 0) query else ""
+    val opsQuery = if (carouselState.currentItem == 1) query else ""
 
     val visibleApps =
         remember(apps, showSystemApps) {
@@ -219,17 +207,6 @@ fun AppOpsSettingsUI(
                         color = MaterialTheme.colorScheme.onSurface,
                         modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
                     )
-                }
-
-                val searchOpen = if (page == 0) appsSearchOpen else opsSearchOpen
-                if (searchOpen) {
-                    item(key = "search") {
-                        AppOpsSearchField(
-                            query = if (page == 0) appsQuery else opsQuery,
-                            onQueryChange = { if (page == 0) appsQuery = it else opsQuery = it },
-                            modifier = Modifier.padding(vertical = 8.dp),
-                        )
-                    }
                 }
 
                 item(key = "filters") {
@@ -385,10 +362,7 @@ private fun LazyListScope.appsPage(
                         SingleLine(app.packageName, MaterialTheme.typography.bodySmall, MaterialTheme.colorScheme.onSurfaceVariant)
                     }
                     if (showCounts) {
-                        CountPill(
-                            text = "$allowed/${appEntries.size}",
-                            highlight = allowed < appEntries.size,
-                        )
+                        CountPill(text = "$allowed/${appEntries.size}")
                     }
                 }
             }
@@ -453,23 +427,19 @@ private fun LazyListScope.opsPage(
 }
 
 @Composable
-private fun CountPill(
-    text: String,
-    highlight: Boolean,
-) {
+private fun CountPill(text: String) {
     Box(
         modifier =
             Modifier
                 .clip(CircleShape)
-                .background(
-                    if (highlight) MaterialTheme.colorScheme.errorContainer else MaterialTheme.colorScheme.surfaceContainerHighest,
-                ).padding(horizontal = 10.dp, vertical = 4.dp),
+                .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+                .padding(horizontal = 10.dp, vertical = 4.dp),
     ) {
         Text(
             text = text,
             style = MaterialTheme.typography.labelMedium,
             fontWeight = FontWeight.Bold,
-            color = if (highlight) MaterialTheme.colorScheme.onErrorContainer else MaterialTheme.colorScheme.onSurfaceVariant,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
     }
 }
@@ -602,35 +572,6 @@ private fun SingleLine(
     color: androidx.compose.ui.graphics.Color,
 ) {
     Text(text = text, style = style, color = color, maxLines = 1, overflow = TextOverflow.Ellipsis)
-}
-
-@Composable
-private fun AppOpsSearchField(
-    query: String,
-    onQueryChange: (String) -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    val focusRequester = remember { FocusRequester() }
-    LaunchedEffect(Unit) { runCatching { focusRequester.requestFocus() } }
-    OutlinedTextField(
-        value = query,
-        onValueChange = onQueryChange,
-        modifier = modifier.fillMaxWidth().focusRequester(focusRequester),
-        placeholder = { TranslatableText(R.string.label_search) },
-        leadingIcon = {
-            Icon(
-                painter = painterResource(R.drawable.rounded_search_24),
-                contentDescription = stringResource(R.string.action_search),
-            )
-        },
-        singleLine = true,
-        shape = RoundedCornerShape(28.dp),
-        colors =
-            OutlinedTextFieldDefaults.colors(
-                focusedContainerColor = MaterialTheme.colorScheme.surfaceBright,
-                unfocusedContainerColor = MaterialTheme.colorScheme.surfaceBright,
-            ),
-    )
 }
 
 @Composable

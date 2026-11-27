@@ -54,6 +54,7 @@ data class AppOpInfo(
     val name: String,
     val permission: String?,
     val defaultMode: AppOpMode,
+    val code: Int = -1,
 ) {
     val label: String =
         name
@@ -179,7 +180,7 @@ object AppOpsCatalog {
                         .getOrNull()
                         ?.let(AppOpMode::fromCode)
                         ?: AppOpMode.DEFAULT
-                AppOpInfo(name, permission, defaultMode)
+                AppOpInfo(name, permission, defaultMode, code)
             }.distinctBy { it.name }
             .sortedBy { it.name }
     }
@@ -197,9 +198,9 @@ object AppOpsCatalog {
 object AppOpsParser {
     private const val PACKAGE_MARKER = "@@PKG "
     private val packageRegex = Regex("^[A-Za-z0-9_.]+$")
-    private val uidLineRegex = Regex("^Uid mode: ([A-Z][A-Z0-9_]+): ([a-z]+)")
+    private const val UID_PREFIX = "Uid mode: "
     private val opLineRegex = Regex("^([A-Z][A-Z0-9_]+): ([a-z]+)(.*)$")
-    private val timeRegex = Regex("time=\\+?([^;]+?)(?:\\s+ago)?\\s*(?:;|$)")
+    private val timeRegex = Regex("(?<![a-zA-Z])time=\\+?([^;]+?)(?:\\s+ago)?\\s*(?:;|$)")
 
     fun isValidPackage(packageName: String) = packageRegex.matches(packageName)
 
@@ -208,7 +209,10 @@ object AppOpsParser {
             .filter(::isValidPackage)
             .joinToString("; ") { "echo '$PACKAGE_MARKER$it'; appops get $it 2>/dev/null" }
 
-    fun parseBatch(output: String): Map<String, Map<String, AppOpEntry>> {
+    fun parseBatch(
+        output: String,
+        opCodes: Map<String, Int>,
+    ): Map<String, Map<String, AppOpEntry>> {
         val result = mutableMapOf<String, MutableList<String>>()
         var current: MutableList<String>? = null
         output.lineSequence().forEach { line ->
@@ -218,32 +222,48 @@ object AppOpsParser {
                 current?.add(line)
             }
         }
-        return result.mapValues { (_, lines) -> parse(lines) }
+        return result.mapValues { (_, lines) -> parse(lines, opCodes) }
     }
 
-    fun parse(lines: List<String>): Map<String, AppOpEntry> {
+    fun parse(
+        lines: List<String>,
+        opCodes: Map<String, Int>,
+    ): Map<String, AppOpEntry> {
         val entries = mutableMapOf<String, AppOpEntry>()
+        val uidOps = mutableSetOf<String>()
+        var inUidSection = false
+        var lastUidCode = -1
         lines.forEach { raw ->
             if (raw.isEmpty() || raw.first().isWhitespace()) return@forEach
-            val line = raw.trim()
-            uidLineRegex.find(line)?.let { match ->
-                val mode = AppOpMode.fromShell(match.groupValues[2]) ?: return@let
-                val op = match.groupValues[1]
-                entries[op] = AppOpEntry(op, mode, isUidMode = true, lastUsed = entries[op]?.lastUsed)
+            var line = raw.trim()
+            if (line.startsWith(UID_PREFIX)) {
+                inUidSection = true
+                line = line.removePrefix(UID_PREFIX)
+            }
+            val match = opLineRegex.find(line) ?: return@forEach
+            val op = match.groupValues[1]
+            val mode = AppOpMode.fromShell(match.groupValues[2]) ?: return@forEach
+            val rest = match.groupValues[3]
+            val code = opCodes[op]
+            if (inUidSection) {
+                val hasTiming = "time=" in rest || "duration=" in rest
+                val orderReset = code != null && lastUidCode >= 0 && code < lastUidCode
+                if (hasTiming || orderReset || op in uidOps) inUidSection = false
+            }
+            if (inUidSection) {
+                uidOps += op
+                if (code != null) lastUidCode = code
+                entries[op] = AppOpEntry(op, mode, isUidMode = true, lastUsed = null)
                 return@forEach
             }
-            opLineRegex.find(line)?.let { match ->
-                val op = match.groupValues[1]
-                val mode = AppOpMode.fromShell(match.groupValues[2]) ?: return@let
-                val lastUsed = timeRegex.find(match.groupValues[3])?.groupValues?.get(1)?.trim()
-                val existing = entries[op]
-                entries[op] =
-                    if (existing?.isUidMode == true && existing.mode != AppOpMode.DEFAULT) {
-                        existing.copy(lastUsed = lastUsed ?: existing.lastUsed)
-                    } else {
-                        AppOpEntry(op, mode, isUidMode = false, lastUsed = lastUsed)
-                    }
-            }
+            val lastUsed = timeRegex.find(rest)?.groupValues?.get(1)?.trim()
+            val existing = entries[op]
+            entries[op] =
+                if (existing?.isUidMode == true && existing.mode != AppOpMode.DEFAULT) {
+                    existing.copy(lastUsed = lastUsed ?: existing.lastUsed)
+                } else {
+                    AppOpEntry(op, mode, isUidMode = false, lastUsed = lastUsed)
+                }
         }
         return entries
     }
