@@ -17,7 +17,7 @@
     <string name="check_pre_releases_label">检查预览版更新</string>
     <string name="check_pre_releases_desc">可能不稳定</string>
     <string name="label_default_tab">默认标签页</string>
-    <string name="label_toolbar">Customize toolbar</string>
+    <string name="label_toolbar">自定义工具栏</string>
     <string name="toolbar_section_hidden">Hidden from toolbar</string>
     <string name="toolbar_hidden_hint">Drag items here to remove them from the toolbar. They will show up in the Essentials tab.</string>
     <string name="toolbar_show_tab_names">Show tab names</string>
@@ -92,7 +92,7 @@
     <string name="flashlight_options_title">闪光灯选项</string>
     <string name="flashlight_options_desc">调整渐变和其他设置</string>
     <string name="setting_pitch_black_theme_title">纯黑色主题</string>
-    <string name="setting_app_color_title">App color</string>
+    <string name="setting_app_color_title">应用颜色</string>
     <string name="setting_use_system_font_title">使用系统字体</string>
     <string name="app_color_variant_soft">Soft</string>
     <string name="app_color_variant_bright">Bright</string>
@@ -2003,7 +2003,7 @@
     <string name="btn_reset_onboarding">重置使用流程</string>
     <string name="btn_clear_search_history">清除搜尋紀錄</string>
     <string name="btn_reset_update_note">重置更新說明</string>
-    <string name="settings_section_customizations">個人化</string>
+    <string name="settings_section_customizations">个性化</string>
     <string name="perm_write_secure_instructions">此權限可以透過電腦使用 ADB 授予。複製 ADB 命令並在 shell 中執行。
 
 或者，你也可以使用下方按鈕透過 Shizuku 輕鬆授予。
