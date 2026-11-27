@@ -10,6 +10,7 @@
 
 package com.sameerasw.essentials.ui.core.cards
 
+import com.sameerasw.essentials.ui.theme.cardListItemColors
 import androidx.compose.animation.togetherWith
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.fadeIn
@@ -29,9 +30,8 @@ import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
-import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Switch
+import com.sameerasw.essentials.ui.core.controls.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.material3.ripple
@@ -238,9 +238,7 @@ fun IconToggleItem(
                     }
                     },
                     colors =
-                        ListItemDefaults.colors(
-                            containerColor = MaterialTheme.colorScheme.surfaceBright,
-                        ),
+                        cardListItemColors(),
                     content = {
                         Text(
                             text = title,
@@ -372,9 +370,7 @@ fun IconToggleItem(
                     }
                     },
                     colors =
-                        ListItemDefaults.colors(
-                            containerColor = MaterialTheme.colorScheme.surfaceBright,
-                        ),
+                        cardListItemColors(),
                     content = {
                         Text(
                             text = title,
@@ -421,9 +417,7 @@ fun IconToggleItem(
                     },
                 trailingContent = trailingContent,
                 colors =
-                    ListItemDefaults.colors(
-                        containerColor = MaterialTheme.colorScheme.surfaceBright,
-                    ),
+                    cardListItemColors(),
                 content = {
                     Text(
                         text = title,

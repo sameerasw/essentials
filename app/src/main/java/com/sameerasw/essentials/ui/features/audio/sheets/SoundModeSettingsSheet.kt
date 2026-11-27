@@ -98,7 +98,7 @@ fun SoundModeSettingsSheet(
                             Modifier
                                 .size(40.dp)
                                 .background(
-                                    color = ColorUtil.getPastelColorFor(infoTitle),
+                                    color = ColorUtil.iconContainerColor(infoTitle),
                                     shape = CircleShape,
                                 ),
                         contentAlignment = Alignment.Center,
@@ -106,7 +106,7 @@ fun SoundModeSettingsSheet(
                         Icon(
                             painter = painterResource(R.drawable.rounded_info_24),
                             contentDescription = null,
-                            tint = ColorUtil.getVibrantColorFor(infoTitle),
+                            tint = ColorUtil.iconTintColor(infoTitle),
                             modifier = Modifier.size(24.dp),
                         )
                     }

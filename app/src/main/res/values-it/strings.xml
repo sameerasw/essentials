@@ -1734,6 +1734,10 @@ con il ❤️ da 🇱🇰</string>
     <string name="feat_activity_launcher_title">Launcher attività</string>
     <string name="feat_activity_launcher_desc">Apri o fissa qualunque schermata app</string>
     <string name="haptic_mode_stronger">Più forte</string>
+    <string name="label_ui_design">UI design</string>
+    <string name="ui_design_expressive">Material Expressive</string>
+    <string name="ui_design_one_ui">OneUI inspired</string>
+    <string name="ui_design_experimental_info">Custom UI styles are experimental and might not be perfect</string>
     <string name="label_device_battery">Batteria</string>
     <string name="watch_complications_title">Complicazioni</string>
     <string name="watch_complications_desc">Personalizza widget delle Complicazioni</string>
@@ -1971,6 +1975,7 @@ con il ❤️ da 🇱🇰</string>
     <string name="tour_search_fab">Search anything in Essentials</string>
     <string name="tour_bug_report_fab">Something not right? Report a bug from here</string>
     <string name="tour_help_fab">Use this anytime for help</string>
+    <string name="tour_design_switch">Prefer the Material Expressive design? Switch in settings</string>
     <string name="action_reset_tour">Reset tour</string>
     <string name="tour_reset_toast">Tour reset</string>
     <string name="instruction_section_genai_title">IA Generativa sul dispositivo (Gemini Nano)</string>

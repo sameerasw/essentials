@@ -9,6 +9,13 @@
 
 package com.sameerasw.essentials.ui.components
 
+import com.sameerasw.essentials.ui.state.TourStep
+import com.sameerasw.essentials.ui.theme.fabContentColor
+import com.sameerasw.essentials.ui.theme.fabContainerColor
+import com.sameerasw.essentials.ui.theme.toolbarPillColor
+import com.sameerasw.essentials.ui.theme.toolbarSelectedContentColor
+import com.sameerasw.essentials.ui.theme.toolbarContentColor
+import com.sameerasw.essentials.ui.theme.toolbarContainerColor
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.CornerRadius
@@ -148,6 +155,7 @@ data class ToolbarItem(
     val onIconPlaced: ((Rect) -> Unit)? = null,
     val iconAlpha: (() -> Float)? = null,
     val iconSlot: (() -> Float)? = null,
+    val tourSteps: List<Pair<TourStep, Boolean>> = emptyList(),
 )
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class, ExperimentalSharedTransitionApi::class)
@@ -252,8 +260,8 @@ fun EssentialsFloatingToolbar(
                             HapticUtil.performUIHaptic(view)
                             onHelpClick()
                         },
-                        containerColor = MaterialTheme.colorScheme.primaryContainer,
-                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                        containerColor = fabContainerColor(),
+                        contentColor = fabContentColor(),
                         shape = MaterialTheme.shapes.large,
                         elevation = FloatingActionButtonDefaults.elevation(0.dp, 0.dp, 0.dp, 0.dp),
                     ) {
@@ -272,8 +280,8 @@ fun EssentialsFloatingToolbar(
                             HapticUtil.performUIHaptic(view)
                             fabAction()
                         },
-                        containerColor = MaterialTheme.colorScheme.primaryContainer,
-                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                        containerColor = fabContainerColor(),
+                        contentColor = fabContentColor(),
                         shape = MaterialTheme.shapes.large,
                         elevation = FloatingActionButtonDefaults.elevation(0.dp, 0.dp, 0.dp, 0.dp),
                     ) {
@@ -300,8 +308,8 @@ fun EssentialsFloatingToolbar(
         scrollBehavior = scrollBehavior,
         colors =
             FloatingToolbarDefaults.vibrantFloatingToolbarColors(
-                toolbarContentColor = MaterialTheme.colorScheme.onSurface,
-                toolbarContainerColor = MaterialTheme.colorScheme.primary,
+                toolbarContentColor = toolbarContentColor(),
+                toolbarContainerColor = toolbarContainerColor(),
             ),
         content = {
             SharedTransitionLayout {
@@ -381,8 +389,8 @@ fun EssentialsFloatingToolbar(
                                         .width(48.dp + (8.dp + titleWidth) * if (latestTitle != null) collapse else 0f),
                                 colors =
                                     IconButtonDefaults.filledIconButtonColors(
-                                        contentColor = MaterialTheme.colorScheme.primary,
-                                        containerColor = MaterialTheme.colorScheme.background,
+                                        contentColor = toolbarSelectedContentColor(),
+                                        containerColor = toolbarPillColor(),
                                     ),
                             ) {
                                 Icon(
@@ -444,7 +452,7 @@ fun EssentialsFloatingToolbar(
                                         TranslatableText(
                                             text = shownTitle ?: "",
                                             style = MaterialTheme.typography.titleMedium,
-                                            color = MaterialTheme.colorScheme.background,
+                                            color = toolbarContentColor(),
                                             maxLines = 1,
                                             textAlign = TextAlign.Center,
                                             modifier =
@@ -456,8 +464,8 @@ fun EssentialsFloatingToolbar(
                                     if (isBeta) {
                                         com.sameerasw.essentials.ui.core.cards.FeatureTagIcon(
                                             iconRes = R.drawable.rounded_science_24,
-                                            containerColor = MaterialTheme.colorScheme.background,
-                                            contentColor = MaterialTheme.colorScheme.primary,
+                                            containerColor = toolbarContentColor(),
+                                            contentColor = toolbarContainerColor(),
                                             contentDescription = stringResource(R.string.label_beta),
                                         )
                                     }
@@ -488,7 +496,7 @@ fun EssentialsFloatingToolbar(
                                 launch { pillRight.animateTo(targetRight, if (movingRight) lead else trail) }
                             }
 
-                            val pillColor = MaterialTheme.colorScheme.background
+                            val pillColor = toolbarPillColor()
                             var rowSize by remember { mutableStateOf(IntSize.Zero) }
                             var pillPosition by remember { mutableStateOf(Offset.Zero) }
                             Box(
@@ -572,139 +580,144 @@ fun EssentialsFloatingToolbar(
                                         }
 
                                     if (itemWidth > 0.dp || isSelected) {
-                                        IconButton(
-                                            onClick = {
-                                                HapticUtil.performVirtualKeyHaptic(view)
-                                                item.onClick()
-                                            },
+                                        Box(
                                             modifier =
-                                                Modifier
-                                                    .onPlaced { coords ->
-                                                        val x = coords.positionInParent().x
-                                                        itemBounds[index] = x to x + coords.size.width
-                                                    }
-                                                    .width(shownWidth)
-                                                    .height(48.dp),
-                                            colors =
-                                                IconButtonDefaults.iconButtonColors(
-                                                    contentColor = MaterialTheme.colorScheme.background,
-                                                    containerColor = Color.Transparent,
-                                                ),
+                                                Modifier.onPlaced { coords ->
+                                                    val x = coords.positionInParent().x
+                                                    itemBounds[index] = x to x + coords.size.width
+                                                },
                                         ) {
-                                            val tint =
-                                                lerp(
-                                                    MaterialTheme.colorScheme.background,
-                                                    MaterialTheme.colorScheme.primary,
-                                                    if (pillPlaced) pillCoverage(itemBounds[index], pillLeft.value, pillRight.value) else if (isSelected) 1f else 0f,
-                                                )
-                                            val labelShown = labelsActive && expanded && isSelected
-                                            val iconSlot = if (labelShown) item.iconSlot else null
-                                            Row(
-                                                verticalAlignment = Alignment.CenterVertically,
-                                                horizontalArrangement = Arrangement.Center,
-                                                modifier =
-                                                    when {
-                                                        iconSlot != null -> Modifier.padding(start = LABEL_END_PADDING, end = LABEL_END_PADDING)
-                                                        labelShown -> Modifier.padding(start = LABEL_START_PADDING, end = LABEL_END_PADDING)
-                                                        else -> Modifier
+                                            TourAnchor(*item.tourSteps.toTypedArray()) {
+                                                IconButton(
+                                                    onClick = {
+                                                        HapticUtil.performVirtualKeyHaptic(view)
+                                                        item.onClick()
                                                     },
-                                            ) {
-                                                Box(
                                                     modifier =
-                                                        if (iconSlot != null) {
-                                                            Modifier.layout { measurable, constraints ->
-                                                                val placeable = measurable.measure(constraints)
-                                                                val gap = (LABEL_START_PADDING - LABEL_END_PADDING).roundToPx()
-                                                                val width = ((placeable.width + gap) * iconSlot().coerceIn(0f, 1f)).roundToInt()
-                                                                layout(width, placeable.height) {
-                                                                    placeable.place(width - placeable.width, 0)
-                                                                }
-                                                            }
-                                                        } else {
-                                                            Modifier
-                                                        },
+                                                        Modifier
+                                                            .width(shownWidth)
+                                                            .height(48.dp),
+                                                    colors =
+                                                        IconButtonDefaults.iconButtonColors(
+                                                            contentColor = toolbarContentColor(),
+                                                            containerColor = Color.Transparent,
+                                                        ),
                                                 ) {
-                                                    AnimatedToolbarIcon(
-                                                        iconRes = if (isSelected && holdProgress.value > 0.5f) R.drawable.rounded_edit_24 else item.iconRes,
-                                                        contentDescription = stringResource(id = item.labelRes),
-                                                        tint = tint,
-                                                        selected = isSelected,
-                                                        effect = if (isSelected && holdProgress.value > 0.5f) null else item.effect,
+                                                    val tint =
+                                                        lerp(
+                                                            toolbarContentColor(),
+                                                            toolbarSelectedContentColor(),
+                                                            if (pillPlaced) pillCoverage(itemBounds[index], pillLeft.value, pillRight.value) else if (isSelected) 1f else 0f,
+                                                        )
+                                                    val labelShown = labelsActive && expanded && isSelected
+                                                    val iconSlot = if (labelShown) item.iconSlot else null
+                                                    Row(
+                                                        verticalAlignment = Alignment.CenterVertically,
+                                                        horizontalArrangement = Arrangement.Center,
                                                         modifier =
-                                                            Modifier
-                                                                .size(24.dp * item.iconScale)
-                                                                .then(
-                                                                    if (item.onIconPlaced != null) {
-                                                                        Modifier.onGloballyPositioned { item.onIconPlaced.invoke(Rect(it.positionInWindow(), it.size.toSize())) }
-                                                                    } else {
-                                                                        Modifier
-                                                                    },
-                                                                ).then(
-                                                                    if (item.iconAlpha != null) {
-                                                                        Modifier.graphicsLayer { alpha = item.iconAlpha.invoke() }
-                                                                    } else {
-                                                                        Modifier
-                                                                    },
-                                                                ),
-                                                    )
-                                                    if (item.badge != null) {
+                                                            when {
+                                                                iconSlot != null -> Modifier.padding(start = LABEL_END_PADDING, end = LABEL_END_PADDING)
+                                                                labelShown -> Modifier.padding(start = LABEL_START_PADDING, end = LABEL_END_PADDING)
+                                                                else -> Modifier
+                                                            },
+                                                    ) {
                                                         Box(
                                                             modifier =
-                                                                Modifier
-                                                                    .align(Alignment.TopEnd)
-                                                                    .offset(x = 7.dp, y = (-7).dp),
-                                                        ) {
-                                                            item.badge.invoke()
-                                                        }
-                                                    }
-                                                }
-                                                if (labelShown) {
-                                                    Box(
-                                                        modifier =
-                                                            Modifier
-                                                                .weight(1f, fill = false)
-                                                                .graphicsLayer { compositingStrategy = CompositingStrategy.Offscreen }
-                                                                .drawWithContent {
-                                                                    drawContent()
-                                                                    val fade = LABEL_FADE.toPx() / size.width
-                                                                    drawRect(
-                                                                        brush =
-                                                                            Brush.horizontalGradient(
-                                                                                0f to Color.Transparent,
-                                                                                fade to Color.Black,
-                                                                                1f - fade to Color.Black,
-                                                                                1f to Color.Transparent,
-                                                                            ),
-                                                                        blendMode = BlendMode.DstIn,
-                                                                    )
+                                                                if (iconSlot != null) {
+                                                                    Modifier.layout { measurable, constraints ->
+                                                                        val placeable = measurable.measure(constraints)
+                                                                        val gap = (LABEL_START_PADDING - LABEL_END_PADDING).roundToPx()
+                                                                        val width = ((placeable.width + gap) * iconSlot().coerceIn(0f, 1f)).roundToInt()
+                                                                        layout(width, placeable.height) {
+                                                                            placeable.place(width - placeable.width, 0)
+                                                                        }
+                                                                    }
+                                                                } else {
+                                                                    Modifier
                                                                 },
-                                                    ) {
-                                                        AnimatedContent(
-                                                            targetState = if (holdProgress.value > 0.5f) R.string.action_customize else item.labelRes,
-                                                            transitionSpec = {
-                                                                (fadeIn() + slideInVertically { it / 2 }) togetherWith
-                                                                    (fadeOut() + slideOutVertically { -it / 2 }) using SizeTransform(clip = false)
-                                                            },
-                                                            contentAlignment = Alignment.CenterStart,
-                                                            label = "toolbar_item_label",
-                                                        ) { labelRes ->
-                                                            Text(
-                                                                text = stringResource(id = labelRes),
-                                                                style = labelStyle,
-                                                                color = tint,
-                                                                maxLines = 1,
-                                                                softWrap = false,
+                                                        ) {
+                                                            AnimatedToolbarIcon(
+                                                                iconRes = if (isSelected && holdProgress.value > 0.5f) R.drawable.rounded_edit_24 else item.iconRes,
+                                                                contentDescription = stringResource(id = item.labelRes),
+                                                                tint = tint,
+                                                                selected = isSelected,
+                                                                effect = if (isSelected && holdProgress.value > 0.5f) null else item.effect,
                                                                 modifier =
                                                                     Modifier
-                                                                        .basicMarquee(iterations = Int.MAX_VALUE)
-                                                                        .padding(horizontal = LABEL_FADE),
+                                                                        .size(24.dp * item.iconScale)
+                                                                        .then(
+                                                                            if (item.onIconPlaced != null) {
+                                                                                Modifier.onGloballyPositioned { item.onIconPlaced.invoke(Rect(it.positionInWindow(), it.size.toSize())) }
+                                                                            } else {
+                                                                                Modifier
+                                                                            },
+                                                                        ).then(
+                                                                            if (item.iconAlpha != null) {
+                                                                                Modifier.graphicsLayer { alpha = item.iconAlpha.invoke() }
+                                                                            } else {
+                                                                                Modifier
+                                                                            },
+                                                                        ),
                                                             )
+                                                            if (item.badge != null) {
+                                                                Box(
+                                                                    modifier =
+                                                                        Modifier
+                                                                            .align(Alignment.TopEnd)
+                                                                            .offset(x = 7.dp, y = (-7).dp),
+                                                                ) {
+                                                                    item.badge.invoke()
+                                                                }
+                                                            }
+                                                        }
+                                                        if (labelShown) {
+                                                            Box(
+                                                                modifier =
+                                                                    Modifier
+                                                                        .weight(1f, fill = false)
+                                                                        .graphicsLayer { compositingStrategy = CompositingStrategy.Offscreen }
+                                                                        .drawWithContent {
+                                                                            drawContent()
+                                                                            val fade = LABEL_FADE.toPx() / size.width
+                                                                            drawRect(
+                                                                                brush =
+                                                                                    Brush.horizontalGradient(
+                                                                                        0f to Color.Transparent,
+                                                                                        fade to Color.Black,
+                                                                                        1f - fade to Color.Black,
+                                                                                        1f to Color.Transparent,
+                                                                                    ),
+                                                                                blendMode = BlendMode.DstIn,
+                                                                            )
+                                                                        },
+                                                            ) {
+                                                                AnimatedContent(
+                                                                    targetState = if (holdProgress.value > 0.5f) R.string.action_customize else item.labelRes,
+                                                                    transitionSpec = {
+                                                                        (fadeIn() + slideInVertically { it / 2 }) togetherWith
+                                                                            (fadeOut() + slideOutVertically { -it / 2 }) using SizeTransform(clip = false)
+                                                                    },
+                                                                    contentAlignment = Alignment.CenterStart,
+                                                                    label = "toolbar_item_label",
+                                                                ) { labelRes ->
+                                                                    Text(
+                                                                        text = stringResource(id = labelRes),
+                                                                        style = labelStyle,
+                                                                        color = tint,
+                                                                        maxLines = 1,
+                                                                        softWrap = false,
+                                                                        modifier =
+                                                                            Modifier
+                                                                                .basicMarquee(iterations = Int.MAX_VALUE)
+                                                                                .padding(horizontal = LABEL_FADE),
+                                                                    )
+                                                                }
+                                                            }
                                                         }
                                                     }
                                                 }
                                             }
                                         }
-
                                         // Animated spacing between buttons
                                         if (index < items.size - 1) {
                                             Spacer(modifier = Modifier.width(spacerWidth * (1f - holdProgress.value)))

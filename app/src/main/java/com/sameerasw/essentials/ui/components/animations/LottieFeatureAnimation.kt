@@ -9,13 +9,13 @@
 
 package com.sameerasw.essentials.ui.components.animations
 
+import com.sameerasw.essentials.ui.theme.accentColor
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -43,7 +43,7 @@ fun LottieFeatureAnimation(
         iterations = LottieConstants.IterateForever,
     )
 
-    val primaryColor = MaterialTheme.colorScheme.primary
+    val primaryColor = accentColor()
     val aspect =
         composition?.let { it.bounds.width().toFloat() / it.bounds.height().toFloat() } ?: 1f
 

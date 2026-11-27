@@ -1719,6 +1719,10 @@ Réinitialiser permet d\'effacer les valeurs personnalisées et le système gér
     <string name="feat_allow_overlays_in_settings_desc">Permets aux applications d\'ajouter un/des overlays par dessus les paramètres système</string>
     <string name="app_icon_default">Par défaut</string>
     <string name="haptic_mode_stronger">Très fort</string>
+    <string name="label_ui_design">UI design</string>
+    <string name="ui_design_expressive">Material Expressive</string>
+    <string name="ui_design_one_ui">OneUI inspired</string>
+    <string name="ui_design_experimental_info">Custom UI styles are experimental and might not be perfect</string>
     <string name="conscious_gate_enable_title">Activer la barrière de conscience</string>
     <string name="conscious_gate_select_apps_title">Sélectionnez les applications</string>
     <string name="conscious_gate_select_apps_desc">Choisissez quels applications vont devoir afficher un écran d\'une barrière de conscience avant leurs ouvertures.</string>
@@ -2006,6 +2010,7 @@ Les effets de la LED HiLight peuvent être aussi utilisés comme une action dans
     <string name="tour_search_fab">Search anything in Essentials</string>
     <string name="tour_bug_report_fab">Something not right? Report a bug from here</string>
     <string name="tour_help_fab">Use this anytime for help</string>
+    <string name="tour_design_switch">Prefer the Material Expressive design? Switch in settings</string>
     <string name="action_reset_tour">Reset tour</string>
     <string name="tour_reset_toast">Tour reset</string>
 </resources>

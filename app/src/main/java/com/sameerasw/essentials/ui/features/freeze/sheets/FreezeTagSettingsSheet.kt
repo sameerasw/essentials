@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials.ui.core.sheets
 
+import com.sameerasw.essentials.ui.theme.cardListItemColors
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -23,7 +24,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -168,9 +168,7 @@ fun FreezeTagSettingsSheet(
                                 )
                             },
                             colors =
-                                ListItemDefaults.colors(
-                                    containerColor = MaterialTheme.colorScheme.surfaceBright,
-                                ),
+                                cardListItemColors(),
                             modifier =
                                 Modifier
                                     .fillMaxWidth()

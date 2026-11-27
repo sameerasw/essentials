@@ -1123,6 +1123,7 @@ fun SetupFeatures(
                                 sectionFeatures.forEach { feature ->
                                     TourAnchor(TourStep.FEATURE_ITEM to (feature.id == "Display" && AppTour.homeTab == DIYTabs.ESSENTIALS)) {
                                         FeatureCard(
+                                            oneUiAppIcon = true,
                                             title = feature.title,
                                             isSelected = feature.id in LocalSelectedFeatureIds.current,
                                             isEnabled = feature.isEnabled(viewModel),
@@ -1204,6 +1205,7 @@ fun SetupFeatures(
                                 val activeModeCount = activeModeIds.size
                                 hiddenTabs.forEach { tab ->
                                     FeatureCard(
+                                        oneUiAppIcon = true,
                                         title = tab.displayTitle,
                                         description =
                                             when (tab) {
@@ -1352,6 +1354,7 @@ private fun RecentSearchesSection(
         ) {
             validSearches.forEach { result ->
                 FeatureCard(
+                    oneUiAppIcon = true,
                     title = result.title,
                     isSelected = result.featureKey in LocalSelectedFeatureIds.current,
                     isEnabled = true,
@@ -1500,6 +1503,7 @@ private fun SearchResultsSection(
                 ) {
                     for (result in visibleResults) {
                         FeatureCard(
+                            oneUiAppIcon = true,
                             title = result.title,
                             isSelected = result.featureKey in LocalSelectedFeatureIds.current,
                             isEnabled = true,

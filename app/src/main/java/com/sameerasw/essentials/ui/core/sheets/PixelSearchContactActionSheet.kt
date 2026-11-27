@@ -92,7 +92,7 @@ fun PixelSearchContactActionSheet(
                             Modifier
                                 .size(52.dp)
                                 .background(
-                                    color = ColorUtil.getPastelColorFor(contactItem.name),
+                                    color = ColorUtil.iconContainerColor(contactItem.name),
                                     shape = CircleShape,
                                 ),
                         contentAlignment = Alignment.Center,

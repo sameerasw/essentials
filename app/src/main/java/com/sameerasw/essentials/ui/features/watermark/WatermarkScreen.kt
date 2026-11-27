@@ -9,6 +9,8 @@
 
 package com.sameerasw.essentials.ui.composables.watermark
 
+import com.sameerasw.essentials.ui.theme.fabContentColor
+import com.sameerasw.essentials.ui.theme.fabContainerColor
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.ActivityInfo
@@ -175,8 +177,8 @@ fun WatermarkScreen(
                         showEditSheet = true
                     },
                     modifier = Modifier.padding(bottom = 16.dp, end = 16.dp),
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                    containerColor = fabContainerColor(),
+                    contentColor = fabContentColor(),
                     elevation =
                         androidx.compose.material3.FloatingActionButtonDefaults.elevation(
                             0.dp,

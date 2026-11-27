@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials.ui.features.apps.sheets
 
+import com.sameerasw.essentials.ui.theme.cardListItemColors
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -18,7 +19,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.ListItem
-import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.runtime.Composable
@@ -97,9 +97,7 @@ fun StandbyAppsMoveSheet(
                                 )
                             },
                             colors =
-                                ListItemDefaults.colors(
-                                    containerColor = MaterialTheme.colorScheme.surfaceBright,
-                                ),
+                                cardListItemColors(),
                             contentPadding =
                                 PaddingValues(
                                     horizontal = 16.dp,

@@ -1858,6 +1858,10 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="settings_genai_automation_title">Activar el uso de GenAI</string>
     <string name="label_ripple_animation">Animación de onda</string>
     <string name="haptic_mode_stronger">Fuerte</string>
+    <string name="label_ui_design">UI design</string>
+    <string name="ui_design_expressive">Material Expressive</string>
+    <string name="ui_design_one_ui">OneUI inspired</string>
+    <string name="ui_design_experimental_info">Custom UI styles are experimental and might not be perfect</string>
     <string name="notification_lighting_sweep_select_shapes_title">Formas</string>
     <string name="notification_lighting_sweep_select_shapes_desc">Elija qué formas se utilizan en la animación de barrido</string>
     <string name="feat_aod_wallpaper_extended_media">Mostrar información de reproducción</string>
@@ -2222,6 +2226,7 @@ Consejos: Las palabras clave solo se expanden al comienzo de una palabra, por lo
     <string name="tour_search_fab">Search anything in Essentials</string>
     <string name="tour_bug_report_fab">Something not right? Report a bug from here</string>
     <string name="tour_help_fab">Use this anytime for help</string>
+    <string name="tour_design_switch">Prefer the Material Expressive design? Switch in settings</string>
     <string name="action_reset_tour">Reset tour</string>
     <string name="tour_reset_toast">Tour reset</string>
     <string name="label_top_contributors">Contribuidores, Gracias! </string>

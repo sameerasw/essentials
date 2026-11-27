@@ -26,12 +26,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.text.font.FontFamily
 import com.materialkolor.PaletteStyle
 import com.materialkolor.dynamicColorScheme
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import androidx.compose.ui.platform.LocalHapticFeedback
+import com.sameerasw.essentials.utils.DeviceUtils
 import com.sameerasw.essentials.utils.HapticUtil
 import androidx.compose.ui.platform.LocalContext
 
@@ -57,6 +60,60 @@ private fun ColorScheme.asPitchBlack(): ColorScheme =
         surfaceContainerLowest = Color.Black,
         surfaceContainerLow = Color.Black,
     )
+
+private fun Color.monochrome(): Color {
+    val gray = 0.2126f * red + 0.7152f * green + 0.0722f * blue
+    return Color(gray, gray, gray, alpha)
+}
+
+private fun ColorScheme.asMonochromeSurfaces(darkTheme: Boolean): ColorScheme =
+    copy(
+        background = if (darkTheme) background.monochrome() else surfaceContainer,
+        surface = if (darkTheme) surface.monochrome() else surfaceContainer,
+        surfaceDim = surfaceDim.monochrome(),
+        surfaceBright =
+            if (darkTheme) {
+                lerp(surfaceBright.monochrome(), primary, 0.08f)
+            } else {
+                lerp(surfaceContainerLowest.monochrome(), primary, 0.02f)
+            },
+        surfaceContainerLowest = surfaceContainerLowest.monochrome(),
+        surfaceContainerLow = surfaceContainerLow.monochrome(),
+        surfaceContainer = surfaceContainer.monochrome(),
+        surfaceContainerHigh = surfaceContainerHigh.monochrome(),
+        surfaceContainerHighest = surfaceContainerHighest.monochrome(),
+        surfaceVariant = surfaceVariant.monochrome(),
+        surfaceTint = surfaceTint.monochrome(),
+        inverseSurface = inverseSurface.monochrome(),
+        outline = outline.monochrome(),
+        outlineVariant = outlineVariant.monochrome(),
+        onBackground = onBackground.monochrome(),
+        onSurface = onSurface.monochrome(),
+        onSurfaceVariant = onSurfaceVariant.monochrome(),
+        inverseOnSurface = inverseOnSurface.monochrome(),
+    )
+
+val LocalBlurEnabled = staticCompositionLocalOf { false }
+
+@Composable
+private fun rememberBlurEnabled(): Boolean {
+    val context = LocalContext.current
+    val prefs = remember { context.getSharedPreferences(SettingsRepository.PREFS_NAME, Context.MODE_PRIVATE) }
+    fun read() =
+        prefs.getBoolean(SettingsRepository.KEY_USE_BLUR, true) &&
+            !DeviceUtils.isBlurProblematicDevice() &&
+            !DeviceUtils.isPowerSaveMode(context)
+    var enabled by remember { mutableStateOf(read()) }
+    DisposableEffect(prefs) {
+        val listener =
+            SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
+                if (key == SettingsRepository.KEY_USE_BLUR) enabled = read()
+            }
+        prefs.registerOnSharedPreferenceChangeListener(listener)
+        onDispose { prefs.unregisterOnSharedPreferenceChangeListener(listener) }
+    }
+    return enabled
+}
 
 @Composable
 private fun rememberAppColor(): Pair<Int, PaletteStyle> {
@@ -88,7 +145,10 @@ fun EssentialsTheme(
 ) {
     val (seed, style) = rememberAppColor()
     SystemFontState.init(LocalContext.current)
+    UiDesignState.init(LocalContext.current)
     val useSystemFont = SystemFontState.enabled
+    val uiDesign = UiDesignState.resolved
+    val blurEnabled = rememberBlurEnabled()
     val baseScheme =
         when {
             dynamicColor && seed != 0 ->
@@ -108,10 +168,16 @@ fun EssentialsTheme(
             darkTheme -> DarkColorScheme
             else -> LightColorScheme
         }
-    val colorScheme = if (darkTheme && pitchBlackTheme) baseScheme.asPitchBlack() else baseScheme
+    val designScheme = if (uiDesign == UiDesign.ONE_UI) baseScheme.asMonochromeSurfaces(darkTheme) else baseScheme
+    val colorScheme =
+        if (darkTheme && pitchBlackTheme) designScheme.asPitchBlack() else designScheme
 
     val gatedHaptics = HapticUtil.gate(LocalContext.current, LocalHapticFeedback.current)
-    CompositionLocalProvider(LocalHapticFeedback provides gatedHaptics) {
+    CompositionLocalProvider(
+        LocalHapticFeedback provides gatedHaptics,
+        LocalUiDesign provides uiDesign,
+        LocalBlurEnabled provides blurEnabled,
+    ) {
         MaterialTheme(
             colorScheme = colorScheme,
             typography = if (useSystemFont) Typography.withFontFamily(FontFamily.Default) else Typography,
