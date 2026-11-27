@@ -625,47 +625,17 @@ fun SettingsContent(
                 onIconSelectedWithPosition = onAppIconSelectedWithPosition,
             )
 
-            val appLanguage by viewModel.appLanguage
-            LanguagePicker(
-                selectedLanguageCode = appLanguage,
-                onLanguageSelected = { viewModel.setAppLanguage(it) },
+            val appColorSeed by viewModel.appColorSeed
+            val appColorStyle by viewModel.appColorStyle
+            val appColorVariant by viewModel.appColorVariant
+            AppColorPicker(
+                selectedSeed = appColorSeed,
+                selectedStyle = appColorStyle,
+                selectedVariant = appColorVariant,
+                onVariantSelected = { viewModel.setAppColorVariant(it) },
+                onSelected = { seed, style -> viewModel.setAppColor(seed, style) },
+                onSelectedWithPosition = onAppColorSelectedWithPosition,
             )
-
-            IconToggleItem(
-                iconRes = R.drawable.rounded_bottom_navigation_24,
-                title = stringResource(R.string.label_toolbar),
-                showToggle = false,
-                onClick = {
-                    showToolbarConfigSheet = true
-                },
-            )
-
-            val hapticModeLabels = mapOf(
-                AppHapticMode.DISABLED to stringResource(R.string.haptic_mode_disabled),
-                AppHapticMode.ENABLED to stringResource(R.string.haptic_mode_enabled),
-                AppHapticMode.STRONGER to stringResource(R.string.haptic_mode_stronger),
-            )
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(MaterialTheme.colorScheme.surfaceBright, MaterialTheme.shapes.extraSmall)
-                    .padding(top = 12.dp),
-            ) {
-                TranslatableText(
-                    stringResId = R.string.label_haptics_title,
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier.padding(horizontal = 16.dp),
-                )
-                SegmentedPicker(
-                    items = AppHapticMode.entries,
-                    selectedItem = hapticMode,
-                    onItemSelected = { HapticUtil.saveHapticMode(context, it) },
-                    labelProvider = { hapticModeLabels.getValue(it) },
-                    modifier = Modifier.fillMaxWidth(),
-                    title = stringResource(R.string.label_haptic_feedback),
-                )
-            }
 
             val uiDesignLabels = mapOf(
                 UiDesign.AUTO to stringResource(R.string.label_auto),
@@ -689,18 +659,6 @@ fun SettingsContent(
                 }
             }
 
-            val appColorSeed by viewModel.appColorSeed
-            val appColorStyle by viewModel.appColorStyle
-            val appColorVariant by viewModel.appColorVariant
-            AppColorPicker(
-                selectedSeed = appColorSeed,
-                selectedStyle = appColorStyle,
-                selectedVariant = appColorVariant,
-                onVariantSelected = { viewModel.setAppColorVariant(it) },
-                onSelected = { seed, style -> viewModel.setAppColor(seed, style) },
-                onSelectedWithPosition = onAppColorSelectedWithPosition,
-            )
-
             IconToggleItem(
                 iconRes = R.drawable.rounded_format_size_24,
                 title = stringResource(R.string.setting_use_system_font_title),
@@ -714,6 +672,16 @@ fun SettingsContent(
                 isChecked = viewModel.isPitchBlackThemeEnabled.value,
                 onCheckedChange = { viewModel.setPitchBlackThemeEnabled(it, context) },
             )
+
+            IconToggleItem(
+                iconRes = R.drawable.rounded_bottom_navigation_24,
+                title = stringResource(R.string.label_toolbar),
+                showToggle = false,
+                onClick = {
+                    showToolbarConfigSheet = true
+                },
+            )
+
             val isBlurProblematic = remember { DeviceUtils.isBlurProblematicDevice() }
 
             IconToggleItem(
@@ -761,18 +729,37 @@ fun SettingsContent(
                 )
             }
 
-            IconToggleItem(
-                iconRes = R.drawable.rounded_music_video_24,
-                title = stringResource(R.string.label_online_help_media),
-                isChecked = viewModel.isOnlineHelpMediaEnabled.value,
-                onCheckedChange = { viewModel.setOnlineHelpMediaEnabled(it, context) },
+            val hapticModeLabels = mapOf(
+                AppHapticMode.DISABLED to stringResource(R.string.haptic_mode_disabled),
+                AppHapticMode.ENABLED to stringResource(R.string.haptic_mode_enabled),
+                AppHapticMode.STRONGER to stringResource(R.string.haptic_mode_stronger),
             )
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.surfaceBright, MaterialTheme.shapes.extraSmall)
+                    .padding(top = 12.dp),
+            ) {
+                TranslatableText(
+                    stringResId = R.string.label_haptics_title,
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                )
+                SegmentedPicker(
+                    items = AppHapticMode.entries,
+                    selectedItem = hapticMode,
+                    onItemSelected = { HapticUtil.saveHapticMode(context, it) },
+                    labelProvider = { hapticModeLabels.getValue(it) },
+                    modifier = Modifier.fillMaxWidth(),
+                    title = stringResource(R.string.label_haptic_feedback),
+                )
+            }
 
-            IconToggleItem(
-                iconRes = R.drawable.rounded_mobile_vibrate_24,
-                title = stringResource(R.string.label_shake_for_help),
-                isChecked = viewModel.isShakeForHelpEnabled.value,
-                onCheckedChange = { viewModel.setShakeForHelpEnabled(it, context) },
+            val appLanguage by viewModel.appLanguage
+            LanguagePicker(
+                selectedLanguageCode = appLanguage,
+                onLanguageSelected = { viewModel.setAppLanguage(it) },
             )
         }
 
@@ -1070,6 +1057,20 @@ fun SettingsContent(
         )
 
         RoundedCardContainer {
+            IconToggleItem(
+                iconRes = R.drawable.rounded_music_video_24,
+                title = stringResource(R.string.label_online_help_media),
+                isChecked = viewModel.isOnlineHelpMediaEnabled.value,
+                onCheckedChange = { viewModel.setOnlineHelpMediaEnabled(it, context) },
+            )
+
+            IconToggleItem(
+                iconRes = R.drawable.rounded_mobile_vibrate_24,
+                title = stringResource(R.string.label_shake_for_help),
+                isChecked = viewModel.isShakeForHelpEnabled.value,
+                onCheckedChange = { viewModel.setShakeForHelpEnabled(it, context) },
+            )
+
             CrashReportingPicker(
                 selectedMode = sentryMode,
                 onModeSelected = { viewModel.setSentryReportMode(it, context) },
