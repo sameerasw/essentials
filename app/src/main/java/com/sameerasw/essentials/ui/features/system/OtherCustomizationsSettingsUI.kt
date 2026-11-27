@@ -231,7 +231,7 @@ fun OtherCustomizationsSettingsUI(
                     }
                 },
                 iconRes = R.drawable.rounded_mobile_rotate_24,
-                modifier = Modifier.highlight(highlightSetting == "disable_rotation_suggestion_toggle"),
+                modifier = Modifier.highlight("disable_rotation_suggestion_toggle", highlightSetting),
             )
 
             IconToggleItem(
@@ -258,7 +258,7 @@ fun OtherCustomizationsSettingsUI(
                     }
                 },
                 iconRes = R.drawable.rounded_security_24,
-                modifier = Modifier.highlight(highlightSetting == "allow_overlays_in_settings_toggle"),
+                modifier = Modifier.highlight("allow_overlays_in_settings_toggle", highlightSetting),
             )
         }
 
@@ -292,7 +292,7 @@ fun OtherCustomizationsSettingsUI(
                     }
                 },
                 iconRes = R.drawable.rounded_memory_alt_24,
-                modifier = Modifier.highlight(highlightSetting == "prefer_gpu_composing_toggle"),
+                modifier = Modifier.highlight("prefer_gpu_composing_toggle", highlightSetting),
             )
         }
     }

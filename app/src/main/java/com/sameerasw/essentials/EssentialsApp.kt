@@ -53,6 +53,7 @@ class EssentialsApp : Application() {
         context = applicationContext
         UiDesignState.applyFirstRunDefaults(this)
         com.sameerasw.essentials.ui.theme.SystemFontState.init(this)
+        com.sameerasw.essentials.ui.state.WhatsNewState.init(this)
         com.sameerasw.essentials.utils.HapticUtil.initialize(this)
 
         try {

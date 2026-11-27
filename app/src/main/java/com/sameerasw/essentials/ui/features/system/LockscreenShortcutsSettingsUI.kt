@@ -126,7 +126,7 @@ fun LockscreenShortcutsSettingsUI(
                 onCheckedChange = { viewModel.setLockscreenShortcutsEnabled(it) },
                 enabled = isEnabled || systemState != SystemShortcutsState.PRESENT,
                 onDisabledClick = { Toast.makeText(context, statusText, Toast.LENGTH_LONG).show() },
-                modifier = Modifier.highlight(highlightSetting == "enable_lockscreen_shortcuts"),
+                modifier = Modifier.highlight("enable_lockscreen_shortcuts", highlightSetting),
             )
         }
 

@@ -10,7 +10,9 @@
 package com.sameerasw.essentials
 
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.domain.registry.WhatsNewRegistry
 import com.sameerasw.essentials.translation.TranslatableText
+import com.sameerasw.essentials.ui.modifiers.whatsNewSetting
 import com.sameerasw.essentials.ui.navigation.AppRoutes
 import com.sameerasw.essentials.BuildConfig
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -133,6 +135,7 @@ import com.sameerasw.essentials.ui.modifiers.BlurDirection
 import com.sameerasw.essentials.ui.modifiers.liquidRipple
 import com.sameerasw.essentials.ui.modifiers.progressiveBlur
 import com.sameerasw.essentials.ui.modifiers.scrollMotionBlur
+import com.sameerasw.essentials.ui.state.WhatsNewState
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
 import com.sameerasw.essentials.ui.theme.Shapes
 import com.sameerasw.essentials.utils.DeviceUtils
@@ -623,6 +626,7 @@ fun SettingsContent(
                 selectedIcon = selectedAppIcon,
                 onIconSelected = { viewModel.setAppIcon(it, context) },
                 onIconSelectedWithPosition = onAppIconSelectedWithPosition,
+                modifier = Modifier.whatsNewSetting("app_icon", WhatsNewRegistry.SETTINGS),
             )
 
             val appColorSeed by viewModel.appColorSeed
@@ -635,6 +639,7 @@ fun SettingsContent(
                 onVariantSelected = { viewModel.setAppColorVariant(it) },
                 onSelected = { seed, style -> viewModel.setAppColor(seed, style) },
                 onSelectedWithPosition = onAppColorSelectedWithPosition,
+                modifier = Modifier.whatsNewSetting("app_color", WhatsNewRegistry.SETTINGS),
             )
 
             val uiDesignLabels = mapOf(
@@ -647,6 +652,7 @@ fun SettingsContent(
                 iconRes = R.drawable.rounded_styler_24,
                 selectedValue = uiDesignLabels.getValue(UiDesignState.selected),
                 infoText = stringResource(R.string.ui_design_experimental_info),
+                modifier = Modifier.whatsNewSetting("ui_design", WhatsNewRegistry.SETTINGS),
             ) {
                 UiDesign.entries.forEach { design ->
                     SegmentedDropdownMenuItem(
@@ -664,6 +670,7 @@ fun SettingsContent(
                 title = stringResource(R.string.setting_use_system_font_title),
                 isChecked = viewModel.useSystemFont.value,
                 onCheckedChange = { viewModel.setUseSystemFont(it) },
+                modifier = Modifier.whatsNewSetting("system_font", WhatsNewRegistry.SETTINGS),
             )
 
             IconToggleItem(
@@ -680,6 +687,7 @@ fun SettingsContent(
                 onClick = {
                     showToolbarConfigSheet = true
                 },
+                modifier = Modifier.whatsNewSetting("toolbar", WhatsNewRegistry.SETTINGS),
             )
 
             val isBlurProblematic = remember { DeviceUtils.isBlurProblematicDevice() }
@@ -1408,6 +1416,13 @@ fun SettingsContent(
 
             RoundedCardContainer {
                 com.sameerasw.essentials.ui.features.system.AutoBackupSetting()
+
+                IconToggleItem(
+                    iconRes = R.drawable.rounded_celebration_24,
+                    title = stringResource(R.string.setting_show_whats_new_title),
+                    isChecked = WhatsNewState.enabled,
+                    onCheckedChange = { SettingsRepository(context).putBoolean(SettingsRepository.KEY_SHOW_WHATS_NEW, it) },
+                )
 
                 Column(
                     modifier =

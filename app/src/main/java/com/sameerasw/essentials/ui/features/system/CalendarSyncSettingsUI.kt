@@ -95,7 +95,7 @@ fun CalendarSyncSettingsUI(
                 isChecked = isPeriodicEnabled,
                 onCheckedChange = { viewModel.setCalendarSyncPeriodicEnabled(it, context) },
                 enabled = isEnabled,
-                modifier = Modifier.highlight(highlightKey == "periodic_sync"),
+                modifier = Modifier.highlight("periodic_sync", highlightKey),
             )
 
             IconToggleItem(
@@ -112,7 +112,7 @@ fun CalendarSyncSettingsUI(
                 },
                 enabled = isEnabled,
                 showToggle = false,
-                modifier = Modifier.highlight(highlightKey == "sync_now"),
+                modifier = Modifier.highlight("sync_now", highlightKey),
             )
         }
 

@@ -36,6 +36,7 @@ import com.sameerasw.essentials.island.plugins.starlink.StarlinkSpeedFormat
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.pickers.SegmentedPicker
 import com.sameerasw.essentials.ui.core.sheets.EssentialsBottomSheet
+import com.sameerasw.essentials.ui.modifiers.whatsNewSetting
 import com.sameerasw.essentials.utils.HapticUtil
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -103,6 +104,7 @@ fun IslandStarlinkOptionsBottomSheet(
                         statusColor = it
                         settings.putBoolean(SettingsRepository.KEY_ISLAND_STARLINK_STATUS_COLOR, it)
                     },
+                    modifier = Modifier.whatsNewSetting(SettingsRepository.KEY_ISLAND_STARLINK_STATUS_COLOR),
                 )
                 AnimatedVisibility(
                     visible = showInCompact,

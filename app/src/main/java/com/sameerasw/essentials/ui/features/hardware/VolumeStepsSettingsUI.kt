@@ -52,7 +52,7 @@ fun VolumeStepsSettingsUI(
                 isChecked = viewModel.isVolumeStepsEnabled.value,
                 onCheckedChange = { viewModel.setVolumeStepsEnabled(it) },
                 enabled = viewModel.isAccessibilityEnabled.value,
-                modifier = Modifier.highlight(highlightSetting == "enable_volume_steps"),
+                modifier = Modifier.highlight("enable_volume_steps", highlightSetting),
             )
 
             ConfigSliderItem(
@@ -65,7 +65,7 @@ fun VolumeStepsSettingsUI(
                 valueFormatter = { it.roundToInt().toString() },
                 enabled = viewModel.isVolumeStepsEnabled.value,
                 iconRes = R.drawable.rounded_steps_24,
-                modifier = Modifier.highlight(highlightSetting == "volume_steps_per_press"),
+                modifier = Modifier.highlight("volume_steps_per_press", highlightSetting),
             )
         }
 

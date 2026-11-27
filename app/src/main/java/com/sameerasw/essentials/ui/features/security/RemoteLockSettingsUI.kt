@@ -115,7 +115,7 @@ fun RemoteLockSettingsUI(
                         else -> ""
                     }
                 },
-                modifier = Modifier.highlight(highlightSetting == "remote_lock_mode"),
+                modifier = Modifier.highlight("remote_lock_mode", highlightSetting),
             )
         }
 

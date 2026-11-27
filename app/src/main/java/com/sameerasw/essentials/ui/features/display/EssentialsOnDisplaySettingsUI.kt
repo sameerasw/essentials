@@ -96,7 +96,7 @@ fun EssentialsOnDisplaySettingsUI(
                 onCheckedChange = { viewModel.setAmbientMusicGlanceEnabled(it) },
                 enabled = isPermissionGranted,
                 onDisabledClick = { showPermissionSheet = true },
-                modifier = Modifier.highlight(highlightSetting == "enable_essentials_on_display"),
+                modifier = Modifier.highlight("enable_essentials_on_display", highlightSetting),
             )
 
             IconToggleItem(
@@ -107,7 +107,7 @@ fun EssentialsOnDisplaySettingsUI(
                 onCheckedChange = { viewModel.setAmbientMusicGlanceDockedModeEnabled(it) },
                 enabled = isPermissionGranted && viewModel.isAmbientMusicGlanceEnabled.value,
                 onDisabledClick = { if (!isPermissionGranted) showPermissionSheet = true },
-                modifier = Modifier.highlight(highlightSetting == "essentials_on_display_docked_mode"),
+                modifier = Modifier.highlight("essentials_on_display_docked_mode", highlightSetting),
             )
 
             androidx.compose.animation.AnimatedVisibility(
@@ -139,7 +139,7 @@ fun EssentialsOnDisplaySettingsUI(
         AlbumArtModePicker(
             selectedMode = viewModel.ambientMusicGlanceAlbumArtMode.value,
             onModeSelected = { viewModel.setAmbientMusicGlanceAlbumArtMode(it) },
-            modifier = Modifier.highlight(highlightSetting == "essentials_on_display_album_art"),
+            modifier = Modifier.highlight("essentials_on_display_album_art", highlightSetting),
         )
 
         androidx.compose.animation.AnimatedVisibility(

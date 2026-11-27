@@ -115,7 +115,7 @@ fun ScreenLockedSecuritySettingsUI(
                     }
                 },
                 iconRes = R.drawable.rounded_security_24,
-                modifier = Modifier.highlight(highlightSetting == "screen_locked_security_toggle"),
+                modifier = Modifier.highlight("screen_locked_security_toggle", highlightSetting),
             )
 
             IconToggleItem(
@@ -136,8 +136,7 @@ fun ScreenLockedSecuritySettingsUI(
                 },
                 iconRes = R.drawable.outline_circle_notifications_24,
                 modifier =
-                    Modifier.highlight(
-                        highlightSetting == "screen_locked_disable_notification_interactions",
+                    Modifier.highlight("screen_locked_disable_notification_interactions", highlightSetting,
                     ),
             )
 
@@ -148,7 +147,7 @@ fun ScreenLockedSecuritySettingsUI(
                     viewModel.setScreenLockedDisableOnExtendedUnlock(isChecked)
                 },
                 iconRes = R.drawable.rounded_lock_24,
-                modifier = Modifier.highlight(highlightSetting == "screen_locked_disable_on_extended_unlock"),
+                modifier = Modifier.highlight("screen_locked_disable_on_extended_unlock", highlightSetting),
             )
         }
     }

@@ -168,7 +168,7 @@ fun NotificationLightingSettingsUI(
                     viewModel.setOnlyShowWhenScreenOff(checked, context)
                 },
                 enabled = isNotificationLightingEnabled,
-                modifier = Modifier.highlight(highlightSetting == "only_screen_off"),
+                modifier = Modifier.highlight("only_screen_off", highlightSetting),
             )
             IconToggleItem(
                 iconRes = R.drawable.rounded_notifications_off_24,
@@ -177,7 +177,7 @@ fun NotificationLightingSettingsUI(
                 onCheckedChange = { checked ->
                     viewModel.setSkipSilentNotifications(checked, context)
                 },
-                modifier = Modifier.highlight(highlightSetting == "skip_silent_notifications"),
+                modifier = Modifier.highlight("skip_silent_notifications", highlightSetting),
             )
             IconToggleItem(
                 iconRes = R.drawable.outline_circle_notifications_24,
@@ -186,7 +186,7 @@ fun NotificationLightingSettingsUI(
                 onCheckedChange = { checked ->
                     viewModel.setSkipPersistentNotifications(checked, context)
                 },
-                modifier = Modifier.highlight(highlightSetting == "skip_persistent_notifications"),
+                modifier = Modifier.highlight("skip_persistent_notifications", highlightSetting),
             )
         }
 
@@ -339,7 +339,7 @@ fun NotificationLightingSettingsUI(
                             viewModel.removePreviewOverlay(context)
                         }
                     },
-                    modifier = Modifier.highlight(highlightSetting == "corner_radius"),
+                    modifier = Modifier.highlight("corner_radius", highlightSetting),
                 )
 
                 if (style == NotificationLightingStyle.STROKE) {
@@ -356,7 +356,7 @@ fun NotificationLightingSettingsUI(
                                 newValue,
                             )
                         },
-                        modifier = Modifier.highlight(highlightSetting == "stroke_thickness"),
+                        modifier = Modifier.highlight("stroke_thickness", highlightSetting),
                         valueRange = 1f..20f,
                         valueFormatter = { "%.1f".format(it) },
                         onValueChangeFinished = {
@@ -1152,7 +1152,7 @@ fun NotificationLightingSettingsUI(
                     onCheckedChange = { checked ->
                         viewModel.setAmbientDisplayEnabled(checked, context)
                     },
-                    modifier = Modifier.highlight(highlightSetting == "ambient_display"),
+                    modifier = Modifier.highlight("ambient_display", highlightSetting),
                 )
                 if (viewModel.isAmbientDisplayEnabled.value) {
                     IconToggleItem(
@@ -1163,7 +1163,7 @@ fun NotificationLightingSettingsUI(
                         onCheckedChange = { checked ->
                             viewModel.setAmbientShowLockScreenEnabled(checked, context)
                         },
-                        modifier = Modifier.highlight(highlightSetting == "ambient_show_lock_screen"),
+                        modifier = Modifier.highlight("ambient_show_lock_screen", highlightSetting),
                     )
                 }
             }

@@ -48,6 +48,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -155,6 +156,7 @@ import com.sameerasw.essentials.ui.features.watch.WatchWirelessDebuggingSettings
 import com.sameerasw.essentials.ui.features.watch.WatchfaceSettingsUI
 import com.sameerasw.essentials.ui.features.widgets.WidgetStackSettingsUI
 import com.sameerasw.essentials.ui.modifiers.BlurDirection
+import com.sameerasw.essentials.ui.modifiers.LocalWhatsNewScope
 import com.sameerasw.essentials.ui.modifiers.highlight
 import com.sameerasw.essentials.ui.modifiers.progressiveBlur
 import com.sameerasw.essentials.ui.modifiers.scrollMotionBlur
@@ -171,6 +173,16 @@ import kotlinx.coroutines.delay
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun FeatureSettingsScreen(
+    route: AppRoute.FeatureSettings,
+    onBack: () -> Unit,
+) {
+    CompositionLocalProvider(LocalWhatsNewScope provides route.featureId) {
+        FeatureSettingsContent(route, onBack)
+    }
+}
+
+@Composable
+private fun FeatureSettingsContent(
     route: AppRoute.FeatureSettings,
     onBack: () -> Unit,
 ) {
@@ -960,6 +972,7 @@ fun FeatureSettingsScreen(
 
                                     FeatureCard(
                                         modifier = Modifier.highlight(highlightSetting == child.id),
+                                        whatsNewId = child.id,
                                         title = child.title,
                                         isSelected = child.id in LocalSelectedFeatureIds.current,
                                         description = child.description,

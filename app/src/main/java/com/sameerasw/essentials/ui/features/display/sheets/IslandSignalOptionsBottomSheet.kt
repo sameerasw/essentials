@@ -30,6 +30,7 @@ import com.sameerasw.essentials.ui.core.pickers.NetworkTypePicker
 import com.sameerasw.essentials.ui.core.sheets.EssentialsBottomSheet
 import com.sameerasw.essentials.ui.core.sheets.PermissionItem
 import com.sameerasw.essentials.ui.core.sheets.PermissionsBottomSheet
+import com.sameerasw.essentials.ui.modifiers.whatsNewSetting
 import com.sameerasw.essentials.utils.HapticUtil
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -82,6 +83,7 @@ fun IslandSignalOptionsBottomSheet(onDismissRequest: () -> Unit) {
                         vpn = it
                         settings.setIslandNetworkVpnEnabled(it)
                     },
+                    modifier = Modifier.whatsNewSetting(SettingsRepository.KEY_ISLAND_NETWORK_VPN),
                 )
                 IconToggleItem(
                     iconRes = R.drawable.rounded_signal_cellular_alt_24,

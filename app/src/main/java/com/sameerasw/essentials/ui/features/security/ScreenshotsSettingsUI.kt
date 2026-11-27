@@ -100,7 +100,7 @@ fun ScreenshotsSettingsUI(
                             viewModel.setScreenshotShareCleanupEnabled(checked)
                         }
                     },
-                    modifier = Modifier.highlight(highlightSetting == "screenshot_share_cleanup_enabled"),
+                    modifier = Modifier.highlight("screenshot_share_cleanup_enabled", highlightSetting),
                 )
 
                 AnimatedVisibility(
@@ -153,7 +153,7 @@ fun ScreenshotsSettingsUI(
                         viewModel.setScreenshotAutoCleanEnabled(checked)
                     }
                 },
-                modifier = Modifier.highlight(highlightSetting == "screenshot_auto_clean_enabled"),
+                modifier = Modifier.highlight("screenshot_auto_clean_enabled", highlightSetting),
             )
 
             AnimatedVisibility(

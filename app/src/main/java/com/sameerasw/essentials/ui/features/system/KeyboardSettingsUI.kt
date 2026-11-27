@@ -154,7 +154,7 @@ fun KeyboardSettingsUI(
                 },
                 valueRange = 200f..600f,
                 steps = 0,
-                modifier = Modifier.highlight(highlightSetting == "keyboard_height"),
+                modifier = Modifier.highlight("keyboard_height", highlightSetting),
             )
 
             ConfigSliderItem(
@@ -167,7 +167,7 @@ fun KeyboardSettingsUI(
                 },
                 valueRange = 0f..100f,
                 steps = 0,
-                modifier = Modifier.highlight(highlightSetting == "keyboard_bottom_padding"),
+                modifier = Modifier.highlight("keyboard_bottom_padding", highlightSetting),
             )
 
             ConfigSliderItem(
@@ -180,7 +180,7 @@ fun KeyboardSettingsUI(
                 },
                 valueRange = 4f..30f,
                 steps = 0,
-                modifier = Modifier.highlight(highlightSetting == "keyboard_roundness"),
+                modifier = Modifier.highlight("keyboard_roundness", highlightSetting),
             )
         }
 
@@ -247,7 +247,7 @@ fun KeyboardSettingsUI(
                 title = stringResource(R.string.label_keyboard_functions_bottom),
                 isChecked = viewModel.isKeyboardFunctionsBottom.value,
                 onCheckedChange = { viewModel.setKeyboardFunctionsBottom(it, context) },
-                modifier = Modifier.highlight(highlightSetting == "keyboard_functions_bottom"),
+                modifier = Modifier.highlight("keyboard_functions_bottom", highlightSetting),
             )
 
             ConfigSliderItem(
@@ -260,7 +260,7 @@ fun KeyboardSettingsUI(
                 },
                 valueRange = 0f..100f,
                 steps = 0,
-                modifier = Modifier.highlight(highlightSetting == "keyboard_functions_padding"),
+                modifier = Modifier.highlight("keyboard_functions_padding", highlightSetting),
             )
         }
 
@@ -270,7 +270,7 @@ fun KeyboardSettingsUI(
                 title = stringResource(R.string.label_keyboard_haptics),
                 isChecked = viewModel.isKeyboardHapticsEnabled.value,
                 onCheckedChange = { viewModel.setKeyboardHapticsEnabled(it, context) },
-                modifier = Modifier.highlight(highlightSetting == "keyboard_haptics"),
+                modifier = Modifier.highlight("keyboard_haptics", highlightSetting),
             )
 
             if (viewModel.isKeyboardHapticsEnabled.value) {
@@ -280,7 +280,7 @@ fun KeyboardSettingsUI(
                     onValueChange = {
                         viewModel.setKeyboardHapticStrength(it, context)
                     },
-                    modifier = Modifier.highlight(highlightSetting == "keyboard_haptic_strength"),
+                    modifier = Modifier.highlight("keyboard_haptic_strength", highlightSetting),
                 )
             }
 
@@ -289,7 +289,7 @@ fun KeyboardSettingsUI(
                 title = stringResource(R.string.label_keyboard_always_dark),
                 isChecked = viewModel.isKeyboardAlwaysDark.value,
                 onCheckedChange = { viewModel.setKeyboardAlwaysDark(it, context) },
-                modifier = Modifier.highlight(highlightSetting == "keyboard_always_dark"),
+                modifier = Modifier.highlight("keyboard_always_dark", highlightSetting),
             )
 
             IconToggleItem(
@@ -297,7 +297,7 @@ fun KeyboardSettingsUI(
                 title = stringResource(R.string.label_keyboard_pitch_black),
                 isChecked = viewModel.isKeyboardPitchBlack.value,
                 onCheckedChange = { viewModel.setKeyboardPitchBlack(it, context) },
-                modifier = Modifier.highlight(highlightSetting == "keyboard_pitch_black"),
+                modifier = Modifier.highlight("keyboard_pitch_black", highlightSetting),
             )
 
             IconToggleItem(
@@ -305,7 +305,7 @@ fun KeyboardSettingsUI(
                 title = stringResource(R.string.label_keyboard_clipboard_enabled),
                 isChecked = viewModel.isKeyboardClipboardEnabled.value,
                 onCheckedChange = { viewModel.setKeyboardClipboardEnabled(it, context) },
-                modifier = Modifier.highlight(highlightSetting == "keyboard_clipboard_enabled"),
+                modifier = Modifier.highlight("keyboard_clipboard_enabled", highlightSetting),
             )
 
             IconToggleItem(
@@ -313,7 +313,7 @@ fun KeyboardSettingsUI(
                 title = stringResource(R.string.label_keyboard_long_press_symbols),
                 isChecked = viewModel.isLongPressSymbolsEnabled.value,
                 onCheckedChange = { viewModel.setLongPressSymbolsEnabled(it, context) },
-                modifier = Modifier.highlight(highlightSetting == "keyboard_long_press_symbols"),
+                modifier = Modifier.highlight("keyboard_long_press_symbols", highlightSetting),
             )
 
             IconToggleItem(
@@ -322,7 +322,7 @@ fun KeyboardSettingsUI(
                 isChecked = viewModel.isAccentedCharactersEnabled.value,
                 onCheckedChange = { viewModel.setAccentedCharactersEnabled(it, context) },
                 enabled = viewModel.isLongPressSymbolsEnabled.value,
-                modifier = Modifier.highlight(highlightSetting == "keyboard_accented_characters"),
+                modifier = Modifier.highlight("keyboard_accented_characters", highlightSetting),
             )
 
             IconToggleItem(
@@ -330,7 +330,7 @@ fun KeyboardSettingsUI(
                 title = stringResource(R.string.keyboard_user_dictionary_title),
                 isChecked = viewModel.isUserDictionaryEnabled.value,
                 onCheckedChange = { viewModel.setUserDictionaryEnabled(it, context) },
-                modifier = Modifier.highlight(highlightSetting == "user_dictionary_enabled"),
+                modifier = Modifier.highlight("user_dictionary_enabled", highlightSetting),
             )
 
             if (viewModel.isUserDictionaryEnabled.value) {

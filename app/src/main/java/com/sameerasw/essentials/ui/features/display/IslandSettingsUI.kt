@@ -209,7 +209,7 @@ fun IslandSettingsUI(
                         viewModel.setIslandEnabled(false)
                     }
                 },
-                modifier = Modifier.highlight(highlightSetting == "island_enabled"),
+                modifier = Modifier.highlight("island_enabled", highlightSetting),
             )
         }
 
@@ -219,6 +219,7 @@ fun IslandSettingsUI(
         ) {
             ISLAND_SUB_PAGES.forEach { (featureId, titleRes, iconRes) ->
                 FeatureCard(
+                    whatsNewId = featureId,
                     title = titleRes,
                     iconRes = iconRes,
                     isEnabled = true,
@@ -250,7 +251,7 @@ fun IslandSettingsUI(
                     viewModel.setIslandBriefEnabled(checked)
                 },
                 onSettingsClick = { showBriefOptionsSheet = true },
-                modifier = Modifier.highlight(highlightSetting == "island_brief_enabled"),
+                modifier = Modifier.highlight("island_brief_enabled", highlightSetting),
             )
         }
 
@@ -270,7 +271,7 @@ fun IslandSettingsUI(
                     .fillMaxWidth()
                     .background(MaterialTheme.colorScheme.surfaceBright, MaterialTheme.shapes.extraSmall)
                     .padding(top = 12.dp)
-                    .highlight(highlightSetting == "island_max_items"),
+                    .highlight("island_max_items", highlightSetting),
             ) {
                 TranslatableText(
                     stringResId = R.string.island_max_items_title,
@@ -312,7 +313,7 @@ fun IslandSettingsUI(
                             }
                         },
                         onSettingsClick = { showCallOptionsSheet = true },
-                        modifier = Modifier.highlight(highlightSetting == "island_show_calls"),
+                        modifier = Modifier.highlight("island_show_calls", highlightSetting),
                     )
                     "live_updates" -> IconToggleItem(
                         dragHandle = handle,
@@ -324,7 +325,7 @@ fun IslandSettingsUI(
                             viewModel.setIslandNotifKeepProgress(checked)
                         },
                         onSettingsClick = { showLiveUpdatesOptionsSheet = true },
-                        modifier = Modifier.highlight(highlightSetting == "island_notif_keep_progress"),
+                        modifier = Modifier.highlight("island_notif_keep_progress", highlightSetting),
                     )
                     "notifications" -> IconToggleItem(
                         dragHandle = handle,
@@ -343,7 +344,7 @@ fun IslandSettingsUI(
                                 },
                             )
                         },
-                        modifier = Modifier.highlight(highlightSetting == "island_show_notifications"),
+                        modifier = Modifier.highlight("island_show_notifications", highlightSetting),
                     )
                     "time" -> IconToggleItem(
                         dragHandle = handle,
@@ -355,7 +356,7 @@ fun IslandSettingsUI(
                             viewModel.setIslandShowTimeBattery(checked)
                         },
                         onSettingsClick = { showTimeOptionsSheet = true },
-                        modifier = Modifier.highlight(highlightSetting == "island_show_time_battery"),
+                        modifier = Modifier.highlight("island_show_time_battery", highlightSetting),
                     )
                     "battery" -> IconToggleItem(
                         dragHandle = handle,
@@ -367,7 +368,7 @@ fun IslandSettingsUI(
                             viewModel.setIslandShowBattery(checked)
                         },
                         onSettingsClick = { showBatteryOptionsSheet = true },
-                        modifier = Modifier.highlight(highlightSetting == "island_show_battery"),
+                        modifier = Modifier.highlight("island_show_battery", highlightSetting),
                     )
                     "flashlight" -> IconToggleItem(
                         dragHandle = handle,
@@ -378,7 +379,7 @@ fun IslandSettingsUI(
                             HapticUtil.performVirtualKeyHaptic(view)
                             viewModel.setIslandShowFlashlight(checked)
                         },
-                        modifier = Modifier.highlight(highlightSetting == "island_show_flashlight"),
+                        modifier = Modifier.highlight("island_show_flashlight", highlightSetting),
                     )
                     "timer" -> IconToggleItem(
                         dragHandle = handle,
@@ -390,7 +391,7 @@ fun IslandSettingsUI(
                             viewModel.setIslandShowTimers(checked)
                         },
                         onSettingsClick = { showTimerOptionsSheet = true },
-                        modifier = Modifier.highlight(highlightSetting == "island_show_timers"),
+                        modifier = Modifier.highlight("island_show_timers", highlightSetting),
                     )
                     "media" -> IconToggleItem(
                         dragHandle = handle,
@@ -402,7 +403,7 @@ fun IslandSettingsUI(
                             viewModel.setIslandShowMedia(checked)
                         },
                         onSettingsClick = { showMediaAppSelectionSheet = true },
-                        modifier = Modifier.highlight(highlightSetting == "island_show_media"),
+                        modifier = Modifier.highlight("island_show_media", highlightSetting),
                     )
                     "conscious_gate" -> IconToggleItem(
                         dragHandle = handle,
@@ -419,7 +420,7 @@ fun IslandSettingsUI(
                             }
                             context.startActivity(intent)
                         },
-                        modifier = Modifier.highlight(highlightSetting == "island_show_conscious_gate"),
+                        modifier = Modifier.highlight("island_show_conscious_gate", highlightSetting),
                     )
                     "caffeinate" -> IconToggleItem(
                         dragHandle = handle,
@@ -431,7 +432,7 @@ fun IslandSettingsUI(
                             viewModel.setIslandShowCaffeinate(checked)
                         },
                         onSettingsClick = { showCaffeinateOptionsSheet = true },
-                        modifier = Modifier.highlight(highlightSetting == "island_show_caffeinate"),
+                        modifier = Modifier.highlight("island_show_caffeinate", highlightSetting),
                     )
                     "travel" -> IconToggleItem(
                         dragHandle = handle,
@@ -442,7 +443,7 @@ fun IslandSettingsUI(
                             HapticUtil.performVirtualKeyHaptic(view)
                             viewModel.setIslandShowTravel(checked)
                         },
-                        modifier = Modifier.highlight(highlightSetting == "island_show_travel"),
+                        modifier = Modifier.highlight("island_show_travel", highlightSetting),
                     )
                     "calendar" -> IconToggleItem(
                         dragHandle = handle,
@@ -458,7 +459,7 @@ fun IslandSettingsUI(
                             }
                         },
                         onSettingsClick = { showCalendarOptionsSheet = true },
-                        modifier = Modifier.highlight(highlightSetting == "island_show_calendar"),
+                        modifier = Modifier.highlight("island_show_calendar", highlightSetting),
                     )
                     "sound_mode" -> IconToggleItem(
                         dragHandle = handle,
@@ -470,7 +471,7 @@ fun IslandSettingsUI(
                             viewModel.setIslandShowSoundMode(checked)
                         },
                         onSettingsClick = { showSoundModeOptionsSheet = true },
-                        modifier = Modifier.highlight(highlightSetting == "island_show_sound_mode"),
+                        modifier = Modifier.highlight("island_show_sound_mode", highlightSetting),
                     )
                     "network" -> IconToggleItem(
                         dragHandle = handle,
@@ -482,7 +483,7 @@ fun IslandSettingsUI(
                             viewModel.setIslandShowNetwork(checked)
                         },
                         onSettingsClick = { showSignalOptionsSheet = true },
-                        modifier = Modifier.highlight(highlightSetting == "island_show_network"),
+                        modifier = Modifier.highlight("island_show_network", highlightSetting),
                     )
                     "alarm" -> IconToggleItem(
                         dragHandle = handle,
@@ -494,7 +495,7 @@ fun IslandSettingsUI(
                             viewModel.setIslandShowAlarm(checked)
                         },
                         onSettingsClick = { showAlarmOptionsSheet = true },
-                        modifier = Modifier.highlight(highlightSetting == "island_show_alarm"),
+                        modifier = Modifier.highlight("island_show_alarm", highlightSetting),
                     )
                     "navigation" -> IconToggleItem(
                         dragHandle = handle,
@@ -506,7 +507,7 @@ fun IslandSettingsUI(
                             viewModel.setIslandShowNavigation(checked)
                         },
                         onSettingsClick = { showNavigationOptionsSheet = true },
-                        modifier = Modifier.highlight(highlightSetting == "island_show_navigation"),
+                        modifier = Modifier.highlight("island_show_navigation", highlightSetting),
                     )
                     "hotspot" -> IconToggleItem(
                         dragHandle = handle,
@@ -523,7 +524,7 @@ fun IslandSettingsUI(
                                 if (missing.isNotEmpty()) requestingPermissionsFor = Pair(R.string.island_title, missing)
                             }
                         },
-                        modifier = Modifier.highlight(highlightSetting == "island_show_hotspot"),
+                        modifier = Modifier.highlight("island_show_hotspot", highlightSetting),
                     )
                     "starlink" -> IconToggleItem(
                         dragHandle = handle,
@@ -535,7 +536,7 @@ fun IslandSettingsUI(
                             viewModel.setIslandShowStarlink(checked)
                         },
                         onSettingsClick = { showStarlinkOptionsSheet = true },
-                        modifier = Modifier.highlight(highlightSetting == "island_show_starlink"),
+                        modifier = Modifier.highlight("island_show_starlink", highlightSetting),
                     )
                     "devices" -> IconToggleItem(
                         dragHandle = handle,
@@ -551,7 +552,7 @@ fun IslandSettingsUI(
                             }
                         },
                         onSettingsClick = { showDevicesBatterySheet = true },
-                        modifier = Modifier.highlight(highlightSetting == "island_show_devices"),
+                        modifier = Modifier.highlight("island_show_devices", highlightSetting),
                     )
                     else -> if (IslandPriorityEntries.isProvider(entryId)) {
                         val packageName = IslandPriorityEntries.providerPackage(entryId)
@@ -568,7 +569,7 @@ fun IslandSettingsUI(
                                     providerVersion++
                                 },
                                 onSettingsClick = { providerOptionsFor = provider.packageName to provider.label },
-                                modifier = Modifier.highlight(highlightSetting == "island_provider_show_on_update"),
+                                modifier = Modifier.highlight("island_provider_show_on_update", highlightSetting),
                             )
                         }
                     }
@@ -683,7 +684,7 @@ fun IslandSettingsUI(
                         HapticUtil.performVirtualKeyHaptic(view)
                         viewModel.setDuoIslandCombined(checked)
                     },
-                    modifier = Modifier.highlight(highlightSetting == "duo_island_combined"),
+                    modifier = Modifier.highlight("duo_island_combined", highlightSetting),
                 )
             }
         }
@@ -702,7 +703,7 @@ fun IslandSettingsUI(
             headerContent = {
                 Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
                     Column(
-                        modifier = Modifier.highlight(highlightSetting == "island_media_player_style"),
+                        modifier = Modifier.highlight("island_media_player_style", highlightSetting),
                         verticalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
                         TranslatableText(
@@ -730,7 +731,7 @@ fun IslandSettingsUI(
                                     HapticUtil.performVirtualKeyHaptic(view)
                                     viewModel.setIslandMediaPeekSongChange(checked)
                                 },
-                                modifier = Modifier.highlight(highlightSetting == "island_media_peek_song_change"),
+                                modifier = Modifier.highlight("island_media_peek_song_change", highlightSetting),
                             )
                         }
                         IconToggleItem(
@@ -741,7 +742,7 @@ fun IslandSettingsUI(
                                 HapticUtil.performVirtualKeyHaptic(view)
                                 viewModel.setIslandMediaKeepWhenPaused(checked)
                             },
-                            modifier = Modifier.highlight(highlightSetting == "island_media_keep_when_paused"),
+                            modifier = Modifier.highlight("island_media_keep_when_paused", highlightSetting),
                         )
                         IconToggleItem(
                             iconRes = R.drawable.rounded_skip_previous_24,
@@ -751,7 +752,7 @@ fun IslandSettingsUI(
                                 HapticUtil.performVirtualKeyHaptic(view)
                                 viewModel.setIslandMediaShowPrevious(checked)
                             },
-                            modifier = Modifier.highlight(highlightSetting == "island_media_show_previous"),
+                            modifier = Modifier.highlight("island_media_show_previous", highlightSetting),
                         )
                         IconToggleItem(
                             iconRes = R.drawable.rounded_favorite_24,
@@ -761,7 +762,7 @@ fun IslandSettingsUI(
                                 HapticUtil.performVirtualKeyHaptic(view)
                                 viewModel.setIslandMediaShowLike(checked)
                             },
-                            modifier = Modifier.highlight(highlightSetting == "island_media_show_like"),
+                            modifier = Modifier.highlight("island_media_show_like", highlightSetting),
                         )
                         IconToggleItem(
                             iconRes = R.drawable.rounded_palette_24,
@@ -771,7 +772,7 @@ fun IslandSettingsUI(
                                 HapticUtil.performVirtualKeyHaptic(view)
                                 viewModel.setIslandMediaUseArtColor(checked)
                             },
-                            modifier = Modifier.highlight(highlightSetting == "island_media_use_art_color"),
+                            modifier = Modifier.highlight("island_media_use_art_color", highlightSetting),
                         )
                     }
                     if (viewModel.isIslandSecondaryBubble.value) {
@@ -784,7 +785,7 @@ fun IslandSettingsUI(
                                     HapticUtil.performVirtualKeyHaptic(view)
                                     viewModel.setIslandMediaBubble(checked)
                                 },
-                                modifier = Modifier.highlight(highlightSetting == "island_media_bubble"),
+                                modifier = Modifier.highlight("island_media_bubble", highlightSetting),
                             )
                             AnimatedVisibility(
                                 visible = viewModel.isIslandMediaBubble.value,
@@ -800,7 +801,7 @@ fun IslandSettingsUI(
                                             HapticUtil.performVirtualKeyHaptic(view)
                                             viewModel.setIslandMediaBubbleWide(checked)
                                         },
-                                        modifier = Modifier.highlight(highlightSetting == "island_media_bubble_wide"),
+                                        modifier = Modifier.highlight("island_media_bubble_wide", highlightSetting),
                                     )
                                     AnimatedVisibility(
                                         visible = viewModel.isIslandMediaBubbleWide.value,
@@ -815,7 +816,7 @@ fun IslandSettingsUI(
                                                 HapticUtil.performVirtualKeyHaptic(view)
                                                 viewModel.setIslandMediaBubbleFillArt(checked)
                                             },
-                                            modifier = Modifier.highlight(highlightSetting == "island_media_bubble_fill_art"),
+                                            modifier = Modifier.highlight("island_media_bubble_fill_art", highlightSetting),
                                         )
                                     }
                                 }

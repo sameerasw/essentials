@@ -105,7 +105,7 @@ fun HilightSettingsUI(
                 title = stringResource(R.string.flashlight_pulse_disable_on_dnd_title),
                 isChecked = viewModel.isHilightSkipDnd.value,
                 onCheckedChange = { viewModel.setHilightSkipDnd(it) },
-                modifier = Modifier.highlight(highlightSetting == "hilight_skip_dnd"),
+                modifier = Modifier.highlight("hilight_skip_dnd", highlightSetting),
             )
         }
 
@@ -150,7 +150,7 @@ fun HilightNotificationsSettingsUI(
                 onDisabledClick = {
                     Toast.makeText(context, R.string.hilight_not_supported_toast, Toast.LENGTH_SHORT).show()
                 },
-                modifier = Modifier.highlight(highlightSetting == "hilight_notifications"),
+                modifier = Modifier.highlight("hilight_notifications", highlightSetting),
             )
             ConfigSliderItem(
                 title = stringResource(R.string.hilight_cooldown_title),
@@ -162,7 +162,7 @@ fun HilightNotificationsSettingsUI(
                 increment = 15f,
                 valueFormatter = { formatCooldown(context, it.toInt()) },
                 iconRes = R.drawable.rounded_timer_24,
-                modifier = Modifier.highlight(highlightSetting == "hilight_cooldown"),
+                modifier = Modifier.highlight("hilight_cooldown", highlightSetting),
             )
         }
 
@@ -319,7 +319,7 @@ private fun HilightProgressSection(
             onDisabledClick = {
                 Toast.makeText(context, R.string.hilight_not_supported_toast, Toast.LENGTH_SHORT).show()
             },
-            modifier = Modifier.highlight(highlightSetting == "hilight_progress"),
+            modifier = Modifier.highlight("hilight_progress", highlightSetting),
         )
         SegmentedPicker(
             items = HilightProgressColorMode.entries,

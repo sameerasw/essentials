@@ -35,7 +35,9 @@ import com.sameerasw.essentials.domain.configshare.ConfigParseResult
 import com.sameerasw.essentials.domain.configshare.ConfigShareDescriptor
 import com.sameerasw.essentials.domain.configshare.ConfigShareManager
 import com.sameerasw.essentials.domain.configshare.ParsedConfig
+import com.sameerasw.essentials.domain.registry.WhatsNewRegistry
 import com.sameerasw.essentials.translation.TranslatableText
+import com.sameerasw.essentials.ui.modifiers.whatsNewSetting
 import com.sameerasw.essentials.utils.HapticUtil
 
 @Composable
@@ -98,6 +100,7 @@ fun ConfigShareRow(
                     .weight(1f)
                     .height(58.dp)
                     .clip(RoundedCornerShape(topStart = 24.dp, bottomStart = 24.dp, topEnd = 4.dp, bottomEnd = 4.dp))
+                    .whatsNewSetting(WhatsNewRegistry.CONFIG_SHARE, descriptor.featureId)
                     .background(MaterialTheme.colorScheme.surfaceBright),
             contentAlignment = Alignment.CenterStart,
         ) {

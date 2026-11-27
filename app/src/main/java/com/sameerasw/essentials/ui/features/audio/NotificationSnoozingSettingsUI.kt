@@ -65,7 +65,7 @@ fun NotificationSnoozingSettingsUI(
                     HapticUtil.performUIHaptic(view)
                 },
                 iconRes = R.drawable.rounded_notifications_paused_24,
-                modifier = Modifier.highlight(highlightSetting == "snooze_enabled"),
+                modifier = Modifier.highlight("snooze_enabled", highlightSetting),
             )
         }
 

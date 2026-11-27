@@ -55,7 +55,7 @@ fun FlashlightSettingsUI(
                 description = stringResource(R.string.flashlight_global_desc),
                 isChecked = viewModel.isFlashlightGlobalEnabled.value,
                 onCheckedChange = { viewModel.setFlashlightGlobalEnabled(it, context) },
-                modifier = Modifier.highlight(highlightSetting == "flashlight_global"),
+                modifier = Modifier.highlight("flashlight_global", highlightSetting),
             )
 
             IconToggleItem(
@@ -64,7 +64,7 @@ fun FlashlightSettingsUI(
                 description = stringResource(R.string.flashlight_adjust_intensity_desc),
                 isChecked = viewModel.isFlashlightAdjustEnabled.value,
                 onCheckedChange = { viewModel.setFlashlightAdjustEnabled(it, context) },
-                modifier = Modifier.highlight(highlightSetting == "flashlight_adjust"),
+                modifier = Modifier.highlight("flashlight_adjust", highlightSetting),
             )
             IconToggleItem(
                 iconRes = R.drawable.rounded_flashlight_on_24,
@@ -72,7 +72,7 @@ fun FlashlightSettingsUI(
                 description = stringResource(R.string.flashlight_live_update_desc),
                 isChecked = viewModel.isFlashlightLiveUpdateEnabled.value,
                 onCheckedChange = { viewModel.setFlashlightLiveUpdateEnabled(it, context) },
-                modifier = Modifier.highlight(highlightSetting == "flashlight_live_update"),
+                modifier = Modifier.highlight("flashlight_live_update", highlightSetting),
             )
             IconToggleItem(
                 iconRes = R.drawable.rounded_front_hand_24,

@@ -199,7 +199,7 @@ fun StatusGlanceSettingsUI(
                         viewModel.setStatusGlanceEnabled(isChecked)
                     }
                 },
-                modifier = Modifier.highlight(highlightSetting == "status_glance_enabled"),
+                modifier = Modifier.highlight("status_glance_enabled", highlightSetting),
             )
         }
 
@@ -251,7 +251,7 @@ fun StatusGlanceSettingsUI(
                             HapticUtil.performUIHaptic(view)
                             viewModel.autoDetectStatusGlancePosition(context)
                         },
-                        modifier = Modifier.highlight(highlightSetting == "status_glance_auto_detect"),
+                        modifier = Modifier.highlight("status_glance_auto_detect", highlightSetting),
                     )
 
                     ConfigSliderItem(
@@ -326,7 +326,7 @@ fun StatusGlanceSettingsUI(
                             HapticUtil.performUIHaptic(view)
                             viewModel.setStatusGlanceShowFlashlight(it)
                         },
-                        modifier = Modifier.highlight(highlightSetting == "status_glance_show_flashlight"),
+                        modifier = Modifier.highlight("status_glance_show_flashlight", highlightSetting),
                     )
 
                     IconToggleItem(
@@ -346,7 +346,7 @@ fun StatusGlanceSettingsUI(
                         onSettingsClick = {
                             showCalendarOptionsSheet = true
                         },
-                        modifier = Modifier.highlight(highlightSetting == "status_glance_show_calendar"),
+                        modifier = Modifier.highlight("status_glance_show_calendar", highlightSetting),
                     )
 
                     IconToggleItem(
@@ -366,7 +366,7 @@ fun StatusGlanceSettingsUI(
                         onSettingsClick = {
                             showMediaAppSelectionSheet = true
                         },
-                        modifier = Modifier.highlight(highlightSetting == "status_glance_show_media"),
+                        modifier = Modifier.highlight("status_glance_show_media", highlightSetting),
                     )
 
                     IconToggleItem(
@@ -377,7 +377,7 @@ fun StatusGlanceSettingsUI(
                             HapticUtil.performUIHaptic(view)
                             viewModel.setStatusGlanceShowTime(it)
                         },
-                        modifier = Modifier.highlight(highlightSetting == "status_glance_show_time"),
+                        modifier = Modifier.highlight("status_glance_show_time", highlightSetting),
                     )
 
                     IconToggleItem(
@@ -388,7 +388,7 @@ fun StatusGlanceSettingsUI(
                             HapticUtil.performUIHaptic(view)
                             viewModel.setStatusGlanceShowSeconds(it)
                         },
-                        modifier = Modifier.highlight(highlightSetting == "status_glance_show_seconds"),
+                        modifier = Modifier.highlight("status_glance_show_seconds", highlightSetting),
                     )
 
                     IconToggleItem(
@@ -402,7 +402,7 @@ fun StatusGlanceSettingsUI(
                         onSettingsClick = {
                             showBatteryOptionsSheet = true
                         },
-                        modifier = Modifier.highlight(highlightSetting == "status_glance_show_battery"),
+                        modifier = Modifier.highlight("status_glance_show_battery", highlightSetting),
                     )
                 }
 
@@ -432,7 +432,7 @@ fun StatusGlanceSettingsUI(
                             HapticUtil.performVirtualKeyHaptic(view)
                             pickingActionForGesture = "tap"
                         },
-                        modifier = Modifier.highlight(highlightSetting == "status_glance_tap_action"),
+                        modifier = Modifier.highlight("status_glance_tap_action", highlightSetting),
                     )
 
                     val doubleTapAction = viewModel.statusGlanceDoubleTapAction.value
@@ -445,7 +445,7 @@ fun StatusGlanceSettingsUI(
                             HapticUtil.performVirtualKeyHaptic(view)
                             pickingActionForGesture = "double_tap"
                         },
-                        modifier = Modifier.highlight(highlightSetting == "status_glance_double_tap_action"),
+                        modifier = Modifier.highlight("status_glance_double_tap_action", highlightSetting),
                     )
 
                     val longPressAction = viewModel.statusGlanceLongPressAction.value
@@ -458,7 +458,7 @@ fun StatusGlanceSettingsUI(
                             HapticUtil.performVirtualKeyHaptic(view)
                             pickingActionForGesture = "long_press"
                         },
-                        modifier = Modifier.highlight(highlightSetting == "status_glance_long_press_action"),
+                        modifier = Modifier.highlight("status_glance_long_press_action", highlightSetting),
                     )
 
                     IconToggleItem(
@@ -489,7 +489,7 @@ fun StatusGlanceSettingsUI(
                             HapticUtil.performUIHaptic(view)
                             viewModel.setStatusGlanceBoldText(it)
                         },
-                        modifier = Modifier.highlight(highlightSetting == "status_glance_bold_text"),
+                        modifier = Modifier.highlight("status_glance_bold_text", highlightSetting),
                     )
 
                     IconToggleItem(
@@ -501,7 +501,7 @@ fun StatusGlanceSettingsUI(
                             HapticUtil.performUIHaptic(view)
                             viewModel.setStatusGlanceBackgroundPill(it)
                         },
-                        modifier = Modifier.highlight(highlightSetting == "status_glance_background_pill"),
+                        modifier = Modifier.highlight("status_glance_background_pill", highlightSetting),
                     )
 
                     IconToggleItem(
@@ -513,7 +513,7 @@ fun StatusGlanceSettingsUI(
                             HapticUtil.performUIHaptic(view)
                             viewModel.setStatusGlanceAlbumArtColors(it)
                         },
-                        modifier = Modifier.highlight(highlightSetting == "status_glance_album_art_colors"),
+                        modifier = Modifier.highlight("status_glance_album_art_colors", highlightSetting),
                     )
 
                     IconToggleItem(
@@ -524,7 +524,7 @@ fun StatusGlanceSettingsUI(
                             HapticUtil.performUIHaptic(view)
                             viewModel.setStatusGlanceHideInQuickSettings(it)
                         },
-                        modifier = Modifier.highlight(highlightSetting == "status_glance_hide_in_quick_settings"),
+                        modifier = Modifier.highlight("status_glance_hide_in_quick_settings", highlightSetting),
                     )
 
                     IconToggleItem(
@@ -536,7 +536,7 @@ fun StatusGlanceSettingsUI(
                             HapticUtil.performUIHaptic(view)
                             viewModel.setStatusGlanceHideWhenLocked(it)
                         },
-                        modifier = Modifier.highlight(highlightSetting == "status_glance_hide_when_locked"),
+                        modifier = Modifier.highlight("status_glance_hide_when_locked", highlightSetting),
                     )
                 }
 

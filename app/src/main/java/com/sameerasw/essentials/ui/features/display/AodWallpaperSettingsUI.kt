@@ -127,7 +127,7 @@ fun AodWallpaperSettingsUI(
                 },
                 enabled = true,
                 onDisabledClick = { requestMainPermissions() },
-                modifier = Modifier.highlight(highlightSetting == "aod_wallpaper"),
+                modifier = Modifier.highlight("aod_wallpaper", highlightSetting),
             )
 
             AnimatedVisibility(
@@ -143,7 +143,7 @@ fun AodWallpaperSettingsUI(
                         HapticUtil.performVirtualKeyHaptic(view)
                         viewModel.setAodWallpaperDisableOnDnd(checked)
                     },
-                    modifier = Modifier.highlight(highlightSetting == "aod_wallpaper_disable_on_dnd"),
+                    modifier = Modifier.highlight("aod_wallpaper_disable_on_dnd", highlightSetting),
                 )
             }
 
@@ -285,7 +285,7 @@ fun AodWallpaperSettingsUI(
                             Pair(R.string.feat_aod_wallpaper_use_album_art, listOf("NOTIFICATION_LISTENER"))
                     }
                 },
-                modifier = Modifier.highlight(highlightSetting == "aod_wallpaper_album_art"),
+                modifier = Modifier.highlight("aod_wallpaper_album_art", highlightSetting),
             )
 
             AnimatedVisibility(
@@ -318,7 +318,7 @@ fun AodWallpaperSettingsUI(
                         viewModel.setAodWallpaperKeepOnMedia(checked)
                     },
                     enabled = !isTimeoutNever,
-                    modifier = Modifier.highlight(highlightSetting == "aod_wallpaper_keep_on_media"),
+                    modifier = Modifier.highlight("aod_wallpaper_keep_on_media", highlightSetting),
                 )
             }
 
@@ -367,7 +367,7 @@ fun AodWallpaperSettingsUI(
                         viewModel.setAodWallpaperExtendedMedia(checked)
                     }
                 },
-                modifier = Modifier.highlight(highlightSetting == "aod_wallpaper_extended_media"),
+                modifier = Modifier.highlight("aod_wallpaper_extended_media", highlightSetting),
             )
 
             AnimatedVisibility(
@@ -383,7 +383,7 @@ fun AodWallpaperSettingsUI(
                         HapticUtil.performVirtualKeyHaptic(view)
                         viewModel.setAodWallpaperExtendedAppIcon(checked)
                     },
-                    modifier = Modifier.highlight(highlightSetting == "aod_wallpaper_extended_app_icon"),
+                    modifier = Modifier.highlight("aod_wallpaper_extended_app_icon", highlightSetting),
                 )
             }
 

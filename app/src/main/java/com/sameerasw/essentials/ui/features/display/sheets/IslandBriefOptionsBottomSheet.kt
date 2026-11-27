@@ -69,7 +69,7 @@ fun IslandBriefOptionsBottomSheet(
                         HapticUtil.performVirtualKeyHaptic(view)
                         viewModel.setIslandBriefShowAlarm(checked)
                     },
-                    modifier = Modifier.highlight(highlightSetting == "island_brief_show_alarm"),
+                    modifier = Modifier.highlight("island_brief_show_alarm", highlightSetting),
                 )
 
                 IslandPrefToggle(

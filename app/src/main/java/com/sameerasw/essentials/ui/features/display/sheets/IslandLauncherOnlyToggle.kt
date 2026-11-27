@@ -14,6 +14,7 @@ import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
+import com.sameerasw.essentials.ui.modifiers.whatsNewSetting
 import com.sameerasw.essentials.utils.HapticUtil
 
 @Composable
@@ -65,7 +66,7 @@ fun IslandPrefToggle(
             settings.putBoolean(settingKey, it)
             onChanged(it)
         },
-        modifier = modifier,
+        modifier = modifier.whatsNewSetting(settingKey),
     )
 }
 
