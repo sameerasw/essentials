@@ -9,11 +9,21 @@
 
 package com.sameerasw.essentials.ui.composables
 
+import com.sameerasw.essentials.ui.core.sheets.AppSelectionSheet
 import com.sameerasw.essentials.ui.core.sheets.WhatIsThisButton
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.SplitButtonDefaults
 import androidx.compose.material3.SplitButtonLayout
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.PathEffect
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.components.rememberPullTitleHeaderState
@@ -238,6 +248,7 @@ fun FreezeGridUI(
     }
 
     var appForTagAssignment by remember { mutableStateOf<NotificationApp?>(null) }
+    var isAppSelectionSheetOpen by remember { mutableStateOf(false) }
 
     Box(modifier = modifier.fillMaxSize()) {
         if (isPickedAppsLoading && pickedApps.isEmpty()) {
@@ -451,7 +462,9 @@ fun FreezeGridUI(
                             )
                         }
                     } else {
-                        val chunkedApps = filteredApps.chunked(4)
+                        val gridEntries: List<NotificationApp?> =
+                            if (searchQuery.isEmpty()) filteredApps + null else filteredApps
+                        val chunkedApps = gridEntries.chunked(4)
                         Column(
                             modifier =
                                 Modifier
@@ -460,10 +473,26 @@ fun FreezeGridUI(
                         ) {
                             chunkedApps.forEach { rowApps ->
                                 Row(
-                                    modifier = Modifier.fillMaxWidth(),
+                                    modifier =
+                                        Modifier
+                                            .fillMaxWidth()
+                                            .height(IntrinsicSize.Min),
                                     horizontalArrangement = Arrangement.spacedBy(4.dp),
                                 ) {
                                     rowApps.forEach { app ->
+                                        if (app == null) {
+                                            AddAppsGridItem(
+                                                onClick = {
+                                                    HapticUtil.performVirtualKeyHaptic(view)
+                                                    isAppSelectionSheetOpen = true
+                                                },
+                                                modifier =
+                                                    Modifier
+                                                        .weight(1f)
+                                                        .fillMaxHeight(),
+                                            )
+                                            return@forEach
+                                        }
                                         val appTagIds =
                                             freezeAppTagMap[app.packageName] ?: emptyList()
                                         val neverAutoFreezeTagIds =
@@ -567,6 +596,18 @@ fun FreezeGridUI(
             }
         }
 
+        if (isAppSelectionSheetOpen) {
+            AppSelectionSheet(
+                restrictSystemApps = !viewModel.isEnableUnsupportedFeatures.value,
+                showInvertSelection = false,
+                hideSystemAppsByDefault = true,
+                onDismissRequest = { isAppSelectionSheetOpen = false },
+                onLoadApps = { viewModel.loadFreezeSelectedApps(it) },
+                onSaveApps = { ctx, apps -> viewModel.saveFreezeSelectedApps(ctx, apps) },
+                onAppToggle = { ctx, pkg, enabled -> viewModel.updateFreezeAppEnabled(ctx, pkg, enabled) },
+            )
+        }
+
         if (showShellPermissionSheet) {
             PermissionsBottomSheet(
                 onDismissRequest = {
@@ -598,6 +639,40 @@ fun FreezeGridUI(
 }
 
 @OptIn(ExperimentalFoundationApi::class)
+@Composable
+private fun AddAppsGridItem(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val outline = MaterialTheme.colorScheme.outline
+    Box(
+        modifier =
+            modifier
+                .clip(RoundedCornerShape(16.dp))
+                .drawBehind {
+                    val stroke = 1.5.dp.toPx()
+                    drawRoundRect(
+                        color = outline,
+                        topLeft = Offset(stroke / 2, stroke / 2),
+                        size = Size(size.width - stroke, size.height - stroke),
+                        cornerRadius = CornerRadius(16.dp.toPx() - stroke / 2),
+                        style =
+                            Stroke(
+                                width = stroke,
+                                pathEffect = PathEffect.dashPathEffect(floatArrayOf(6.dp.toPx(), 4.dp.toPx())),
+                            ),
+                    )
+                }.clickable(onClick = onClick),
+        contentAlignment = Alignment.Center,
+    ) {
+        Icon(
+            painter = painterResource(id = R.drawable.rounded_add_24),
+            contentDescription = stringResource(R.string.action_add),
+            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+    }
+}
+
 @Composable
 fun AppGridItem(
     app: NotificationApp,
