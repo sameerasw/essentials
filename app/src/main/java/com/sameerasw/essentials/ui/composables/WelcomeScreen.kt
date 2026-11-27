@@ -858,6 +858,16 @@ fun WhatsNewStepContent(
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            Text(
+                text = "Read more",
+                style = MaterialTheme.typography.titleSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(start = 32.dp, end = 24.dp, bottom = 12.dp),
+            )
+
             // Release Notes / Markdown
             Box(
                 modifier =
