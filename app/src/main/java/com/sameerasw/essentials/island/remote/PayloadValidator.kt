@@ -4,6 +4,8 @@ import android.graphics.Bitmap
 import com.sameerasw.island.sdk.BriefCardPayload
 import com.sameerasw.island.sdk.DecodedPayload
 import com.sameerasw.island.sdk.IslandAction
+import com.sameerasw.island.sdk.IslandAnchor
+import com.sameerasw.island.sdk.IslandAttachmentPayload
 import com.sameerasw.island.sdk.IslandCellPayload
 import com.sameerasw.island.sdk.IslandExpandedPayload
 import com.sameerasw.island.sdk.IslandInteractionsPayload
@@ -24,6 +26,11 @@ object PayloadValidator {
     private const val MAX_LINE_TEXT = 120
     private const val MIN_HEIGHT_DP = 80
     private const val MAX_HEIGHT_DP = 640
+    private const val MIN_ATTACHMENT_DP = 40
+    private const val MAX_ATTACHMENT_DP = 240
+    private val ANCHORS = setOf(IslandAnchor.MEDIA)
+    private const val MIN_BEAT_MS = 250f
+    private const val MAX_BEAT_MS = 2000f
 
     fun sanitize(decoded: DecodedPayload): DecodedPayload {
         val items = decoded.payload.items
@@ -41,7 +48,14 @@ object PayloadValidator {
             .distinctBy { it.key.take(MAX_KEY) }
             .take(MAX_OPTIONS)
             .map { it.copy(key = it.key.take(MAX_KEY), title = it.title.take(MAX_OPTION_TITLE)) }
-        return DecodedPayload(IslandPayload(decoded.payload.schema, items, cards, options), assets(decoded.assets))
+        val attachments = decoded.payload.attachments.orEmpty()
+            .filter { it.key.isNotBlank() && it.anchor in ANCHORS }
+            .distinctBy { it.anchor }
+            .map(::attachment)
+        return DecodedPayload(
+            IslandPayload(decoded.payload.schema, items, cards, options = options, attachments = attachments),
+            assets(decoded.assets),
+        )
     }
 
     private fun assets(source: Map<String, Bitmap>): Map<String, Bitmap> {
@@ -97,6 +111,14 @@ object PayloadValidator {
         trailingText = card.trailingText?.take(16),
         trailingTone = tone(card.trailingTone),
         pageHeightDp = card.pageHeightDp?.coerceIn(MIN_HEIGHT_DP, MAX_HEIGHT_DP),
+    )
+
+    private fun attachment(attachment: IslandAttachmentPayload) = attachment.copy(
+        key = attachment.key.take(MAX_KEY),
+        heightDp = attachment.heightDp.coerceIn(MIN_ATTACHMENT_DP, MAX_ATTACHMENT_DP),
+        matchTitle = attachment.matchTitle?.take(MAX_LINE_TEXT),
+        beatMs = attachment.beatMs?.takeIf { it.isFinite() && it in MIN_BEAT_MS..MAX_BEAT_MS },
+        beatOffsetMs = attachment.beatOffsetMs?.takeIf { it.isFinite() },
     )
 
     private fun action(action: IslandAction) = action.copy(target = action.target?.take(MAX_KEY))

@@ -16,8 +16,16 @@ object IslandSchema {
     val ALLOWED_HOSTS = setOf(DEFAULT_HOST_PACKAGE)
 }
 
+object IslandAnchor {
+    const val MEDIA = "media"
+}
+
 object IslandSurfaceKey {
     private const val BRIEF_PREFIX = "brief."
+    private const val ATTACHMENT_PREFIX = "attach."
+    fun attachment(attachmentKey: String) = ATTACHMENT_PREFIX + attachmentKey
+    fun isAttachment(surfaceKey: String) = surfaceKey.startsWith(ATTACHMENT_PREFIX)
+    fun attachmentKey(surfaceKey: String) = surfaceKey.removePrefix(ATTACHMENT_PREFIX)
 
     fun brief(cardKey: String) = BRIEF_PREFIX + cardKey
     fun isBrief(surfaceKey: String) = surfaceKey.startsWith(BRIEF_PREFIX)

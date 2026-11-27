@@ -119,6 +119,16 @@ class MediaSessionSource(
             return ((state.position + elapsed) / duration.toFloat()).coerceIn(0f, 1f)
         }
 
+        fun positionMs(controller: MediaController): Long {
+            val state = controller.playbackState ?: return 0L
+            val elapsed = if (state.state == PlaybackState.STATE_PLAYING) {
+                (SystemClock.elapsedRealtime() - state.lastPositionUpdateTime) * state.playbackSpeed
+            } else {
+                0f
+            }
+            return (state.position + elapsed).toLong().coerceAtLeast(0L)
+        }
+
         fun canSeek(controller: MediaController): Boolean {
             val actions = controller.playbackState?.actions ?: return false
             val duration = controller.metadata?.getLong(MediaMetadata.METADATA_KEY_DURATION) ?: 0L

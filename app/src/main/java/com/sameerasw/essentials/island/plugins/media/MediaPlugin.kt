@@ -39,6 +39,7 @@ import com.sameerasw.essentials.island.ui.components.MediaArtCue
 import com.sameerasw.essentials.island.ui.components.TrackSkipPill
 import com.sameerasw.essentials.island.ui.components.IslandBitmap
 import com.sameerasw.essentials.services.NotificationListener
+import com.sameerasw.island.sdk.IslandAnchor
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -300,6 +301,10 @@ class MediaPlugin : BaseIslandPlugin() {
                 queueAccent = t.accent?.let { Color(it) },
                 stack = stack,
                 sideBubble = if (settings.isIslandMediaBubbleEnabled()) mediaBubble(t, isPlaying, artAccent) else null,
+                attachmentAnchor = IslandAnchor.MEDIA,
+                attachmentTitle = t.title,
+                attachmentActive = isPlaying,
+                attachmentPositionMs = { active?.let(MediaSessionSource::positionMs) ?: 0L },
             ),
         )
     }

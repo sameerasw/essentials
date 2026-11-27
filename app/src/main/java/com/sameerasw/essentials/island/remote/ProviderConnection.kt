@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.toArgb
 import com.sameerasw.essentials.data.repository.SettingsRepository
+import com.sameerasw.essentials.island.model.IslandAttachments
 import com.sameerasw.essentials.island.model.IslandExpandedScope
 import com.sameerasw.essentials.island.model.IslandItem
 import com.sameerasw.essentials.island.model.IslandPriorityEntries
@@ -207,6 +208,7 @@ class ProviderConnection(
         pending.value = null
         _items.value = emptyList()
         RemoteBriefCards.set(info.packageName, emptyList())
+        IslandAttachments.set(info.packageName, emptyList())
         RemoteProviderOptions.clear(info.packageName)
         lastDecoded = null
         onItemsChanged()
@@ -223,6 +225,7 @@ class ProviderConnection(
         val siblings = decoded.payload.items.map { it.key }.toSet()
         _items.value = decoded.payload.items.mapNotNull { RemoteItemMapper.map(it, decoded.assets, siblings, this) }
         RemoteBriefCards.set(info.packageName, decoded.payload.briefCards.map { RemoteBriefCard(info.packageName, it, decoded.assets, this) })
+        IslandAttachments.set(info.packageName, decoded.payload.attachments.map { RemoteAttachments.map(info.packageName, it, this) })
         RemoteProviderOptions.set(info.packageName, decoded.payload.options, ::setOption)
         onItemsChanged()
     }
@@ -250,6 +253,7 @@ class ProviderConnection(
             cameraSlotWidthPx = snapshot?.cameraSlotWidthPx ?: 0,
             cornerPx = snapshot?.cornerPx ?: 0,
             powerSave = DeviceUtils.isPowerSaveMode(context),
+            supportsAttachments = Build.VERSION.SDK_INT >= Build.VERSION_CODES.R,
         )
     }
 
