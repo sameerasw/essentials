@@ -17,29 +17,29 @@
     <string name="check_pre_releases_label">Ön sürümleri kontrol et</string>
     <string name="check_pre_releases_desc">Kararsız olabilir</string>
     <string name="label_default_tab">Varsayılan sekme</string>
-    <string name="label_toolbar">Araç çubuğunu özelleştir</string>
-    <string name="toolbar_section_hidden">Araç çubuğundan gizlenmiş</string>
+    <string name="label_toolbar">Customize toolbar</string>
+    <string name="toolbar_section_hidden">Hidden from toolbar</string>
     <string name="toolbar_hidden_hint">Drag items here to remove them from the toolbar. They will show up in the Essentials tab.</string>
-    <string name="toolbar_show_tab_names">Sekme adlarını göster</string>
-    <string name="toolbar_show_tab_names_unavailable">Sekme adları yalnızca araç çubuğunda en fazla %1$d öğe olduğunda gösterilebilir. Adlarının görünmesi için bazı sekmeleri gizleyin.</string>
+    <string name="toolbar_show_tab_names">Show tab names</string>
+    <string name="toolbar_show_tab_names_unavailable">Tab names can only be shown when the toolbar has up to %1$d items. Hide some tabs to make room for their names.</string>
     <string name="action_customize">Customize</string>
     <string name="header_greeting_name">Hello %1$s!</string>
     <string name="label_your_name">Your name</string>
-    <string name="modes_none_active">Hiç aktif yok</string>
+    <string name="modes_none_active">Hiçbiri aktif değil</string>
     <string name="tab_modes">Modlar</string>
     <string name="modes_active_count">%1$d aktif</string>
-    <string name="modes_empty">Henüz mod yok</string>
-    <string name="modes_unsupported">Modes need Android 15 or newer</string>
-    <string name="action_new_mode">Yeni mod</string>
+    <string name="modes_empty">No modes yet</string>
+    <string name="modes_unsupported">Modlar Android 15 veya üstü istemektedir</string>
+    <string name="action_new_mode">New mode</string>
     <string name="mode_editor_edit_title">Edit mode</string>
-    <string name="mode_name_hint">Mod adı</string>
+    <string name="mode_name_hint">Mode name</string>
     <string name="mode_system_settings">Open in system settings</string>
     <string name="mode_section_features">While active</string>
     <string name="mode_section_freeze">Freeze apps</string>
     <string name="mode_feature_mobile_data">Mobile data</string>
     <string name="mode_feature_show_taps">Show taps</string>
-    <string name="mode_link_title">Bir sistem modunu bağla</string>
-    <string name="mode_link_none">Bağlanacak sistem modu kalmadı</string>
+    <string name="mode_link_title">Link a system mode</string>
+    <string name="mode_link_none">No system modes left to link</string>
     <string name="mode_unlink">Unlink</string>
     <string name="mode_section_conditions">Turn on automatically</string>
     <string name="mode_condition_add">Add condition</string>
@@ -56,11 +56,7 @@
     <string name="mode_linked_to">Linked to %1$s</string>
     <string name="mode_owned">Essentials mode</string>
     <string name="tab_modes_desc">Turn Essentials and system modes into routines</string>
-    <string name="about_desc_tab_modes">Modlar, Android\'in Hızlı Ayarlar ve Ayarlar\'da gördüğünüz kendi Modları üzerine kuruludur.
-
-Bir mod açıkken, Essentials özellikleri ve sistem ayarlarını açıp kapatabilir, uygulamaları etiket veya kategoriye göre dondurabilir, kendi eylemlerinizi çalıştırabilir ve Henüz orada mıyız? yolculuğu başlatabilir. Mod sona erdiğinde her şey eski haline döner.
-
-Modlar, bir programdan, takvim etkinliklerinden veya çalışma konumunuzdan, Wi-Fi\'den, Bluetooth\'tan, bir yerden, şarjdan veya Android Auto\'dan otomatik olarak açılabilir. Ayrıca Uyku Zamanı gibi mevcut sistem modlarını da bağlayabilirsiniz.</string>
+    <string name="about_desc_tab_modes">Modes build on Android\'s own Modes, the ones you see in Quick Settings and Settings.\n\nWhile a mode is on, Essentials can switch features and system settings on or off, freeze apps by tag or category, run your own actions and start an Are we there yet? trip. Everything is put back when the mode ends.\n\nModes can turn on by themselves from a schedule, calendar events or your working location, Wi-Fi, Bluetooth, a place, charging or Android Auto. You can also link existing system modes like Bedtime.</string>
     <string name="how_to_use_tab_modes">Tap + to create a mode or link a system mode. Open a mode to choose what turns it on and what it changes. Use the switch to turn it on or off yourself.</string>
     <string name="about_desc_tab_diy">Build your own automations.\n\nRun actions when something happens, while a state holds, when an app opens, or from a shortcut.</string>
     <string name="how_to_use_tab_diy">Tap + to create an automation, pick what starts it, then add the actions to run.</string>
@@ -100,7 +96,7 @@ Modlar, bir programdan, takvim etkinliklerinden veya çalışma konumunuzdan, Wi
     <string name="setting_use_system_font_title">Sistem fontunu kullan</string>
     <string name="app_color_variant_soft">Yumuşak</string>
     <string name="app_color_variant_bright">Parlak</string>
-    <string name="app_color_variant_neutral">Doğal</string>
+    <string name="app_color_variant_neutral">Nötr</string>
     <string name="setting_pitch_black_theme_desc">Karanlık modda saf siyah arka plan kullanın</string>
     <string name="settings_section_haptic">Dokunsal Geri Bildirim</string>
     <string name="button_remap_section_long_press">Uzun Basmayı Yeniden Eşle</string>
@@ -357,7 +353,7 @@ Modlar, bir programdan, takvim etkinliklerinden veya çalışma konumunuzdan, Wi
     <string name="icon_nfc">NFC / Felica</string>
     <string name="icon_vpn">VPN</string>
     <string name="icon_airplane_mode">Uçak Modu</string>
-    <string name="icon_hotspot">Sıcak nokta</string>
+    <string name="icon_hotspot">Uzak Bağlantı</string>
     <string name="icon_cast">Yansıtma</string>
     <string name="icon_mobile_data">Mobil Veri</string>
     <string name="icon_phone_signal">Telefon Sinyali</string>
@@ -908,7 +904,7 @@ Bu özelliği etkinleştirmek için güvenli ayarlar yazma izni, zorla kapatma s
     <string name="diy_effect_dim_wallpaper">Loş Duvar Kağıdı</string>
     <string name="diy_effect_night_mode">Gece Modu</string>
     <string name="diy_device_effects_android_15_warning">Bu özellik Android 15 veya üzerini gerektirir.</string>
-    <string name="diy_device_effects_enabled">Etkin</string>
+    <string name="diy_device_effects_enabled">Aktif</string>
     <string name="diy_device_effects_disabled">Devre dışı</string>
     <string name="diy_action_sound_mode">Ses Modu</string>
     <string name="diy_sound_mode_desc">Bu eylem, tetikleyicilere bağlı olarak Ses, Titreşim ve Sessiz modları arasında geçiş yapılmasına olanak tanır. Rahatsız Etmeyin erişimi gerektirir.</string>
@@ -1592,7 +1588,7 @@ Ve ayarın etkili olması için birden fazla kez uygulanması gerekebilir.</stri
     <string name="setting_swipe_tabs_desc">Ana ekranda</string>
     <string name="setting_enable_unsupported_features_title">Desteklenmeyen özellikleri etkinleştir</string>
     <string name="setting_enable_unsupported_features_desc">Varsayılan olarak gizlenmiş olan, OEM\'e özgü veya gereksiz özellikleri göster.</string>
-    <string name="settings_translated_texts">Çevrildi</string>
+    <string name="settings_translated_texts">Çevirildi</string>
     <string name="settings_translated_texts_desc">%d düzenleme beklemede — göndermek veya iptal etmek için dokunun</string>
     <string name="settings_translate_mode">Çeviri Modu</string>
     <string name="settings_translate_mode_desc">Çeviri yapmak ve topluluğa katkıda bulunmak için herhangi bir metne uzun basın</string>
@@ -1795,14 +1791,14 @@ Gizlendiğinde, bildirimler ekranınızın üzerinde belirmek yerine bildirim pa
     <string name="duo_camera_offset_y_title">Dikey konum</string>
     <string name="island_max_width_title">Maksimum genişlik</string>
     <string name="island_font_scale_title">Font boyutu</string>
-    <string name="duo_show_flashlight_title">El feneri</string>
+    <string name="duo_show_flashlight_title">Fener</string>
     <string name="status_glance_show_calendar_title">Takvim etkinlikleri</string>
     <string name="status_glance_calendar_timeframe_title">Şu zamandaki yaklaşan etkinlikleri göster:</string>
     <string name="status_glance_calendar_show_all_day_title">Tüm gün süren etkinlikleri göster</string>
-    <string name="duo_show_media_title">Medya oynatma</string>
+    <string name="duo_show_media_title">Medya oynatımı</string>
     <string name="duo_show_time_title">Zaman</string>
     <string name="duo_show_battery_title">Batarya</string>
-    <string name="island_action_tap_title">Tek dokunuş</string>
+    <string name="island_action_tap_title">Tek dokunma</string>
     <string name="status_glance_action_tap_media_desc">Medya oynatılırken Oynat / Duraklat</string>
     <string name="duo_action_double_tap_title">Çift dokunma</string>
     <string name="duo_action_long_press_title">Uzun basma</string>
@@ -1880,7 +1876,7 @@ Gizlendiğinde, bildirimler ekranınızın üzerinde belirmek yerine bildirim pa
     <string name="duo_action_tap_title">Dokun</string>
     <string name="island_show_network_title">Ağ</string>
     <string name="island_section_notifications">Bildirimler</string>
-    <string name="island_call_options_title">Çağrılar</string>
+    <string name="island_call_options_title">Aramalar</string>
     <string name="island_devices_battery_section">Cihazlar</string>
     <string name="island_like_while_playing_title">Müzik Oynarken Beğen</string>
     <string name="feat_widget_stack_desc">Widget\'ları üst üste yerleştirin ve aralarında geçiş yapın</string>
@@ -2211,7 +2207,7 @@ Bazı seçenekler Shizuku veya erişilebilirlik izni gerektirir ve sonuçlar cih
     <string name="btn_grant_all_permissions">Tüm izinleri ver</string>
     <string name="btn_reset_onboarding">Yeni kullanıcı sürecini sıfırla</string>
     <string name="haptic_mode_stronger">Daha güçlü</string>
-    <string name="label_ui_design">UI design</string>
+    <string name="label_ui_design">Arayüz tasarımı</string>
     <string name="ui_design_expressive">Material Expressive</string>
     <string name="ui_design_one_ui">OneUI inspired</string>
     <string name="ui_design_experimental_info">Custom UI styles are experimental and might not be perfect</string>
@@ -2252,8 +2248,8 @@ Bazı seçenekler Shizuku veya erişilebilirlik izni gerektirir ve sonuçlar cih
 Veya aşağıdaki düğmeyi kullanarak Shizuku üzerinden kolayca verebilirsiniz.
 
 Bu izin için sadece şunlara ihtiyaç duyulmaktadır: </string>
-    <string name="external_control_token_title">Harici kontrol token\'ı</string>
-    <string name="shizuku_auth_token_label">Shizuku kimlik token\'ı</string>
+    <string name="external_control_token_title">Harici kontrol belirteci</string>
+    <string name="shizuku_auth_token_label">Shizuku kimlik jetonu</string>
     <string name="feature_reset_info_title">Bu özelliği sıfırla</string>
     <string name="feature_reset_info_desc">Bu özellik için Essentials ayarlarının tümünü varsayılan değerlerine sıfırlar. Sistem ayarları ve izinler değiştirilmez.</string>
     <string name="cat_sync">Senkronizasyon</string>
@@ -2443,7 +2439,7 @@ Bu izin için sadece şunlara ihtiyaç duyulmaktadır: </string>
     <string name="island_suppress_system_heads_up_title">Sistem mesajlarını sakla</string>
     <string name="island_hide_live_updates_title">Canlı güncellemeleri ada görünür haldeyken sakla</string>
     <string name="island_dismiss_on_outside_title">Dış aktivitedeyken geç</string>
-    <string name="label_reset_battery_stats_title">Batatya istatiklerini sıfırla</string>
+    <string name="label_reset_battery_stats_title">Batarya İstatistiklerini Sıfırla</string>
     <string name="duo_auto_detect_title">Kamerayı otomatik bul</string>
     <string name="duo_auto_detect_desc">Otomatik şekilde ön kamera yerini bulur</string>
     <string name="duo_ring_radius_title">Yüzük büyüklüğü</string>
@@ -2508,6 +2504,19 @@ Bu izin için sadece şunlara ihtiyaç duyulmaktadır: </string>
     <string name="screenshots_section_auto_clean">Otomatik temizleme</string>
     <string name="screenshots_section_stats">Şimdiye kadar temizlenen</string>
     <string name="screenshots_section_after_sharing">Paylaştıktan sonra</string>
-    <string name="action_reset_battery_stats">İstatistikleri sıfırla</string>
+    <string name="action_reset_battery_stats">Bilgileri sıfırla</string>
     <string name="action_reset_snooze">Erteleme Seçeneklerini Sıfırla</string>
+    <string name="charge_opt_long_press_title">Seçenekleri Değiştir</string>
+    <string name="charge_opt_long_press_desc">Quick Tile a basıldığında modlar arası geçiş yaparken geçeceği modu/modları seçin</string>
+    <string name="diy_type_action_shortcut">Aksiyonlu kısayol</string>
+    <string name="diy_type_accessibility_shortcut">Erişebilirlikli kısayol</string>
+    <string name="diy_type_state">Durum</string>
+    <string name="diy_type_app">Uygulama</string>
+    <string name="diy_type_trigger">Tetikle</string>
+    <string name="island_reorder_title">Yeniden sırala</string>
+    <string name="island_time_show_seconds_title">Saniyeyi göster</string>
+    <string name="perm_install_packages_title">Bilinmeyen Uygulamaları İndir</string>
+    <string name="perm_install_packages_desc">Uygulama ve gereksimleri otomatik yüklemek için gereklidir.</string>
+    <string name="perm_storage_title">Bütün Dosyalara Erişim</string>
+    <string name="perm_sensitive_notifications_title">Özel Bildirimleri Oku</string>
 </resources>
