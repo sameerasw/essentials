@@ -233,6 +233,13 @@ fun ToolbarConfigBottomSheet(
                         verticalArrangement = Arrangement.spacedBy(2.dp),
                     ) {
                         IconToggleItem(
+                            iconRes = R.drawable.rounded_touch_app_24,
+                            title = stringResource(R.string.setting_swipe_tabs_title),
+                            isChecked = viewModel.isSwipeTabsEnabled.value,
+                            onCheckedChange = { viewModel.setSwipeTabsEnabled(it) },
+                            modifier = Modifier.clip(segmentShape(0, 3)),
+                        )
+                        IconToggleItem(
                             iconRes = R.drawable.rounded_label_24,
                             title = stringResource(R.string.toolbar_show_tab_names),
                             isChecked = canShowLabels && viewModel.isToolbarShowLabels.value,
@@ -240,13 +247,13 @@ fun ToolbarConfigBottomSheet(
                             enabled = canShowLabels,
                             onDisabledClick = { showLabelsInfo = true },
                             onInfoClick = if (canShowLabels) null else ({ showLabelsInfo = true }),
-                            modifier = Modifier.clip(segmentShape(0, 2)),
+                            modifier = Modifier.clip(segmentShape(1, 3)),
                         )
                         Box(
                             modifier =
                                 Modifier
                                     .fillMaxWidth()
-                                    .clip(segmentShape(1, 2))
+                                    .clip(segmentShape(2, 3))
                                     .background(MaterialTheme.colorScheme.surfaceBright)
                                     .padding(horizontal = 16.dp, vertical = 12.dp),
                         ) {

@@ -651,13 +651,6 @@ fun SettingsContent(
                 options = availableTabs,
             )
 
-            IconToggleItem(
-                iconRes = R.drawable.rounded_touch_app_24,
-                title = stringResource(R.string.setting_swipe_tabs_title),
-                isChecked = viewModel.isSwipeTabsEnabled.value,
-                onCheckedChange = { viewModel.setSwipeTabsEnabled(it) },
-            )
-
             val hapticModeLabels = mapOf(
                 AppHapticMode.DISABLED to stringResource(R.string.haptic_mode_disabled),
                 AppHapticMode.ENABLED to stringResource(R.string.haptic_mode_enabled),
