@@ -10,6 +10,7 @@
 package com.sameerasw.essentials.domain.appops
 
 import android.app.AppOpsManager
+import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.sameerasw.essentials.R
 import org.lsposed.hiddenapibypass.HiddenApiBypass
@@ -59,6 +60,91 @@ data class AppOpInfo(
             .lowercase()
             .replace('_', ' ')
             .replaceFirstChar { it.uppercase() }
+
+    @DrawableRes
+    val iconRes: Int = AppOpIcons.iconFor(name)
+}
+
+object AppOpIcons {
+    private val rules: List<Pair<List<String>, Int>> =
+        listOf(
+            listOf("RING_VOLUME") to R.drawable.rounded_ring_volume_24,
+            listOf("VOLUME") to R.drawable.rounded_volume_up_24,
+            listOf("TAKE_AUDIO_FOCUS") to R.drawable.rounded_headphones_24,
+            listOf("TAKE_MEDIA_BUTTONS") to R.drawable.rounded_play_pause_24,
+            listOf("PLAY_AUDIO") to R.drawable.rounded_music_note_24,
+            listOf("CONTROL_AUDIO", "MEDIA_ROUTING") to R.drawable.rounded_speaker_group_24,
+            listOf("RECORD_AUDIO_OUTPUT") to R.drawable.rounded_fiber_smart_record_24,
+            listOf("MUTE_MICROPHONE") to R.drawable.rounded_mic_off_24,
+            listOf("RECORD_AUDIO", "MICROPHONE", "HOTWORD", "TRIGGER_AUDIO", "INTERACTION_AUDIO", "PHONE_AUDIO") to R.drawable.rounded_mic_24,
+            listOf("CAMERA") to R.drawable.rounded_photo_camera_24,
+            listOf("PROJECT_MEDIA") to R.drawable.rounded_cast_24,
+            listOf("ASSIST_SCREENSHOT") to R.drawable.rounded_screenshot_region_24,
+            listOf("ASSIST") to R.drawable.rounded_record_voice_over_24,
+            listOf("MEDIA_LOCATION") to R.drawable.rounded_add_location_alt_24,
+            listOf("MOCK_LOCATION") to R.drawable.rounded_my_location_24,
+            listOf("LOCATION", "GPS") to R.drawable.rounded_location_on_24,
+            listOf("NEIGHBORING_CELLS") to R.drawable.rounded_signal_cellular_alt_24,
+            listOf("VIBRATE") to R.drawable.rounded_mobile_vibrate_24,
+            listOf("CONTACTS") to R.drawable.rounded_import_contacts_24,
+            listOf("GET_ACCOUNTS") to R.drawable.rounded_person_24,
+            listOf("CALL_LOG") to R.drawable.rounded_call_log_24,
+            listOf("CALENDAR") to R.drawable.rounded_calendar_month_24,
+            listOf("WIFI") to R.drawable.rounded_wifi_24,
+            listOf("BLUETOOTH") to R.drawable.rounded_bluetooth_24,
+            listOf("UWB", "RANGING") to R.drawable.rounded_devices_other_24,
+            listOf("NOTIFICATION") to R.drawable.rounded_notifications_24,
+            listOf("BROADCAST") to R.drawable.rounded_campaign_24,
+            listOf("SMS_FINANCIAL") to R.drawable.rounded_payments_24,
+            listOf("ICC") to R.drawable.rounded_sim_card_24,
+            listOf("SMS", "MMS", "WAP_PUSH") to R.drawable.rounded_chat_bubble_24,
+            listOf("VOICEMAIL", "SIP", "CALL", "PHONE_STATE", "PHONE_NUMBERS", "HANDOVER") to R.drawable.rounded_call_24,
+            listOf("WRITE_SETTINGS", "SYSTEM_PREFERENCES") to R.drawable.rounded_settings_24,
+            listOf("RESTRICTED_SETTINGS") to R.drawable.rounded_shield_lock_24,
+            listOf("SYSTEM_ALERT_WINDOW", "TOAST_WINDOW", "OVERLAY") to R.drawable.rounded_ad_units_24,
+            listOf("WRITE_CLIPBOARD") to R.drawable.rounded_content_copy_24,
+            listOf("CLIPBOARD") to R.drawable.rounded_content_paste_24,
+            listOf("TURN_SCREEN_ON") to R.drawable.rounded_brightness_6_24,
+            listOf("WAKE_LOCK") to R.drawable.rounded_wb_sunny_24,
+            listOf("USAGE_STATS") to R.drawable.rounded_data_usage_24,
+            listOf("VPN", "IPSEC") to R.drawable.rounded_vpn_key_24,
+            listOf("WALLPAPER") to R.drawable.rounded_wallpaper_24,
+            listOf("FINGERPRINT", "BIOMETRIC") to R.drawable.rounded_face_24,
+            listOf("TEMPERATURE") to R.drawable.rounded_device_thermostat_24,
+            listOf("HEART_RATE") to R.drawable.rounded_monitor_heart_24,
+            listOf("OXYGEN") to R.drawable.rounded_bloodtype_24,
+            listOf("BODY_SENSORS") to R.drawable.rounded_ecg_heart_24,
+            listOf("HEALTH") to R.drawable.rounded_health_and_safety_24,
+            listOf("ACTIVITY_RECOGNITION") to R.drawable.rounded_directions_walk_24,
+            listOf("MEDIA_AUDIO") to R.drawable.rounded_library_music_24,
+            listOf("MEDIA_VIDEO") to R.drawable.rounded_movie_24,
+            listOf("MEDIA_IMAGES", "VISUAL_USER_SELECTED") to R.drawable.rounded_photo_library_24,
+            listOf("MANAGE_MEDIA") to R.drawable.rounded_photo_album_24,
+            listOf("STORAGE") to R.drawable.rounded_folder_24,
+            listOf("INSTALL_PACKAGES") to R.drawable.rounded_download_24,
+            listOf("DELETE_PACKAGES") to R.drawable.rounded_delete_24,
+            listOf("QUERY_ALL_PACKAGES", "INSTANT_APP") to R.drawable.rounded_apps_24,
+            listOf("POWER_RESTRICTIONS", "HIBERNATION", "SUSPENSION") to R.drawable.rounded_battery_android_frame_shield_24,
+            listOf("BACKGROUND", "FOREGROUND", "JOBS", "BG_START") to R.drawable.rounded_sync_24,
+            listOf("EXACT_ALARM") to R.drawable.rounded_alarm_24,
+            listOf("PICTURE_IN_PICTURE") to R.drawable.rounded_splitscreen_24,
+            listOf("FULL_SCREEN_INTENT") to R.drawable.rounded_fullscreen_portrait_24,
+            listOf("ACCESSIBILITY") to R.drawable.rounded_accessibility_new_24,
+            listOf("DEVICE_IDENTIFIERS") to R.drawable.rounded_badge_24,
+            listOf("ACROSS_PROFILES") to R.drawable.rounded_work_24,
+            listOf("AUTO_REVOKE") to R.drawable.rounded_history_24,
+            listOf("CREDENTIALS") to R.drawable.rounded_key_24,
+            listOf("MOBILE_DATA") to R.drawable.rounded_mobiledata_arrows_24,
+            listOf("GRAMMATICAL_GENDER") to R.drawable.rounded_translate_24,
+            listOf("ARCHIVAL", "ARCHIVE") to R.drawable.rounded_archive_24,
+            listOf("CONSENTED_STATE") to R.drawable.rounded_policy_24,
+            listOf("TESTING") to R.drawable.rounded_bug_report_24,
+            listOf("SENSOR", "DETECTION") to R.drawable.rounded_sensors_24,
+        )
+
+    @DrawableRes
+    fun iconFor(opName: String): Int =
+        rules.firstOrNull { (keys, _) -> keys.any { it in opName } }?.second ?: R.drawable.rounded_android_24
 }
 
 data class AppOpEntry(

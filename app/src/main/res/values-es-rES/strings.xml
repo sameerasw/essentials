@@ -1976,7 +1976,6 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla s
     <string name="app_ops_scanning">Reading app ops…</string>
     <string name="app_ops_restricted_count">%1$d restricted</string>
     <string name="app_ops_changed_count">%1$d changed</string>
-    <string name="app_ops_apps_count">%1$d apps</string>
     <string name="app_ops_add_app">Add app</string>
     <string name="app_ops_section_used">Used or changed</string>
     <string name="app_ops_section_other">Other operations</string>

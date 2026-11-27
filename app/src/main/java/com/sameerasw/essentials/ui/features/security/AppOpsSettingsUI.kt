@@ -10,7 +10,6 @@
 package com.sameerasw.essentials.ui.features.security
 
 import android.widget.Toast
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -27,7 +26,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -53,7 +54,6 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.ImageBitmap
@@ -73,9 +73,9 @@ import com.sameerasw.essentials.domain.appops.AppOpMode
 import com.sameerasw.essentials.domain.appops.isEffectivelyAllowed
 import com.sameerasw.essentials.domain.model.NotificationApp
 import com.sameerasw.essentials.translation.TranslatableText
+import com.sameerasw.essentials.ui.components.CategoryExpandableSection
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenu
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
-import com.sameerasw.essentials.ui.core.controls.Switch
 import com.sameerasw.essentials.ui.core.sheets.PermissionsBottomSheet
 import com.sameerasw.essentials.ui.core.sheets.SingleAppSelectionSheet
 import com.sameerasw.essentials.utils.HapticUtil
@@ -83,32 +83,6 @@ import com.sameerasw.essentials.utils.PermissionUIHelper
 import com.sameerasw.essentials.utils.ShellUtils
 import com.sameerasw.essentials.viewmodels.AppOpsViewModel
 import com.sameerasw.essentials.viewmodels.MainViewModel
-
-private sealed interface OpsRow {
-    val key: String
-
-    data class Header(
-        val op: AppOpInfo,
-        val count: Int,
-        val expanded: Boolean,
-    ) : OpsRow {
-        override val key = "h_${op.name}"
-    }
-
-    data class AppItem(
-        val op: AppOpInfo,
-        val app: NotificationApp,
-        val entry: AppOpEntry,
-    ) : OpsRow {
-        override val key = "a_${op.name}_${app.packageName}"
-    }
-
-    data class AddApp(
-        val op: AppOpInfo,
-    ) : OpsRow {
-        override val key = "add_${op.name}"
-    }
-}
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -140,7 +114,7 @@ fun AppOpsSettingsUI(
     var opsSearchOpen by rememberSaveable { mutableStateOf(false) }
     var appsQuery by rememberSaveable { mutableStateOf("") }
     var opsQuery by rememberSaveable { mutableStateOf("") }
-    var expandedOps by remember { mutableStateOf(setOf<String>()) }
+    var expandedOp by rememberSaveable { mutableStateOf<String?>(null) }
     var selectedPackage by remember { mutableStateOf<String?>(null) }
     var pinnedOp by remember { mutableStateOf<String?>(null) }
     var addAppForOp by remember { mutableStateOf<String?>(null) }
@@ -197,18 +171,7 @@ fun AppOpsSettingsUI(
                 it.permission?.contains(opsQuery, ignoreCase = true) == true
         }
 
-    val opsRows =
-        buildList {
-            filteredOps.forEach { op ->
-                val opApps = appsForOp[op.name].orEmpty()
-                val expanded = op.name in expandedOps
-                add(OpsRow.Header(op, opApps.size, expanded))
-                if (expanded) {
-                    opApps.forEach { (app, entry) -> add(OpsRow.AppItem(op, app, entry)) }
-                    add(OpsRow.AddApp(op))
-                }
-            }
-        }
+    val defaultModes = remember(ops) { ops.associate { it.name to it.defaultMode } }
 
     fun requireShell(action: () -> Unit) {
         if (hasShell) action() else showPermissionSheet = true
@@ -246,7 +209,7 @@ fun AppOpsSettingsUI(
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
                 contentPadding = PaddingValues(start = 12.dp, end = 12.dp, top = statusBarHeight + 20.dp, bottom = 150.dp),
-                verticalArrangement = Arrangement.spacedBy(2.dp),
+                verticalArrangement = Arrangement.spacedBy(if (page == 1) 8.dp else 2.dp),
             ) {
                 item(key = "title") {
                     TranslatableText(
@@ -306,6 +269,8 @@ fun AppOpsSettingsUI(
                         filteredApps = filteredApps,
                         query = appsQuery,
                         entries = entries,
+                        defaultModes = defaultModes,
+                        showCounts = viewModel.hasScanned.value,
                         onClick = { app ->
                             HapticUtil.performVirtualKeyHaptic(view)
                             pinnedOp = null
@@ -314,12 +279,11 @@ fun AppOpsSettingsUI(
                     )
                 } else {
                     opsPage(
-                        rows = opsRows,
+                        ops = filteredOps,
+                        appsForOp = appsForOp,
+                        expandedOp = expandedOp,
                         query = opsQuery,
-                        onToggleExpand = { op ->
-                            HapticUtil.performVirtualKeyHaptic(view)
-                            expandedOps = if (op.name in expandedOps) expandedOps - op.name else expandedOps + op.name
-                        },
+                        onToggleExpand = { op -> expandedOp = if (expandedOp == op.name) null else op.name },
                         onModeChange = { pkg, op, mode -> changeMode(pkg, op, mode) },
                         onOpenApp = { pkg, op ->
                             pinnedOp = op.name
@@ -402,6 +366,8 @@ private fun LazyListScope.appsPage(
     filteredApps: List<NotificationApp>,
     query: String,
     entries: Map<String, Map<String, AppOpEntry>>,
+    defaultModes: Map<String, AppOpMode>,
+    showCounts: Boolean,
     onClick: (NotificationApp) -> Unit,
 ) {
     when {
@@ -409,105 +375,102 @@ private fun LazyListScope.appsPage(
         filteredApps.isEmpty() -> item(key = "empty") { EmptyText(query) }
         else ->
             itemsIndexed(filteredApps, key = { _, app -> app.packageName }) { index, app ->
-                val restricted = entries[app.packageName]?.values?.count { it.mode.isRestricted } ?: 0
+                val appEntries = entries[app.packageName].orEmpty()
+                val allowed =
+                    appEntries.values.count { it.mode.isEffectivelyAllowed(defaultModes[it.op] ?: AppOpMode.DEFAULT) }
                 AppOpsRowSurface(shape = rowShape(index, filteredApps.lastIndex), onClick = { onClick(app) }) {
                     AppIcon(app.icon, 40)
                     Column(modifier = Modifier.weight(1f)) {
                         SingleLine(app.appName, MaterialTheme.typography.bodyLarge, MaterialTheme.colorScheme.onSurface)
-                        SingleLine(
-                            if (restricted > 0) {
-                                "${app.packageName} · ${stringResource(R.string.app_ops_restricted_count, restricted)}"
-                            } else {
-                                app.packageName
-                            },
-                            MaterialTheme.typography.bodySmall,
-                            MaterialTheme.colorScheme.onSurfaceVariant,
+                        SingleLine(app.packageName, MaterialTheme.typography.bodySmall, MaterialTheme.colorScheme.onSurfaceVariant)
+                    }
+                    if (showCounts) {
+                        CountPill(
+                            text = "$allowed/${appEntries.size}",
+                            highlight = allowed < appEntries.size,
                         )
                     }
-                    Icon(
-                        painter = painterResource(R.drawable.rounded_chevron_right_24),
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
                 }
             }
     }
 }
 
 private fun LazyListScope.opsPage(
-    rows: List<OpsRow>,
+    ops: List<AppOpInfo>,
+    appsForOp: Map<String, List<Pair<NotificationApp, AppOpEntry>>>,
+    expandedOp: String?,
     query: String,
     onToggleExpand: (AppOpInfo) -> Unit,
     onModeChange: (String, AppOpInfo, AppOpMode) -> Unit,
     onOpenApp: (String, AppOpInfo) -> Unit,
     onAddApp: (AppOpInfo) -> Unit,
 ) {
-    if (rows.isEmpty()) {
+    if (ops.isEmpty()) {
         item(key = "ops_empty") { if (query.isBlank()) CenteredLoading() else EmptyText(query) }
         return
     }
-    itemsIndexed(rows, key = { _, row -> row.key }) { index, row ->
-        val shape = rowShape(index, rows.lastIndex)
-        when (row) {
-            is OpsRow.Header -> {
-                val rotation by animateFloatAsState(if (row.expanded) 180f else 0f, label = "opChevron")
-                AppOpsRowSurface(shape = shape, onClick = { onToggleExpand(row.op) }) {
-                    Column(modifier = Modifier.weight(1f)) {
-                        SingleLine(row.op.label, MaterialTheme.typography.bodyLarge, MaterialTheme.colorScheme.onSurface)
-                        SingleLine(
-                            listOfNotNull(row.op.name, row.op.permission?.substringAfterLast('.')).joinToString(" · "),
-                            MaterialTheme.typography.bodySmall,
-                            MaterialTheme.colorScheme.onSurfaceVariant,
-                        )
-                    }
-                    if (row.count > 0) {
-                        Text(
-                            text = stringResource(R.string.app_ops_apps_count, row.count),
-                            style = MaterialTheme.typography.labelMedium,
-                            color = MaterialTheme.colorScheme.primary,
-                        )
-                    }
-                    Icon(
-                        painter = painterResource(R.drawable.rounded_keyboard_arrow_down_24),
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.rotate(rotation),
-                    )
-                }
-            }
-
-            is OpsRow.AppItem ->
+    items(ops, key = { it.name }) { op ->
+        val opApps = appsForOp[op.name].orEmpty()
+        CategoryExpandableSection(
+            title = op.label,
+            itemCount = opApps.size,
+            isExpanded = expandedOp == op.name,
+            onToggleExpand = { onToggleExpand(op) },
+            iconRes = op.iconRes,
+            subtitle = listOfNotNull(op.name, op.permission?.substringAfterLast('.')).joinToString(" · "),
+        ) {
+            val lastIndex = opApps.size
+            opApps.forEachIndexed { index, (app, entry) ->
                 OpModeRow(
-                    title = row.app.appName,
-                    op = row.op,
-                    entry = row.entry,
-                    shape = shape,
-                    color = MaterialTheme.colorScheme.surfaceContainer,
-                    leading = { AppIcon(row.app.icon, 32) },
-                    onModeChange = { onModeChange(row.app.packageName, row.op, it) },
-                    onRowClick = { onOpenApp(row.app.packageName, row.op) },
+                    title = app.appName,
+                    op = op,
+                    entry = entry,
+                    shape = rowShape(index, lastIndex),
+                    leading = { AppIcon(app.icon, 32) },
+                    onModeChange = { onModeChange(app.packageName, op, it) },
+                    onRowClick = { onOpenApp(app.packageName, op) },
                 )
-
-            is OpsRow.AddApp ->
-                AppOpsRowSurface(
-                    shape = shape,
-                    color = MaterialTheme.colorScheme.surfaceContainer,
-                    onClick = { onAddApp(row.op) },
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.rounded_add_24),
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(32.dp).padding(4.dp),
-                    )
-                    TranslatableText(
-                        stringResId = R.string.app_ops_add_app,
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.weight(1f),
-                    )
-                }
+            }
+            AppOpsRowSurface(
+                shape = rowShape(lastIndex, lastIndex),
+                onClick = { onAddApp(op) },
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.rounded_add_24),
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(32.dp).padding(4.dp),
+                )
+                TranslatableText(
+                    stringResId = R.string.app_ops_add_app,
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.weight(1f),
+                )
+            }
         }
+    }
+}
+
+@Composable
+private fun CountPill(
+    text: String,
+    highlight: Boolean,
+) {
+    Box(
+        modifier =
+            Modifier
+                .clip(CircleShape)
+                .background(
+                    if (highlight) MaterialTheme.colorScheme.errorContainer else MaterialTheme.colorScheme.surfaceContainerHighest,
+                ).padding(horizontal = 10.dp, vertical = 4.dp),
+    ) {
+        Text(
+            text = text,
+            style = MaterialTheme.typography.labelMedium,
+            fontWeight = FontWeight.Bold,
+            color = if (highlight) MaterialTheme.colorScheme.onErrorContainer else MaterialTheme.colorScheme.onSurfaceVariant,
+        )
     }
 }
 
@@ -526,77 +489,73 @@ private fun OpModeRow(
     val view = LocalView.current
     var menuOpen by remember { mutableStateOf(false) }
     val mode = entry?.mode ?: AppOpMode.DEFAULT
-    val allowed = mode.isEffectivelyAllowed(op.defaultMode)
     val details =
         buildList {
-            add(stringResource(mode.label))
             if (entry?.isUidMode == true) add(stringResource(R.string.app_ops_uid_mode))
             entry?.lastUsed?.let(::formatLastUsed)?.let { add(stringResource(R.string.app_ops_last_used, it)) }
         }.joinToString(" · ")
 
-    Box {
-        AppOpsRowSurface(
-            shape = shape,
-            color = color,
-            onClick = {
-                HapticUtil.performVirtualKeyHaptic(view)
-                if (onRowClick != null) onRowClick() else menuOpen = true
-            },
-        ) {
-            leading?.invoke()
-            Column(modifier = Modifier.weight(1f)) {
-                SingleLine(title, MaterialTheme.typography.bodyLarge, MaterialTheme.colorScheme.onSurface)
-                SingleLine(
-                    details,
-                    MaterialTheme.typography.bodySmall,
-                    if (mode.isRestricted) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant,
-                )
+    AppOpsRowSurface(
+        shape = shape,
+        color = color,
+        onClick = {
+            HapticUtil.performVirtualKeyHaptic(view)
+            if (onRowClick != null) onRowClick() else menuOpen = true
+        },
+    ) {
+        leading?.invoke()
+        Column(modifier = Modifier.weight(1f)) {
+            SingleLine(title, MaterialTheme.typography.bodyLarge, MaterialTheme.colorScheme.onSurface)
+            if (details.isNotEmpty()) {
+                SingleLine(details, MaterialTheme.typography.bodySmall, MaterialTheme.colorScheme.onSurfaceVariant)
             }
+        }
+        Box {
             Surface(
                 onClick = {
                     HapticUtil.performVirtualKeyHaptic(view)
                     menuOpen = true
                 },
                 shape = RoundedCornerShape(12.dp),
-                color = MaterialTheme.colorScheme.surfaceContainerHighest,
+                color =
+                    if (mode.isRestricted) MaterialTheme.colorScheme.errorContainer else MaterialTheme.colorScheme.surfaceContainerHighest,
+                contentColor =
+                    if (mode.isRestricted) MaterialTheme.colorScheme.onErrorContainer else MaterialTheme.colorScheme.onSurfaceVariant,
                 enabled = enabled,
             ) {
-                Icon(
-                    painter = painterResource(R.drawable.rounded_more_vert_24),
-                    contentDescription = stringResource(R.string.app_ops_change_mode),
-                    modifier = Modifier.padding(8.dp).size(20.dp),
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
+                Row(
+                    modifier = Modifier.padding(start = 12.dp, end = 6.dp, top = 6.dp, bottom = 6.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(2.dp),
+                ) {
+                    Text(text = stringResource(mode.label), style = MaterialTheme.typography.labelLarge)
+                    Icon(
+                        painter = painterResource(R.drawable.rounded_keyboard_arrow_down_24),
+                        contentDescription = stringResource(R.string.app_ops_change_mode),
+                        modifier = Modifier.size(20.dp),
+                    )
+                }
             }
-            Switch(
-                checked = allowed,
-                enabled = enabled,
-                onCheckedChange = {
-                    HapticUtil.performVirtualKeyHaptic(view)
-                    onModeChange(if (it) AppOpMode.ALLOW else AppOpMode.IGNORE)
-                },
-            )
-        }
-        SegmentedDropdownMenu(
-            expanded = menuOpen,
-            onDismissRequest = { menuOpen = false },
-            modifier = Modifier.align(Alignment.TopEnd),
-        ) {
-            AppOpMode.entries.forEach { option ->
-                SegmentedDropdownMenuItem(
-                    text = { Text(stringResource(option.label)) },
-                    onClick = {
-                        menuOpen = false
-                        HapticUtil.performVirtualKeyHaptic(view)
-                        if (option != mode) onModeChange(option)
-                    },
-                    trailingIcon =
-                        if (option == mode) {
-                            { Icon(painterResource(R.drawable.rounded_check_24), contentDescription = null) }
-                        } else {
-                            null
+            SegmentedDropdownMenu(
+                expanded = menuOpen,
+                onDismissRequest = { menuOpen = false },
+            ) {
+                AppOpMode.entries.forEach { option ->
+                    SegmentedDropdownMenuItem(
+                        text = { Text(stringResource(option.label)) },
+                        onClick = {
+                            menuOpen = false
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            if (option != mode) onModeChange(option)
                         },
-                )
+                        trailingIcon =
+                            if (option == mode) {
+                                { Icon(painterResource(R.drawable.rounded_check_24), contentDescription = null) }
+                            } else {
+                                null
+                            },
+                    )
+                }
             }
         }
     }
