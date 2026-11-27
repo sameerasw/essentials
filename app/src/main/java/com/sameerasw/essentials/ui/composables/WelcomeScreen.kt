@@ -65,10 +65,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.boundsInWindow
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
@@ -118,6 +121,8 @@ enum class OnboardingStep {
 fun WelcomeScreen(
     viewModel: MainViewModel,
     isWhatsNewFlow: Boolean = false,
+    onLogoPlaced: ((Rect) -> Unit)? = null,
+    logoAlpha: (() -> Float)? = null,
     onBeginClick: () -> Unit,
 ) {
     val view = LocalView.current
@@ -156,6 +161,8 @@ fun WelcomeScreen(
                         WelcomeStepContent(
                             viewModel = viewModel,
                             isWhatsNewFlow = isWhatsNewFlow,
+                            onLogoPlaced = onLogoPlaced,
+                            logoAlpha = logoAlpha,
                             rotationAnimatable = rotationAnimatable,
                             center = center,
                             onCenterChanged = { center = it },
@@ -238,6 +245,8 @@ fun WelcomeScreen(
 fun WelcomeStepContent(
     viewModel: MainViewModel,
     isWhatsNewFlow: Boolean,
+    onLogoPlaced: ((Rect) -> Unit)?,
+    logoAlpha: (() -> Float)?,
     rotationAnimatable: Animatable<Float, *>,
     center: Offset,
     onCenterChanged: (Offset) -> Unit,
@@ -271,7 +280,13 @@ fun WelcomeStepContent(
                 modifier =
                     Modifier
                         .size(240.dp)
-                        .onSizeChanged {
+                        .then(
+                            if (onLogoPlaced != null) {
+                                Modifier.onGloballyPositioned { onLogoPlaced(it.boundsInWindow()) }
+                            } else {
+                                Modifier
+                            },
+                        ).onSizeChanged {
                             onCenterChanged(Offset(it.width / 2f, it.height / 2f))
                         }.pointerInput(Unit) {
                             val majorStep = 60f
@@ -356,6 +371,7 @@ fun WelcomeStepContent(
                             )
                         }.graphicsLayer {
                             rotationZ = rotationAnimatable.value
+                            alpha = logoAlpha?.invoke() ?: 1f
                         },
                 colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary),
             )

@@ -1423,9 +1423,14 @@ class MainActivity : AppCompatActivity() {
                             enter = fadeIn() + slideInVertically { it },
                             exit = fadeOut() + slideOutVertically { it },
                         ) {
+                            DisposableEffect(Unit) {
+                                onDispose { splashLogoHandoff.welcomeBounds = null }
+                            }
                             WelcomeScreen(
                                 viewModel = viewModel,
                                 isWhatsNewFlow = isWhatsNewVisible,
+                                onLogoPlaced = { splashLogoHandoff.welcomeBounds = it },
+                                logoAlpha = { splashLogoHandoff.welcomeLogoAlpha.floatValue },
                                 onBeginClick = {
                                     if (isWhatsNewVisible) {
                                         viewModel.completeWhatsNew()
