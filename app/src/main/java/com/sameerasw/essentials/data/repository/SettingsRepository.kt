@@ -320,6 +320,7 @@ class SettingsRepository(
         const val KEY_VOLUME_STEPS_PER_PRESS = "volume_steps_per_press"
         const val KEY_APP_VOLUME_ENABLED = "app_volume_enabled"
         const val KEY_APP_VOLUME_LEVELS = "app_volume_levels"
+        const val KEY_APP_VOLUME_FOCUS_IGNORED = "app_volume_focus_ignored"
         const val KEY_APP_VOLUME_OVERLAY_ENABLED = "app_volume_overlay_enabled"
 
         const val KEY_DYNAMIC_NIGHT_LIGHT_ENABLED = "dynamic_night_light_enabled"
@@ -5051,6 +5052,17 @@ class SettingsRepository(
         } ?: emptyMap()
 
     fun setAppVolumeLevels(levels: Map<String, Float>) = putString(KEY_APP_VOLUME_LEVELS, gson.toJson(levels))
+
+    fun getAppVolumeFocusIgnored(): Set<String> =
+        getString(KEY_APP_VOLUME_FOCUS_IGNORED)?.let {
+            try {
+                gson.fromJson<Set<String>>(it, object : TypeToken<Set<String>>() {}.type)
+            } catch (_: Exception) {
+                null
+            }
+        } ?: emptySet()
+
+    fun setAppVolumeFocusIgnored(packages: Set<String>) = putString(KEY_APP_VOLUME_FOCUS_IGNORED, gson.toJson(packages))
 
     fun isTextSnippetsEnabled(): Boolean = getBoolean(KEY_TEXT_SNIPPETS_ENABLED, false)
     fun setTextSnippetsEnabled(enabled: Boolean) {

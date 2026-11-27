@@ -417,6 +417,7 @@ fun FeatureHelpBottomSheet(
                     HoldToContinueButton(
                         waitTimeProgress = 1f,
                         onContinue = {
+                            if (feature.id == "App volume") viewModel.restoreAllAppAudioFocus(context)
                             SettingsRepository(context).resetKeysWithPrefixes(resetPrefixes)
                             viewModel.check(context)
                             Toast.makeText(context, R.string.feature_reset_done, Toast.LENGTH_SHORT).show()

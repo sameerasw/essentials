@@ -63,6 +63,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.text.input.clearText
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
@@ -832,6 +833,7 @@ class MainActivity : AppCompatActivity() {
                                     val isDetail = !barAtHome
                                     val isTranslationModeActive by com.sameerasw.essentials.translation.TranslationManager.isTranslationModeEnabled
                                     val detailSpec = if (isDetail) bottomBarHost.specFor(barRoute) else null
+                                    val detailSearch = detailSpec?.search
                                     val routeTitle =
                                         when (val route = barRoute) {
                                             is AppRoute.FeatureSettings ->
@@ -844,7 +846,7 @@ class MainActivity : AppCompatActivity() {
                                             is AppRoute.Wallpaper -> stringResource(R.string.feat_daily_wallpaper_title)
                                             else -> ""
                                         }
-                                    val barMode = if ((barAtHome || pageTab == DIYTabs.FREEZE) && isSearchActive) "search" else "bar"
+                                    val barMode = if (((barAtHome || pageTab == DIYTabs.FREEZE) && isSearchActive) || detailSearch != null) "search" else "bar"
                                     Box(
                                         modifier = Modifier.fillMaxWidth(),
                                         contentAlignment = Alignment.BottomCenter,
@@ -873,6 +875,38 @@ class MainActivity : AppCompatActivity() {
                                                     color = SearchBarDefaults.colors().containerColor,
                                                     shadowElevation = 6.dp,
                                                 ) {
+                                                    if (detailSearch != null) {
+                                                        SearchBarDefaults.InputField(
+                                                            detailSearch.state,
+                                                            onSearch = { focusManager.clearFocus() },
+                                                            expanded = true,
+                                                            onExpandedChange = {},
+                                                            modifier = Modifier.focusRequester(searchFocusRequester),
+                                                            placeholder = { Text(detailSearch.placeholder, maxLines = 1) },
+                                                            leadingIcon = {
+                                                                IconButton(onClick = {
+                                                                    HapticUtil.performVirtualKeyHaptic(view)
+                                                                    focusManager.clearFocus()
+                                                                    detailSearch.onClose()
+                                                                }) {
+                                                                    Icon(
+                                                                        painter = painterResource(id = R.drawable.rounded_arrow_back_24),
+                                                                        contentDescription = stringResource(R.string.content_desc_back),
+                                                                    )
+                                                                }
+                                                            },
+                                                            trailingIcon = {
+                                                                if (detailSearch.state.text.isNotEmpty()) {
+                                                                    IconButton(onClick = { detailSearch.state.clearText() }) {
+                                                                        Icon(
+                                                                            painter = painterResource(id = R.drawable.rounded_close_24),
+                                                                            contentDescription = stringResource(R.string.action_clear),
+                                                                        )
+                                                                    }
+                                                                }
+                                                            },
+                                                        )
+                                                    } else {
                                                     SearchBarDefaults.InputField(
                                                         query = searchQuery,
                                                         onQueryChange = onSearchQueryChange,
@@ -913,6 +947,7 @@ class MainActivity : AppCompatActivity() {
                                                             }
                                                         },
                                                     )
+                                                    }
                                                 }
                                             } else {
                                                 DisposableEffect(isDetail) {
@@ -1150,7 +1185,7 @@ class MainActivity : AppCompatActivity() {
                                         when {
                                             isAtHome -> 130.dp
                                             topRoute is AppRoute.Wallpaper -> 0.dp
-                                            else -> 150.dp
+                                            else -> bottomBarHost.specFor(topRoute)?.bottomBlurHeight ?: 150.dp
                                         },
                                     label = "bottom_blur_height",
                                 )

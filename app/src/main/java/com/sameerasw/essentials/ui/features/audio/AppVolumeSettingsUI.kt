@@ -57,9 +57,21 @@ fun AppVolumeSettingsUI(
     val view = LocalView.current
     val playing by AppVolumeController.playingPackages.collectAsState()
     val levels = viewModel.appVolumeLevels.value
+    val focusIgnored = viewModel.appVolumeFocusIgnored.value
+    val canRunShell = viewModel.isShizukuPermissionGranted.value
     val isEnabled = viewModel.isAppVolumeEnabled.value
     var showAppPicker by remember { mutableStateOf(false) }
     var editingPackage by remember { mutableStateOf<String?>(null) }
+
+    val lifecycleOwner = androidx.lifecycle.compose.LocalLifecycleOwner.current
+    androidx.compose.runtime.DisposableEffect(lifecycleOwner, canRunShell) {
+        val observer =
+            androidx.lifecycle.LifecycleEventObserver { _, event ->
+                if (event == androidx.lifecycle.Lifecycle.Event.ON_RESUME) viewModel.refreshAppAudioFocus(context)
+            }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
+    }
 
     Column(
         modifier =
@@ -102,7 +114,7 @@ fun AppVolumeSettingsUI(
             cornerRadius = 24.dp,
             modifier = Modifier.highlight(highlightSetting == "app_volume_apps"),
         ) {
-            (playing + levels.keys).distinct().forEach { packageName ->
+            (playing + levels.keys + focusIgnored).distinct().forEach { packageName ->
                 val appIcon =
                     remember(packageName) {
                         runCatching {
@@ -114,13 +126,19 @@ fun AppVolumeSettingsUI(
                         }.getOrNull()
                     }
                 val percent = formatLevel(levels[packageName] ?: 1f)
+                val summary =
+                    if (packageName in playing) {
+                        stringResource(R.string.app_volume_playing_summary, percent)
+                    } else {
+                        percent
+                    }
                 FeatureCard(
                     title = appLabel(packageName),
                     descriptionOverride =
-                        if (packageName in playing) {
-                            stringResource(R.string.app_volume_playing_summary, percent)
+                        if (packageName in focusIgnored) {
+                            stringResource(R.string.app_volume_focus_ignored_summary, summary)
                         } else {
-                            percent
+                            summary
                         },
                     isEnabled = true,
                     onToggle = {},
@@ -129,12 +147,15 @@ fun AppVolumeSettingsUI(
                     showToggle = false,
                     hasMoreSettings = true,
                     customTrailingContent =
-                        if (packageName in levels) {
+                        if (packageName in levels || packageName in focusIgnored) {
                             {
                                 IconButton(
                                     onClick = {
                                         HapticUtil.performVirtualKeyHaptic(view)
                                         viewModel.removeAppVolumeLevel(packageName)
+                                        if (packageName in focusIgnored) {
+                                            viewModel.setAppAudioFocusIgnored(context, packageName, false)
+                                        }
                                     },
                                 ) {
                                     Icon(
@@ -187,6 +208,9 @@ fun AppVolumeSettingsUI(
             level = levels[packageName] ?: 1f,
             onLevelChange = { AppVolumeController.preview(packageName, it) },
             onLevelChangeFinished = { viewModel.setAppVolumeLevel(packageName, it) },
+            isFocusIgnored = packageName in focusIgnored,
+            isFocusToggleEnabled = canRunShell,
+            onFocusIgnoredChange = { viewModel.setAppAudioFocusIgnored(context, packageName, it) },
             onDismiss = {
                 editingPackage = null
                 AppVolumeController.refresh()
@@ -201,6 +225,9 @@ private fun AppVolumeSheet(
     level: Float,
     onLevelChange: (Float) -> Unit,
     onLevelChangeFinished: (Float) -> Unit,
+    isFocusIgnored: Boolean,
+    isFocusToggleEnabled: Boolean,
+    onFocusIgnoredChange: (Boolean) -> Unit,
     onDismiss: () -> Unit,
 ) {
     var current by remember { mutableFloatStateOf(level) }
@@ -236,13 +263,14 @@ private fun AppVolumeSheet(
                     valueFormatter = { formatLevel(it) },
                     iconRes = R.drawable.rounded_volume_up_24,
                 )
+                IconToggleItem(
+                    iconRes = R.drawable.rounded_queue_music_24,
+                    title = stringResource(R.string.app_volume_ignore_focus_title),
+                    isChecked = isFocusIgnored,
+                    onCheckedChange = onFocusIgnoredChange,
+                    enabled = isFocusToggleEnabled,
+                )
             }
-            TranslatableText(
-                stringResId = R.string.app_volume_sheet_desc,
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(horizontal = 16.dp),
-            )
         }
     }
 }

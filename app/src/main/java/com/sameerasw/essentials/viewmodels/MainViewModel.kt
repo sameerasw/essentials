@@ -170,6 +170,7 @@ class MainViewModel : ViewModel() {
     val isAppVolumeEnabled = mutableStateOf(false)
     val isAppVolumeOverlayEnabled = mutableStateOf(false)
     val appVolumeLevels = mutableStateOf<Map<String, Float>>(emptyMap())
+    val appVolumeFocusIgnored = mutableStateOf<Set<String>>(emptySet())
     val remapHapticType = mutableStateOf(HapticFeedbackType.DOUBLE)
     val isDynamicNightLightEnabled = mutableStateOf(false)
     val isSmartPixelsEnabled = mutableStateOf(false)
@@ -2521,6 +2522,7 @@ class MainViewModel : ViewModel() {
         isAppVolumeEnabled.value = settingsRepository.isAppVolumeEnabled()
         isAppVolumeOverlayEnabled.value = settingsRepository.isAppVolumeOverlayEnabled()
         appVolumeLevels.value = settingsRepository.getAppVolumeLevels()
+        appVolumeFocusIgnored.value = settingsRepository.getAppVolumeFocusIgnored()
         LockscreenShortcutSide.entries.forEach { side ->
             lockscreenShortcutActions[side] = settingsRepository.getRemapActions(side.prefKey)
         }
@@ -5514,6 +5516,44 @@ class MainViewModel : ViewModel() {
     fun removeAppVolumeLevel(packageName: String) {
         appVolumeLevels.value = appVolumeLevels.value - packageName
         settingsRepository.setAppVolumeLevels(appVolumeLevels.value)
+    }
+
+    fun setAppAudioFocusIgnored(
+        context: Context,
+        packageName: String,
+        ignored: Boolean,
+    ) {
+        val appContext = context.applicationContext
+        appVolumeFocusIgnored.value =
+            if (ignored) appVolumeFocusIgnored.value + packageName else appVolumeFocusIgnored.value - packageName
+        viewModelScope.launch(Dispatchers.IO) {
+            com.sameerasw.essentials.utils.media.AudioFocusController.setIgnored(appContext, packageName, ignored)
+            syncAppAudioFocus(appContext)
+        }
+    }
+
+    fun refreshAppAudioFocus(context: Context) {
+        val appContext = context.applicationContext
+        viewModelScope.launch(Dispatchers.IO) { syncAppAudioFocus(appContext) }
+    }
+
+    private suspend fun syncAppAudioFocus(context: Context) {
+        val live = com.sameerasw.essentials.utils.media.AudioFocusController.queryIgnored(context) ?: return
+        withContext(Dispatchers.Main) {
+            appVolumeFocusIgnored.value = live
+            settingsRepository.setAppVolumeFocusIgnored(live)
+        }
+    }
+
+    fun restoreAllAppAudioFocus(context: Context) {
+        val appContext = context.applicationContext
+        val known = settingsRepository.getAppVolumeFocusIgnored() + appVolumeFocusIgnored.value
+        appVolumeFocusIgnored.value = emptySet()
+        settingsRepository.setAppVolumeFocusIgnored(emptySet())
+        viewModelScope.launch(Dispatchers.IO) {
+            val packages = known + com.sameerasw.essentials.utils.media.AudioFocusController.queryIgnored(appContext).orEmpty()
+            packages.forEach { com.sameerasw.essentials.utils.media.AudioFocusController.setIgnored(appContext, it, false) }
+        }
     }
 
     fun setLockscreenShortcutsEnabled(enabled: Boolean) {

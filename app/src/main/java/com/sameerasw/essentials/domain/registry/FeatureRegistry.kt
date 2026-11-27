@@ -2199,6 +2199,28 @@ object FeatureRegistry {
                 ) = viewModel.setScreenLockedSecurityEnabled(enabled, context)
             },
             object : Feature(
+                id = "App Ops",
+                title = R.string.feat_app_ops_title,
+                iconRes = R.drawable.rounded_admin_panel_settings_24,
+                category = R.string.cat_tools,
+                description = R.string.feat_app_ops_desc,
+                aboutDescription = R.string.about_desc_app_ops,
+                parentFeatureId = "Security",
+                showToggle = false,
+                hasMoreSettings = true,
+            ) {
+                override val permissionKeys: List<String>
+                    get() = listOf(if (ShellUtils.isRootEnabled(EssentialsApp.context)) "ROOT" else "SHIZUKU")
+
+                override fun isEnabled(viewModel: MainViewModel) = true
+
+                override fun onToggle(
+                    viewModel: MainViewModel,
+                    context: Context,
+                    enabled: Boolean,
+                ) {}
+            },
+            object : Feature(
                 id = "App lock",
                 title = R.string.feat_app_lock_title,
                 iconRes = R.drawable.rounded_apps_24,

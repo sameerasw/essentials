@@ -96,6 +96,9 @@ import com.sameerasw.essentials.ui.state.LocalMenuStateManager
 import com.sameerasw.essentials.utils.ColorUtil
 import com.sameerasw.essentials.utils.FreezeManager
 import com.sameerasw.essentials.utils.HapticUtil
+import com.sameerasw.essentials.utils.ShellUtils
+import com.sameerasw.essentials.utils.PermissionUIHelper
+import com.sameerasw.essentials.ui.core.sheets.PermissionsBottomSheet
 import com.sameerasw.essentials.utils.ShortcutUtil
 import com.sameerasw.essentials.viewmodels.MainViewModel
 import kotlinx.coroutines.Dispatchers
@@ -173,12 +176,24 @@ fun FreezeGridUI(
             if (searchQuery.isNotBlank() && filteredApps.isNotEmpty()) filteredApps.first() else null
         }
 
+    var showShellPermissionSheet by remember { mutableStateOf(false) }
+
+    fun ensureShellPermission(): Boolean {
+        if (ShellUtils.isAvailable(context) && !ShellUtils.hasPermission(context)) {
+            showShellPermissionSheet = true
+            return false
+        }
+        return true
+    }
+
     LaunchedEffect(searchSubmitSignal) {
         if (searchSubmitSignal > 0) {
             bestMatch?.let { app ->
                 HapticUtil.performVirtualKeyHaptic(view)
-                viewModel.launchAndUnfreezeApp(context, app.packageName)
-                onAppLaunched?.invoke()
+                if (frozenStates[app.packageName] != true || ensureShellPermission()) {
+                    viewModel.launchAndUnfreezeApp(context, app.packageName)
+                    onAppLaunched?.invoke()
+                }
             }
         }
     }
@@ -212,7 +227,7 @@ fun FreezeGridUI(
     }
 
     val runBulk: ((Set<String>?) -> Unit) -> Unit = { action ->
-        scope.launch(Dispatchers.IO) {
+        if (ensureShellPermission()) scope.launch(Dispatchers.IO) {
             action(tagFilterPackages)
             val states =
                 pickedApps.associate { app ->
@@ -489,14 +504,16 @@ fun FreezeGridUI(
                                                 menuState = menuState,
                                                 onClick = {
                                                     HapticUtil.performVirtualKeyHaptic(view)
-                                                    viewModel.launchAndUnfreezeApp(
-                                                        context,
-                                                        app.packageName,
-                                                    )
-                                                    onAppLaunched?.invoke()
+                                                    if (frozenStates[app.packageName] != true || ensureShellPermission()) {
+                                                        viewModel.launchAndUnfreezeApp(
+                                                            context,
+                                                            app.packageName,
+                                                        )
+                                                        onAppLaunched?.invoke()
+                                                    }
                                                 },
                                                 onToggleFreeze = {
-                                                    scope.launch(Dispatchers.IO) {
+                                                    if (ensureShellPermission()) scope.launch(Dispatchers.IO) {
                                                         val isCurrentlyFrozen =
                                                             frozenStates[app.packageName] ?: false
                                                         if (isCurrentlyFrozen) {
@@ -548,6 +565,22 @@ fun FreezeGridUI(
                 onHelpClick?.let { WhatIsThisButton(onClick = it, modifier = Modifier.padding(top = 24.dp)) }
                 Spacer(modifier = Modifier.height(contentPadding.calculateBottomPadding()))
             }
+        }
+
+        if (showShellPermissionSheet) {
+            PermissionsBottomSheet(
+                onDismissRequest = {
+                    showShellPermissionSheet = false
+                    viewModel.check(context)
+                },
+                featureTitle = R.string.feat_freeze_title,
+                permissions =
+                    PermissionUIHelper.getPermissionItems(
+                        listOf(if (ShellUtils.isRootEnabled(context)) "ROOT" else "SHIZUKU"),
+                        context,
+                        viewModel,
+                    ),
+            )
         }
 
         appForTagAssignment?.let { targetApp ->

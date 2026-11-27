@@ -9,6 +9,14 @@ import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.unit.Dp
+import androidx.compose.foundation.text.input.TextFieldState
+
+data class BottomBarSearch(
+    val state: TextFieldState,
+    val placeholder: String,
+    val onClose: () -> Unit,
+)
 
 data class BottomBarSpec(
     val title: String,
@@ -18,6 +26,8 @@ data class BottomBarSpec(
     val fabAction: (() -> Unit)? = null,
     val fabContentDescription: String? = null,
     val onHelpClick: (() -> Unit)? = null,
+    val search: BottomBarSearch? = null,
+    val bottomBlurHeight: Dp? = null,
 )
 
 @Stable
