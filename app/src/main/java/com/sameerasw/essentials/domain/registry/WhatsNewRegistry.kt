@@ -67,7 +67,6 @@ object WhatsNewRegistry {
                     WhatsNewItem("App volume", "app_volume_ignore_focus"),
                     WhatsNewItem("Shut-Up!"),
                     WhatsNewItem("Widget stack"),
-                    WhatsNewItem(tabId(DIYTabs.FREEZE)),
                     WhatsNewItem(MODES),
                     WhatsNewItem(DIY),
                     WhatsNewItem(SETTINGS, "app_icon"),
