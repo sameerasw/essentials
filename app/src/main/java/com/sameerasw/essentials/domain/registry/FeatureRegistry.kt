@@ -2202,7 +2202,7 @@ object FeatureRegistry {
                 id = "App Ops",
                 title = R.string.feat_app_ops_title,
                 iconRes = R.drawable.rounded_admin_panel_settings_24,
-                category = R.string.cat_protection,
+                category = R.string.cat_tools,
                 description = R.string.feat_app_ops_desc,
                 aboutDescription = R.string.about_desc_app_ops,
                 parentFeatureId = "Security",
