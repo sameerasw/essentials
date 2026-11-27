@@ -92,6 +92,7 @@ import com.sameerasw.essentials.R
 import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.components.ShakeForHelpCard
 import com.sameerasw.essentials.ui.components.WhatsNewCustomContent
+import com.sameerasw.essentials.ui.components.WhatsNewToggleItem
 import com.sameerasw.essentials.ui.components.text.SimpleMarkdown
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.pickers.PrivilegedModePicker
@@ -924,51 +925,59 @@ fun WhatsNewStepContent(
             Spacer(modifier = Modifier.height(32.dp))
         }
 
-        Row(
+        Column(
             modifier =
                 Modifier
                     .fillMaxWidth()
                     .navigationBarsPadding()
                     .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            OutlinedButton(
-                onClick = {
-                    HapticUtil.performVirtualKeyHaptic(view)
-                    onBack()
-                },
-                modifier = Modifier.size(56.dp),
-                shape = RoundedCornerShape(16.dp),
-                contentPadding = PaddingValues(0.dp),
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.rounded_arrow_back_24),
-                    contentDescription = stringResource(R.string.action_back),
-                    modifier = Modifier.size(24.dp),
-                )
+            RoundedCardContainer {
+                WhatsNewToggleItem()
             }
-
-            Button(
-                onClick = onFinish,
-                modifier =
-                    Modifier
-                        .weight(1f)
-                        .height(56.dp),
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
             ) {
-                TranslatableText(
-                    stringResId = R.string.action_let_me_in,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                )
+                OutlinedButton(
+                    onClick = {
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        onBack()
+                    },
+                    modifier = Modifier.size(56.dp),
+                    shape = RoundedCornerShape(16.dp),
+                    contentPadding = PaddingValues(0.dp),
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.rounded_arrow_back_24),
+                        contentDescription = stringResource(R.string.action_back),
+                        modifier = Modifier.size(24.dp),
+                    )
+                }
 
-                Spacer(modifier = Modifier.weight(1f))
+                Button(
+                    onClick = onFinish,
+                    modifier =
+                        Modifier
+                            .weight(1f)
+                            .height(56.dp),
+                ) {
+                    TranslatableText(
+                        stringResId = R.string.action_let_me_in,
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                    )
 
-                Icon(
-                    painter = painterResource(id = R.drawable.rounded_mobile_check_24),
-                    contentDescription = null,
-                    modifier = Modifier.size(24.dp),
-                )
+                    Spacer(modifier = Modifier.weight(1f))
+
+                    Icon(
+                        painter = painterResource(id = R.drawable.rounded_mobile_check_24),
+                        contentDescription = null,
+                        modifier = Modifier.size(24.dp),
+                    )
+                }
             }
         }
     }

@@ -1996,7 +1996,7 @@
     <string name="translation_logged_in_as">以 %1$s 身份登入</string>
     <string name="subreddit_description">這裡是討論 Essentials 和我開發的其他應用的地方。加入社區，為專案貢獻，獲取幫助，還能學到一些東西。 ( ´ ▽ ` )ﾉ</string>
     <string name="label_developer_options">開發人員選項</string>
-    <string name="setting_show_whats_new_title">Show what\'s new</string>
+    <string name="setting_show_whats_new_title">Indicate what\'s new for a day</string>
     <string name="auto_backup_title">自動備份配置</string>
     <string name="auto_backup_folder">備份資料夾</string>
     <string name="btn_grant_all_permissions">授權所有權限</string>

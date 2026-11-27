@@ -2411,7 +2411,7 @@
     <string name="status_glance_section_what_to_show">Что показать</string>
     <string name="action_licenses_and_credits">Лицензии</string>
     <string name="label_developer_options">Параметры разработчика</string>
-    <string name="setting_show_whats_new_title">Show what\'s new</string>
+    <string name="setting_show_whats_new_title">Indicate what\'s new for a day</string>
     <string name="btn_grant_all_permissions">Предоставить все разрешения</string>
     <string name="btn_reset_onboarding">Сбросить регистрацию</string>
     <string name="label_haptics_title">Тактильные ощущения</string>

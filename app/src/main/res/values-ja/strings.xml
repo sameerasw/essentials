@@ -2220,7 +2220,7 @@ Duoと組み合わせることで、単一の統合カメラエリアとして�
     <string name="licenses_credits_subtitle">Essentials はオープンソースプロジェクトで成り立っています</string>
     <string name="label_top_contributors">上位の貢献者、ありがとう！</string>
     <string name="label_developer_options">開発者向けオプション</string>
-    <string name="setting_show_whats_new_title">Show what\'s new</string>
+    <string name="setting_show_whats_new_title">Indicate what\'s new for a day</string>
     <string name="auto_backup_title">自動バックアップ頻度</string>
     <string name="auto_backup_folder">バックアップ先のフォルダー</string>
     <string name="btn_grant_all_permissions">すべての権限を付与</string>

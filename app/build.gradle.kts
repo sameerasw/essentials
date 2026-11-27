@@ -118,7 +118,7 @@ android {
         versionCode = 75
         versionName = "22.0-beta.1"
 
-        val whatsNewCounter = 8
+        val whatsNewCounter = 9
         buildConfigField("int", "WHATS_NEW_COUNTER", whatsNewCounter.toString())
         buildConfigField("int", "REQUIRED_WEAR_VERSION_CODE", "8")
 

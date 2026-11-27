@@ -135,7 +135,6 @@ import com.sameerasw.essentials.ui.modifiers.BlurDirection
 import com.sameerasw.essentials.ui.modifiers.liquidRipple
 import com.sameerasw.essentials.ui.modifiers.progressiveBlur
 import com.sameerasw.essentials.ui.modifiers.scrollMotionBlur
-import com.sameerasw.essentials.ui.state.WhatsNewState
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
 import com.sameerasw.essentials.ui.theme.Shapes
 import com.sameerasw.essentials.utils.DeviceUtils
@@ -1417,12 +1416,7 @@ fun SettingsContent(
             RoundedCardContainer {
                 com.sameerasw.essentials.ui.features.system.AutoBackupSetting()
 
-                IconToggleItem(
-                    iconRes = R.drawable.rounded_celebration_24,
-                    title = stringResource(R.string.setting_show_whats_new_title),
-                    isChecked = WhatsNewState.enabled,
-                    onCheckedChange = { SettingsRepository(context).putBoolean(SettingsRepository.KEY_SHOW_WHATS_NEW, it) },
-                )
+                com.sameerasw.essentials.ui.components.WhatsNewToggleItem()
 
                 Column(
                     modifier =
