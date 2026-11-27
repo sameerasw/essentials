@@ -658,6 +658,7 @@ private fun AppOpsAppSheet(
             .sortedWith(compareByDescending<AppOpInfo> { it.name == pinnedOp }.thenBy { it.name })
     val other = ops.filter { it.name !in entries && it.name != pinnedOp }
     val restricted = entries.values.count { it.mode.isRestricted }
+    var otherExpanded by remember { mutableStateOf(false) }
 
     com.sameerasw.essentials.ui.core.sheets.EssentialsBottomSheet(onDismissRequest = onDismiss) {
         LazyColumn(
@@ -728,7 +729,22 @@ private fun AppOpsAppSheet(
             }
 
             sheetSection("used", R.string.app_ops_section_used, used, entries, hasShell, onModeChange)
-            sheetSection("other", R.string.app_ops_section_other, other, entries, hasShell, onModeChange)
+
+            if (other.isNotEmpty()) {
+                item(key = "other") {
+                    CategoryExpandableSection(
+                        title = stringResource(R.string.app_ops_section_other),
+                        itemCount = other.size,
+                        isExpanded = otherExpanded,
+                        onToggleExpand = { otherExpanded = !otherExpanded },
+                        modifier = Modifier.padding(top = 16.dp),
+                    ) {
+                        other.forEachIndexed { index, op ->
+                            SheetOpRow(op, entries[op.name], rowShape(index, other.lastIndex), hasShell, onModeChange)
+                        }
+                    }
+                }
+            }
         }
     }
 }
@@ -751,13 +767,32 @@ private fun LazyListScope.sheetSection(
         )
     }
     itemsIndexed(ops, key = { _, op -> "${key}_${op.name}" }) { index, op ->
-        OpModeRow(
-            title = op.label,
-            op = op,
-            entry = entries[op.name],
-            shape = rowShape(index, ops.lastIndex),
-            enabled = hasShell,
-            onModeChange = { onModeChange(op, it) },
-        )
+        SheetOpRow(op, entries[op.name], rowShape(index, ops.lastIndex), hasShell, onModeChange)
     }
+}
+
+@Composable
+private fun SheetOpRow(
+    op: AppOpInfo,
+    entry: AppOpEntry?,
+    shape: RoundedCornerShape,
+    hasShell: Boolean,
+    onModeChange: (AppOpInfo, AppOpMode) -> Unit,
+) {
+    OpModeRow(
+        title = op.label,
+        op = op,
+        entry = entry,
+        shape = shape,
+        enabled = hasShell,
+        leading = {
+            Icon(
+                painter = painterResource(op.iconRes),
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(24.dp),
+            )
+        },
+        onModeChange = { onModeChange(op, it) },
+    )
 }
