@@ -63,6 +63,16 @@ fun AppVolumeSettingsUI(
     var showAppPicker by remember { mutableStateOf(false) }
     var editingPackage by remember { mutableStateOf<String?>(null) }
 
+    val lifecycleOwner = androidx.lifecycle.compose.LocalLifecycleOwner.current
+    androidx.compose.runtime.DisposableEffect(lifecycleOwner, canRunShell) {
+        val observer =
+            androidx.lifecycle.LifecycleEventObserver { _, event ->
+                if (event == androidx.lifecycle.Lifecycle.Event.ON_RESUME) viewModel.refreshAppAudioFocus(context)
+            }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
+    }
+
     Column(
         modifier =
             modifier

@@ -5523,18 +5523,37 @@ class MainViewModel : ViewModel() {
         packageName: String,
         ignored: Boolean,
     ) {
+        val appContext = context.applicationContext
         appVolumeFocusIgnored.value =
             if (ignored) appVolumeFocusIgnored.value + packageName else appVolumeFocusIgnored.value - packageName
-        settingsRepository.setAppVolumeFocusIgnored(appVolumeFocusIgnored.value)
-        com.sameerasw.essentials.utils.media.AudioFocusController.setIgnored(context, packageName, ignored)
+        viewModelScope.launch(Dispatchers.IO) {
+            com.sameerasw.essentials.utils.media.AudioFocusController.setIgnored(appContext, packageName, ignored)
+            syncAppAudioFocus(appContext)
+        }
+    }
+
+    fun refreshAppAudioFocus(context: Context) {
+        val appContext = context.applicationContext
+        viewModelScope.launch(Dispatchers.IO) { syncAppAudioFocus(appContext) }
+    }
+
+    private suspend fun syncAppAudioFocus(context: Context) {
+        val live = com.sameerasw.essentials.utils.media.AudioFocusController.queryIgnored(context) ?: return
+        withContext(Dispatchers.Main) {
+            appVolumeFocusIgnored.value = live
+            settingsRepository.setAppVolumeFocusIgnored(live)
+        }
     }
 
     fun restoreAllAppAudioFocus(context: Context) {
-        settingsRepository.getAppVolumeFocusIgnored().forEach {
-            com.sameerasw.essentials.utils.media.AudioFocusController.setIgnored(context, it, false)
-        }
+        val appContext = context.applicationContext
+        val known = settingsRepository.getAppVolumeFocusIgnored() + appVolumeFocusIgnored.value
         appVolumeFocusIgnored.value = emptySet()
         settingsRepository.setAppVolumeFocusIgnored(emptySet())
+        viewModelScope.launch(Dispatchers.IO) {
+            val packages = known + com.sameerasw.essentials.utils.media.AudioFocusController.queryIgnored(appContext).orEmpty()
+            packages.forEach { com.sameerasw.essentials.utils.media.AudioFocusController.setIgnored(appContext, it, false) }
+        }
     }
 
     fun setLockscreenShortcutsEnabled(enabled: Boolean) {
