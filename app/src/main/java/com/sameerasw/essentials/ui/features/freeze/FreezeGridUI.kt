@@ -97,7 +97,7 @@ import com.sameerasw.essentials.utils.ColorUtil
 import com.sameerasw.essentials.utils.FreezeManager
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.utils.ShellUtils
-import com.sameerasw.essentials.utils.ui.PermissionUIHelper
+import com.sameerasw.essentials.utils.PermissionUIHelper
 import com.sameerasw.essentials.ui.core.sheets.PermissionsBottomSheet
 import com.sameerasw.essentials.utils.ShortcutUtil
 import com.sameerasw.essentials.viewmodels.MainViewModel

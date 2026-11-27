@@ -19,6 +19,7 @@ import android.os.Looper
 import android.provider.CalendarContract
 import android.util.Log
 import androidx.core.content.ContextCompat
+import androidx.core.text.HtmlCompat
 import java.util.TimeZone
 import java.util.concurrent.CopyOnWriteArraySet
 
@@ -57,6 +58,26 @@ data class CalendarInfo(
 
 object CalendarRepository {
     private const val TAG = "CalendarRepository"
+
+    private val htmlTagRegex = Regex("</?[a-zA-Z][^>]*>|&(nbsp|amp|lt|gt|quot|#\\d+);")
+    private val htmlHiddenBlockRegex =
+        Regex("<(head|style|script|title)\\b[^>]*>.*?</\\1\\s*>", setOf(RegexOption.IGNORE_CASE, RegexOption.DOT_MATCHES_ALL))
+    private val htmlCommentRegex = Regex("<!--.*?-->", RegexOption.DOT_MATCHES_ALL)
+    private val blankLinesRegex = Regex("\\n[ \\t\\u00A0]*(\\n[ \\t\\u00A0]*)+")
+
+    private fun plainDescription(raw: String): String {
+        if (!htmlTagRegex.containsMatchIn(raw)) return raw.trim()
+        val cleaned = raw.replace(htmlCommentRegex, "").replace(htmlHiddenBlockRegex, "")
+        return HtmlCompat
+            .fromHtml(cleaned, HtmlCompat.FROM_HTML_MODE_COMPACT)
+            .toString()
+            .replace('\uFFFC', ' ')
+            .lines()
+            .joinToString("\n") { it.replace('\u00A0', ' ').trimEnd() }
+            .replace(blankLinesRegex, "\n\n")
+            .trim()
+    }
+
     private const val EVENT_TYPE_PROPERTY = "shared:calendarProviderEventType"
     const val EVENT_TYPE_WORKING_LOCATION = "WORKING_LOCATION"
     private const val CHANGE_DEBOUNCE_MS = 300L
@@ -127,7 +148,7 @@ object CalendarRepository {
                                         calendarName = c.getString(8)?.trim()?.takeIf { it.isNotBlank() },
                                         color = if (c.isNull(9)) null else c.getInt(9),
                                         location = c.getString(10)?.trim()?.takeIf { it.isNotBlank() },
-                                        description = c.getString(11)?.trim()?.takeIf { it.isNotBlank() },
+                                        description = c.getString(11)?.let(::plainDescription)?.takeIf { it.isNotBlank() },
                                     ),
                                 )
                             }
