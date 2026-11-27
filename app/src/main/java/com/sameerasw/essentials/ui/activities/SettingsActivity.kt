@@ -103,7 +103,6 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.core.app.ActivityCompat
-import com.sameerasw.essentials.domain.DIYTabs
 import com.sameerasw.essentials.domain.registry.FeatureRegistry
 import com.sameerasw.essentials.domain.registry.PermissionRegistry
 import com.sameerasw.essentials.translation.TranslationManager
@@ -121,7 +120,6 @@ import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.pickers.AppColorPicker
 import com.sameerasw.essentials.ui.core.pickers.AppIconPicker
 import com.sameerasw.essentials.ui.core.pickers.CrashReportingPicker
-import com.sameerasw.essentials.ui.core.pickers.DefaultTabPicker
 import com.sameerasw.essentials.ui.core.pickers.LanguagePicker
 import com.sameerasw.essentials.ui.core.sheets.GitHubAuthSheet
 import com.sameerasw.essentials.ui.core.sheets.ImportConfigConfirmationSheet
@@ -640,15 +638,6 @@ fun SettingsContent(
                 onClick = {
                     showToolbarConfigSheet = true
                 },
-            )
-
-            val defaultTab by viewModel.defaultTab
-            val toolbarTabs by viewModel.toolbarTabs
-            val availableTabs = remember(toolbarTabs) { listOf(DIYTabs.ESSENTIALS) + toolbarTabs }
-            DefaultTabPicker(
-                selectedTab = defaultTab,
-                onTabSelected = { viewModel.setDefaultTab(it, context) },
-                options = availableTabs,
             )
 
             val hapticModeLabels = mapOf(

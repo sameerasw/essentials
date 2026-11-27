@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials.ui.core.sheets
 
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -16,12 +17,14 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -44,11 +47,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextAlign
@@ -101,6 +109,13 @@ fun ToolbarConfigBottomSheet(
     val canShowLabels = visibleTabs.size + 2 <= DIYTabs.MAX_LABELED_TOOLBAR_ITEMS
     var showLabelsInfo by remember { mutableStateOf(false) }
     val deviceUserName = rememberDeviceUserFirstName()
+    val context = LocalContext.current
+    val defaultTab by viewModel.defaultTab
+
+    fun selectDefault(tab: DIYTabs) {
+        HapticUtil.performVirtualKeyHaptic(view)
+        viewModel.setDefaultTab(tab, context)
+    }
 
     if (showLabelsInfo) {
         ToolbarLabelsInfoBottomSheet(onDismissRequest = { showLabelsInfo = false })
@@ -158,6 +173,8 @@ fun ToolbarConfigBottomSheet(
                     ToolbarTabRow(
                         tab = DIYTabs.ESSENTIALS,
                         shape = segmentShape(0, visibleTabs.size + 2),
+                        isDefault = defaultTab == DIYTabs.ESSENTIALS,
+                        onSetDefault = { selectDefault(DIYTabs.ESSENTIALS) },
                     )
                 }
 
@@ -178,6 +195,8 @@ fun ToolbarConfigBottomSheet(
                                 shape = shape,
                                 isDragging = isDragging,
                                 isVisible = isVisible,
+                                isDefault = if (isVisible) defaultTab == entry else null,
+                                onSetDefault = { selectDefault(entry) },
                                 dragScope = this,
                                 onToggleVisibility = { moveAcrossDivider(entry) },
                                 onDragStarted = {
@@ -193,6 +212,7 @@ fun ToolbarConfigBottomSheet(
                                 ToolbarTabRow(
                                     tab = DIYTabs.SETTINGS,
                                     shape = segmentShape(visibleTabs.size + 1, visibleTabs.size + 2),
+                                    reserveDefaultSlot = true,
                                 )
                                 TranslatableText(
                                     stringResId = R.string.toolbar_section_hidden,
@@ -323,6 +343,9 @@ private fun ToolbarTabRow(
     shape: Shape,
     isDragging: Boolean = false,
     isVisible: Boolean = true,
+    isDefault: Boolean? = null,
+    onSetDefault: () -> Unit = {},
+    reserveDefaultSlot: Boolean = false,
     dragScope: ReorderableCollectionItemScope? = null,
     onToggleVisibility: (() -> Unit)? = null,
     onDragStarted: () -> Unit = {},
@@ -346,32 +369,39 @@ private fun ToolbarTabRow(
                 .fillMaxWidth()
                 .clip(shape),
         leadingContent = {
-            Box(
-                modifier =
-                    Modifier
-                        .size(40.dp)
-                        .background(
-                            color =
-                                if (isVisible) {
-                                    MaterialTheme.colorScheme.primaryContainer
-                                } else {
-                                    MaterialTheme.colorScheme.surfaceContainerHighest
-                                },
-                            shape = CircleShape,
-                        ),
-                contentAlignment = Alignment.Center,
-            ) {
-                Icon(
-                    painter = painterResource(id = tab.iconRes),
-                    contentDescription = null,
-                    modifier = Modifier.size(if (tab == DIYTabs.ESSENTIALS) 26.dp else 22.dp),
-                    tint =
-                        if (isVisible) {
-                            MaterialTheme.colorScheme.onPrimaryContainer
-                        } else {
-                            MaterialTheme.colorScheme.onSurfaceVariant
-                        },
-                )
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                if (isDefault != null) {
+                    DefaultTabStar(selected = isDefault, onClick = onSetDefault)
+                } else if (reserveDefaultSlot) {
+                    Spacer(modifier = Modifier.size(44.dp))
+                }
+                Box(
+                    modifier =
+                        Modifier
+                            .size(40.dp)
+                            .background(
+                                color =
+                                    if (isVisible) {
+                                        MaterialTheme.colorScheme.primaryContainer
+                                    } else {
+                                        MaterialTheme.colorScheme.surfaceContainerHighest
+                                    },
+                                shape = CircleShape,
+                            ),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Icon(
+                        painter = painterResource(id = tab.iconRes),
+                        contentDescription = null,
+                        modifier = Modifier.size(if (tab == DIYTabs.ESSENTIALS) 26.dp else 22.dp),
+                        tint =
+                            if (isVisible) {
+                                MaterialTheme.colorScheme.onPrimaryContainer
+                            } else {
+                                MaterialTheme.colorScheme.onSurfaceVariant
+                            },
+                    )
+                }
             }
         },
         content = {
@@ -382,14 +412,7 @@ private fun ToolbarTabRow(
             )
         },
         trailingContent = {
-            if (isFixed) {
-                Icon(
-                    painter = painterResource(id = R.drawable.rounded_lock_24),
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(12.dp),
-                )
-            } else {
+            if (!isFixed) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     IconButton(onClick = { onToggleVisibility?.invoke() }) {
                         Icon(
@@ -421,4 +444,32 @@ private fun ToolbarTabRow(
             }
         },
     )
+}
+
+@Composable
+private fun DefaultTabStar(
+    selected: Boolean,
+    onClick: () -> Unit,
+) {
+    val alpha by animateFloatAsState(if (selected) 1f else 0.12f, label = "defaultStarAlpha")
+    val label = stringResource(R.string.label_default_tab)
+    Box(
+        modifier =
+            Modifier
+                .size(44.dp)
+                .clip(CircleShape)
+                .selectable(selected = selected, role = Role.RadioButton, onClick = onClick)
+                .semantics { contentDescription = label },
+        contentAlignment = Alignment.Center,
+    ) {
+        Icon(
+            painter = painterResource(id = R.drawable.round_star_24),
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.primary,
+            modifier =
+                Modifier
+                    .size(30.dp)
+                    .graphicsLayer { this.alpha = alpha },
+        )
+    }
 }
