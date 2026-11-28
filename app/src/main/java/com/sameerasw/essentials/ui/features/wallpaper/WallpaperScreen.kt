@@ -45,6 +45,9 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.geometry.Rect
 import android.graphics.Rect as AndroidRect
+import android.R as AndroidR
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.draw.blur
 import androidx.compose.runtime.collectAsState
@@ -1572,6 +1575,15 @@ private fun PreviewDock(
             iconsRect.bottom + paddingPx,
         )
     val shape = RoundedCornerShape(with(density) { minOf(container.height / 2f, 32.dp.toPx()).toDp() })
+    val isNight = isSystemInDarkTheme()
+    val tintColor =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            colorResource(if (isNight) AndroidR.color.system_accent1_900 else AndroidR.color.system_accent1_50)
+        } else if (isNight) {
+            Color.Black
+        } else {
+            Color.White
+        }
     val iconColors =
         listOf(
             MaterialTheme.colorScheme.primaryContainer,
@@ -1610,8 +1622,8 @@ private fun PreviewDock(
                 modifier =
                     Modifier
                         .matchParentSize()
-                        .background(Color.White.copy(alpha = 0.16f))
-                        .border(1.dp, Color.White.copy(alpha = 0.12f), shape),
+                        .background(tintColor.copy(alpha = if (isNight) 0.38f else 0.42f))
+                        .border(1.dp, Color.White.copy(alpha = if (isNight) 0.10f else 0.30f), shape),
             )
             Row(
                 modifier =

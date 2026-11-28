@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials.services
 
+import android.R as AndroidR
 import android.animation.ValueAnimator
 import android.app.KeyguardManager
 import android.app.WallpaperManager
@@ -17,6 +18,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.SharedPreferences
+import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
@@ -155,6 +157,8 @@ class LiveWallpaperService : WallpaperService() {
                             }, 500)
                         }
 
+                        Intent.ACTION_CONFIGURATION_CHANGED -> requestDraw()
+
                         Intent.ACTION_SCREEN_ON -> {
                             if (keyguardManager.isKeyguardLocked) {
                                 setRevealImmediately(0f)
@@ -193,6 +197,7 @@ class LiveWallpaperService : WallpaperService() {
                     addAction(Intent.ACTION_USER_PRESENT)
                     addAction(Intent.ACTION_SCREEN_OFF)
                     addAction(Intent.ACTION_SCREEN_ON)
+                    addAction(Intent.ACTION_CONFIGURATION_CHANGED)
                 }
             registerReceiver(receiver, filter)
 
@@ -614,12 +619,31 @@ class LiveWallpaperService : WallpaperService() {
                 }
             }
 
-            dockTintPaint.color = Color.argb((alpha * DOCK_TINT_ALPHA).toInt(), 255, 255, 255)
+            val night = isNightMode()
+            dockTintPaint.color = withAlpha(dockTintColor(night), alpha * if (night) DOCK_TINT_ALPHA_DARK else DOCK_TINT_ALPHA_LIGHT)
             canvas.drawPath(dockClipPath, dockTintPaint)
             dockStrokePaint.strokeWidth = density
-            dockStrokePaint.color = Color.argb((alpha * DOCK_STROKE_ALPHA).toInt(), 255, 255, 255)
+            dockStrokePaint.color = withAlpha(Color.WHITE, alpha * if (night) DOCK_STROKE_ALPHA_DARK else DOCK_STROKE_ALPHA_LIGHT)
             canvas.drawPath(dockClipPath, dockStrokePaint)
         }
+
+        private fun isNightMode(): Boolean =
+            (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+
+        // material you accent tones where available, plain black/white before Android 12
+        private fun dockTintColor(night: Boolean): Int =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                getColor(if (night) AndroidR.color.system_accent1_900 else AndroidR.color.system_accent1_50)
+            } else if (night) {
+                Color.BLACK
+            } else {
+                Color.WHITE
+            }
+
+        private fun withAlpha(
+            color: Int,
+            alpha: Float,
+        ): Int = Color.argb(alpha.toInt().coerceIn(0, 255), Color.red(color), Color.green(color), Color.blue(color))
 
         private fun zoomedRect(
             width: Int,
@@ -741,8 +765,10 @@ class LiveWallpaperService : WallpaperService() {
         private const val BLUR_RADIUS_DP = 28f
         private const val ZOOM_AMOUNT = 0.06f
         private const val DOCK_CORNER_DP = 32f
-        private const val DOCK_TINT_ALPHA = 0.16f
-        private const val DOCK_STROKE_ALPHA = 0.12f
+        private const val DOCK_TINT_ALPHA_LIGHT = 0.42f
+        private const val DOCK_TINT_ALPHA_DARK = 0.38f
+        private const val DOCK_STROKE_ALPHA_LIGHT = 0.30f
+        private const val DOCK_STROKE_ALPHA_DARK = 0.10f
         private const val DOCK_ANIM_DURATION = 320L
         private const val ZOOM_IN_DURATION = 1600L
         private const val ZOOM_OUT_DURATION = 650L
