@@ -34,7 +34,8 @@ jobs:
             const checked = (name) => new RegExp(`-\\s*\\[[xX]\\]\\s*${name}`).test(body);
             const isFeature = checked('New feature') || pr.head.ref.startsWith('feature/');
             const isExempt = !isFeature && (checked('Bug fix') || checked('Translations') || checked('Documentation'));
-            const labels = pr.labels.map((l) => l.name);
+            const { data: freshLabels } = await github.rest.issues.listLabelsOnIssue({ owner, repo, issue_number: pr.number });
+            const labels = freshLabels.map((l) => l.name);
 
             const setLabel = async (name, on) => {
               if (on && !labels.includes(name)) {
@@ -54,6 +55,13 @@ jobs:
                 await github.rest.issues.createComment({ owner, repo, issue_number: pr.number, body: full });
               }
             };
+
+            if (labels.includes('approved')) {
+              await setLabel(GATE_LABEL, false);
+              await setLabel(SIZE_LABEL, false);
+              await comment('Thanks! This PR was approved by a maintainer and is queued for review.');
+              return;
+            }
 
             const problems = [];
 
@@ -120,6 +128,7 @@ jobs:
             const prs = await github.paginate(github.rest.pulls.list, { owner, repo, state: 'open' });
             for (const pr of prs) {
               if (!pr.labels.some((l) => l.name === 'needs-approved-issue')) continue;
+              if (pr.labels.some((l) => l.name === 'approved')) continue;
               const events = await github.paginate(github.rest.issues.listEvents, { owner, repo, issue_number: pr.number });
               const labeled = events.filter((e) => e.event === 'labeled' && e.label?.name === 'needs-approved-issue').pop();
               if (!labeled || new Date(labeled.created_at).getTime() > cutoff) continue;
