@@ -174,6 +174,18 @@ class LiveWallpaperService : WallpaperService() {
 
             repository.registerOnSharedPreferenceChangeListener(prefsListener)
             repository.registerLiveWallpaperPrefsListener(livePrefsListener)
+            if (imageMode) onDailyLiveActivated()
+        }
+
+        // the live wallpaper takes over daily updates, so the static auto-apply is switched off
+        private fun onDailyLiveActivated() {
+            if (isPreview) return
+            if (repository.getBoolean(SettingsRepository.KEY_DAILY_WALLPAPER_AUTO_UPDATE, false)) {
+                repository.putBoolean(SettingsRepository.KEY_DAILY_WALLPAPER_AUTO_UPDATE, false)
+                repository.remove(SettingsRepository.KEY_DAILY_WALLPAPER_AUTO_UPDATE_TIME)
+                repository.remove(SettingsRepository.KEY_DAILY_WALLPAPER_RETRY_COUNT)
+            }
+            DailyWallpaperWorker.ensurePeriodic(applicationContext)
         }
 
         override fun onVisibilityChanged(visible: Boolean) {
@@ -237,6 +249,7 @@ class LiveWallpaperService : WallpaperService() {
             if (daily) {
                 releasePlayer()
                 imageMode = true
+                onDailyLiveActivated()
                 blurProgress = blurTarget()
                 if (surfaceReady) loadDailyImage()
             } else {

@@ -111,6 +111,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import androidx.lifecycle.compose.LifecycleResumeEffect
 import coil.compose.SubcomposeAsyncImage
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.SettingsRepository
@@ -207,6 +208,11 @@ fun WallpaperScreen(
     LaunchedEffect(Unit) {
         viewModel.loadCachedWallpaper()
         viewModel.fetchTodayWallpaper(context)
+    }
+
+    LifecycleResumeEffect(Unit) {
+        viewModel.reloadDailyWallpaperAutoUpdateState()
+        onPauseOrDispose { }
     }
 
     val density = LocalDensity.current

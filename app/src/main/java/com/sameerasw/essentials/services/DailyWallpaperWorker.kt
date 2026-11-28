@@ -14,10 +14,14 @@ import android.content.ComponentName
 import android.content.Context
 import android.util.Log
 import androidx.work.CoroutineWorker
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.data.repository.WallpaperRepository
 import java.time.LocalDateTime
+import java.util.concurrent.TimeUnit
 
 class DailyWallpaperWorker(
     appContext: Context,
@@ -35,7 +39,8 @@ class DailyWallpaperWorker(
                     SettingsRepository.KEY_DAILY_WALLPAPER_AUTO_UPDATE,
                     false,
                 )
-            if (!isEnabled) {
+            val liveDailyActive = isDailyLiveWallpaperActive(context, settingsRepository)
+            if (!isEnabled && !liveDailyActive) {
                 return Result.success()
             }
 
@@ -55,7 +60,6 @@ class DailyWallpaperWorker(
                     if (applyHome) flags = flags or android.app.WallpaperManager.FLAG_SYSTEM
                     if (applyLock) flags = flags or android.app.WallpaperManager.FLAG_LOCK
 
-                    val liveDailyActive = isDailyLiveWallpaperActive(context, settingsRepository)
                     if (flags != 0 || liveDailyActive) {
                         val applied =
                             liveDailyActive ||
@@ -152,12 +156,41 @@ class DailyWallpaperWorker(
         }
     }
 
-    private fun isDailyLiveWallpaperActive(
-        context: Context,
-        settingsRepository: SettingsRepository,
-    ): Boolean {
-        if (!settingsRepository.isLiveWallpaperDailyImageSelected()) return false
-        val active = WallpaperManager.getInstance(context).wallpaperInfo?.component ?: return false
-        return active == ComponentName(context, LiveWallpaperService::class.java)
+    companion object {
+        private const val PERIODIC_WORK_NAME = "daily_wallpaper_check_work"
+        private const val RETRY_WORK_NAME = "daily_wallpaper_retry_work"
+
+        fun isDailyLiveWallpaperActive(
+            context: Context,
+            settingsRepository: SettingsRepository,
+        ): Boolean {
+            if (!settingsRepository.isLiveWallpaperDailyImageSelected()) return false
+            val active = WallpaperManager.getInstance(context).wallpaperInfo?.component ?: return false
+            return active == ComponentName(context, LiveWallpaperService::class.java)
+        }
+
+        fun schedulePeriodic(context: Context) {
+            val workRequest =
+                PeriodicWorkRequestBuilder<DailyWallpaperWorker>(24, TimeUnit.HOURS).build()
+            WorkManager.getInstance(context).enqueueUniquePeriodicWork(
+                PERIODIC_WORK_NAME,
+                ExistingPeriodicWorkPolicy.UPDATE,
+                workRequest,
+            )
+        }
+
+        fun ensurePeriodic(context: Context) {
+            WorkManager.getInstance(context).enqueueUniquePeriodicWork(
+                PERIODIC_WORK_NAME,
+                ExistingPeriodicWorkPolicy.KEEP,
+                PeriodicWorkRequestBuilder<DailyWallpaperWorker>(24, TimeUnit.HOURS).build(),
+            )
+        }
+
+        fun cancel(context: Context) {
+            val workManager = WorkManager.getInstance(context)
+            workManager.cancelUniqueWork(PERIODIC_WORK_NAME)
+            workManager.cancelUniqueWork(RETRY_WORK_NAME)
+        }
     }
 }

@@ -82,6 +82,7 @@ import com.sameerasw.essentials.domain.model.UpdateInfo
 import com.sameerasw.essentials.domain.registry.SearchRegistry
 import com.sameerasw.essentials.services.AppUpdateWorker
 import com.sameerasw.essentials.services.CaffeinateWakeLockService
+import com.sameerasw.essentials.services.DailyWallpaperWorker
 import com.sameerasw.essentials.services.NotificationLightingService
 import com.sameerasw.essentials.services.receivers.FlashlightActionReceiver
 import com.sameerasw.essentials.services.receivers.SecurityDeviceAdminReceiver
@@ -2101,6 +2102,8 @@ class MainViewModel : ViewModel() {
             settingsRepository.getBoolean(SettingsRepository.KEY_DAILY_WALLPAPER_AUTO_UPDATE, false)
         if (isDailyWallpaperAutoUpdateEnabled.value) {
             schedulePeriodicWallpaperCheck(context)
+        } else if (DailyWallpaperWorker.isDailyLiveWallpaperActive(context, settingsRepository)) {
+            DailyWallpaperWorker.ensurePeriodic(context)
         }
         schedulePeriodicAppUpdateCheck(context)
         dailyWallpaperAutoUpdateTime.value =
@@ -10738,20 +10741,7 @@ class MainViewModel : ViewModel() {
             .enqueue(workRequest)
     }
 
-    private fun schedulePeriodicWallpaperCheck(context: Context) {
-        val workRequest =
-            androidx.work
-                .PeriodicWorkRequestBuilder<com.sameerasw.essentials.services.DailyWallpaperWorker>(
-                    24,
-                    java.util.concurrent.TimeUnit.HOURS,
-                ).build()
-
-        androidx.work.WorkManager.getInstance(context).enqueueUniquePeriodicWork(
-            "daily_wallpaper_check_work",
-            androidx.work.ExistingPeriodicWorkPolicy.UPDATE,
-            workRequest,
-        )
-    }
+    private fun schedulePeriodicWallpaperCheck(context: Context) = DailyWallpaperWorker.schedulePeriodic(context)
 
     private fun schedulePeriodicAppUpdateCheck(context: Context) {
         val constraints =
@@ -10776,12 +10766,16 @@ class MainViewModel : ViewModel() {
     }
 
     private fun cancelPeriodicWallpaperCheck(context: Context) {
-        androidx.work.WorkManager
-            .getInstance(context)
-            .cancelUniqueWork("daily_wallpaper_check_work")
-        androidx.work.WorkManager
-            .getInstance(context)
-            .cancelUniqueWork("daily_wallpaper_retry_work")
+        if (DailyWallpaperWorker.isDailyLiveWallpaperActive(context, settingsRepository)) return
+        DailyWallpaperWorker.cancel(context)
+    }
+
+    fun reloadDailyWallpaperAutoUpdateState() {
+        if (!::settingsRepository.isInitialized) return
+        isDailyWallpaperAutoUpdateEnabled.value =
+            settingsRepository.getBoolean(SettingsRepository.KEY_DAILY_WALLPAPER_AUTO_UPDATE, false)
+        dailyWallpaperAutoUpdateTime.value =
+            settingsRepository.getString(SettingsRepository.KEY_DAILY_WALLPAPER_AUTO_UPDATE_TIME)
     }
 
     private fun updateDailyWallpaperAutoUpdateTime(enabled: Boolean) {
