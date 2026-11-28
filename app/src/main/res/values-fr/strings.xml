@@ -2045,4 +2045,9 @@ Les effets de la LED HiLight peuvent être aussi utilisés comme une action dans
     <string name="app_ops_search_apps">Search apps</string>
     <string name="app_ops_search_ops">Search operations</string>
     <string name="setting_show_whats_new_title">Indicate what\'s new for a day</string>
+    <string name="translation_logged_in_as">Connecté en tant que %1$s</string>
+    <string name="settings_genai_automation_title">Activé et utilisé GenAI</string>
+    <string name="settings_genai_automation_desc">Utilisé sur votre smartphone Gemini Nano pour vous aidez à créé des automatismes selon les descriptions.</string>
+    <string name="subreddit_description">Un lieu d\'échange sur Essentials et mes autres applications. Rejoignez la communauté, contribuez aux projets, obtenez de l\'aide et apprenez plein de choses ! ( ´ ▽ ` )ﾉ</string>
+    <string name="perm_local_network_desc">Android 17 empêche les applications de communiquer avec des appareils présents sur votre réseau Wi-Fi, sauf si vous les y autorisez. Essentials a besoin de cette autorisation pour interagir avec votre montre via le réseau local.</string>
 </resources>
