@@ -1369,7 +1369,13 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla s
     <string name="label_animator_duration_scale">Escala de duración del animador.</string>
     <string name="label_transition_animation_scale">Escala de animación de transición</string>
     <string name="label_window_animation_scale">Escala de animación de ventana</string>
-    <string name="about_desc_text_animations">Adjust how your whole system looks and feels.\n\nChange the font scale and weight, the display scale (smallest width), and the animation speeds for windows, transitions and animators. You can also set the screen timeout and auto rotate.\n\nSwitch between Default and Glove mode profiles in one tap. Glove mode adjusts the UI scale and increases touch sensitivity so the screen responds better with gloves or screen protectors. A Quick Settings tile is available to toggle it quickly.\n\nSome settings may require advanced permissions or a device reboot for certain apps to reflect changes. Shizuku or root permission may be necessary for scale adjustments.</string>
+    <string name="about_desc_text_animations">Ajusta cómo se ve y se siente todo tu sistema.
+
+Cambie la escala de fuentes y el grosor, la escala de visualización (ancho más pequeño) y las velocidades de animación para ventanas, transiciones y animaciones. También puede configurar el tiempo de espera de pantalla y la rotación automática.
+
+Cambie entre los perfiles de modo predeterminado y guante en un solo toque. El modo guante ajusta la escala de interfaz de usuario y aumenta la sensibilidad táctil para que la pantalla responda mejor con guantes o protectores de pantalla. Una ficha de configuración rápida está disponible para alternarla rápidamente.
+
+Algunas configuraciones pueden requerir permisos avanzados o un reinicio de dispositivo para que ciertas aplicaciones reflejen los cambios. El permiso Shizuku o root puede ser necesario para los ajustes de escala. </string>
     <string name="about_desc_screen_refresh_rate">Establece una frecuencia de actualización de pantalla personalizada usando Shizuku. El modo fijo bloquea tanto la frecuencia mínima como la máxima en un solo valor, mientras que el modo por rango te permite definir valores mínimos y máximos por separado. Restablecer elimina la configuración personalizada y devuelve el dispositivo al comportamiento de actualización gestionado por el sistema.</string>
     <string name="refresh_rate_section_mode">Modo</string>
     <string name="refresh_rate_section_values">Frecuencia de actualización</string>
@@ -1815,7 +1821,7 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="watchface_show_glow_desc">Degradado dinámico en la parte superior para eventos y viajes</string>
     <string name="setting_hidden_debugging_title">Ocultar soporte de Depuración</string>
     <string name="island_section_visuals">Visuales</string>
-    <string name="island_section_duration">Duración</string>
+    <string name="island_section_duration">Tiempo</string>
     <string name="island_section_behavior">Comportamiento</string>
     <string name="island_section_interactions">Interactions</string>
     <string name="island_section_gestures">Gestures</string>
@@ -2257,7 +2263,7 @@ Consejos: Las palabras clave solo se expanden al comienzo de una palabra, por lo
     <string name="duo_combine_with_island">Combinar con Isla</string>
     <string name="action_got_it">Entendido</string>
     <string name="island_brief_options_title">Opciones de actividades</string>
-    <string name="duo_section_what_to_show">Que mostrar</string>
+    <string name="duo_section_what_to_show">Qué mostrar</string>
     <string name="island_call_sticky_title">No colapsarse automáticamente</string>
     <string name="island_navigation_options_title">Navegación</string>
     <string name="island_notif_show_title">Mostrar notificaciones</string>
@@ -2277,21 +2283,21 @@ Consejos: Las palabras clave solo se expanden al comienzo de una palabra, por lo
     <string name="island_otp_timeout_title">Mostrar códigos por</string>
     <string name="island_notif_section_lock_screen">Pantalla de bloqueo</string>
     <string name="duo_media_skip_apps_title">Seleccionar apps para saltar</string>
-    <string name="conscious_gate_appearance_title">Apariencia de la pantalla de Puerta Consciente</string>
+    <string name="conscious_gate_appearance_title">Aparición de la pantalla de puerta consciente </string>
     <string name="conscious_gate_description">Añade una breve pausa consciente antes de abrir aplicaciones con las que hayas elegido ser más intencionado, como las redes sociales.</string>
     <string name="island_calendar_show_ongoing_title">Mostrar eventos próximos</string>
     <string name="status_glance_calendar_select_calendars_title">Calendarios a mostrar</string>
     <string name="bt_order_separator">Resultados de abajo están ocultos</string>
     <string name="bt_device_icons_title">Orden e iconos</string>
-    <string name="island_reorder_title">Re-ordenar</string>
+    <string name="island_reorder_title">Re-ordernar</string>
     <string name="island_providers_title">Aplicaciones con Isla</string>
     <string name="island_combine_with_duo">Combinar con Duo</string>
-    <string name="pocket_mode_exclude_apps_title">Excluir aplicaciones</string>
-    <string name="pocket_mode_exclude_apps_desc">Elige aplicaciones donde el modo Bolsillo no debería activarse. El modo Bolsillo no funcionará por defecto al hacer streaming o jugar</string>
-    <string name="pocket_mode_warning">Advertencia: En algunos dispositivos con sensores ausentes, activar el Modo Bolsillo puede romper el sueño profundo y provocar un mayor consumo de batería</string>
+    <string name="pocket_mode_exclude_apps_title">Excluir apps</string>
+    <string name="pocket_mode_exclude_apps_desc">Elija aplicaciones donde el modo de bolsillo no debe activarse. El modo de bolsillo no funcionará cuando se transmite o se juega de forma predeterminada. </string>
+    <string name="pocket_mode_warning">Advertencia: En algunos dispositivos con sensores faltantes, habilitar el modo de bolsillo puede romper el sueño profundo y causar un mayor drenaje de la batería. </string>
     <string name="button_remap_section_button">Botón</string>
-    <string name="button_remap_add_action">Añadir acción</string>
-    <string name="lockscreen_shortcuts_hint">Cada lado ejecuta una acción. Toca y mantén presionado un atajo en la pantalla de bloqueo para ejecutarlo. Las acciones que abren una app pedirán que desbloquees primero.</string>
+    <string name="button_remap_add_action">Añadir acción </string>
+    <string name="lockscreen_shortcuts_hint">Cada lado ejecuta una acción. Mantenga pulsado un acceso directo en la pantalla de bloqueo para ejecutarlo. Las acciones que abren una aplicación te piden que primero desbloquees la pantalla. </string>
     <string name="feat_text_snippets_title">Fragmentos de texto</string>
     <string name="about_desc_text_snippets">Crea atajos personalizables que se expandan hasta convertirse en frases completas, enlaces o plantillas cuando escribes un prefijo de disparador (como ;, :, o @@) o pulsas el espacio.</string>
     <string name="instruction_section_notification_snoozing_title">¿Cómo usar Posponer Notificaciones? </string>
@@ -2309,9 +2315,9 @@ Consejos: Las palabras clave solo se expanden al comienzo de una palabra, por lo
     <string name="title_battery_saver_location">Localización y GPS</string>
     <string name="tile_heads_up_notifications">Banner de Notificación</string>
     <string name="tile_default_launcher">Launcher Por Defecto</string>
-    <string name="qs_tiles_widget_name">Mosaicos Favoritos</string>
-    <string name="qs_tiles_long_press_info">Mantenga presionado un mosaico para ver qué hace</string>
-    <string name="qs_tiles_long_press_add">Mantenga presionado para agregar</string>
+    <string name="qs_tiles_widget_name">Mosaicos favoritos</string>
+    <string name="qs_tiles_long_press_info">Presione un mosaico para ver lo que hace </string>
+    <string name="qs_tiles_long_press_add">Mantener presionados los mosaicos para añadirlos</string>
     <string name="label_restore_mode">Modo de restauración </string>
     <string name="face_unlock_trigger_unlock_title">Desbloqueo por activación</string>
     <string name="face_unlock_auto_illuminate_title">Iluminar automáticamente cuando se levante</string>
@@ -2334,8 +2340,8 @@ Consejos: Las palabras clave solo se expanden al comienzo de una palabra, por lo
     <string name="about_desc_screenshots">Mantén tu galería libre de capturas de pantalla de una sola vez. Mantén tu galería libre de capturas de pantalla de una sola vez. Las capturas ya compartidas pueden ser eliminadas al momento o poco después de ser compartidas; cada captura nueva puede ser eliminada días después automáticamente, a menos que tú requieras mantenerla desde la notificación o marcarla como favorita en Fotos. Capturas eliminadas pueden ser restauradas desde Files o Fotos por 30 días. </string>
     <string name="watermark_border">Borde</string>
     <string name="charge_opt_long_press_desc">Escoje chales modos de cargas para cambiar entre ellas cuando presiones el Mosaico. </string>
-    <string name="charge_opt_long_press_title">Opciones</string>
-    <string name="label_reset_battery_stats_title">Reiniciar Estadísticas de la Batería</string>
+    <string name="charge_opt_long_press_title">Alternar opciones</string>
+    <string name="label_reset_battery_stats_title">Reiniciar estadísticas de la batería </string>
     <string name="label_reset_battery_stats_desc">Reinicias las estadísticas del sistema de la batería (dumpsys --reset). Esto limpia el uso de la batería pasada y la información del uso por aplicación así que empieza con uno fresco con la carga actual. </string>
     <string name="feat_text_snippets_desc">Expande el texto</string>
     <string name="label_wallpaper_apply">Aplicar fondo de pantalla</string>
@@ -2382,7 +2388,7 @@ Esto le permite a Essentials automatizarse y reiniciar Shizuku en demanda cuando
     <string name="stb_hide_entire_status_bar_title">Esconder la barra de estado entera</string>
     <string name="stb_clock_position">Posición del reloj</string>
     <string name="settings_section_more">Más</string>
-    <string name="settings_section_customizations">Personalización</string>
+    <string name="settings_section_customizations">Personalizaciones</string>
     <string name="translation_logged_in_as">Sesión iniciada como %1$s</string>
     <string name="label_developer_options">Opciones de desarrollador</string>
     <string name="bug_report_issue_details">Detalles del informe</string>
@@ -2414,4 +2420,27 @@ Esto le permite a Essentials automatizarse y reiniciar Shizuku en demanda cuando
     <string name="freeze_tag_icon_picker_label">Selecciona un icono</string>
     <string name="action_create">Crear</string>
     <string name="action_backup_app_list">Exportar la lista de apps</string>
+    <string name="action_view_all">Ver todo</string>
+    <string name="diy_action_open_app">Abrir App</string>
+    <string name="diy_action_open_activity">Abrir actividad</string>
+    <string name="diy_action_auto_brightness_on">Encender brillo automático </string>
+    <string name="diy_action_auto_brightness_off">Apagar brillo automático </string>
+    <string name="diy_no_automations">Aún no hay automatizaciones</string>
+    <string name="action_reset_battery_stats">Reiniciar estadísticas </string>
+    <string name="about_desc_notification_snoozing">Habilita el botón notificación de snooze en las notificaciones y configura las opciones de intervalo personalizadas y la duración predeterminada para aplazar las notificaciones para su posterior visualización.</string>
+    <string name="about_desc_volume_steps">Establece en cuántos escalones se mueve el volumen de medios cada vez que presionas una tecla de volumen. Mantener una clave sigue dando un escalón hasta que lo dejas ir. Las llamadas, el timbre, las alarmas y las aplicaciones de la cámara mantienen el comportamiento normal del volumen.
+
+Si el remapeo del botón tiene una acción de pulsación larga para una tecla de volumen, la tecla mantiene esa tecla que ejecuta la acción en lugar de cambiar el volumen, y una pulsación corta aún mueve el volumen por el tamaño de su escalón. Mientras se muestra el panel de volumen, el remapeo de botones se detiene de forma predeterminada, por lo que mantener presionada la tecla cambia el volumen. Desactivar \"Desactivado mientras se abre el cuadro de diálogo de volumen\" en el remapeo del botón si desea que la acción siempre gane.</string>
+    <string name="volume_steps_hint">Cada pulsación de una tecla de volumen mueve el volumen de medios en muchos escalones. La tecla de retención la repite, a menos que el remapeo de botones tenga una acción de pulsaciones larga para esa tecla, lo cual tiene prioridad.</string>
+    <string name="app_volume_hint">Las aplicaciones que reproducen sonido aparecen aquí automáticamente. Toque una aplicación para cambiar su volumen o elimínela para volver al volumen normal.</string>
+    <string name="duo_aod_burn_in_protection_desc">Las opciones de Ambient/AOD están bloqueadas para evitar el quemado de la pantalla. Active \"Habilitar funciones no compatibles\" en la configuración para personalizarla.</string>
+    <string name="about_desc_smart_pixels">Superpone un patrón a cuadros personalizable de píxeles oscurecidos en la pantalla utilizando el servicio de accesibilidad para ahorrar energía de visualización en las pantallas OLED. </string>
+    <string name="about_desc_other_customizations">Funciones extra de la pantalla e interfaz del sistema se ajusta en un solo lugar.
+
+Oculte la barra de gestos (opcionalmente manteniéndola en el lanzador), cambie el gesto Circle a Search, haga que la barra de navegación sea transparente, deshabilite el botón de sugerencia de rotación, permita superposiciones sobre la configuración del sistema y prefiera la GPU para la composición de la pantalla, que se reinicia en el reinicio.
+
+Algunas opciones necesitan permiso de Shizuku o de accesibilidad, y los resultados pueden variar según la versión del dispositivo y del sistema operativo.</string>
+    <string name="section_graphics">Gráficos </string>
+    <string name="qs_tiles_widget_empty_state">Aún no hay mosaicos favoritos. Aún no hay mosaicos. Mantén presionado para fijar algunos!!</string>
+    <string name="about_desc_networks">Configure los límites de velocidad de descarga de la red, mantenga los datos móviles continuamente activos incluso cuando se conectan a Wi-Fi y active la configuración de certificación de pantalla inalámbrica. </string>
 </resources>
