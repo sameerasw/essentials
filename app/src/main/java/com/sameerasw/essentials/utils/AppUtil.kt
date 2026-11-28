@@ -18,6 +18,7 @@ import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.util.Log
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.core.graphics.createBitmap
 import androidx.palette.graphics.Palette
@@ -25,6 +26,7 @@ import com.sameerasw.essentials.domain.model.AppSelection
 import com.sameerasw.essentials.domain.model.NotificationApp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.util.concurrent.ConcurrentHashMap
 
 object AppUtil {
     fun hasSystemFlag(
@@ -40,10 +42,11 @@ object AppUtil {
     private const val TAG = "AppUtil"
 
     // Cache for extracted brand colors
-    private val colorCache = mutableMapOf<String, Int>()
+    private val colorCache = ConcurrentHashMap<String, Int>()
 
     // Cache for app icons to prevent repeated system calls
-    private val iconCache = mutableMapOf<String, Bitmap>()
+    private val iconCache = ConcurrentHashMap<String, Bitmap>()
+    private val imageBitmapCache = ConcurrentHashMap<String, ImageBitmap>()
 
     // Target size for app icons to balance quality and performance
     private const val ICON_SIZE = 64
@@ -80,7 +83,7 @@ object AppUtil {
                                     packageName = appInfo.packageName,
                                     appName = pm.getApplicationLabel(appInfo).toString(),
                                     isEnabled = false,
-                                    icon = getLowQualityIcon(context, appInfo.packageName).asImageBitmap(),
+                                    icon = getLowQualityImageBitmap(context, appInfo.packageName),
                                     isSystemApp = isSystemApp,
                                     lastUpdated = System.currentTimeMillis(),
                                 )
@@ -125,7 +128,7 @@ object AppUtil {
                                 packageName = appInfo.packageName,
                                 appName = pm.getApplicationLabel(appInfo).toString(),
                                 isEnabled = false,
-                                icon = getLowQualityIcon(context, packageName).asImageBitmap(),
+                                icon = getLowQualityImageBitmap(context, packageName),
                                 isSystemApp = isSystemApp,
                                 lastUpdated = System.currentTimeMillis(),
                             )
@@ -198,6 +201,12 @@ object AppUtil {
     /**
      * Helper to load and scale an app icon to a lower resolution for better performance.
      */
+    private fun getLowQualityImageBitmap(
+        context: Context,
+        packageName: String,
+    ): ImageBitmap =
+        imageBitmapCache.getOrPut(packageName) { getLowQualityIcon(context, packageName).asImageBitmap() }
+
     private fun getLowQualityIcon(
         context: Context,
         packageName: String,
