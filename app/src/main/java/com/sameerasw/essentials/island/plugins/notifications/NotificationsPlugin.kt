@@ -824,7 +824,7 @@ class NotificationsPlugin : BaseIslandPlugin() {
 
     private fun openAlert(alert: ActiveNotificationAlert) {
         if (!sendPendingIntent(context, alert.contentIntent)) launchPackage(context, alert.packageName)
-        if (!alert.ongoing && settings.isIslandNotifForceDismissOnOpen()) NotificationListener.dismissNotification(alert.key)
+        if (!alert.ongoing && (alert.autoCancel || settings.isIslandNotifForceDismissOnOpen())) NotificationListener.dismissNotification(alert.key)
         popCurrent(reExpand = false)
     }
 

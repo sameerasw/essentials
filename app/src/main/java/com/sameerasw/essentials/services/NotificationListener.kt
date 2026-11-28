@@ -2484,6 +2484,7 @@ class NotificationListener : NotificationListenerService() {
             text = text,
             icon = bitmap,
             contentIntent = notif.contentIntent,
+            autoCancel = (notif.flags and Notification.FLAG_AUTO_CANCEL) != 0,
             appColor = appColor,
             senderName = senderName,
             appName = appName,
