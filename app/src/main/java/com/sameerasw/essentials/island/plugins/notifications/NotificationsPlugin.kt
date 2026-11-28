@@ -815,12 +815,17 @@ class NotificationsPlugin : BaseIslandPlugin() {
                 popCurrent(reExpand = false)
             },
             onOpen = {
-                if (!sendPendingIntent(context, alert.contentIntent)) launchPackage(context, alert.packageName)
-                popCurrent(reExpand = false)
+                openAlert(alert)
             },
             sourcePackage = alert.packageName,
             contentId = alert.key,
         )
+    }
+
+    private fun openAlert(alert: ActiveNotificationAlert) {
+        if (!sendPendingIntent(context, alert.contentIntent)) launchPackage(context, alert.packageName)
+        if (!alert.ongoing && (alert.autoCancel || settings.isIslandNotifForceDismissOnOpen())) NotificationListener.dismissNotification(alert.key)
+        popCurrent(reExpand = false)
     }
 
     private fun hidesChatPictures() = settings.getBoolean(SettingsRepository.KEY_ISLAND_NOTIF_CONCEAL_CHAT_PICTURES, false)
@@ -828,10 +833,7 @@ class NotificationsPlugin : BaseIslandPlugin() {
     private fun concealedItemFor(alert: ActiveNotificationAlert): IslandItem {
         val hideChat = hidesChatPictures()
         val icon = if (hideChat) alert.appIcon ?: alert.icon else alert.chatIcon ?: alert.appIcon ?: alert.icon
-        val open = {
-            if (!sendPendingIntent(context, alert.contentIntent)) launchPackage(context, alert.packageName)
-            popCurrent(reExpand = false)
-        }
+        val open = { openAlert(alert) }
         return IslandItem(
             key = ITEM_KEY,
             priority = IslandPriority.NOTIFICATION,
@@ -915,8 +917,7 @@ class NotificationsPlugin : BaseIslandPlugin() {
             dismissible = true,
             onDismiss = dismiss,
             onOpen = {
-                if (!sendPendingIntent(context, alert.contentIntent)) launchPackage(context, alert.packageName)
-                popCurrent(reExpand = false)
+                openAlert(alert)
             },
             interactions = if (settings.isIslandOtpTapToCopyEnabled()) {
                 InteractionOverrides(onTap = { copy(); true }, onLineTap = { copy(); true })

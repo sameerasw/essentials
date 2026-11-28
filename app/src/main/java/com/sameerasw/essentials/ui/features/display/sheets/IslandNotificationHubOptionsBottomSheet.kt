@@ -90,6 +90,15 @@ fun IslandNotificationHubOptionsBottomSheet(
                     },
                 )
                 IconToggleItem(
+                    iconRes = R.drawable.rounded_check_24,
+                    title = stringResource(R.string.island_notif_force_dismiss_on_open),
+                    isChecked = viewModel.isIslandNotifForceDismissOnOpen.value,
+                    onCheckedChange = {
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        viewModel.setIslandNotifForceDismissOnOpen(it)
+                    },
+                )
+                IconToggleItem(
                     iconRes = R.drawable.rounded_person_24,
                     title = stringResource(R.string.island_notif_hub_chat_pictures),
                     isChecked = viewModel.isIslandNotifHubPreferChatPictures.value,

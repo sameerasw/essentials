@@ -851,6 +851,7 @@ class SettingsRepository(
         const val KEY_ISLAND_NOTIF_HUB_OVERFLOW = "island_notif_hub_overflow"
         const val KEY_ISLAND_NOTIF_HUB_SILENT = "island_notif_hub_silent"
         const val KEY_ISLAND_NOTIF_HUB_GROUP = "island_notif_hub_group"
+        const val KEY_ISLAND_NOTIF_FORCE_DISMISS_ON_OPEN = "island_notif_force_dismiss_on_open"
         const val ISLAND_NOTIF_HUB_ORDER_DYNAMIC = "dynamic"
         const val ISLAND_NOTIF_HUB_ORDER_PRIORITY = "priority"
         const val ISLAND_NOTIF_HUB_ORDER_RECENT = "recent"
@@ -4835,6 +4836,9 @@ class SettingsRepository(
 
     fun isIslandNotifHubGroupByApps(): Boolean = getBoolean(KEY_ISLAND_NOTIF_HUB_GROUP, false)
     fun setIslandNotifHubGroupByApps(enabled: Boolean) = putBoolean(KEY_ISLAND_NOTIF_HUB_GROUP, enabled)
+
+    fun isIslandNotifForceDismissOnOpen(): Boolean = getBoolean(KEY_ISLAND_NOTIF_FORCE_DISMISS_ON_OPEN, false)
+    fun setIslandNotifForceDismissOnOpen(enabled: Boolean) = putBoolean(KEY_ISLAND_NOTIF_FORCE_DISMISS_ON_OPEN, enabled)
 
     fun getIslandNotifHubOrder(): String =
         getString(KEY_ISLAND_NOTIF_HUB_ORDER, null)
