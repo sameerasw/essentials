@@ -1865,6 +1865,7 @@ Die Schaltfläche \"Weiter\" bleibt für einige Sekunden deaktiviert, damit Sie 
     <string name="feat_aod_wallpaper_desc">Überlagerung verwenden</string>
     <string name="feat_aod_wallpaper_use_album_art">Albumcover verwenden</string>
     <string name="feat_aod_wallpaper_share_lock">Share with lock screen wallpaper</string>
+    <string name="feat_aod_wallpaper_use_daily_live">Use today\'s wallpaper</string>
     <string name="about_desc_aod_wallpaper">Zeigt Ihr Hintergrundbild hinter der Uhr auf dem Always On Display mithilfe einer Überlagerung an, mit einstellbarer Deckkraft, Unschärfe, Vignette und Schwarzwert. Sie können auch ein benutzerdefiniertes Bild auswählen oder das Albumcover der aktuell abgespielten Musik anzeigen.
 
 Dies funktioniert nur mit statischen Hintergrundbildern. Live- und Videohintergründe werden nicht unterstützt.

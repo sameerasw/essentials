@@ -57,6 +57,7 @@ import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.utils.PriorityModeUtil
 import com.sameerasw.essentials.utils.ShellUtils
 import com.sameerasw.essentials.domain.model.AppSelection
+import com.sameerasw.essentials.services.DailyWallpaperWorker
 import com.sameerasw.essentials.services.LiveWallpaperService
 import com.sameerasw.essentials.services.NotificationListener
 import com.sameerasw.essentials.utils.AppUtil
@@ -1351,8 +1352,21 @@ class AodWallpaperOverlayHandler(
     }
 
     private var lastWallpaperId = -1
+    private var lastDailyImageKey: String? = null
+
+    // the live wallpaper's surface can't be read back, so its cached daily image stands in for it
+    private fun dailyLiveImageFile(): File? {
+        if (!prefs.getBoolean(SettingsRepository.KEY_AOD_WALLPAPER_USE_DAILY_LIVE, false)) return null
+        if (!DailyWallpaperWorker.isDailyLiveWallpaperActive(service, SettingsRepository(service))) return null
+        return LiveWallpaperService.latestDailyImageFile(service)
+    }
 
     private fun loadAndApplyWallpaper() {
+        val dailyKey = dailyLiveImageFile()?.let { "${it.name}:${it.lastModified()}" }
+        if (dailyKey != lastDailyImageKey) {
+            cachedWallpaperBitmap = null
+            lastDailyImageKey = dailyKey
+        }
         val wallpaperManager = WallpaperManager.getInstance(service)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             val currentLockId = wallpaperManager.getWallpaperId(WallpaperManager.FLAG_LOCK)
@@ -1369,6 +1383,10 @@ class AodWallpaperOverlayHandler(
 
     private fun extractCurrentWallpaper(): Bitmap? {
         return try {
+            dailyLiveImageFile()?.let { file ->
+                AppUtil.decodeSampledBitmapFromFile(file.absolutePath, reqWidth = 1440, reqHeight = 3200)?.let { return it }
+            }
+
             if (prefs.getBoolean(SettingsRepository.KEY_AOD_WALLPAPER_CUSTOM_IMAGE, false)) {
                 val file = File(service.filesDir, CUSTOM_IMAGE_FILE_NAME)
                 if (file.exists()) {

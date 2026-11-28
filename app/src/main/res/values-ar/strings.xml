@@ -2143,6 +2143,7 @@
     <string name="feat_aod_wallpaper_title">إظهار الخلفية في AOD</string>
     <string name="feat_aod_wallpaper_use_album_art">استخدم غلاف الألبوم</string>
     <string name="feat_aod_wallpaper_share_lock">المشاركة مع خلفية شاشة القفل</string>
+    <string name="feat_aod_wallpaper_use_daily_live">Use today\'s wallpaper</string>
     <string name="feat_status_glance_title">نظرة للحالة</string>
     <string name="feat_status_glance_desc">نظرة سريعة على التراكب</string>
     <string name="about_desc_status_glance">تظهر نظرة الحالة شريحة محيطة مدفوعة بالأولوية بجانب فتحة ثقب الكاميرا الأمامية. تعرض بشكل ديناميكي المصباح النشط، وأحداث التقويم القادمة، والوسائط التي تشغل حاليا، والوقت الحالي.</string>

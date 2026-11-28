@@ -1538,6 +1538,7 @@
     <string name="feat_aod_wallpaper_timeout">Temps d\'espera del fons de pantalla</string>
     <string name="feat_aod_wallpaper_use_album_art">Utilitzar la portada de l\'àlbum</string>
     <string name="feat_aod_wallpaper_share_lock">Share with lock screen wallpaper</string>
+    <string name="feat_aod_wallpaper_use_daily_live">Use today\'s wallpaper</string>
     <string name="feat_aod_wallpaper_media_apps">Ometre aplicacions multimèdia </string>
     <string name="duo_desc">Aquest no es doblega</string>
     <string name="duo_enable_title">Activar Duo</string>

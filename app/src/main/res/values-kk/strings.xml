@@ -3411,6 +3411,7 @@ SIM карталарын ажырату немесе сізге ұнамайты
     <string name="feat_aod_wallpaper_extended_app_icon">Жазбаны қолданба белгішесімен ауыстырыңыз</string>
     <string name="feat_aod_wallpaper_use_album_art">Альбом мұқабасын пайдаланыңыз</string>
     <string name="feat_aod_wallpaper_share_lock">Құлыптау экранының тұсқағазымен бөлісіңіз</string>
+    <string name="feat_aod_wallpaper_use_daily_live">Use today\'s wallpaper</string>
     <string name="feat_aod_wallpaper_disable_on_dnd">DND жүйесінде өшіру</string>
     <string name="feat_aod_wallpaper_media_apps">Еленбеген қолданбалар</string>
     <string name="perm_storage_title">Барлық файлдарға қол жеткізу</string>

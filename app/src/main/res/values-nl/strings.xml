@@ -1879,6 +1879,7 @@
     <string name="feat_aod_wallpaper_use_album_art">Gebruik album omslag</string>
     <string name="feat_aod_wallpaper_extended_media">Toon playback info</string>
     <string name="feat_aod_wallpaper_share_lock">Deel met vergrendelscherm achtergrond</string>
+    <string name="feat_aod_wallpaper_use_daily_live">Use today\'s wallpaper</string>
     <string name="feat_aod_wallpaper_keep_on_media">Blijf actief tijdens het spelen van media</string>
     <string name="feat_aod_wallpaper_media_apps">Negeer media apps</string>
     <string name="island_hide_status_bar_title">Verberg statusbalk</string>

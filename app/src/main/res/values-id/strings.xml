@@ -96,6 +96,7 @@ Anda dapat menyesuaikan gaya animasi, warna, dan perilakunya. Fitur ini berfungs
     <string name="perm_write_secure_title">Write Secure Settings</string>
     <string name="feat_aod_wallpaper_use_album_art">Gunakan seni album </string>
     <string name="feat_aod_wallpaper_share_lock">Share with lock screen wallpaper</string>
+    <string name="feat_aod_wallpaper_use_daily_live">Use today\'s wallpaper</string>
     <string name="feat_aod_wallpaper_keep_on_media">Lanjutkan saat media diputar</string>
     <string name="feat_aod_wallpaper_media_apps">Lewati aplikasi media</string>
     <string name="feat_aod_force_turn_off_title">Paksa matikan AOD</string>

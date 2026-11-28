@@ -937,6 +937,10 @@ class LiveWallpaperService : WallpaperService() {
 
     companion object {
         private const val CACHE_DIR = "live_daily_wallpaper"
+
+        fun latestDailyImageFile(context: Context): File? =
+            File(context.filesDir, CACHE_DIR).listFiles()?.maxByOrNull { it.lastModified() }
+
         private const val BLUR_RADIUS_DP = 28f
         private const val ZOOM_AMOUNT = 0.06f
         private const val DOCK_CORNER_DP = 32f

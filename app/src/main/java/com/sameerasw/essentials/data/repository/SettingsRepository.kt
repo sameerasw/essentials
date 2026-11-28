@@ -503,6 +503,7 @@ class SettingsRepository(
         const val KEY_AOD_WALLPAPER_DISABLE_ON_DND = "aod_wallpaper_disable_on_dnd"
         const val KEY_AOD_WALLPAPER_KEEP_ON_MEDIA = "aod_wallpaper_keep_on_media"
         const val KEY_AOD_WALLPAPER_SHARE_LOCK = "aod_wallpaper_share_lock"
+        const val KEY_AOD_WALLPAPER_USE_DAILY_LIVE = "aod_wallpaper_use_daily_live"
         const val KEY_AOD_WALLPAPER_MEDIA_EXCLUDED_APPS = "aod_wallpaper_media_excluded_apps"
         const val KEY_AOD_WALLPAPER_EXTENDED_MEDIA = "aod_wallpaper_extended_media"
         const val KEY_AOD_WALLPAPER_EXTENDED_APP_ICON = "aod_wallpaper_extended_app_icon"

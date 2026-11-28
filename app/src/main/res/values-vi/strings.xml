@@ -1813,6 +1813,7 @@ Cần có quyền quản trị thiết bị nếu sử dụng chế độ khóa.
     <string name="feat_aod_wallpaper_title">Hiển thị hình nền trên màn hình AOD</string>
     <string name="feat_aod_wallpaper_use_album_art">Sử dụng ảnh bìa album</string>
     <string name="feat_aod_wallpaper_share_lock">Chia sẻ cùng hình nền màn hình khóa</string>
+    <string name="feat_aod_wallpaper_use_daily_live">Use today\'s wallpaper</string>
     <string name="feat_aod_wallpaper_keep_on_media">Tiếp tục trong khi phát nhạc</string>
     <string name="feat_aod_wallpaper_media_apps">Bỏ qua các ứng dụng đa phương tiện</string>
     <string name="feat_aod_wallpaper_timeout">Thời gian chờ hình nền</string>

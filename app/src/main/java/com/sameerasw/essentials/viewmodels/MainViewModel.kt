@@ -83,6 +83,7 @@ import com.sameerasw.essentials.domain.registry.SearchRegistry
 import com.sameerasw.essentials.services.AppUpdateWorker
 import com.sameerasw.essentials.services.CaffeinateWakeLockService
 import com.sameerasw.essentials.services.DailyWallpaperWorker
+import com.sameerasw.essentials.services.LiveWallpaperService
 import com.sameerasw.essentials.services.NotificationLightingService
 import com.sameerasw.essentials.services.receivers.FlashlightActionReceiver
 import com.sameerasw.essentials.services.receivers.SecurityDeviceAdminReceiver
@@ -465,6 +466,7 @@ class MainViewModel : ViewModel() {
     val isAodWallpaperDisableOnDnd = mutableStateOf(false)
     val isAodWallpaperKeepOnMedia = mutableStateOf(false)
     val isAodWallpaperShareLock = mutableStateOf(false)
+    val isAodWallpaperUseDailyLive = mutableStateOf(false)
     val isAodWallpaperExtendedMedia = mutableStateOf(false)
     val isAodWallpaperExtendedAppIcon = mutableStateOf(false)
     val aodWallpaperExtendedTextScale = mutableFloatStateOf(1f)
@@ -1521,6 +1523,10 @@ class MainViewModel : ViewModel() {
 
                     SettingsRepository.KEY_AOD_WALLPAPER_SHARE_LOCK ->
                         isAodWallpaperShareLock.value =
+                            settingsRepository.getBoolean(key)
+
+                    SettingsRepository.KEY_AOD_WALLPAPER_USE_DAILY_LIVE ->
+                        isAodWallpaperUseDailyLive.value =
                             settingsRepository.getBoolean(key)
 
                     SettingsRepository.KEY_AOD_WALLPAPER_KEEP_ON_MEDIA ->
@@ -3067,6 +3073,8 @@ class MainViewModel : ViewModel() {
             settingsRepository.isAodWallpaperKeepOnMediaEnabled()
         isAodWallpaperShareLock.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_AOD_WALLPAPER_SHARE_LOCK, false)
+        isAodWallpaperUseDailyLive.value =
+            settingsRepository.getBoolean(SettingsRepository.KEY_AOD_WALLPAPER_USE_DAILY_LIVE, false)
         isAodWallpaperExtendedMedia.value =
             settingsRepository.isAodWallpaperExtendedMediaEnabled()
         isAodWallpaperExtendedAppIcon.value =
@@ -10131,6 +10139,11 @@ class MainViewModel : ViewModel() {
         isAodWallpaperUseAlbumArt.value = enabled
     }
 
+    fun setAodWallpaperUseDailyLive(enabled: Boolean) {
+        settingsRepository.putBoolean(SettingsRepository.KEY_AOD_WALLPAPER_USE_DAILY_LIVE, enabled)
+        isAodWallpaperUseDailyLive.value = enabled
+    }
+
     fun setAodWallpaperShareLock(enabled: Boolean) {
         settingsRepository.putBoolean(SettingsRepository.KEY_AOD_WALLPAPER_SHARE_LOCK, enabled)
         isAodWallpaperShareLock.value = enabled
@@ -10216,6 +10229,21 @@ class MainViewModel : ViewModel() {
     fun loadCurrentWallpaperBitmap(context: Context) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
+                if (settingsRepository.getBoolean(SettingsRepository.KEY_AOD_WALLPAPER_USE_DAILY_LIVE, false) &&
+                    DailyWallpaperWorker.isDailyLiveWallpaperActive(context, settingsRepository)
+                ) {
+                    val bitmap =
+                        LiveWallpaperService.latestDailyImageFile(context)?.let {
+                            AppUtil.decodeSampledBitmapFromFile(it.absolutePath, reqWidth = 1440, reqHeight = 3200)
+                        }
+                    if (bitmap != null) {
+                        withContext(Dispatchers.Main) {
+                            currentWallpaperBitmap.value = bitmap
+                        }
+                        return@launch
+                    }
+                }
+
                 if (settingsRepository.hasAodWallpaperCustomImage()) {
                     val file = File(context.filesDir, "custom_aod_wallpaper.png")
                     if (file.exists()) {

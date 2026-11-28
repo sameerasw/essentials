@@ -36,6 +36,22 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.Dispatchers
+import com.sameerasw.essentials.utils.AppUtil
+import com.sameerasw.essentials.services.LiveWallpaperService
+import com.sameerasw.essentials.services.DailyWallpaperWorker
+import androidx.lifecycle.compose.LifecycleResumeEffect
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.draw.clip
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.background
+import androidx.compose.foundation.Image
 import com.sameerasw.essentials.ui.activities.WallpaperActivity
 import android.content.Intent
 import com.sameerasw.essentials.data.repository.SettingsRepository
@@ -102,6 +118,29 @@ fun AodWallpaperSettingsUI(
         }
     }
 
+    var isDailyLiveActive by remember { mutableStateOf(false) }
+    var dailyPreview by remember { mutableStateOf<ImageBitmap?>(null) }
+    LifecycleResumeEffect(Unit) {
+        val active = DailyWallpaperWorker.isDailyLiveWallpaperActive(context, SettingsRepository(context))
+        if (active != isDailyLiveActive) {
+            isDailyLiveActive = active
+            viewModel.loadCurrentWallpaperBitmap(context)
+        }
+        onPauseOrDispose { }
+    }
+    LaunchedEffect(isDailyLiveActive) {
+        dailyPreview =
+            if (!isDailyLiveActive) {
+                null
+            } else {
+                withContext(Dispatchers.IO) {
+                    LiveWallpaperService.latestDailyImageFile(context)?.let {
+                        AppUtil.decodeSampledBitmapFromFile(it.absolutePath, reqWidth = 160, reqHeight = 320)?.asImageBitmap()
+                    }
+                }
+            }
+    }
+
     Column(
         modifier =
             modifier
@@ -109,6 +148,42 @@ fun AodWallpaperSettingsUI(
                 .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
+        AnimatedVisibility(
+            visible = isDailyLiveActive,
+            enter = expandVertically(animationSpec = tween(durationMillis = 300)) + fadeIn(animationSpec = tween(durationMillis = 300)),
+            exit = shrinkVertically(animationSpec = tween(durationMillis = 300)) + fadeOut(animationSpec = tween(durationMillis = 300)),
+        ) {
+            RoundedCardContainer {
+                IconToggleItem(
+                    title = stringResource(R.string.feat_aod_wallpaper_use_daily_live),
+                    isChecked = viewModel.isAodWallpaperUseDailyLive.value,
+                    onCheckedChange = { checked ->
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        viewModel.setAodWallpaperUseDailyLive(checked)
+                        viewModel.loadCurrentWallpaperBitmap(context)
+                    },
+                    leadingIcon = {
+                        Box(
+                            modifier =
+                                Modifier
+                                    .size(width = 32.dp, height = 56.dp)
+                                    .clip(RoundedCornerShape(8.dp))
+                                    .background(MaterialTheme.colorScheme.surfaceVariant),
+                        ) {
+                            dailyPreview?.let {
+                                Image(
+                                    bitmap = it,
+                                    contentDescription = null,
+                                    contentScale = ContentScale.Crop,
+                                    modifier = Modifier.fillMaxSize(),
+                                )
+                            }
+                        }
+                    },
+                )
+            }
+        }
+
         RoundedCardContainer {
             IconToggleItem(
                 iconRes = R.drawable.rounded_wallpaper_24,

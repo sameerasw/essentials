@@ -1954,6 +1954,7 @@ adicionar algum app</string>
     <string name="island_progressive_blur_title">Animação de desfoque progressivo</string>
     <string name="feat_aod_wallpaper_use_album_art">use a arte do album</string>
     <string name="feat_aod_wallpaper_share_lock">Compartilhar com papel de parede de tela de bloqueio</string>
+    <string name="feat_aod_wallpaper_use_daily_live">Use today\'s wallpaper</string>
     <string name="label_notify_new_updates">Notifique para novas atualizações</string>
     <string name="settings_section_customizations">customizações </string>
     <string name="island_auto_align_camera">Alinhar automaticamente com a câmera </string>

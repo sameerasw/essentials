@@ -1707,6 +1707,7 @@ Réinitialiser permet d\'effacer les valeurs personnalisées et le système gér
     <string name="duo_hide_when_locked_title">Cacher lorsque l\'appareil est verrouillé</string>
     <string name="feat_aod_wallpaper_use_album_art">Utiliser la pochette de l\'album</string>
     <string name="feat_aod_wallpaper_share_lock">Share with lock screen wallpaper</string>
+    <string name="feat_aod_wallpaper_use_daily_live">Use today\'s wallpaper</string>
     <string name="setting_swipe_tabs_title">Glisser entre les onglets</string>
     <string name="notification_lighting_sweep_select_shapes_title">Sélectionner les formes</string>
     <string name="feat_prefer_gpu_composing_title">Privilégier le GPU pour la composition d\'écran</string>

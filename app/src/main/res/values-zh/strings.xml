@@ -1802,6 +1802,7 @@
     <string name="status_glance_hide_when_locked_desc">设备锁屏时隐藏此组件</string>
     <string name="feat_aod_wallpaper_use_album_art">使用媒体播放卡片</string>
     <string name="feat_aod_wallpaper_share_lock">Share with lock screen wallpaper</string>
+    <string name="feat_aod_wallpaper_use_daily_live">Use today\'s wallpaper</string>
     <string name="feat_aod_wallpaper_extended_media">显示播放信息</string>
     <string name="feat_aod_wallpaper_extended_app_icon">将音符替换为应用图标</string>
     <string name="feat_volume_steps_title">音量级数</string>

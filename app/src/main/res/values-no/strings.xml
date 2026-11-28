@@ -1608,6 +1608,7 @@
     <string name="feat_aod_wallpaper_title">Bakgrunn på AOD</string>
     <string name="feat_aod_wallpaper_use_album_art">Bruk albumomslag</string>
     <string name="feat_aod_wallpaper_share_lock">Share with lock screen wallpaper</string>
+    <string name="feat_aod_wallpaper_use_daily_live">Use today\'s wallpaper</string>
     <string name="feat_aod_wallpaper_extended_media">Vis avspillingsinformasjon</string>
     <string name="duo_enable_title">Aktiver Duo</string>
     <string name="duo_enable_desc">Denne bretter ikke, men gjør kule ting</string>
