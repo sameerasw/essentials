@@ -336,6 +336,7 @@ class MainViewModel : ViewModel() {
     val islandNotifHubIcons = mutableIntStateOf(0)
     val isIslandNotifHubIncludeSilent = mutableStateOf(false)
     val isIslandNotifHubGroupByApps = mutableStateOf(false)
+    val isIslandNotifForceDismissOnOpen = mutableStateOf(false)
     val isIslandNotifHubPreferChatPictures = mutableStateOf(true)
     val islandNotifHubOrder = mutableStateOf(SettingsRepository.ISLAND_NOTIF_HUB_ORDER_DYNAMIC)
     val islandNotifHubOverflow = mutableStateOf(com.sameerasw.essentials.island.model.QueueOverflow.Number)
@@ -1069,6 +1070,9 @@ class MainViewModel : ViewModel() {
 
                     SettingsRepository.KEY_ISLAND_NOTIF_HUB_GROUP ->
                         isIslandNotifHubGroupByApps.value = settingsRepository.isIslandNotifHubGroupByApps()
+
+                    SettingsRepository.KEY_ISLAND_NOTIF_FORCE_DISMISS_ON_OPEN ->
+                        isIslandNotifForceDismissOnOpen.value = settingsRepository.isIslandNotifForceDismissOnOpen()
 
                     SettingsRepository.KEY_ISLAND_NOTIF_HUB_CHAT_PICTURES ->
                         isIslandNotifHubPreferChatPictures.value = settingsRepository.isIslandNotifHubPreferChatPictures()
@@ -2721,6 +2725,7 @@ class MainViewModel : ViewModel() {
         islandNotifHubOrder.value = settingsRepository.getIslandNotifHubOrder()
         isIslandNotifHubIncludeSilent.value = settingsRepository.isIslandNotifHubIncludeSilent()
         isIslandNotifHubGroupByApps.value = settingsRepository.isIslandNotifHubGroupByApps()
+        isIslandNotifForceDismissOnOpen.value = settingsRepository.isIslandNotifForceDismissOnOpen()
         isIslandNotifHubPreferChatPictures.value = settingsRepository.isIslandNotifHubPreferChatPictures()
         islandNotifHubOverflow.value = settingsRepository.getIslandNotifHubOverflow()
         isIslandTapToOpenExpanded.value = settingsRepository.isIslandTapToOpenExpandedEnabled()
@@ -6478,6 +6483,11 @@ class MainViewModel : ViewModel() {
     fun setIslandNotifHubGroupByApps(enabled: Boolean) {
         isIslandNotifHubGroupByApps.value = enabled
         settingsRepository.setIslandNotifHubGroupByApps(enabled)
+    }
+
+    fun setIslandNotifForceDismissOnOpen(enabled: Boolean) {
+        isIslandNotifForceDismissOnOpen.value = enabled
+        settingsRepository.setIslandNotifForceDismissOnOpen(enabled)
     }
 
     fun setIslandNotifHubOrder(value: String) {

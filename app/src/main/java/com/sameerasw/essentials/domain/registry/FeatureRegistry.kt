@@ -914,6 +914,11 @@ object FeatureRegistry {
                             "island_notif_hub",
                         ),
                         SearchSetting(
+                            R.string.island_notif_force_dismiss_on_open,
+                            R.string.island_notif_hub_title,
+                            "island_notif_hub",
+                        ),
+                        SearchSetting(
                             R.string.island_show_calls_title,
                             R.string.island_call_incoming,
                             "island_show_calls",
