@@ -25,12 +25,12 @@
     <string name="action_customize">Customize</string>
     <string name="header_greeting_name">Hello %1$s!</string>
     <string name="label_your_name">Your name</string>
-    <string name="modes_none_active">None active</string>
-    <string name="tab_modes">Modes</string>
-    <string name="modes_active_count">%1$d active</string>
-    <string name="modes_empty">No modes yet</string>
+    <string name="modes_none_active">无启用的模式</string>
+    <string name="tab_modes">模式</string>
+    <string name="modes_active_count">%1$d 已激活</string>
+    <string name="modes_empty">暂时还没有模式~</string>
     <string name="modes_unsupported">Modes need Android 15 or newer</string>
-    <string name="action_new_mode">New mode</string>
+    <string name="action_new_mode">新建模式</string>
     <string name="mode_editor_edit_title">Edit mode</string>
     <string name="mode_name_hint">Mode name</string>
     <string name="mode_system_settings">Open in system settings</string>
@@ -1771,8 +1771,8 @@
     <string name="island_expanded_dark_theme_warning">Expanded dark theme is on. If the island text or colors look wrong, filter Essentials out of it in Display settings.</string>
     <string name="island_expanded_dark_theme_action">Open display settings</string>
     <string name="settings_reset_all_hold">Hold to reset all data</string>
-    <string name="settings_reset_all_info_title">Reset Essentials data</string>
-    <string name="settings_reset_all_info_desc">Resets all Essentials settings and data to a fresh start. System settings, permissions and anything Essentials changed on your device, such as secure settings, are not reverted.</string>
+    <string name="settings_reset_all_info_title">重置Essentials数据</string>
+    <string name="settings_reset_all_info_desc">重置所有Essentials选项和数据以重新开始。系统设置，权限和任何Essentials选项会在你的设备上改变，例如安全设置之类的不会被涉及</string>
     <string name="island_prefer_still_title">Prefer still island</string>
     <string name="island_prefer_still_info">Stops the island\'s animations after a few seconds without interaction, so the display can drop to a low refresh rate and save battery. Media visualizers, second by second counters and other looping animations pause until you interact with the island again.</string>
     <string name="island_statusbar_aware_width_title">Statusbar aware width</string>
@@ -1926,7 +1926,7 @@
     <string name="island_backdrop_blur_available_title">Blur is reported as supported on this device</string>
     <string name="island_backdrop_blur_available_note">It may still not work on some devices. Battery Saver, system settings such as \"Disable window blurs\" in Developer options, and manufacturer limits can turn window blur off at any time.</string>
     <string name="island_backdrop_blur_radius_title">Blur amount</string>
-    <string name="what_is_this">這是什麼？</string>
+    <string name="what_is_this">这是什么？</string>
     <string name="label_feature_designed_by">Designed by</string>
     <string name="label_how_to_use">How to use</string>
     <string name="shut_up_how_to_use">1. Grant Write secure settings and Usage access from the permissions prompt. Shizuku is needed for freezing apps.\n\n2. Tap Select Apps and pick the apps that refuse to run with developer options, debugging or accessibility turned on, such as banking or payment apps.\n\n3. Tap an app to choose what gets hidden for it: Developer Options, USB Debugging, Wireless Debugging and Accessibility Services. You can also turn on Auto Freeze to freeze the app after you leave it, and Restore keyboard to switch back to your keyboard afterwards.\n\n4. Tap Create shortcut for each app and add it to your home screen. Always open the app from this shortcut, never from its normal icon, so the settings are turned off before the app starts and can check them.\n\n5. When you leave the app, Shut-Up! waits for the Restoration Delay and then shows a notification. Tap it to turn everything back on. Set Restore mode to Auto if you would rather have the settings restored on their own.\n\nTips: if wireless debugging was turned off, Shizuku may stop working, so enable Attempt Shizuku restart. Use the Keyboard option to pick the keyboard to restore, or leave it on Skip. With Auto Freeze, a notification counts down and lets you freeze now or abort.</string>
@@ -2139,11 +2139,11 @@
     <string name="app_volume_ignore_focus_title">Ignore audio focus</string>
     <string name="app_volume_focus_ignored_summary">%1$s · Ignores audio focus</string>
     <string name="feat_app_ops_title">App Ops</string>
-    <string name="feat_app_ops_desc">Control what each app is allowed to do</string>
+    <string name="feat_app_ops_desc">控制每个app被允许做的事</string>
     <string name="about_desc_app_ops">Browse and change Android\'s per-app operation modes, such as running in the background, reading the clipboard, vibrating or taking audio focus. Pick an app to see all of its operations, or pick an operation to see which apps use it. Needs Shizuku or root.</string>
     <string name="app_ops_apps_page">Apps</string>
     <string name="app_ops_ops_page">Operations</string>
-    <string name="app_ops_system_apps">System apps</string>
+    <string name="app_ops_system_apps">系统应用</string>
     <string name="app_ops_scanning">Reading app ops…</string>
     <string name="app_ops_restricted_count">%1$d restricted</string>
     <string name="app_ops_changed_count">%1$d changed</string>
@@ -2167,4 +2167,12 @@
     <string name="app_ops_user_app">User app</string>
     <string name="app_ops_search_apps">Search apps</string>
     <string name="app_ops_search_ops">Search operations</string>
+    <string name="widget_stack_add_to_home">在主屏幕上添加一个磁贴</string>
+    <string name="widget_stack_add_to_home_desc">接下来选择对你有用的小部件</string>
+    <string name="app_volume_hint">这里会自动显示正在播放的App。点击一个应用以改变其音量大小，或者移除它以便其回到正常音量大小</string>
+    <string name="about_desc_app_volume">不改变总媒体音量而是独立调小一个App的音量。为每一个应用挑选一个音量并当App在播放音频时实时应用，包括后台播放。
+
+声音大小只能相对总媒体音量调小，决不能超过。部分游戏和低延时音频App可能忽略设定的音量等级。Shizuku必须在应用新的音量等级时运行，所以记得在重启后再次重启它</string>
+    <string name="feature_reset_info_title">重者这项功能</string>
+    <string name="feature_reset_info_desc">重置每一个Essentials功能到其默认选项。系统设置和权限不会被改变</string>
 </resources>
