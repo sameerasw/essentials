@@ -54,5 +54,11 @@ object KnownProviders {
                 iconRes = R.drawable.ic_minus,
                 installUrl = "https://play.google.com/store/apps/details?id=com.serranoie.app.minus",
             ),
+            KnownProvider(
+                packageName = "com.serranoie.app.synced",
+                nameRes = R.string.app_synced,
+                iconRes = R.drawable.ic_synced,
+                installUrl = "https://github.com/isaacsa51/Synced/releases",
+            ),
         )
 }
