@@ -1612,6 +1612,7 @@
     <string name="live_wallpaper_blur_height">Blur height</string>
     <string name="live_wallpaper_zoom_effect">Zoom effect</string>
     <string name="live_wallpaper_dock">Dock</string>
+    <string name="live_wallpaper_dock_padding">Dock padding</string>
     <string name="live_wallpaper_video_title">Video</string>
     <string name="btn_apply">Apply</string>
     <string name="add_video">Add video</string>

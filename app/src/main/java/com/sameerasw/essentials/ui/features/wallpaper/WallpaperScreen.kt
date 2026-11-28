@@ -36,6 +36,20 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import kotlin.math.roundToInt
+import com.sameerasw.essentials.services.handlers.WallpaperDockBridge
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.Constraints
+import androidx.compose.ui.layout.positionInWindow
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.layout
+import androidx.compose.ui.geometry.Rect
+import android.graphics.Rect as AndroidRect
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.draw.blur
+import androidx.compose.runtime.collectAsState
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
@@ -164,6 +178,8 @@ fun WallpaperScreen(
     var progressiveBlurEnabled by remember { mutableStateOf(repository.isLiveWallpaperProgressiveBlurEnabled()) }
     var zoomEffectEnabled by remember { mutableStateOf(repository.isLiveWallpaperZoomEffectEnabled()) }
     var dockEnabled by remember { mutableStateOf(repository.isLiveWallpaperDockEnabled()) }
+    var dockPadding by remember { mutableFloatStateOf(repository.getLiveWallpaperDockPadding()) }
+    val liveDockBounds by WallpaperDockBridge.bounds.collectAsState()
     var isAccessibilityGranted by remember { mutableStateOf(PermissionUtils.isAccessibilityServiceEnabled(context)) }
     var showDockPermissionSheet by remember { mutableStateOf(false) }
     var progressiveBlurHeight by remember { mutableFloatStateOf(repository.getLiveWallpaperProgressiveBlurHeight()) }
@@ -605,6 +621,16 @@ fun WallpaperScreen(
                                     }
                                 },
                             )
+
+                            if (dockEnabled && isAccessibilityGranted) {
+                                PreviewDock(
+                                    imageUrl = wallpaperInfo?.urlMobile,
+                                    dockBounds = liveDockBounds,
+                                    paddingDp = dockPadding,
+                                    containerWidthPx = constraints.maxWidth,
+                                    containerHeightPx = constraints.maxHeight,
+                                )
+                            }
                         }
                     }
                 }
@@ -911,6 +937,32 @@ fun WallpaperScreen(
                                                 }
                                             },
                                         )
+                                    }
+
+                                    AnimatedVisibility(
+                                        visible = dockEnabled && isAccessibilityGranted,
+                                        enter = expandVertically(animationSpec = tween(300)) + fadeIn(animationSpec = tween(300)),
+                                        exit = shrinkVertically(animationSpec = tween(300)) + fadeOut(animationSpec = tween(300)),
+                                    ) {
+                                        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                                            TranslatableText(
+                                                stringResId = R.string.live_wallpaper_dock_padding,
+                                                style = MaterialTheme.typography.labelLarge,
+                                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                            )
+                                            Slider(
+                                                value = dockPadding,
+                                                onValueChange = {
+                                                    dockPadding = it
+                                                    HapticUtil.performSliderHaptic(view)
+                                                },
+                                                onValueChangeFinished = {
+                                                    repository.setLiveWallpaperDockPadding(dockPadding)
+                                                },
+                                                valueRange = 0f..32f,
+                                                modifier = Modifier.fillMaxWidth(),
+                                            )
+                                        }
                                     }
                                 } else {
                                     TranslatableText(
@@ -1475,6 +1527,108 @@ fun DailyWallpaperLiveItem(
                             .padding(4.dp)
                             .size(14.dp),
                 )
+            }
+        }
+    }
+}
+
+@Composable
+private fun PreviewDock(
+    imageUrl: String?,
+    dockBounds: AndroidRect?,
+    paddingDp: Float,
+    containerWidthPx: Int,
+    containerHeightPx: Int,
+) {
+    val density = LocalDensity.current
+    var originInWindow by remember { mutableStateOf(Offset.Zero) }
+
+    val iconsRect =
+        dockBounds?.let {
+            Rect(
+                it.left - originInWindow.x,
+                it.top - originInWindow.y,
+                it.right - originInWindow.x,
+                it.bottom - originInWindow.y,
+            )
+        } ?: with(density) {
+            val iconSize = 56.dp.toPx()
+            val width = iconSize * 4 + 28.dp.toPx() * 3
+            val bottom = containerHeightPx * 0.89f
+            Rect(
+                (containerWidthPx - width) / 2f,
+                bottom - iconSize,
+                (containerWidthPx + width) / 2f,
+                bottom,
+            )
+        }
+    val iconCount = (iconsRect.width / (iconsRect.height * 1.25f)).roundToInt().coerceIn(1, 7)
+    val paddingPx = with(density) { paddingDp.dp.toPx() }
+    val container =
+        Rect(
+            iconsRect.left - paddingPx,
+            iconsRect.top - paddingPx,
+            iconsRect.right + paddingPx,
+            iconsRect.bottom + paddingPx,
+        )
+    val shape = RoundedCornerShape(with(density) { minOf(container.height / 2f, 32.dp.toPx()).toDp() })
+    val iconColors =
+        listOf(
+            MaterialTheme.colorScheme.primaryContainer,
+            MaterialTheme.colorScheme.secondaryContainer,
+            MaterialTheme.colorScheme.tertiaryContainer,
+            MaterialTheme.colorScheme.surfaceBright,
+        )
+
+    Box(
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .onGloballyPositioned { originInWindow = it.positionInWindow() },
+    ) {
+        Box(
+            modifier =
+                Modifier
+                    .offset { IntOffset(container.left.roundToInt(), container.top.roundToInt()) }
+                    .size(with(density) { container.width.toDp() }, with(density) { container.height.toDp() })
+                    .clip(shape),
+        ) {
+            SubcomposeAsyncImage(
+                model = imageUrl,
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier =
+                    Modifier
+                        .layout { measurable, constraints ->
+                            val placeable = measurable.measure(Constraints.fixed(containerWidthPx, containerHeightPx))
+                            layout(constraints.maxWidth, constraints.maxHeight) {
+                                placeable.place(-container.left.roundToInt(), -container.top.roundToInt())
+                            }
+                        }.blur(28.dp),
+            )
+            Box(
+                modifier =
+                    Modifier
+                        .matchParentSize()
+                        .background(Color.White.copy(alpha = 0.16f))
+                        .border(1.dp, Color.White.copy(alpha = 0.12f), shape),
+            )
+            Row(
+                modifier =
+                    Modifier
+                        .matchParentSize()
+                        .padding(with(density) { paddingPx.toDp() }),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                repeat(iconCount) { index ->
+                    Box(
+                        modifier =
+                            Modifier
+                                .size(with(density) { (iconsRect.height * 0.8f).toDp() })
+                                .background(iconColors[index % iconColors.size], CircleShape),
+                    )
+                }
             }
         }
     }

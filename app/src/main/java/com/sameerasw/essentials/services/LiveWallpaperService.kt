@@ -24,6 +24,7 @@ import android.graphics.Color
 import android.graphics.LinearGradient
 import android.graphics.Matrix
 import android.graphics.Paint
+import android.graphics.Path
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffXfermode
 import android.graphics.Rect
@@ -93,11 +94,8 @@ class LiveWallpaperService : WallpaperService() {
         private val bitmapPaint = Paint(Paint.FILTER_BITMAP_FLAG or Paint.ANTI_ALIAS_FLAG)
         private val maskPaint = Paint().apply { xfermode = PorterDuffXfermode(PorterDuff.Mode.DST_IN) }
         private val scrimPaint = Paint()
-        private val dockMaskPaint =
-            Paint(Paint.ANTI_ALIAS_FLAG).apply {
-                color = Color.BLACK
-                xfermode = PorterDuffXfermode(PorterDuff.Mode.DST_IN)
-            }
+        private val dockClipPath = Path()
+        private var dockBlurNode: RenderNode? = null
         private val dockTintPaint = Paint(Paint.ANTI_ALIAS_FLAG)
         private val dockStrokePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.STROKE }
 
@@ -117,6 +115,7 @@ class LiveWallpaperService : WallpaperService() {
                     SettingsRepository.KEY_LIVE_WALLPAPER_PROGRESSIVE_BLUR,
                     SettingsRepository.KEY_LIVE_WALLPAPER_PROGRESSIVE_BLUR_HEIGHT,
                     SettingsRepository.KEY_LIVE_WALLPAPER_DOCK,
+                    SettingsRepository.KEY_LIVE_WALLPAPER_DOCK_PADDING,
                     -> {
                         revealProgress = revealTarget()
                         requestDraw()
@@ -520,8 +519,12 @@ class LiveWallpaperService : WallpaperService() {
         }
 
         private fun discardBlurNode() {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) blurNode?.discardDisplayList()
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                blurNode?.discardDisplayList()
+                dockBlurNode?.discardDisplayList()
+            }
             blurNode = null
+            dockBlurNode = null
         }
 
         private fun clearImageState() {
@@ -554,13 +557,15 @@ class LiveWallpaperService : WallpaperService() {
                 val showDock =
                     revealProgress > 0f && dockAlpha > 0f && dock != null && !isPreview &&
                         repository.isLiveWallpaperDockEnabled()
-                if (showEdges || showDock) ensureBlurLayer(bitmap, matrix, width, height)
+                if (showEdges || (showDock && Build.VERSION.SDK_INT < Build.VERSION_CODES.S)) {
+                    ensureBlurLayer(bitmap, matrix, width, height)
+                }
                 if (showEdges) {
                     val edge = height * repository.getLiveWallpaperProgressiveBlurHeight().coerceIn(0.02f, 0.5f)
                     drawBlurredEdge(canvas, width, height, edge, top = true)
                     drawBlurredEdge(canvas, width, height, edge, top = false)
                 }
-                if (showDock && dock != null) drawDock(canvas, dock, width, height)
+                if (showDock && dock != null) drawDock(canvas, dock, bitmap, matrix, width, height)
             } finally {
                 holder.unlockCanvasAndPost(canvas)
             }
@@ -569,37 +574,51 @@ class LiveWallpaperService : WallpaperService() {
         private fun drawDock(
             canvas: Canvas,
             icons: RectF,
+            bitmap: Bitmap,
+            matrix: Matrix,
             width: Int,
             height: Int,
         ) {
             val density = resources.displayMetrics.density
-            val container =
-                RectF(
-                    icons.left - DOCK_PADDING_H_DP * density,
-                    icons.top - DOCK_PADDING_V_DP * density,
-                    icons.right + DOCK_PADDING_H_DP * density,
-                    icons.bottom + DOCK_PADDING_V_DP * density,
-                )
-            val radius = minOf(container.height() / 2f, DOCK_CORNER_DP * density)
-            val alpha = (revealProgress * dockAlpha * 255).toInt().coerceIn(0, 255)
+            val padding = repository.getLiveWallpaperDockPadding() * density
+            val container = RectF(icons.left - padding, icons.top - padding, icons.right + padding, icons.bottom + padding)
+            val corner = minOf(container.height() / 2f, DOCK_CORNER_DP * density)
+            val progress = (revealProgress * dockAlpha).coerceIn(0f, 1f)
+            val alpha = (progress * 255).toInt()
 
-            val save = canvas.saveLayer(container, null)
-            val node = blurNode
-            val fallback = blurFallback
-            if (node != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                canvas.drawRenderNode(node)
-            } else if (fallback != null) {
-                canvas.drawBitmap(fallback, null, zoomedRect(width, height), bitmapPaint)
+            dockClipPath.reset()
+            dockClipPath.addRoundRect(container, corner, corner, Path.Direction.CW)
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                val radius = BLUR_RADIUS_DP * density * progress
+                if (radius >= 0.5f) {
+                    val node = dockBlurNode ?: RenderNode("dockBlur").also { dockBlurNode = it }
+                    node.setPosition(0, 0, width, height)
+                    node.setRenderEffect(RenderEffect.createBlurEffect(radius, radius, Shader.TileMode.CLAMP))
+                    val recording = node.beginRecording(width, height)
+                    recording.drawBitmap(bitmap, matrix, bitmapPaint)
+                    node.endRecording()
+                    val save = canvas.save()
+                    canvas.clipPath(dockClipPath)
+                    canvas.drawRenderNode(node)
+                    canvas.restoreToCount(save)
+                }
+            } else {
+                blurFallback?.let {
+                    val save = canvas.save()
+                    canvas.clipPath(dockClipPath)
+                    bitmapPaint.alpha = alpha
+                    canvas.drawBitmap(it, null, zoomedRect(width, height), bitmapPaint)
+                    bitmapPaint.alpha = 255
+                    canvas.restoreToCount(save)
+                }
             }
-            dockMaskPaint.alpha = alpha
-            canvas.drawRoundRect(container, radius, radius, dockMaskPaint)
-            canvas.restoreToCount(save)
 
             dockTintPaint.color = Color.argb((alpha * DOCK_TINT_ALPHA).toInt(), 255, 255, 255)
-            canvas.drawRoundRect(container, radius, radius, dockTintPaint)
+            canvas.drawPath(dockClipPath, dockTintPaint)
             dockStrokePaint.strokeWidth = density
             dockStrokePaint.color = Color.argb((alpha * DOCK_STROKE_ALPHA).toInt(), 255, 255, 255)
-            canvas.drawRoundRect(container, radius, radius, dockStrokePaint)
+            canvas.drawPath(dockClipPath, dockStrokePaint)
         }
 
         private fun zoomedRect(
@@ -721,8 +740,6 @@ class LiveWallpaperService : WallpaperService() {
         private const val CACHE_DIR = "live_daily_wallpaper"
         private const val BLUR_RADIUS_DP = 28f
         private const val ZOOM_AMOUNT = 0.06f
-        private const val DOCK_PADDING_H_DP = 14f
-        private const val DOCK_PADDING_V_DP = 10f
         private const val DOCK_CORNER_DP = 32f
         private const val DOCK_TINT_ALPHA = 0.16f
         private const val DOCK_STROKE_ALPHA = 0.12f

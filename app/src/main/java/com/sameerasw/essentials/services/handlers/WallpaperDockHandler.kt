@@ -116,7 +116,7 @@ class WallpaperDockHandler(
         val home = resolveHomePackage() ?: return
         homePackage = home
 
-        // launcher not on screen: keep the last bounds, the wallpaper isn't visible anyway
+        // launcher or dock not on screen (app open, drawer, recents): keep the last bounds as is
         val root =
             try {
                 service.windows
@@ -126,11 +126,8 @@ class WallpaperDockHandler(
                 null
             } ?: return
 
-        val hotseat = findHotseat(root, home)
-        if (hotseat == null || !hotseat.isVisibleToUser) {
-            WallpaperDockBridge.publish(null)
-            return
-        }
+        val hotseat = findHotseat(root, home) ?: return
+        if (!hotseat.isVisibleToUser) return
         WallpaperDockBridge.publish(iconBounds(hotseat))
     }
 

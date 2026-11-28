@@ -922,6 +922,8 @@ class SettingsRepository(
         const val KEY_LIVE_WALLPAPER_PROGRESSIVE_BLUR_HEIGHT = "progressive_blur_height"
         const val KEY_LIVE_WALLPAPER_ZOOM_EFFECT = "zoom_effect"
         const val KEY_LIVE_WALLPAPER_DOCK = "dock"
+        const val KEY_LIVE_WALLPAPER_DOCK_PADDING = "dock_padding"
+        const val LIVE_WALLPAPER_DOCK_PADDING_DEFAULT = 12f
         const val LIVE_WALLPAPER_PROGRESSIVE_BLUR_HEIGHT_DEFAULT = 0.18f
 
         const val KEY_SHUT_UP_SELECTED_APPS = "shut_up_selected_apps"
@@ -2954,6 +2956,12 @@ class SettingsRepository(
 
     fun setLiveWallpaperDockEnabled(enabled: Boolean) =
         liveWallpaperPrefs.edit().putBoolean(KEY_LIVE_WALLPAPER_DOCK, enabled).apply()
+
+    fun getLiveWallpaperDockPadding(): Float =
+        liveWallpaperPrefs.getFloat(KEY_LIVE_WALLPAPER_DOCK_PADDING, LIVE_WALLPAPER_DOCK_PADDING_DEFAULT)
+
+    fun setLiveWallpaperDockPadding(padding: Float) =
+        liveWallpaperPrefs.edit().putFloat(KEY_LIVE_WALLPAPER_DOCK_PADDING, padding).apply()
 
     fun isLiveWallpaperZoomEffectEnabled(): Boolean =
         liveWallpaperPrefs.getBoolean(KEY_LIVE_WALLPAPER_ZOOM_EFFECT, false)
