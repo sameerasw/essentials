@@ -123,7 +123,11 @@ import com.sameerasw.essentials.ui.core.pickers.SegmentedPicker
 import com.sameerasw.essentials.ui.modifiers.BlurDirection
 import com.sameerasw.essentials.ui.modifiers.progressiveBlur
 import com.sameerasw.essentials.ui.modifiers.scrollMotionBlur
+import com.sameerasw.essentials.domain.registry.PermissionRegistry
+import com.sameerasw.essentials.ui.core.sheets.PermissionItem
+import com.sameerasw.essentials.ui.core.sheets.PermissionsBottomSheet
 import com.sameerasw.essentials.utils.HapticUtil
+import com.sameerasw.essentials.utils.PermissionUtils
 import com.sameerasw.essentials.viewmodels.MainViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -159,6 +163,9 @@ fun WallpaperScreen(
     var playbackTrigger by remember { mutableStateOf(repository.getLiveWallpaperPlaybackTrigger()) }
     var progressiveBlurEnabled by remember { mutableStateOf(repository.isLiveWallpaperProgressiveBlurEnabled()) }
     var zoomEffectEnabled by remember { mutableStateOf(repository.isLiveWallpaperZoomEffectEnabled()) }
+    var dockEnabled by remember { mutableStateOf(repository.isLiveWallpaperDockEnabled()) }
+    var isAccessibilityGranted by remember { mutableStateOf(PermissionUtils.isAccessibilityServiceEnabled(context)) }
+    var showDockPermissionSheet by remember { mutableStateOf(false) }
     var progressiveBlurHeight by remember { mutableFloatStateOf(repository.getLiveWallpaperProgressiveBlurHeight()) }
     var applyHome by remember { mutableStateOf(repository.getDailyWallpaperApplyHome()) }
     var applyLock by remember { mutableStateOf(repository.getDailyWallpaperApplyLock()) }
@@ -213,6 +220,11 @@ fun WallpaperScreen(
 
     LifecycleResumeEffect(Unit) {
         viewModel.reloadDailyWallpaperAutoUpdateState()
+        isAccessibilityGranted = PermissionUtils.isAccessibilityServiceEnabled(context)
+        if (isAccessibilityGranted && showDockPermissionSheet) {
+            dockEnabled = true
+            repository.setLiveWallpaperDockEnabled(true)
+        }
         onPauseOrDispose { }
     }
 
@@ -599,6 +611,25 @@ fun WallpaperScreen(
             }
         }
 
+        if (showDockPermissionSheet) {
+            PermissionsBottomSheet(
+                onDismissRequest = { showDockPermissionSheet = false },
+                featureTitle = R.string.live_wallpaper_dock,
+                permissions =
+                    listOf(
+                        PermissionItem(
+                            iconRes = R.drawable.rounded_settings_accessibility_24,
+                            title = R.string.perm_accessibility_title,
+                            description = R.string.perm_accessibility_desc_common,
+                            dependentFeatures = PermissionRegistry.getFeatures("ACCESSIBILITY"),
+                            actionLabel = R.string.perm_action_enable,
+                            action = { PermissionUtils.openAccessibilitySettings(context) },
+                            isGranted = isAccessibilityGranted,
+                        ),
+                    ),
+            )
+        }
+
         BackHandler(enabled = isDailyLivePreviewExpanded) {
             isDailyLivePreviewExpanded = false
         }
@@ -854,6 +885,30 @@ fun WallpaperScreen(
                                                 HapticUtil.performUIHaptic(view)
                                                 zoomEffectEnabled = checked
                                                 repository.setLiveWallpaperZoomEffectEnabled(checked)
+                                            },
+                                        )
+                                    }
+
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.SpaceBetween,
+                                    ) {
+                                        TranslatableText(
+                                            stringResId = R.string.live_wallpaper_dock,
+                                            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                                            color = MaterialTheme.colorScheme.onSurface,
+                                        )
+                                        Switch(
+                                            checked = dockEnabled && isAccessibilityGranted,
+                                            onCheckedChange = { checked ->
+                                                HapticUtil.performUIHaptic(view)
+                                                if (checked && !isAccessibilityGranted) {
+                                                    showDockPermissionSheet = true
+                                                } else {
+                                                    dockEnabled = checked
+                                                    repository.setLiveWallpaperDockEnabled(checked)
+                                                }
                                             },
                                         )
                                     }

@@ -26,6 +26,7 @@ import android.graphics.Matrix
 import android.graphics.Paint
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffXfermode
+import android.graphics.Rect
 import android.graphics.RectF
 import android.graphics.RenderEffect
 import android.graphics.RenderNode
@@ -47,6 +48,7 @@ import androidx.media3.exoplayer.DefaultRenderersFactory
 import androidx.media3.exoplayer.ExoPlayer
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.data.repository.WallpaperRepository
+import com.sameerasw.essentials.services.handlers.WallpaperDockBridge
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -74,9 +76,12 @@ class LiveWallpaperService : WallpaperService() {
         private var blurCacheKey: String? = null
         private var blurNode: RenderNode? = null
         private var blurFallback: Bitmap? = null
-        private var blurProgress = 0f
-        private var blurAnimator: ValueAnimator? = null
+        private var revealProgress = 0f
+        private var revealAnimator: ValueAnimator? = null
         private var zoomProgress = 0f
+        private var dockRect: RectF? = null
+        private var dockAlpha = 0f
+        private var dockAnimator: ValueAnimator? = null
         private var zoomAnimator: ValueAnimator? = null
         private var drawScheduled = false
         private val frameCallback =
@@ -88,6 +93,13 @@ class LiveWallpaperService : WallpaperService() {
         private val bitmapPaint = Paint(Paint.FILTER_BITMAP_FLAG or Paint.ANTI_ALIAS_FLAG)
         private val maskPaint = Paint().apply { xfermode = PorterDuffXfermode(PorterDuff.Mode.DST_IN) }
         private val scrimPaint = Paint()
+        private val dockMaskPaint =
+            Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                color = Color.BLACK
+                xfermode = PorterDuffXfermode(PorterDuff.Mode.DST_IN)
+            }
+        private val dockTintPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+        private val dockStrokePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.STROKE }
 
         private val livePrefsListener =
             SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
@@ -104,9 +116,10 @@ class LiveWallpaperService : WallpaperService() {
                     }
                     SettingsRepository.KEY_LIVE_WALLPAPER_PROGRESSIVE_BLUR,
                     SettingsRepository.KEY_LIVE_WALLPAPER_PROGRESSIVE_BLUR_HEIGHT,
+                    SettingsRepository.KEY_LIVE_WALLPAPER_DOCK,
                     -> {
-                        blurProgress = blurTarget()
-                        drawImage()
+                        revealProgress = revealTarget()
+                        requestDraw()
                     }
                 }
             }
@@ -128,12 +141,12 @@ class LiveWallpaperService : WallpaperService() {
                         Intent.ACTION_USER_PRESENT -> {
                             exoPlayer?.play()
                             // keyguard can still report locked while USER_PRESENT is delivered
-                            animateBlurTo(if (blurAllowed()) 1f else 0f)
+                            animateRevealTo(if (revealAllowed()) 1f else 0f)
                             animateZoomTo(0f, ZOOM_OUT_DURATION)
                         }
 
                         Intent.ACTION_SCREEN_OFF -> {
-                            setBlurImmediately(0f)
+                            setRevealImmediately(0f)
                             setZoomImmediately(0f)
                             discardBlurNode()
                             executor.removeCallbacksAndMessages(null)
@@ -145,10 +158,10 @@ class LiveWallpaperService : WallpaperService() {
 
                         Intent.ACTION_SCREEN_ON -> {
                             if (keyguardManager.isKeyguardLocked) {
-                                setBlurImmediately(0f)
+                                setRevealImmediately(0f)
                                 if (zoomAllowed()) animateZoomTo(1f, ZOOM_IN_DURATION)
                             } else {
-                                animateBlurTo(blurTarget())
+                                animateRevealTo(revealTarget())
                             }
 
                             val shouldPlay =
@@ -187,6 +200,37 @@ class LiveWallpaperService : WallpaperService() {
             repository.registerOnSharedPreferenceChangeListener(prefsListener)
             repository.registerLiveWallpaperPrefsListener(livePrefsListener)
             if (imageMode) onDailyLiveActivated()
+            scope.launch { WallpaperDockBridge.bounds.collect { onDockBoundsChanged(it) } }
+        }
+
+        private fun onDockBoundsChanged(bounds: Rect?) {
+            val target = bounds?.let { RectF(it) }
+            val from = dockRect
+            val fromAlpha = dockAlpha
+            val targetAlpha = if (target != null) 1f else 0f
+            dockAnimator?.cancel()
+            if (target != null && from == null) dockRect = RectF(target)
+            dockAnimator =
+                ValueAnimator.ofFloat(0f, 1f).apply {
+                    duration = DOCK_ANIM_DURATION
+                    interpolator = DecelerateInterpolator(1.5f)
+                    addUpdateListener {
+                        val t = it.animatedValue as Float
+                        dockAlpha = fromAlpha + (targetAlpha - fromAlpha) * t
+                        if (target != null && from != null) {
+                            dockRect =
+                                RectF(
+                                    from.left + (target.left - from.left) * t,
+                                    from.top + (target.top - from.top) * t,
+                                    from.right + (target.right - from.right) * t,
+                                    from.bottom + (target.bottom - from.bottom) * t,
+                                )
+                        }
+                        if (t >= 1f && target == null) dockRect = null
+                        requestDraw()
+                    }
+                    start()
+                }
         }
 
         // the live wallpaper takes over daily updates, so the static auto-apply is switched off
@@ -203,8 +247,8 @@ class LiveWallpaperService : WallpaperService() {
         override fun onVisibilityChanged(visible: Boolean) {
             if (imageMode) {
                 if (visible) {
-                    blurAnimator?.cancel()
-                    blurProgress = blurTarget()
+                    revealAnimator?.cancel()
+                    revealProgress = revealTarget()
                     if (!keyguardManager.isKeyguardLocked) {
                         zoomAnimator?.cancel()
                         zoomProgress = 0f
@@ -228,7 +272,7 @@ class LiveWallpaperService : WallpaperService() {
             super.onSurfaceCreated(holder)
             surfaceReady = true
             if (imageMode) {
-                blurProgress = blurTarget()
+                revealProgress = revealTarget()
                 loadDailyImage()
             } else {
                 createPlayer(holder)
@@ -266,12 +310,12 @@ class LiveWallpaperService : WallpaperService() {
                 releasePlayer()
                 imageMode = true
                 onDailyLiveActivated()
-                blurProgress = blurTarget()
+                revealProgress = revealTarget()
                 if (surfaceReady) loadDailyImage()
             } else {
                 imageMode = false
                 imageLoadJob?.cancel()
-                blurAnimator?.cancel()
+                revealAnimator?.cancel()
                 zoomAnimator?.cancel()
                 zoomProgress = 0f
                 clearImageState()
@@ -309,20 +353,23 @@ class LiveWallpaperService : WallpaperService() {
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE &&
                 wallpaperFlags == WallpaperManager.FLAG_LOCK
 
-        private fun blurAllowed(): Boolean = repository.isLiveWallpaperProgressiveBlurEnabled() && !isLockScreenOnlyEngine()
+        // drives everything that only shows once unlocked: edge blur and the dock container
+        private fun revealAllowed(): Boolean =
+            (repository.isLiveWallpaperProgressiveBlurEnabled() || repository.isLiveWallpaperDockEnabled()) &&
+                !isLockScreenOnlyEngine()
 
-        private fun blurTarget(): Float =
+        private fun revealTarget(): Float =
             when {
-                !blurAllowed() -> 0f
+                !revealAllowed() -> 0f
                 isPreview -> 1f
                 keyguardManager.isKeyguardLocked -> 0f
                 else -> 1f
             }
 
-        private fun setBlurImmediately(value: Float) {
+        private fun setRevealImmediately(value: Float) {
             if (!imageMode) return
-            blurAnimator?.cancel()
-            blurProgress = value
+            revealAnimator?.cancel()
+            revealProgress = value
             drawImage()
         }
 
@@ -360,16 +407,16 @@ class LiveWallpaperService : WallpaperService() {
             Choreographer.getInstance().postFrameCallback(frameCallback)
         }
 
-        private fun animateBlurTo(target: Float) {
+        private fun animateRevealTo(target: Float) {
             if (!imageMode) return
-            blurAnimator?.cancel()
-            if (blurProgress == target) return
-            blurAnimator =
-                ValueAnimator.ofFloat(blurProgress, target).apply {
+            revealAnimator?.cancel()
+            if (revealProgress == target) return
+            revealAnimator =
+                ValueAnimator.ofFloat(revealProgress, target).apply {
                     duration = 700
                     interpolator = DecelerateInterpolator(1.6f)
                     addUpdateListener {
-                        blurProgress = it.animatedValue as Float
+                        revealProgress = it.animatedValue as Float
                         requestDraw()
                     }
                     start()
@@ -502,15 +549,57 @@ class LiveWallpaperService : WallpaperService() {
                 val matrix = centerCropMatrix(bitmap, width, height).apply { postScale(zoom, zoom, width / 2f, height / 2f) }
                 canvas.drawColor(Color.BLACK)
                 canvas.drawBitmap(bitmap, matrix, bitmapPaint)
-                if (blurProgress > 0f && repository.isLiveWallpaperProgressiveBlurEnabled()) {
-                    ensureBlurLayer(bitmap, matrix, width, height)
+                val showEdges = revealProgress > 0f && repository.isLiveWallpaperProgressiveBlurEnabled()
+                val dock = dockRect
+                val showDock =
+                    revealProgress > 0f && dockAlpha > 0f && dock != null && !isPreview &&
+                        repository.isLiveWallpaperDockEnabled()
+                if (showEdges || showDock) ensureBlurLayer(bitmap, matrix, width, height)
+                if (showEdges) {
                     val edge = height * repository.getLiveWallpaperProgressiveBlurHeight().coerceIn(0.02f, 0.5f)
                     drawBlurredEdge(canvas, width, height, edge, top = true)
                     drawBlurredEdge(canvas, width, height, edge, top = false)
                 }
+                if (showDock && dock != null) drawDock(canvas, dock, width, height)
             } finally {
                 holder.unlockCanvasAndPost(canvas)
             }
+        }
+
+        private fun drawDock(
+            canvas: Canvas,
+            icons: RectF,
+            width: Int,
+            height: Int,
+        ) {
+            val density = resources.displayMetrics.density
+            val container =
+                RectF(
+                    icons.left - DOCK_PADDING_H_DP * density,
+                    icons.top - DOCK_PADDING_V_DP * density,
+                    icons.right + DOCK_PADDING_H_DP * density,
+                    icons.bottom + DOCK_PADDING_V_DP * density,
+                )
+            val radius = minOf(container.height() / 2f, DOCK_CORNER_DP * density)
+            val alpha = (revealProgress * dockAlpha * 255).toInt().coerceIn(0, 255)
+
+            val save = canvas.saveLayer(container, null)
+            val node = blurNode
+            val fallback = blurFallback
+            if (node != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                canvas.drawRenderNode(node)
+            } else if (fallback != null) {
+                canvas.drawBitmap(fallback, null, zoomedRect(width, height), bitmapPaint)
+            }
+            dockMaskPaint.alpha = alpha
+            canvas.drawRoundRect(container, radius, radius, dockMaskPaint)
+            canvas.restoreToCount(save)
+
+            dockTintPaint.color = Color.argb((alpha * DOCK_TINT_ALPHA).toInt(), 255, 255, 255)
+            canvas.drawRoundRect(container, radius, radius, dockTintPaint)
+            dockStrokePaint.strokeWidth = density
+            dockStrokePaint.color = Color.argb((alpha * DOCK_STROKE_ALPHA).toInt(), 255, 255, 255)
+            canvas.drawRoundRect(container, radius, radius, dockStrokePaint)
         }
 
         private fun zoomedRect(
@@ -532,7 +621,7 @@ class LiveWallpaperService : WallpaperService() {
         ) {
             val start = if (top) 0f else height.toFloat()
             val end = if (top) edge else height - edge
-            val alpha = (blurProgress * 255).toInt().coerceIn(0, 255)
+            val alpha = (revealProgress * 255).toInt().coerceIn(0, 255)
             val stops = floatArrayOf(0f, 0.45f, 1f)
 
             val save =
@@ -565,7 +654,7 @@ class LiveWallpaperService : WallpaperService() {
             }
             canvas.restoreToCount(save)
 
-            val scrimAlpha = (blurProgress * SCRIM_ALPHA * 255).toInt()
+            val scrimAlpha = (revealProgress * SCRIM_ALPHA * 255).toInt()
             scrimPaint.shader =
                 LinearGradient(
                     0f,
@@ -601,8 +690,9 @@ class LiveWallpaperService : WallpaperService() {
 
         override fun onSurfaceDestroyed(holder: SurfaceHolder) {
             surfaceReady = false
-            blurAnimator?.cancel()
+            revealAnimator?.cancel()
             zoomAnimator?.cancel()
+            dockAnimator?.cancel()
             Choreographer.getInstance().removeFrameCallback(frameCallback)
             drawScheduled = false
             super.onSurfaceDestroyed(holder)
@@ -617,8 +707,9 @@ class LiveWallpaperService : WallpaperService() {
             }
             repository.unregisterOnSharedPreferenceChangeListener(prefsListener)
             repository.unregisterLiveWallpaperPrefsListener(livePrefsListener)
-            blurAnimator?.cancel()
+            revealAnimator?.cancel()
             zoomAnimator?.cancel()
+            dockAnimator?.cancel()
             Choreographer.getInstance().removeFrameCallback(frameCallback)
             scope.cancel()
             clearImageState()
@@ -630,6 +721,12 @@ class LiveWallpaperService : WallpaperService() {
         private const val CACHE_DIR = "live_daily_wallpaper"
         private const val BLUR_RADIUS_DP = 28f
         private const val ZOOM_AMOUNT = 0.06f
+        private const val DOCK_PADDING_H_DP = 14f
+        private const val DOCK_PADDING_V_DP = 10f
+        private const val DOCK_CORNER_DP = 32f
+        private const val DOCK_TINT_ALPHA = 0.16f
+        private const val DOCK_STROKE_ALPHA = 0.12f
+        private const val DOCK_ANIM_DURATION = 320L
         private const val ZOOM_IN_DURATION = 1600L
         private const val ZOOM_OUT_DURATION = 650L
         private const val SCRIM_ALPHA = 0.18f

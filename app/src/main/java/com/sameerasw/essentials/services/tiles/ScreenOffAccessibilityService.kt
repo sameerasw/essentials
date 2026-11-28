@@ -59,6 +59,7 @@ import com.sameerasw.essentials.services.handlers.StatusBarIconHandler
 import com.sameerasw.essentials.services.handlers.LockscreenShortcutsHandler
 import com.sameerasw.essentials.services.handlers.StatusGlanceHandler
 import com.sameerasw.essentials.services.handlers.VolumeStepsHandler
+import com.sameerasw.essentials.services.handlers.WallpaperDockHandler
 import com.sameerasw.essentials.services.receivers.FlashlightActionReceiver
 import com.sameerasw.essentials.utils.CameraSession
 import com.sameerasw.essentials.utils.FreezeManager
@@ -104,6 +105,7 @@ class ScreenOffAccessibilityService :
     private lateinit var lockscreenShortcutsHandler: LockscreenShortcutsHandler
     private lateinit var appVolumeOverlayHandler: AppVolumeOverlayHandler
     private lateinit var snippetExpansionHandler: SnippetExpansionHandler
+    private lateinit var wallpaperDockHandler: WallpaperDockHandler
     private lateinit var statusBarSectionsDebugHandler: com.sameerasw.essentials.services.handlers.StatusBarSectionsDebugHandler
 
     private var lightSensor: Sensor? = null
@@ -450,10 +452,12 @@ class ScreenOffAccessibilityService :
         screenshotShareCleanupHandler = ScreenshotShareCleanupHandler(this, serviceScope)
         screenshotAutoCleanHandler = ScreenshotAutoCleanHandler(this, serviceScope)
         snippetExpansionHandler = SnippetExpansionHandler(this)
+        wallpaperDockHandler = WallpaperDockHandler(this)
 
         flashlightHandler.register()
         statusBarIconHandler.register()
         screenshotAutoCleanHandler.register()
+        wallpaperDockHandler.start()
         smartPixelsHandler.init()
         duoOverlayHandler.init()
         statusGlanceHandler.init()
@@ -636,6 +640,7 @@ class ScreenOffAccessibilityService :
                     AccessibilityServiceInfo.FLAG_RETRIEVE_INTERACTIVE_WINDOWS
             }
         updateSnippetTextListening()
+        wallpaperDockHandler.updateEventSubscription()
         updateOmniOverlay()
         com.sameerasw.essentials.island.service.SharedOverlayWindow.revalidate()
         duoOverlayHandler.restart()
@@ -726,6 +731,7 @@ class ScreenOffAccessibilityService :
         statusBarSectionsDebugHandler.destroy()
         statusBarIconHandler.unregister()
         screenshotAutoCleanHandler.unregister()
+        wallpaperDockHandler.destroy()
         stopInputEventListener()
         cancelPocketFlashlightTurnOff()
         if (isProximityRegistered) {
@@ -761,6 +767,11 @@ class ScreenOffAccessibilityService :
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
         if (event == null) return
 
+        if (event.eventType == AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED) {
+            wallpaperDockHandler.onContentChanged(event)
+            return
+        }
+
         val trustsEventPackage = event.eventType != AccessibilityEvent.TYPE_WINDOWS_CHANGED
         val detectedPackage = if (trustsEventPackage) event.packageName?.toString() else null
         if (detectedPackage == null || detectedPackage == "android") {
@@ -787,6 +798,7 @@ class ScreenOffAccessibilityService :
             lockscreenShortcutsHandler.onWindowsChanged()
             appVolumeOverlayHandler.onWindowsChanged()
             statusBarSectionsDebugHandler.onWindowsChanged()
+            wallpaperDockHandler.onWindowsChanged()
         }
     }
 

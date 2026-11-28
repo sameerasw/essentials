@@ -921,6 +921,7 @@ class SettingsRepository(
         const val KEY_LIVE_WALLPAPER_PROGRESSIVE_BLUR = "progressive_blur"
         const val KEY_LIVE_WALLPAPER_PROGRESSIVE_BLUR_HEIGHT = "progressive_blur_height"
         const val KEY_LIVE_WALLPAPER_ZOOM_EFFECT = "zoom_effect"
+        const val KEY_LIVE_WALLPAPER_DOCK = "dock"
         const val LIVE_WALLPAPER_PROGRESSIVE_BLUR_HEIGHT_DEFAULT = 0.18f
 
         const val KEY_SHUT_UP_SELECTED_APPS = "shut_up_selected_apps"
@@ -2948,6 +2949,11 @@ class SettingsRepository(
 
     fun setLiveWallpaperProgressiveBlurEnabled(enabled: Boolean) =
         liveWallpaperPrefs.edit().putBoolean(KEY_LIVE_WALLPAPER_PROGRESSIVE_BLUR, enabled).apply()
+
+    fun isLiveWallpaperDockEnabled(): Boolean = liveWallpaperPrefs.getBoolean(KEY_LIVE_WALLPAPER_DOCK, false)
+
+    fun setLiveWallpaperDockEnabled(enabled: Boolean) =
+        liveWallpaperPrefs.edit().putBoolean(KEY_LIVE_WALLPAPER_DOCK, enabled).apply()
 
     fun isLiveWallpaperZoomEffectEnabled(): Boolean =
         liveWallpaperPrefs.getBoolean(KEY_LIVE_WALLPAPER_ZOOM_EFFECT, false)

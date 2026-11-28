@@ -58,6 +58,7 @@ fun initPermissionRegistry() {
     PermissionRegistry.register("ACCESSIBILITY", R.string.feat_app_lock_title)
     PermissionRegistry.register("ACCESSIBILITY", R.string.feat_essentials_on_display_title)
     PermissionRegistry.register("ACCESSIBILITY", R.string.feat_aod_wallpaper_title)
+    PermissionRegistry.register("ACCESSIBILITY", R.string.feat_live_wallpaper_title)
     PermissionRegistry.register("ACCESSIBILITY", R.string.duo_title)
     PermissionRegistry.register("ACCESSIBILITY", R.string.feat_status_glance_title)
     PermissionRegistry.register("READ_CALENDAR", R.string.feat_status_glance_title)
