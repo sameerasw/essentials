@@ -263,7 +263,7 @@ class IslandWindowHost(
         name: String,
     ): Boolean {
         try {
-            if (added) wm.updateViewLayout(view, lp) else wm.addView(view, lp)
+            if (added && view.parent != null) wm.updateViewLayout(view, lp) else wm.addView(view, lp)
             return true
         } catch (e: Exception) {
             Log.e(TAG, "Failed to place island $name window, re-adding", e)

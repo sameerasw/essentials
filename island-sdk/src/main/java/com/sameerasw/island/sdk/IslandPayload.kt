@@ -5,12 +5,22 @@ data class IslandPayload(
     val items: List<IslandItemPayload> = emptyList(),
     val briefCards: List<BriefCardPayload> = emptyList(),
     val options: List<IslandOptionPayload> = emptyList(),
+    val attachments: List<IslandAttachmentPayload> = emptyList(),
 )
 
 data class IslandOptionPayload(
     val key: String = "",
     val title: String = "",
     val checked: Boolean = false,
+)
+
+data class IslandAttachmentPayload(
+    val key: String = "",
+    val anchor: String = IslandAnchor.MEDIA,
+    val heightDp: Int = 72,
+    val matchTitle: String? = null,
+    val beatMs: Float? = null,
+    val beatOffsetMs: Float? = null,
 )
 
 data class BriefCardPayload(

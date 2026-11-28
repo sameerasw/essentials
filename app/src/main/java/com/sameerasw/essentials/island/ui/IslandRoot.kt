@@ -113,6 +113,7 @@ import com.sameerasw.essentials.island.gestures.CompactGestures
 import com.sameerasw.essentials.island.gestures.IslandSlideFeedback
 import com.sameerasw.essentials.island.gestures.SlideFeedback
 import com.sameerasw.essentials.island.ui.components.SlideFeedbackCompact
+import com.sameerasw.essentials.island.model.IslandAttachments
 import com.sameerasw.essentials.island.model.IslandItem
 import com.sameerasw.essentials.island.model.ExpandedSurfaceStyle
 import androidx.compose.runtime.SideEffect
@@ -811,6 +812,11 @@ private fun IslandRootContent(
         }
     }
     val focusedItem = state.focused
+    val attachmentsAll by IslandAttachments.all.collectAsState()
+    val attachment = focusedItem?.attachmentAnchor?.let { IslandAttachments.resolve(attachmentsAll, it, focusedItem.attachmentTitle) }
+    val attachmentShown = stage == IslandStage.Expanded && attachment != null
+    var attachmentSize by remember { mutableStateOf(IntSize.Zero) }
+    val attachmentGapPx = with(density) { 4.dp.roundToPx() }
     
     val foreignStackOwner = if (focusedItem != null && focusedItem.stack.isEmpty()) {
         state.items.values.firstOrNull { it.key != focusedItem.key && it.stack.isNotEmpty() && !it.expandedQueueOnly }
@@ -890,7 +896,7 @@ private fun IslandRootContent(
 
     LaunchedEffect(
         target, windowWidth, stage, queueShown, pillSize, lineInsetActive, catchUpShown, hasCompactCells,
-        bubbleOnlyLayout, condensedLineActive, queueWidthPx, sideWidthPx, slackTarget, bubbleRight, spec.balanceCompact,
+        bubbleOnlyLayout, condensedLineActive, queueWidthPx, sideWidthPx, slackTarget, bubbleRight, spec.balanceCompact, attachmentShown, attachmentSize,
     ) {
         if (target == IntSize.Zero || windowWidth == 0) return@LaunchedEffect
         val g = if (stage == IslandStage.Expanded) outsetPx.roundToInt() else 0
@@ -921,6 +927,15 @@ private fun IslandRootContent(
                 bounds.top,
                 maxOf(bounds.right, pillLeft + pillSize.width),
                 bounds.bottom + with(density) { 2.dp.roundToPx() } + pillSize.height,
+            )
+        }
+        if (attachmentShown && attachmentSize != IntSize.Zero) {
+            val ax = left + (target.width - attachmentSize.width) / 2
+            bounds = IntRect(
+                minOf(bounds.left, ax),
+                bounds.top,
+                maxOf(bounds.right, ax + attachmentSize.width),
+                bounds.bottom + attachmentGapPx + attachmentSize.height,
             )
         }
         onTargetBoundsChanged(bounds)
@@ -1119,6 +1134,30 @@ private fun IslandRootContent(
                         .onSizeChanged { pillSize = it },
                 )
             }
+        }
+        val attachmentGlow by animateColorAsState(
+            spec.glowColor ?: focusedItem?.let { reportedAccents[it.key] ?: it.accent } ?: islandAccent(),
+            label = "attachmentGlow",
+        )
+        SeparateComposition {
+            IslandAttachmentSlot(
+                attachment = attachment,
+                shown = attachmentShown,
+                widthPx = with(density) { (spec.expandedWidth + spec.expandedOutset * 2).roundToPx() },
+                centerX = { val w = visibleWidth(); surfaceLeft(w) + w / 2f },
+                top = {
+                    val pill = if (queueShown && currentState.stage == IslandStage.Expanded && pillSize.height > 0) pillSize.height + pillGapPx else 0
+                    (surfaceTopPx + liveSurfaceHeight.intValue + attachmentGapPx + pill).toFloat()
+                },
+                collapse = { collapse.value },
+                outlineColor = outlineFor(1f),
+                outlineThickness = spec.outlineThickness,
+                onSizeChanged = { attachmentSize = it },
+                glow = attachmentGlow,
+                spec = spec,
+                active = focusedItem?.attachmentActive ?: false,
+                positionMs = focusedItem?.attachmentPositionMs,
+            )
         }
         if (bond > 0.001f && lastCatchUp != null && catchUpAnim.value > 0.5f && !bubbleOnlyLayout) {
             Box(
@@ -2014,6 +2053,9 @@ private fun IslandRootContent(
     }
     }
 }
+
+@Composable
+private fun SeparateComposition(content: @Composable () -> Unit) = content()
 
 private const val BOND_DELAY_MS = 3000L
 

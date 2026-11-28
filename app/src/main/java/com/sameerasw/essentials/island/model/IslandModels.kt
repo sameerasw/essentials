@@ -186,6 +186,11 @@ class IslandItem(
     val expandedQueueOnly: Boolean = false,
     val queueAccent: Color? = null,
 
+    val attachmentAnchor: String? = null,
+    val attachmentTitle: String? = null,
+    val attachmentActive: Boolean = true,
+    val attachmentPositionMs: (() -> Long)? = null,
+    
     val stack: List<StackIcon> = emptyList(),
     val queued: List<StackIcon>? = null,
     val priorityGroup: String? = null,
@@ -224,6 +229,10 @@ class IslandItem(
         hideExpandedQueue = hideExpandedQueue,
         expandedQueueOnly = expandedQueueOnly,
         queueAccent = queueAccent,
+        attachmentAnchor = attachmentAnchor,
+        attachmentTitle = attachmentTitle,
+        attachmentActive = attachmentActive,
+        attachmentPositionMs = attachmentPositionMs,
         stack = stack,
         queued = queued,
         priorityGroup = priorityGroup,

@@ -17,6 +17,7 @@ data class HostInfo(
     val cameraSlotWidthPx: Int = 0,
     val cornerPx: Int = 0,
     val powerSave: Boolean = false,
+    val supportsAttachments: Boolean = false,
 ) {
     fun toBundle(): Bundle = Bundle().apply {
         putString(KEY_PACKAGE, hostPackage)
@@ -33,6 +34,7 @@ data class HostInfo(
         putInt(KEY_CAMERA_SLOT, cameraSlotWidthPx)
         putInt(KEY_CORNER, cornerPx)
         putBoolean(KEY_POWER_SAVE, powerSave)
+        putBoolean(KEY_ATTACHMENTS, supportsAttachments)
     }
 
     companion object {
@@ -50,6 +52,7 @@ data class HostInfo(
         private const val KEY_CAMERA_SLOT = "camera_slot"
         private const val KEY_CORNER = "corner"
         private const val KEY_POWER_SAVE = "power_save"
+        private const val KEY_ATTACHMENTS = "attachments"
 
         fun fromBundle(bundle: Bundle): HostInfo = HostInfo(
             hostPackage = bundle.getString(KEY_PACKAGE).orEmpty(),
@@ -66,6 +69,7 @@ data class HostInfo(
             cameraSlotWidthPx = bundle.getInt(KEY_CAMERA_SLOT, 0),
             cornerPx = bundle.getInt(KEY_CORNER, 0),
             powerSave = bundle.getBoolean(KEY_POWER_SAVE, false),
+            supportsAttachments = bundle.getBoolean(KEY_ATTACHMENTS, false),
         )
     }
 }
