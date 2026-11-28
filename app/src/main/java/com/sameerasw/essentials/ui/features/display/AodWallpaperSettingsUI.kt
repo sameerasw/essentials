@@ -65,6 +65,7 @@ import com.sameerasw.essentials.ui.core.sheets.AodCompatibilityInfoBottomSheet
 import com.sameerasw.essentials.ui.core.sheets.AppSelectionSheet
 import com.sameerasw.essentials.ui.core.sheets.PermissionsBottomSheet
 import com.sameerasw.essentials.ui.modifiers.highlight
+import com.sameerasw.essentials.ui.modifiers.whatsNewSetting
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.utils.PermissionUIHelper
 import com.sameerasw.essentials.viewmodels.MainViewModel
@@ -162,6 +163,7 @@ fun AodWallpaperSettingsUI(
                         viewModel.setAodWallpaperUseDailyLive(checked)
                         viewModel.loadCurrentWallpaperBitmap(context)
                     },
+                    modifier = Modifier.whatsNewSetting(SettingsRepository.KEY_AOD_WALLPAPER_USE_DAILY_LIVE, "AOD wallpaper"),
                     leadingIcon = {
                         Box(
                             modifier =
@@ -373,6 +375,7 @@ fun AodWallpaperSettingsUI(
                     HapticUtil.performVirtualKeyHaptic(view)
                     context.startActivity(Intent(context, WallpaperActivity::class.java).putExtra("tab", "music"))
                 },
+                modifier = Modifier.whatsNewSetting("aod_wallpaper_album_art_link", "AOD wallpaper"),
             )
 
             AnimatedVisibility(
