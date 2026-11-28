@@ -1396,6 +1396,7 @@
     <string name="live_wallpaper_zoom_effect">Zoom effect</string>
     <string name="live_wallpaper_dock">Dock</string>
     <string name="live_wallpaper_dock_padding">Dock padding</string>
+    <string name="live_wallpaper_dock_opacity">Dock opacity</string>
     <string name="live_wallpaper_video_title">影片</string>
     <string name="btn_apply">套用</string>
     <string name="add_video">新增影片</string>

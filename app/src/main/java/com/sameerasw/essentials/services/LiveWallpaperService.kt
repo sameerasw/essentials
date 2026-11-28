@@ -118,6 +118,7 @@ class LiveWallpaperService : WallpaperService() {
                     SettingsRepository.KEY_LIVE_WALLPAPER_PROGRESSIVE_BLUR_HEIGHT,
                     SettingsRepository.KEY_LIVE_WALLPAPER_DOCK,
                     SettingsRepository.KEY_LIVE_WALLPAPER_DOCK_PADDING,
+                    SettingsRepository.KEY_LIVE_WALLPAPER_DOCK_OPACITY,
                     -> {
                         revealProgress = revealTarget()
                         requestDraw()
@@ -620,10 +621,11 @@ class LiveWallpaperService : WallpaperService() {
             }
 
             val night = isNightMode()
-            dockTintPaint.color = withAlpha(dockTintColor(night), alpha * if (night) DOCK_TINT_ALPHA_DARK else DOCK_TINT_ALPHA_LIGHT)
+            val opacity = repository.getLiveWallpaperDockOpacity().coerceIn(0f, 1f)
+            dockTintPaint.color = withAlpha(dockTintColor(night), alpha * opacity)
             canvas.drawPath(dockClipPath, dockTintPaint)
             dockStrokePaint.strokeWidth = density
-            dockStrokePaint.color = withAlpha(Color.WHITE, alpha * if (night) DOCK_STROKE_ALPHA_DARK else DOCK_STROKE_ALPHA_LIGHT)
+            dockStrokePaint.color = withAlpha(Color.WHITE, alpha * opacity * if (night) DOCK_STROKE_RATIO_DARK else DOCK_STROKE_RATIO_LIGHT)
             canvas.drawPath(dockClipPath, dockStrokePaint)
         }
 
@@ -765,10 +767,8 @@ class LiveWallpaperService : WallpaperService() {
         private const val BLUR_RADIUS_DP = 28f
         private const val ZOOM_AMOUNT = 0.06f
         private const val DOCK_CORNER_DP = 32f
-        private const val DOCK_TINT_ALPHA_LIGHT = 0.42f
-        private const val DOCK_TINT_ALPHA_DARK = 0.38f
-        private const val DOCK_STROKE_ALPHA_LIGHT = 0.30f
-        private const val DOCK_STROKE_ALPHA_DARK = 0.10f
+        private const val DOCK_STROKE_RATIO_LIGHT = 0.7f
+        private const val DOCK_STROKE_RATIO_DARK = 0.25f
         private const val DOCK_ANIM_DURATION = 320L
         private const val ZOOM_IN_DURATION = 1600L
         private const val ZOOM_OUT_DURATION = 650L

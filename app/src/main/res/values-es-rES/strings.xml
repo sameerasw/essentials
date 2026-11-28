@@ -1615,6 +1615,7 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla s
     <string name="live_wallpaper_zoom_effect">Zoom effect</string>
     <string name="live_wallpaper_dock">Dock</string>
     <string name="live_wallpaper_dock_padding">Dock padding</string>
+    <string name="live_wallpaper_dock_opacity">Dock opacity</string>
     <string name="live_wallpaper_video_title">Vídeo</string>
     <string name="btn_apply">Aplicar</string>
     <string name="add_video">Añadir vídeo</string>

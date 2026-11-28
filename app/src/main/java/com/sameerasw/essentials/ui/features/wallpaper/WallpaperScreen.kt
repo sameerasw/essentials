@@ -182,6 +182,7 @@ fun WallpaperScreen(
     var zoomEffectEnabled by remember { mutableStateOf(repository.isLiveWallpaperZoomEffectEnabled()) }
     var dockEnabled by remember { mutableStateOf(repository.isLiveWallpaperDockEnabled()) }
     var dockPadding by remember { mutableFloatStateOf(repository.getLiveWallpaperDockPadding()) }
+    var dockOpacity by remember { mutableFloatStateOf(repository.getLiveWallpaperDockOpacity()) }
     val liveDockBounds by WallpaperDockBridge.bounds.collectAsState()
     var isAccessibilityGranted by remember { mutableStateOf(PermissionUtils.isAccessibilityServiceEnabled(context)) }
     var showDockPermissionSheet by remember { mutableStateOf(false) }
@@ -630,6 +631,8 @@ fun WallpaperScreen(
                                     imageUrl = wallpaperInfo?.urlMobile,
                                     dockBounds = liveDockBounds,
                                     paddingDp = dockPadding,
+                                    opacity = dockOpacity,
+                                    topPx = with(density) { (statusBarHeight + 96.dp).toPx() },
                                     containerWidthPx = constraints.maxWidth,
                                     containerHeightPx = constraints.maxHeight,
                                 )
@@ -963,6 +966,23 @@ fun WallpaperScreen(
                                                     repository.setLiveWallpaperDockPadding(dockPadding)
                                                 },
                                                 valueRange = 0f..32f,
+                                                modifier = Modifier.fillMaxWidth(),
+                                            )
+                                            TranslatableText(
+                                                stringResId = R.string.live_wallpaper_dock_opacity,
+                                                style = MaterialTheme.typography.labelLarge,
+                                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                            )
+                                            Slider(
+                                                value = dockOpacity,
+                                                onValueChange = {
+                                                    dockOpacity = it
+                                                    HapticUtil.performSliderHaptic(view)
+                                                },
+                                                onValueChangeFinished = {
+                                                    repository.setLiveWallpaperDockOpacity(dockOpacity)
+                                                },
+                                                valueRange = 0f..1f,
                                                 modifier = Modifier.fillMaxWidth(),
                                             )
                                         }
@@ -1540,33 +1560,37 @@ private fun PreviewDock(
     imageUrl: String?,
     dockBounds: AndroidRect?,
     paddingDp: Float,
+    opacity: Float,
+    topPx: Float,
     containerWidthPx: Int,
     containerHeightPx: Int,
 ) {
     val density = LocalDensity.current
     var originInWindow by remember { mutableStateOf(Offset.Zero) }
 
+    val paddingPx = with(density) { paddingDp.dp.toPx() }
+    // real dock width and icon size when known, but placed near the top so the floating controls never cover it
     val iconsRect =
         dockBounds?.let {
+            val top = topPx + paddingPx
             Rect(
                 it.left - originInWindow.x,
-                it.top - originInWindow.y,
+                top,
                 it.right - originInWindow.x,
-                it.bottom - originInWindow.y,
+                top + it.height(),
             )
         } ?: with(density) {
             val iconSize = 56.dp.toPx()
             val width = iconSize * 4 + 28.dp.toPx() * 3
-            val bottom = containerHeightPx * 0.89f
+            val top = topPx + paddingPx
             Rect(
                 (containerWidthPx - width) / 2f,
-                bottom - iconSize,
+                top,
                 (containerWidthPx + width) / 2f,
-                bottom,
+                top + iconSize,
             )
         }
     val iconCount = (iconsRect.width / (iconsRect.height * 1.25f)).roundToInt().coerceIn(1, 7)
-    val paddingPx = with(density) { paddingDp.dp.toPx() }
     val container =
         Rect(
             iconsRect.left - paddingPx,
@@ -1622,8 +1646,8 @@ private fun PreviewDock(
                 modifier =
                     Modifier
                         .matchParentSize()
-                        .background(tintColor.copy(alpha = if (isNight) 0.38f else 0.42f))
-                        .border(1.dp, Color.White.copy(alpha = if (isNight) 0.10f else 0.30f), shape),
+                        .background(tintColor.copy(alpha = opacity))
+                        .border(1.dp, Color.White.copy(alpha = opacity * if (isNight) 0.25f else 0.7f), shape),
             )
             Row(
                 modifier =

@@ -509,4 +509,5 @@ Anda dapat menyesuaikan gaya animasi, warna, dan perilakunya. Fitur ini berfungs
     <string name="live_wallpaper_zoom_effect">Zoom effect</string>
     <string name="live_wallpaper_dock">Dock</string>
     <string name="live_wallpaper_dock_padding">Dock padding</string>
+    <string name="live_wallpaper_dock_opacity">Dock opacity</string>
 </resources>

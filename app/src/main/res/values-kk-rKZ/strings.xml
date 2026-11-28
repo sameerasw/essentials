@@ -1982,6 +1982,7 @@ c ❤\uFE0F ішінен \uD83C\uDDF1\uD83C\uDDF0</string>
     <string name="live_wallpaper_zoom_effect">Zoom effect</string>
     <string name="live_wallpaper_dock">Dock</string>
     <string name="live_wallpaper_dock_padding">Dock padding</string>
+    <string name="live_wallpaper_dock_opacity">Dock opacity</string>
     <string name="live_wallpaper_video_title">Бейне</string>
     <string name="btn_apply">Қолдану</string>
     <string name="add_video">Бейне қосу</string>
