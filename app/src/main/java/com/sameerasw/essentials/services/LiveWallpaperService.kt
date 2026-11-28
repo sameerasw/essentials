@@ -12,6 +12,7 @@ package com.sameerasw.essentials.services
 import android.R as AndroidR
 import android.animation.ValueAnimator
 import android.app.KeyguardManager
+import android.app.WallpaperColors
 import android.app.WallpaperManager
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -78,6 +79,8 @@ class LiveWallpaperService : WallpaperService() {
         private var imageMode = false
         private var imageLoadJob: Job? = null
         private var dailyBitmap: Bitmap? = null
+        private var dailyColors: WallpaperColors? = null
+        private var colorsJob: Job? = null
         private var blurCacheKey: String? = null
         private var blurNode: RenderNode? = null
         private var blurFallback: Bitmap? = null
@@ -583,11 +586,34 @@ class LiveWallpaperService : WallpaperService() {
                 scope.launch {
                     val bitmap = withContext(Dispatchers.IO) { resolveDailyBitmap() } ?: return@launch
                     if (!imageMode) return@launch
+                    val previous = dailyBitmap
                     dailyBitmap = bitmap
                     blurCacheKey = null
                     drawImage()
+                    if (previous == null || !previous.sameAs(bitmap)) updateWallpaperColors(bitmap)
                 }
         }
+
+        private fun updateWallpaperColors(bitmap: Bitmap) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O_MR1) return
+            colorsJob?.cancel()
+            colorsJob =
+                scope.launch {
+                    val colors =
+                        withContext(Dispatchers.Default) {
+                            try {
+                                WallpaperColors.fromBitmap(bitmap)
+                            } catch (_: Exception) {
+                                null
+                            }
+                        } ?: return@launch
+                    if (dailyBitmap !== bitmap) return@launch
+                    dailyColors = colors
+                    notifyColorsChanged()
+                }
+        }
+
+        override fun onComputeColors(): WallpaperColors? = if (imageMode) dailyColors else null
 
         private suspend fun resolveDailyBitmap(): Bitmap? {
             val wallpaperRepository = WallpaperRepository()
@@ -817,6 +843,11 @@ class LiveWallpaperService : WallpaperService() {
 
         private fun clearImageState() {
             dailyBitmap = null
+            colorsJob?.cancel()
+            if (dailyColors != null) {
+                dailyColors = null
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) notifyColorsChanged()
+            }
             blurCacheKey = null
             discardBlurNode()
             blurFallback?.recycle()
