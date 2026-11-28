@@ -1928,6 +1928,7 @@
     <string name="live_wallpaper_trigger_screen_on">亮屏</string>
     <string name="live_wallpaper_progressive_blur">Progressive blur</string>
     <string name="live_wallpaper_blur_height">Blur height</string>
+    <string name="live_wallpaper_zoom_effect">Zoom effect</string>
     <string name="live_wallpaper_video_title">视频</string>
     <string name="btn_apply">应用</string>
     <string name="add_video">添加视频</string>

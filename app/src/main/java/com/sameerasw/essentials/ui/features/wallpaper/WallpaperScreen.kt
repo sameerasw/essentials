@@ -158,6 +158,7 @@ fun WallpaperScreen(
     var selectedVideo by remember { mutableStateOf(repository.getLiveWallpaperSelectedVideo()) }
     var playbackTrigger by remember { mutableStateOf(repository.getLiveWallpaperPlaybackTrigger()) }
     var progressiveBlurEnabled by remember { mutableStateOf(repository.isLiveWallpaperProgressiveBlurEnabled()) }
+    var zoomEffectEnabled by remember { mutableStateOf(repository.isLiveWallpaperZoomEffectEnabled()) }
     var progressiveBlurHeight by remember { mutableFloatStateOf(repository.getLiveWallpaperProgressiveBlurHeight()) }
     var applyHome by remember { mutableStateOf(repository.getDailyWallpaperApplyHome()) }
     var applyLock by remember { mutableStateOf(repository.getDailyWallpaperApplyLock()) }
@@ -835,6 +836,26 @@ fun WallpaperScreen(
                                                 modifier = Modifier.fillMaxWidth(),
                                             )
                                         }
+                                    }
+
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.SpaceBetween,
+                                    ) {
+                                        TranslatableText(
+                                            stringResId = R.string.live_wallpaper_zoom_effect,
+                                            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                                            color = MaterialTheme.colorScheme.onSurface,
+                                        )
+                                        Switch(
+                                            checked = zoomEffectEnabled,
+                                            onCheckedChange = { checked ->
+                                                HapticUtil.performUIHaptic(view)
+                                                zoomEffectEnabled = checked
+                                                repository.setLiveWallpaperZoomEffectEnabled(checked)
+                                            },
+                                        )
                                     }
                                 } else {
                                     TranslatableText(

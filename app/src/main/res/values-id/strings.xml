@@ -506,4 +506,5 @@ Anda dapat menyesuaikan gaya animasi, warna, dan perilakunya. Fitur ini berfungs
     <string name="setting_show_whats_new_title">Indicate what\'s new for a day</string>
     <string name="live_wallpaper_progressive_blur">Progressive blur</string>
     <string name="live_wallpaper_blur_height">Blur height</string>
+    <string name="live_wallpaper_zoom_effect">Zoom effect</string>
 </resources>

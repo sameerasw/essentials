@@ -26,7 +26,7 @@ import android.graphics.Matrix
 import android.graphics.Paint
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffXfermode
-import android.graphics.Rect
+import android.graphics.RectF
 import android.graphics.RenderEffect
 import android.graphics.RenderNode
 import android.graphics.Shader
@@ -35,6 +35,7 @@ import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.service.wallpaper.WallpaperService
+import android.view.Choreographer
 import android.view.SurfaceHolder
 import android.view.animation.DecelerateInterpolator
 import androidx.annotation.OptIn
@@ -75,6 +76,14 @@ class LiveWallpaperService : WallpaperService() {
         private var blurFallback: Bitmap? = null
         private var blurProgress = 0f
         private var blurAnimator: ValueAnimator? = null
+        private var zoomProgress = 0f
+        private var zoomAnimator: ValueAnimator? = null
+        private var drawScheduled = false
+        private val frameCallback =
+            Choreographer.FrameCallback {
+                drawScheduled = false
+                drawImage()
+            }
 
         private val bitmapPaint = Paint(Paint.FILTER_BITMAP_FLAG or Paint.ANTI_ALIAS_FLAG)
         private val maskPaint = Paint().apply { xfermode = PorterDuffXfermode(PorterDuff.Mode.DST_IN) }
@@ -120,10 +129,12 @@ class LiveWallpaperService : WallpaperService() {
                             exoPlayer?.play()
                             // keyguard can still report locked while USER_PRESENT is delivered
                             animateBlurTo(if (blurAllowed()) 1f else 0f)
+                            animateZoomTo(0f, ZOOM_OUT_DURATION)
                         }
 
                         Intent.ACTION_SCREEN_OFF -> {
                             setBlurImmediately(0f)
+                            setZoomImmediately(0f)
                             discardBlurNode()
                             executor.removeCallbacksAndMessages(null)
                             executor.postDelayed({
@@ -135,6 +146,7 @@ class LiveWallpaperService : WallpaperService() {
                         Intent.ACTION_SCREEN_ON -> {
                             if (keyguardManager.isKeyguardLocked) {
                                 setBlurImmediately(0f)
+                                if (zoomAllowed()) animateZoomTo(1f, ZOOM_IN_DURATION)
                             } else {
                                 animateBlurTo(blurTarget())
                             }
@@ -193,6 +205,10 @@ class LiveWallpaperService : WallpaperService() {
                 if (visible) {
                     blurAnimator?.cancel()
                     blurProgress = blurTarget()
+                    if (!keyguardManager.isKeyguardLocked) {
+                        zoomAnimator?.cancel()
+                        zoomProgress = 0f
+                    }
                     drawImage()
                 }
                 return
@@ -256,6 +272,8 @@ class LiveWallpaperService : WallpaperService() {
                 imageMode = false
                 imageLoadJob?.cancel()
                 blurAnimator?.cancel()
+                zoomAnimator?.cancel()
+                zoomProgress = 0f
                 clearImageState()
                 val player = exoPlayer
                 if (player != null) {
@@ -308,6 +326,40 @@ class LiveWallpaperService : WallpaperService() {
             drawImage()
         }
 
+        private fun zoomAllowed(): Boolean = !isPreview && repository.isLiveWallpaperZoomEffectEnabled()
+
+        private fun setZoomImmediately(value: Float) {
+            if (!imageMode) return
+            zoomAnimator?.cancel()
+            zoomProgress = value
+            requestDraw()
+        }
+
+        private fun animateZoomTo(
+            target: Float,
+            durationMs: Long,
+        ) {
+            if (!imageMode) return
+            zoomAnimator?.cancel()
+            if (zoomProgress == target) return
+            zoomAnimator =
+                ValueAnimator.ofFloat(zoomProgress, target).apply {
+                    duration = durationMs
+                    interpolator = DecelerateInterpolator(1.4f)
+                    addUpdateListener {
+                        zoomProgress = it.animatedValue as Float
+                        requestDraw()
+                    }
+                    start()
+                }
+        }
+
+        private fun requestDraw() {
+            if (drawScheduled) return
+            drawScheduled = true
+            Choreographer.getInstance().postFrameCallback(frameCallback)
+        }
+
         private fun animateBlurTo(target: Float) {
             if (!imageMode) return
             blurAnimator?.cancel()
@@ -318,7 +370,7 @@ class LiveWallpaperService : WallpaperService() {
                     interpolator = DecelerateInterpolator(1.6f)
                     addUpdateListener {
                         blurProgress = it.animatedValue as Float
-                        drawImage()
+                        requestDraw()
                     }
                     start()
                 }
@@ -446,7 +498,8 @@ class LiveWallpaperService : WallpaperService() {
             try {
                 val width = canvas.width
                 val height = canvas.height
-                val matrix = centerCropMatrix(bitmap, width, height)
+                val zoom = 1f + ZOOM_AMOUNT * zoomProgress
+                val matrix = centerCropMatrix(bitmap, width, height).apply { postScale(zoom, zoom, width / 2f, height / 2f) }
                 canvas.drawColor(Color.BLACK)
                 canvas.drawBitmap(bitmap, matrix, bitmapPaint)
                 if (blurProgress > 0f && repository.isLiveWallpaperProgressiveBlurEnabled()) {
@@ -458,6 +511,16 @@ class LiveWallpaperService : WallpaperService() {
             } finally {
                 holder.unlockCanvasAndPost(canvas)
             }
+        }
+
+        private fun zoomedRect(
+            width: Int,
+            height: Int,
+        ): RectF {
+            val zoom = 1f + ZOOM_AMOUNT * zoomProgress
+            val dx = width * (zoom - 1f) / 2f
+            val dy = height * (zoom - 1f) / 2f
+            return RectF(-dx, -dy, width + dx, height + dy)
         }
 
         private fun drawBlurredEdge(
@@ -483,7 +546,7 @@ class LiveWallpaperService : WallpaperService() {
             if (node != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 canvas.drawRenderNode(node)
             } else if (fallback != null) {
-                canvas.drawBitmap(fallback, null, Rect(0, 0, width, height), bitmapPaint)
+                canvas.drawBitmap(fallback, null, zoomedRect(width, height), bitmapPaint)
             }
             maskPaint.shader =
                 LinearGradient(
@@ -539,6 +602,9 @@ class LiveWallpaperService : WallpaperService() {
         override fun onSurfaceDestroyed(holder: SurfaceHolder) {
             surfaceReady = false
             blurAnimator?.cancel()
+            zoomAnimator?.cancel()
+            Choreographer.getInstance().removeFrameCallback(frameCallback)
+            drawScheduled = false
             super.onSurfaceDestroyed(holder)
         }
 
@@ -552,6 +618,8 @@ class LiveWallpaperService : WallpaperService() {
             repository.unregisterOnSharedPreferenceChangeListener(prefsListener)
             repository.unregisterLiveWallpaperPrefsListener(livePrefsListener)
             blurAnimator?.cancel()
+            zoomAnimator?.cancel()
+            Choreographer.getInstance().removeFrameCallback(frameCallback)
             scope.cancel()
             clearImageState()
             releasePlayer()
@@ -561,6 +629,9 @@ class LiveWallpaperService : WallpaperService() {
     companion object {
         private const val CACHE_DIR = "live_daily_wallpaper"
         private const val BLUR_RADIUS_DP = 28f
+        private const val ZOOM_AMOUNT = 0.06f
+        private const val ZOOM_IN_DURATION = 1600L
+        private const val ZOOM_OUT_DURATION = 650L
         private const val SCRIM_ALPHA = 0.18f
     }
 }
