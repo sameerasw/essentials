@@ -86,6 +86,24 @@ class LiveWallpaperService : WallpaperService() {
         private var dockAlpha = 0f
         private var dockAnimator: ValueAnimator? = null
         private var zoomAnimator: ValueAnimator? = null
+        private var mediaTracker: LiveWallpaperMediaTracker? = null
+        private val artHandler = Handler(Looper.getMainLooper())
+        private var currentArt: Bitmap? = null
+        private var currentArtKey: String? = null
+        private var outgoingArt: Bitmap? = null
+        private var isMusicPlaying = false
+        private var artProgress = 0f
+        private var artSwap = 1f
+        private var artAnimator: ValueAnimator? = null
+        private var artSwapAnimator: ValueAnimator? = null
+        private val artPaint = Paint(Paint.FILTER_BITMAP_FLAG or Paint.ANTI_ALIAS_FLAG)
+        private var hideArtPending = false
+        private val hideArtRunnable =
+            Runnable {
+                hideArtPending = false
+                isMusicPlaying = false
+                animateArtTo(0f)
+            }
         private var drawScheduled = false
         private val frameCallback =
             Choreographer.FrameCallback {
@@ -105,6 +123,10 @@ class LiveWallpaperService : WallpaperService() {
             SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
                 when (key) {
                     SettingsRepository.KEY_LIVE_WALLPAPER_SELECTED_VIDEO -> applyMode()
+                    SettingsRepository.KEY_LIVE_WALLPAPER_ALBUM_ART -> {
+                        updateMediaTracking()
+                        animateArtTo(artTarget())
+                    }
                     SettingsRepository.KEY_LIVE_WALLPAPER_PLAYBACK_TRIGGER -> {
                         if (isVisible && !keyguardManager.isKeyguardLocked) {
                             exoPlayer?.play()
@@ -131,6 +153,7 @@ class LiveWallpaperService : WallpaperService() {
                 if (key == SettingsRepository.KEY_DAILY_WALLPAPER_LAST_URL_MOBILE && imageMode) {
                     loadDailyImage()
                 }
+                if (key == SettingsRepository.KEY_AOD_WALLPAPER_MEDIA_EXCLUDED_APPS) mediaTracker?.refresh()
             }
 
         private val receiver =
@@ -145,11 +168,13 @@ class LiveWallpaperService : WallpaperService() {
                             // keyguard can still report locked while USER_PRESENT is delivered
                             animateRevealTo(if (revealAllowed()) 1f else 0f)
                             animateZoomTo(0f, ZOOM_OUT_DURATION)
+                            animateArtTo(artTarget(locked = false))
                         }
 
                         Intent.ACTION_SCREEN_OFF -> {
                             setRevealImmediately(0f)
                             setZoomImmediately(0f)
+                            setArtImmediately(artTarget(locked = true))
                             discardBlurNode()
                             executor.removeCallbacksAndMessages(null)
                             executor.postDelayed({
@@ -161,6 +186,7 @@ class LiveWallpaperService : WallpaperService() {
                         Intent.ACTION_CONFIGURATION_CHANGED -> requestDraw()
 
                         Intent.ACTION_SCREEN_ON -> {
+                            setArtImmediately(artTarget())
                             if (keyguardManager.isKeyguardLocked) {
                                 setRevealImmediately(0f)
                                 if (zoomAllowed()) animateZoomTo(1f, ZOOM_IN_DURATION)
@@ -205,7 +231,112 @@ class LiveWallpaperService : WallpaperService() {
             repository.registerOnSharedPreferenceChangeListener(prefsListener)
             repository.registerLiveWallpaperPrefsListener(livePrefsListener)
             if (imageMode) onDailyLiveActivated()
+            updateMediaTracking()
             scope.launch { WallpaperDockBridge.bounds.collect { onDockBoundsChanged(it) } }
+        }
+
+        private fun updateMediaTracking() {
+            val active = imageMode && !isPreview && repository.getLiveWallpaperAlbumArtMode() != SettingsRepository.LIVE_WALLPAPER_ALBUM_ART_NONE
+            if (active) {
+                val tracker =
+                    mediaTracker ?: LiveWallpaperMediaTracker(applicationContext, repository, ::onMediaChanged).also { mediaTracker = it }
+                tracker.start()
+            } else {
+                mediaTracker?.stop()
+                artHandler.removeCallbacks(hideArtRunnable)
+                hideArtPending = false
+                isMusicPlaying = false
+                animateArtTo(0f)
+            }
+        }
+
+        private fun onMediaChanged(
+            art: Bitmap?,
+            key: String?,
+            playing: Boolean,
+        ) {
+            if (!playing || art == null) {
+                // short grace period so track skips and brief pauses don't flash the wallpaper
+                if (isMusicPlaying && !hideArtPending) {
+                    hideArtPending = true
+                    artHandler.postDelayed(hideArtRunnable, ART_HIDE_DELAY)
+                }
+                return
+            }
+            artHandler.removeCallbacks(hideArtRunnable)
+            hideArtPending = false
+            isMusicPlaying = true
+            if (key != currentArtKey) {
+                val previous = currentArt
+                currentArtKey = key
+                currentArt = art
+                if (previous != null && artProgress > 0f) crossfadeArt(previous)
+            } else {
+                currentArt = art
+            }
+            animateArtTo(artTarget())
+            requestDraw()
+        }
+
+        private fun artTarget(locked: Boolean = keyguardManager.isKeyguardLocked): Float {
+            if (!imageMode || currentArt == null || !isMusicPlaying) return 0f
+            return when (repository.getLiveWallpaperAlbumArtMode()) {
+                SettingsRepository.LIVE_WALLPAPER_ALBUM_ART_LOCK -> if (locked) 1f else 0f
+                SettingsRepository.LIVE_WALLPAPER_ALBUM_ART_HOME -> if (locked) 0f else 1f
+                SettingsRepository.LIVE_WALLPAPER_ALBUM_ART_BOTH -> 1f
+                else -> 0f
+            }
+        }
+
+        private fun setArtImmediately(value: Float) {
+            if (!imageMode) return
+            artAnimator?.cancel()
+            artProgress = value
+            if (value == 0f) clearArtIfHidden()
+            requestDraw()
+        }
+
+        private fun animateArtTo(target: Float) {
+            artAnimator?.cancel()
+            if (artProgress == target) {
+                if (target == 0f) clearArtIfHidden()
+                return
+            }
+            artAnimator =
+                ValueAnimator.ofFloat(artProgress, target).apply {
+                    duration = ART_FADE_DURATION
+                    interpolator = DecelerateInterpolator(1.4f)
+                    addUpdateListener {
+                        artProgress = it.animatedValue as Float
+                        if (artProgress == 0f) clearArtIfHidden()
+                        requestDraw()
+                    }
+                    start()
+                }
+        }
+
+        private fun crossfadeArt(previous: Bitmap) {
+            artSwapAnimator?.cancel()
+            outgoingArt = previous
+            artSwap = 0f
+            artSwapAnimator =
+                ValueAnimator.ofFloat(0f, 1f).apply {
+                    duration = ART_FADE_DURATION
+                    interpolator = DecelerateInterpolator(1.4f)
+                    addUpdateListener {
+                        artSwap = it.animatedValue as Float
+                        if (artSwap >= 1f) outgoingArt = null
+                        requestDraw()
+                    }
+                    start()
+                }
+        }
+
+        private fun clearArtIfHidden() {
+            if (isMusicPlaying) return
+            currentArt = null
+            currentArtKey = null
+            outgoingArt = null
         }
 
         private fun onDockBoundsChanged(bounds: Rect?) {
@@ -258,6 +389,8 @@ class LiveWallpaperService : WallpaperService() {
                         zoomAnimator?.cancel()
                         zoomProgress = 0f
                     }
+                    artAnimator?.cancel()
+                    artProgress = artTarget()
                     drawImage()
                 }
                 return
@@ -316,6 +449,7 @@ class LiveWallpaperService : WallpaperService() {
                 imageMode = true
                 onDailyLiveActivated()
                 revealProgress = revealTarget()
+                updateMediaTracking()
                 if (surfaceReady) loadDailyImage()
             } else {
                 imageMode = false
@@ -323,6 +457,9 @@ class LiveWallpaperService : WallpaperService() {
                 revealAnimator?.cancel()
                 zoomAnimator?.cancel()
                 zoomProgress = 0f
+                updateMediaTracking()
+                artAnimator?.cancel()
+                artProgress = 0f
                 clearImageState()
                 val player = exoPlayer
                 if (player != null) {
@@ -486,6 +623,41 @@ class LiveWallpaperService : WallpaperService() {
             }
         }
 
+        private fun sceneMatrix(
+            bitmap: Bitmap,
+            width: Int,
+            height: Int,
+        ): Matrix {
+            val zoom = 1f + ZOOM_AMOUNT * zoomProgress
+            return centerCropMatrix(bitmap, width, height).apply { postScale(zoom, zoom, width / 2f, height / 2f) }
+        }
+
+        // daily image with the album art layered over it; shared by the frame and both blur layers
+        private fun drawScene(
+            canvas: Canvas,
+            width: Int,
+            height: Int,
+        ) {
+            val base = dailyBitmap ?: return
+            canvas.drawBitmap(base, sceneMatrix(base, width, height), bitmapPaint)
+            if (artProgress <= 0f) return
+            val outgoing = outgoingArt
+            if (outgoing != null) drawArt(canvas, outgoing, artProgress, width, height)
+            currentArt?.let { drawArt(canvas, it, artProgress * if (outgoing != null) artSwap else 1f, width, height) }
+        }
+
+        private fun drawArt(
+            canvas: Canvas,
+            art: Bitmap,
+            alpha: Float,
+            width: Int,
+            height: Int,
+        ) {
+            if (art.isRecycled || alpha <= 0f) return
+            artPaint.alpha = (alpha * 255).toInt().coerceIn(0, 255)
+            canvas.drawBitmap(art, sceneMatrix(art, width, height), artPaint)
+        }
+
         private fun ensureBlurLayer(
             bitmap: Bitmap,
             matrix: Matrix,
@@ -499,7 +671,7 @@ class LiveWallpaperService : WallpaperService() {
                 node.setPosition(0, 0, width, height)
                 node.setRenderEffect(RenderEffect.createBlurEffect(radius, radius, Shader.TileMode.CLAMP))
                 val recording = node.beginRecording(width, height)
-                recording.drawBitmap(bitmap, matrix, bitmapPaint)
+                drawScene(recording, width, height)
                 node.endRecording()
                 return
             }
@@ -554,10 +726,9 @@ class LiveWallpaperService : WallpaperService() {
             try {
                 val width = canvas.width
                 val height = canvas.height
-                val zoom = 1f + ZOOM_AMOUNT * zoomProgress
-                val matrix = centerCropMatrix(bitmap, width, height).apply { postScale(zoom, zoom, width / 2f, height / 2f) }
+                val matrix = sceneMatrix(bitmap, width, height)
                 canvas.drawColor(Color.BLACK)
-                canvas.drawBitmap(bitmap, matrix, bitmapPaint)
+                drawScene(canvas, width, height)
                 val showEdges = revealProgress > 0f && repository.isLiveWallpaperProgressiveBlurEnabled()
                 val dock = dockRect
                 val showDock =
@@ -571,7 +742,7 @@ class LiveWallpaperService : WallpaperService() {
                     drawBlurredEdge(canvas, width, height, edge, top = true)
                     drawBlurredEdge(canvas, width, height, edge, top = false)
                 }
-                if (showDock && dock != null) drawDock(canvas, dock, bitmap, matrix, width, height)
+                if (showDock && dock != null) drawDock(canvas, dock, width, height)
             } finally {
                 holder.unlockCanvasAndPost(canvas)
             }
@@ -580,8 +751,6 @@ class LiveWallpaperService : WallpaperService() {
         private fun drawDock(
             canvas: Canvas,
             icons: RectF,
-            bitmap: Bitmap,
-            matrix: Matrix,
             width: Int,
             height: Int,
         ) {
@@ -602,7 +771,7 @@ class LiveWallpaperService : WallpaperService() {
                     node.setPosition(0, 0, width, height)
                     node.setRenderEffect(RenderEffect.createBlurEffect(radius, radius, Shader.TileMode.CLAMP))
                     val recording = node.beginRecording(width, height)
-                    recording.drawBitmap(bitmap, matrix, bitmapPaint)
+                    drawScene(recording, width, height)
                     node.endRecording()
                     val save = canvas.save()
                     canvas.clipPath(dockClipPath)
@@ -752,6 +921,10 @@ class LiveWallpaperService : WallpaperService() {
             }
             repository.unregisterOnSharedPreferenceChangeListener(prefsListener)
             repository.unregisterLiveWallpaperPrefsListener(livePrefsListener)
+            mediaTracker?.stop()
+            artHandler.removeCallbacksAndMessages(null)
+            artAnimator?.cancel()
+            artSwapAnimator?.cancel()
             revealAnimator?.cancel()
             zoomAnimator?.cancel()
             dockAnimator?.cancel()
@@ -773,5 +946,7 @@ class LiveWallpaperService : WallpaperService() {
         private const val ZOOM_IN_DURATION = 1600L
         private const val ZOOM_OUT_DURATION = 650L
         private const val SCRIM_ALPHA = 0.18f
+        private const val ART_FADE_DURATION = 650L
+        private const val ART_HIDE_DELAY = 2500L
     }
 }

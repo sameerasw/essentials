@@ -14,6 +14,15 @@ import com.sameerasw.essentials.ui.navigation.ProvideBottomBar
 import com.sameerasw.essentials.ui.navigation.BottomBarSpec
 import com.sameerasw.essentials.ui.navigation.AppRoute
 import android.content.Intent
+import com.sameerasw.essentials.ui.core.sheets.AppSelectionSheet
+import com.sameerasw.essentials.ui.core.cards.IconToggleItem
+import com.sameerasw.essentials.ui.core.cards.ConfigPickerItem
+import com.sameerasw.essentials.FeatureSettingsActivity
+import com.sameerasw.essentials.services.LiveWallpaperService
+import androidx.compose.ui.unit.Dp
+import android.content.Context
+import android.content.ComponentName
+import android.app.WallpaperManager
 import android.graphics.Bitmap
 import android.media.MediaMetadataRetriever
 import android.net.Uri
@@ -197,8 +206,13 @@ fun WallpaperScreen(
 
     val pagerState =
         rememberPagerState(
-            initialPage = if (initialTab == "live") 1 else 0,
-            pageCount = { 2 },
+            initialPage =
+                when (initialTab) {
+                    "live" -> 1
+                    "music" -> 2
+                    else -> 0
+                },
+            pageCount = { 3 },
         )
 
     val pickerLauncher =
@@ -344,7 +358,7 @@ fun WallpaperScreen(
             horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            val tabs = listOf(0, 1)
+            val tabs = listOf(0, 1, 2)
             tabs.forEachIndexed { index, page ->
                 ToggleButton(
                     checked = pagerState.currentPage == page,
@@ -357,14 +371,20 @@ fun WallpaperScreen(
                     shapes =
                         when (index) {
                             0 -> ButtonGroupDefaults.connectedLeadingButtonShapes()
-                            else -> ButtonGroupDefaults.connectedTrailingButtonShapes()
+                            tabs.lastIndex -> ButtonGroupDefaults.connectedTrailingButtonShapes()
+                            else -> ButtonGroupDefaults.connectedMiddleButtonShapes()
                         },
-                    modifier = Modifier.size(width = 80.dp, height = 48.dp),
+                    modifier = Modifier.size(width = 72.dp, height = 48.dp),
                 ) {
                     Icon(
                         painter =
                             painterResource(
-                                id = if (page == 0) R.drawable.rounded_wallpaper_24 else R.drawable.rounded_slow_motion_video_24,
+                                id =
+                                    when (page) {
+                                        0 -> R.drawable.rounded_wallpaper_24
+                                        1 -> R.drawable.rounded_slow_motion_video_24
+                                        else -> R.drawable.rounded_music_note_24
+                                    },
                             ),
                         contentDescription = null,
                         modifier = Modifier.size(24.dp),
@@ -388,7 +408,14 @@ fun WallpaperScreen(
                     )
                     .scrollMotionBlur(pagerState, enabled = isMotionBlurEnabled),
         ) { page ->
-            if (page == 0) {
+            if (page == 2) {
+                WallpaperMusicPage(
+                    viewModel = viewModel,
+                    isDailyLiveSelected = selectedVideo == SettingsRepository.LIVE_WALLPAPER_DAILY_IMAGE,
+                    topPadding = statusBarHeight + 96.dp,
+                    bottomPadding = bottomPadding + 120.dp,
+                )
+            } else if (page == 0) {
                 Box(modifier = Modifier.fillMaxSize()) {
                     if (wallpaperInfo != null) {
                         SubcomposeAsyncImage(
@@ -1689,6 +1716,156 @@ private fun WallpaperSliderRow(
             onValueChangeFinished = onValueChangeFinished,
             valueRange = valueRange,
             modifier = Modifier.weight(1f),
+        )
+    }
+}
+
+private enum class CurrentWallpaperKind { STILL, ESSENTIALS_LIVE, OTHER_LIVE }
+
+private fun currentWallpaperKind(context: Context): CurrentWallpaperKind {
+    val info =
+        try {
+            WallpaperManager.getInstance(context).wallpaperInfo
+        } catch (_: Exception) {
+            null
+        } ?: return CurrentWallpaperKind.STILL
+    return if (info.component == ComponentName(context, LiveWallpaperService::class.java)) {
+        CurrentWallpaperKind.ESSENTIALS_LIVE
+    } else {
+        CurrentWallpaperKind.OTHER_LIVE
+    }
+}
+
+@Composable
+private fun WallpaperMusicPage(
+    viewModel: MainViewModel,
+    isDailyLiveSelected: Boolean,
+    topPadding: Dp,
+    bottomPadding: Dp,
+) {
+    val context = LocalContext.current
+    val view = LocalView.current
+    val repository = remember { SettingsRepository(context) }
+    var wallpaperKind by remember { mutableStateOf(currentWallpaperKind(context)) }
+    var albumArtMode by remember { mutableStateOf(repository.getLiveWallpaperAlbumArtMode()) }
+    var pendingAlbumArtMode by remember { mutableStateOf<String?>(null) }
+    var showMediaAppsSheet by remember { mutableStateOf(false) }
+    val isNotificationListenerGranted = viewModel.isNotificationListenerEnabled.value
+
+    LifecycleResumeEffect(Unit) {
+        wallpaperKind = currentWallpaperKind(context)
+        viewModel.isNotificationListenerEnabled.value = PermissionUtils.hasNotificationListenerPermission(context)
+        pendingAlbumArtMode?.let {
+            if (viewModel.isNotificationListenerEnabled.value) {
+                albumArtMode = it
+                repository.setLiveWallpaperAlbumArtMode(it)
+                pendingAlbumArtMode = null
+            }
+        }
+        onPauseOrDispose { }
+    }
+
+    Box(
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.surfaceContainer)
+                .verticalScroll(rememberScrollState())
+                .padding(top = topPadding, bottom = bottomPadding, start = 24.dp, end = 24.dp),
+    ) {
+        RoundedCardContainer(modifier = Modifier.fillMaxWidth()) {
+            if (wallpaperKind == CurrentWallpaperKind.ESSENTIALS_LIVE) {
+                val options =
+                    listOf(
+                        SettingsRepository.LIVE_WALLPAPER_ALBUM_ART_NONE to stringResource(R.string.label_none),
+                        SettingsRepository.LIVE_WALLPAPER_ALBUM_ART_LOCK to stringResource(R.string.wallpaper_lock_screen),
+                        SettingsRepository.LIVE_WALLPAPER_ALBUM_ART_HOME to stringResource(R.string.wallpaper_home_screen),
+                        SettingsRepository.LIVE_WALLPAPER_ALBUM_ART_BOTH to stringResource(R.string.btn_wallpaper_both),
+                    )
+                ConfigPickerItem(
+                    title = stringResource(R.string.essentials_on_display_album_art_title),
+                    selectedValue = options.firstOrNull { it.first == albumArtMode }?.second ?: options.first().second,
+                    iconRes = R.drawable.rounded_music_note_24,
+                    isEnabled = isDailyLiveSelected,
+                ) {
+                    options.forEach { (mode, label) ->
+                        SegmentedDropdownMenuItem(
+                            text = { Text(label) },
+                            onClick = {
+                                HapticUtil.performVirtualKeyHaptic(view)
+                                if (mode != SettingsRepository.LIVE_WALLPAPER_ALBUM_ART_NONE && !isNotificationListenerGranted) {
+                                    pendingAlbumArtMode = mode
+                                } else {
+                                    albumArtMode = mode
+                                    repository.setLiveWallpaperAlbumArtMode(mode)
+                                }
+                            },
+                        )
+                    }
+                }
+            } else {
+                val canShareLock =
+                    wallpaperKind == CurrentWallpaperKind.STILL &&
+                        viewModel.isAodWallpaperEnabled.value &&
+                        viewModel.isAodWallpaperUseAlbumArt.value
+                IconToggleItem(
+                    iconRes = R.drawable.rounded_image_24,
+                    title = stringResource(R.string.feat_aod_wallpaper_share_lock),
+                    isChecked = canShareLock && viewModel.isAodWallpaperShareLock.value,
+                    onCheckedChange = { checked ->
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        viewModel.setAodWallpaperShareLock(checked)
+                    },
+                    enabled = canShareLock,
+                    onDisabledClick = {
+                        // still-image sharing rides on the AOD wallpaper album art, so send people there to turn it on
+                        if (wallpaperKind == CurrentWallpaperKind.STILL) {
+                            context.startActivity(
+                                Intent(context, FeatureSettingsActivity::class.java).putExtra("feature", "AOD wallpaper"),
+                            )
+                        }
+                    },
+                )
+            }
+
+            IconToggleItem(
+                iconRes = R.drawable.rounded_apps_24,
+                title = stringResource(R.string.feat_aod_wallpaper_media_apps),
+                showToggle = false,
+                onClick = {
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    showMediaAppsSheet = true
+                },
+            )
+        }
+    }
+
+    if (pendingAlbumArtMode != null && !isNotificationListenerGranted) {
+        PermissionsBottomSheet(
+            onDismissRequest = { pendingAlbumArtMode = null },
+            featureTitle = R.string.essentials_on_display_album_art_title,
+            permissions =
+                listOf(
+                    PermissionItem(
+                        iconRes = R.drawable.rounded_notifications_unread_24,
+                        title = R.string.perm_notif_listener_title,
+                        description = R.string.perm_notif_listener_desc_album_art,
+                        dependentFeatures = PermissionRegistry.getFeatures("NOTIFICATION_LISTENER"),
+                        actionLabel = R.string.perm_action_grant,
+                        action = { viewModel.requestNotificationListenerPermission(context) },
+                        isGranted = isNotificationListenerGranted,
+                    ),
+                ),
+        )
+    }
+
+    if (showMediaAppsSheet) {
+        AppSelectionSheet(
+            onDismissRequest = { showMediaAppsSheet = false },
+            onLoadApps = { viewModel.loadAodWallpaperMediaApps(it) },
+            onSaveApps = { ctx, apps -> viewModel.saveAodWallpaperMediaApps(ctx, apps) },
+            onAppToggle = { ctx, pkg, enabled -> viewModel.updateAodWallpaperMediaAppEnabled(ctx, pkg, enabled) },
+            context = context,
         )
     }
 }

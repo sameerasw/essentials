@@ -1472,6 +1472,9 @@ Wi-Fi、Bluetooth、モバイルデータなどの個々のアイコンを非表
     <string name="live_wallpaper_dock">Dock</string>
     <string name="live_wallpaper_dock_padding">Dock padding</string>
     <string name="live_wallpaper_dock_opacity">Dock opacity</string>
+    <string name="label_none">None</string>
+    <string name="wallpaper_album_art_link">Album art on wallpaper</string>
+    <string name="perm_notif_listener_desc_album_art">Requires notification listener access to read the music that is playing and show its album art.</string>
     <string name="live_wallpaper_video_title">動画</string>
     <string name="btn_apply">適用</string>
     <string name="add_video">動画を追加</string>

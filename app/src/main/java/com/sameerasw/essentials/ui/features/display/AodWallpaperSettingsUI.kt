@@ -36,6 +36,8 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.ui.activities.WallpaperActivity
+import android.content.Intent
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
@@ -288,21 +290,15 @@ fun AodWallpaperSettingsUI(
                 modifier = Modifier.highlight("aod_wallpaper_album_art", highlightSetting),
             )
 
-            AnimatedVisibility(
-                visible = isAlbumArtEnabled,
-                enter = expandVertically() + fadeIn(),
-                exit = shrinkVertically() + fadeOut(),
-            ) {
-                IconToggleItem(
-                    iconRes = R.drawable.rounded_image_24,
-                    title = stringResource(R.string.feat_aod_wallpaper_share_lock),
-                    isChecked = viewModel.isAodWallpaperShareLock.value,
-                    onCheckedChange = { checked ->
-                        HapticUtil.performVirtualKeyHaptic(view)
-                        viewModel.setAodWallpaperShareLock(checked)
-                    },
-                )
-            }
+            IconToggleItem(
+                iconRes = R.drawable.rounded_wallpaper_24,
+                title = stringResource(R.string.wallpaper_album_art_link),
+                showToggle = false,
+                onClick = {
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    context.startActivity(Intent(context, WallpaperActivity::class.java).putExtra("tab", "music"))
+                },
+            )
 
             AnimatedVisibility(
                 visible = isAlbumArtEnabled,

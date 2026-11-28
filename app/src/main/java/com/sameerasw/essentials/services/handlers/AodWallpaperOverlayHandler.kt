@@ -57,6 +57,7 @@ import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.utils.PriorityModeUtil
 import com.sameerasw.essentials.utils.ShellUtils
 import com.sameerasw.essentials.domain.model.AppSelection
+import com.sameerasw.essentials.services.LiveWallpaperService
 import com.sameerasw.essentials.services.NotificationListener
 import com.sameerasw.essentials.utils.AppUtil
 import java.io.File
@@ -206,7 +207,17 @@ class AodWallpaperOverlayHandler(
     private fun isShareLockActive(): Boolean =
         prefs.getBoolean(SettingsRepository.KEY_AOD_WALLPAPER_ENABLED, false) &&
             prefs.getBoolean(SettingsRepository.KEY_AOD_WALLPAPER_USE_ALBUM_ART, false) &&
-            prefs.getBoolean(SettingsRepository.KEY_AOD_WALLPAPER_SHARE_LOCK, false)
+            prefs.getBoolean(SettingsRepository.KEY_AOD_WALLPAPER_SHARE_LOCK, false) &&
+            !isEssentialsLiveWallpaperActive()
+
+    // the live wallpaper shows album art itself, so a still lock wallpaper must never be pushed over it
+    private fun isEssentialsLiveWallpaperActive(): Boolean =
+        try {
+            WallpaperManager.getInstance(service).wallpaperInfo?.component ==
+                ComponentName(service, LiveWallpaperService::class.java)
+        } catch (_: Exception) {
+            false
+        }
 
     private fun centerCropToScreen(src: Bitmap): Bitmap {
         val bounds = (service.getSystemService(Context.WINDOW_SERVICE) as WindowManager).currentWindowMetrics.bounds
@@ -336,6 +347,10 @@ class AodWallpaperOverlayHandler(
         if (state == LOCK_BACKUP_NONE) return
         shareJob?.cancel()
         lastSharedArtKey = null
+        if (isEssentialsLiveWallpaperActive()) {
+            clearLockBackup()
+            return
+        }
         handlerScope.launch(Dispatchers.IO) {
             try {
                 val wallpaperManager = WallpaperManager.getInstance(service)

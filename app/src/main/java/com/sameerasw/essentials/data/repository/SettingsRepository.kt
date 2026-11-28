@@ -925,6 +925,11 @@ class SettingsRepository(
         const val KEY_LIVE_WALLPAPER_DOCK_PADDING = "dock_padding"
         const val LIVE_WALLPAPER_DOCK_PADDING_DEFAULT = 12f
         const val KEY_LIVE_WALLPAPER_DOCK_OPACITY = "dock_opacity"
+        const val KEY_LIVE_WALLPAPER_ALBUM_ART = "album_art"
+        const val LIVE_WALLPAPER_ALBUM_ART_NONE = "none"
+        const val LIVE_WALLPAPER_ALBUM_ART_LOCK = "lock"
+        const val LIVE_WALLPAPER_ALBUM_ART_HOME = "home"
+        const val LIVE_WALLPAPER_ALBUM_ART_BOTH = "both"
         const val LIVE_WALLPAPER_DOCK_OPACITY_DEFAULT = 0.4f
         const val LIVE_WALLPAPER_PROGRESSIVE_BLUR_HEIGHT_DEFAULT = 0.18f
 
@@ -2970,6 +2975,12 @@ class SettingsRepository(
 
     fun setLiveWallpaperDockOpacity(opacity: Float) =
         liveWallpaperPrefs.edit().putFloat(KEY_LIVE_WALLPAPER_DOCK_OPACITY, opacity).apply()
+
+    fun getLiveWallpaperAlbumArtMode(): String =
+        liveWallpaperPrefs.getString(KEY_LIVE_WALLPAPER_ALBUM_ART, LIVE_WALLPAPER_ALBUM_ART_NONE) ?: LIVE_WALLPAPER_ALBUM_ART_NONE
+
+    fun setLiveWallpaperAlbumArtMode(mode: String) =
+        liveWallpaperPrefs.edit().putString(KEY_LIVE_WALLPAPER_ALBUM_ART, mode).apply()
 
     fun isLiveWallpaperZoomEffectEnabled(): Boolean =
         liveWallpaperPrefs.getBoolean(KEY_LIVE_WALLPAPER_ZOOM_EFFECT, false)
