@@ -55,7 +55,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
@@ -67,8 +71,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -76,12 +82,14 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.ColorMatrix
+import androidx.compose.ui.graphics.BlurEffect
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.TileMode
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.SubcomposeLayout
@@ -208,11 +216,13 @@ fun FreezeGridUI(
         }
     }
 
-    // Refresh frozen states when active
+    var resumeCount by remember { mutableIntStateOf(0) }
+
     DisposableEffect(lifecycleOwner) {
         val observer =
             LifecycleEventObserver { _, event ->
                 if (event == Lifecycle.Event.ON_RESUME) {
+                    resumeCount++
                     viewModel.check(context)
                     viewModel.refreshFreezePickedApps(context)
                 }
@@ -223,16 +233,15 @@ fun FreezeGridUI(
         }
     }
 
-    LaunchedEffect(pickedApps) {
-        withContext(Dispatchers.IO) {
-            val states =
+    LaunchedEffect(pickedApps, resumeCount) {
+        val states =
+            withContext(Dispatchers.IO) {
                 pickedApps.associate { app ->
                     app.packageName to FreezeManager.isAppFrozen(context, app.packageName)
                 }
-            // Batch update on Main thread
-            withContext(Dispatchers.Main) {
-                frozenStates.putAll(states)
             }
+        states.forEach { (pkg, frozen) ->
+            if (frozenStates[pkg] != frozen) frozenStates[pkg] = frozen
         }
     }
 
@@ -290,160 +299,165 @@ fun FreezeGridUI(
                 }
             }
         } else {
-            val scrollState = androidx.compose.foundation.rememberScrollState()
+            val listState = rememberLazyListState()
             val isMotionBlurEnabled by viewModel.isMotionBlurEnabled
             val headerState = rememberPullTitleHeaderState()
-            val frozenCount = pickedApps.count { frozenStates[it.packageName] == true }
+            val frozenCount by remember(pickedApps) {
+                derivedStateOf { pickedApps.count { frozenStates[it.packageName] == true } }
+            }
+            val neverAutoFreezeTagIds =
+                remember(freezeTags) { freezeTags.filter { it.neverAutoFreeze }.mapTo(HashSet()) { it.id } }
+            val tagColors = remember(freezeTags) { freezeTags.associate { it.id to parseTagColor(it.colorHex) } }
+            val gridRows =
+                remember(filteredApps, searchQuery) {
+                    val entries: List<NotificationApp?> =
+                        if (searchQuery.isEmpty()) filteredApps + null else filteredApps
+                    entries.chunked(4)
+                }
 
-            Column(
+            LazyColumn(
+                state = listState,
                 modifier =
                     Modifier
                         .fillMaxSize()
                         .nestedScroll(headerState.nestedScrollConnection)
-                        .scrollMotionBlur(scrollState, enabled = isMotionBlurEnabled)
-                        .verticalScroll(scrollState)
+                        .scrollMotionBlur(listState, enabled = isMotionBlurEnabled)
                         .pointerInput(Unit) {
                             detectTapGestures(onTap = { focusManager.clearFocus() })
                         },
+                contentPadding =
+                    PaddingValues(
+                        top = contentPadding.calculateTopPadding(),
+                        bottom = contentPadding.calculateBottomPadding(),
+                    ),
             ) {
-                Spacer(modifier = Modifier.height(contentPadding.calculateTopPadding()))
+                item(key = "header") {
+                    PullTitleHeader(
+                        title =
+                            if (tabNameInToolbar) {
+                                stringResource(R.string.freeze_header_caption, frozenCount, pickedApps.size)
+                            } else {
+                                stringResource(R.string.tab_freeze)
+                            },
+                        state = headerState,
+                        caption = if (tabNameInToolbar) null else stringResource(R.string.freeze_header_caption, frozenCount, pickedApps.size),
+                    )
+                }
 
-                PullTitleHeader(
-                    title =
-                        if (tabNameInToolbar) {
-                            stringResource(R.string.freeze_header_caption, frozenCount, pickedApps.size)
-                        } else {
-                            stringResource(R.string.tab_freeze)
-                        },
-                    state = headerState,
-                    caption = if (tabNameInToolbar) null else stringResource(R.string.freeze_header_caption, frozenCount, pickedApps.size),
-                )
-
-                SubcomposeLayout(
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 8.dp),
-                ) { constraints ->
-                    val actions: @Composable (Boolean) -> Unit = { showLabels ->
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                        ) {
-                            FreezeSplitButton(
-                                iconRes = R.drawable.rounded_mode_cool_24,
-                                text = stringResource(R.string.action_freeze),
-                                menuText = stringResource(R.string.action_freeze_all),
-                                onClick = { runBulk { FreezeManager.freezeAll(context, it) } },
-                                onMenuClick = { runBulk { FreezeManager.freezeAllManual(context, it) } },
-                                showLabel = showLabels,
-                            )
-                            FreezeSplitButton(
-                                iconRes = R.drawable.rounded_mode_cool_off_24,
-                                text = stringResource(R.string.action_unfreeze),
-                                menuText = stringResource(R.string.action_unfreeze_all),
-                                onClick = { runBulk { FreezeManager.unfreezeAll(context, it) } },
-                                onMenuClick = { runBulk { FreezeManager.unfreezeAllManual(context, it) } },
-                                showLabel = showLabels,
-                            )
-                            if (onSettingsClick != null) {
-                                FilledTonalIconButton(
-                                    onClick = {
-                                        HapticUtil.performVirtualKeyHaptic(view)
-                                        onSettingsClick()
-                                    },
-                                ) {
-                                    Icon(
-                                        painter = painterResource(id = R.drawable.rounded_settings_24),
-                                        contentDescription = stringResource(R.string.label_settings),
-                                    )
+                item(key = "actions") {
+                    SubcomposeLayout(
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp, vertical = 8.dp),
+                    ) { constraints ->
+                        val actions: @Composable (Boolean) -> Unit = { showLabels ->
+                            Row(
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                            ) {
+                                FreezeSplitButton(
+                                    iconRes = R.drawable.rounded_mode_cool_24,
+                                    text = stringResource(R.string.action_freeze),
+                                    menuText = stringResource(R.string.action_freeze_all),
+                                    onClick = { runBulk { FreezeManager.freezeAll(context, it) } },
+                                    onMenuClick = { runBulk { FreezeManager.freezeAllManual(context, it) } },
+                                    showLabel = showLabels,
+                                )
+                                FreezeSplitButton(
+                                    iconRes = R.drawable.rounded_mode_cool_off_24,
+                                    text = stringResource(R.string.action_unfreeze),
+                                    menuText = stringResource(R.string.action_unfreeze_all),
+                                    onClick = { runBulk { FreezeManager.unfreezeAll(context, it) } },
+                                    onMenuClick = { runBulk { FreezeManager.unfreezeAllManual(context, it) } },
+                                    showLabel = showLabels,
+                                )
+                                if (onSettingsClick != null) {
+                                    FilledTonalIconButton(
+                                        onClick = {
+                                            HapticUtil.performVirtualKeyHaptic(view)
+                                            onSettingsClick()
+                                        },
+                                    ) {
+                                        Icon(
+                                            painter = painterResource(id = R.drawable.rounded_settings_24),
+                                            contentDescription = stringResource(R.string.label_settings),
+                                        )
+                                    }
                                 }
                             }
                         }
-                    }
-                    val loose = constraints.copy(minWidth = 0, maxWidth = Constraints.Infinity)
-                    val full = subcompose("full") { actions(true) }.first().measure(loose)
-                    val row = if (full.width <= constraints.maxWidth) full
-                    else subcompose("compact") { actions(false) }.first().measure(loose)
-                    val width = constraints.maxWidth
-                    layout(width, row.height) {
-                        row.place(((width - row.width) / 2).coerceAtLeast(0), 0)
+                        val loose = constraints.copy(minWidth = 0, maxWidth = Constraints.Infinity)
+                        val full = subcompose("full") { actions(true) }.first().measure(loose)
+                        val row = if (full.width <= constraints.maxWidth) full
+                        else subcompose("compact") { actions(false) }.first().measure(loose)
+                        val width = constraints.maxWidth
+                        layout(width, row.height) {
+                            row.place(((width - row.width) / 2).coerceAtLeast(0), 0)
+                        }
                     }
                 }
 
                 if (freezeTags.isNotEmpty()) {
-                    androidx.compose.foundation.lazy.LazyRow(
-                        modifier =
-                            Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp, vertical = 4.dp),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        items(freezeTags.size) { index ->
-                            val tag = freezeTags[index]
-                            val isSelected = selectedTagId == tag.id
-                            val color =
-                                try {
-                                    Color(android.graphics.Color.parseColor(tag.colorHex))
-                                } catch (e: Exception) {
-                                    MaterialTheme.colorScheme.primary
-                                }
-                            val iconResId =
-                                context.resources.getIdentifier(
-                                    tag.iconName,
-                                    "drawable",
-                                    context.packageName,
-                                )
-
-                            val richColor = remember(color) { ColorUtil.toRichColor(color) }
-
-                            androidx.compose.material3.FilterChip(
-                                selected = isSelected,
-                                onClick = {
-                                    HapticUtil.performVirtualKeyHaptic(view)
-                                    selectedTagId = if (isSelected) null else tag.id
-                                },
-                                label = { Text(tag.name) },
-                                shape = if (isSelected) CircleShape else androidx.compose.material3.FilterChipDefaults.shape,
-                                leadingIcon = {
-                                    if (isSelected) {
-                                        Icon(
-                                            painter = painterResource(id = R.drawable.rounded_check_24),
-                                            contentDescription = null,
-                                            modifier = Modifier.size(androidx.compose.material3.FilterChipDefaults.IconSize),
-                                        )
-                                    } else {
-                                        Icon(
-                                            painter =
-                                                painterResource(
-                                                    id = if (iconResId != 0) iconResId else R.drawable.rounded_interests_24,
-                                                ),
-                                            contentDescription = null,
-                                            tint = richColor,
-                                            modifier = Modifier.size(18.dp),
-                                        )
+                    item(key = "tags") {
+                        LazyRow(
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 16.dp, vertical = 4.dp),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            items(freezeTags) { tag ->
+                                val isSelected = selectedTagId == tag.id
+                                val color = tagColors[tag.id] ?: MaterialTheme.colorScheme.primary
+                                val iconResId =
+                                    remember(tag.iconName) {
+                                        context.resources.getIdentifier(tag.iconName, "drawable", context.packageName)
                                     }
-                                },
-                            )
+                                val richColor = remember(color) { ColorUtil.toRichColor(color) }
+
+                                androidx.compose.material3.FilterChip(
+                                    selected = isSelected,
+                                    onClick = {
+                                        HapticUtil.performVirtualKeyHaptic(view)
+                                        selectedTagId = if (isSelected) null else tag.id
+                                    },
+                                    label = { Text(tag.name) },
+                                    shape = if (isSelected) CircleShape else androidx.compose.material3.FilterChipDefaults.shape,
+                                    leadingIcon = {
+                                        if (isSelected) {
+                                            Icon(
+                                                painter = painterResource(id = R.drawable.rounded_check_24),
+                                                contentDescription = null,
+                                                modifier = Modifier.size(androidx.compose.material3.FilterChipDefaults.IconSize),
+                                            )
+                                        } else {
+                                            Icon(
+                                                painter =
+                                                    painterResource(
+                                                        id = if (iconResId != 0) iconResId else R.drawable.rounded_interests_24,
+                                                    ),
+                                                contentDescription = null,
+                                                tint = richColor,
+                                                modifier = Modifier.size(18.dp),
+                                            )
+                                        }
+                                    },
+                                )
+                            }
                         }
                     }
                 }
 
-                Spacer(modifier = Modifier.height(16.dp))
+                item(key = "grid_gap") { Spacer(modifier = Modifier.height(16.dp)) }
 
-                // App Grid Items
-                Column(
-                    modifier =
-                        Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp),
-                    verticalArrangement = Arrangement.spacedBy(2.dp),
-                ) {
-                    if (filteredApps.isEmpty() && searchQuery.isNotEmpty()) {
+                if (filteredApps.isEmpty() && searchQuery.isNotEmpty()) {
+                    item(key = "no_results") {
                         Column(
                             modifier =
                                 Modifier
                                     .fillMaxWidth()
+                                    .padding(horizontal = 16.dp)
                                     .padding(vertical = 32.dp),
                             verticalArrangement = Arrangement.Center,
                             horizontalAlignment = Alignment.CenterHorizontally,
@@ -461,138 +475,112 @@ fun FreezeGridUI(
                                 modifier = Modifier.padding(top = 8.dp),
                             )
                         }
-                    } else {
-                        val gridEntries: List<NotificationApp?> =
-                            if (searchQuery.isEmpty()) filteredApps + null else filteredApps
-                        val chunkedApps = gridEntries.chunked(4)
-                        Column(
+                    }
+                } else {
+                    itemsIndexed(
+                        items = gridRows,
+                        contentType = { _, _ -> "grid_row" },
+                    ) { index, rowApps ->
+                        Row(
                             modifier =
                                 Modifier
-                                    .fillMaxWidth(),
-                            verticalArrangement = Arrangement.spacedBy(4.dp),
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 16.dp)
+                                    .padding(top = if (index > 0) 4.dp else 0.dp)
+                                    .then(if (null in rowApps) Modifier.height(IntrinsicSize.Min) else Modifier),
+                            horizontalArrangement = Arrangement.spacedBy(4.dp),
                         ) {
-                            chunkedApps.forEach { rowApps ->
-                                Row(
-                                    modifier =
-                                        Modifier
-                                            .fillMaxWidth()
-                                            .height(IntrinsicSize.Min),
-                                    horizontalArrangement = Arrangement.spacedBy(4.dp),
-                                ) {
-                                    rowApps.forEach { app ->
-                                        if (app == null) {
-                                            AddAppsGridItem(
-                                                onClick = {
-                                                    HapticUtil.performVirtualKeyHaptic(view)
-                                                    isAppSelectionSheetOpen = true
-                                                },
-                                                modifier =
-                                                    Modifier
-                                                        .weight(1f)
-                                                        .fillMaxHeight(),
-                                            )
-                                            return@forEach
-                                        }
-                                        val appTagIds =
-                                            freezeAppTagMap[app.packageName] ?: emptyList()
-                                        val neverAutoFreezeTagIds =
-                                            freezeTags
-                                                .filter { it.neverAutoFreeze }
-                                                .map { it.id }
-                                                .toSet()
-                                        val isLockedByTag =
-                                            appTagIds.any { neverAutoFreezeTagIds.contains(it) }
-
-                                        val tagColor =
-                                            if (isTagColorCodedEnabled) {
-                                                appTagIds.firstOrNull()?.let { firstTagId ->
-                                                    freezeTags.find { it.id == firstTagId }?.colorHex?.let { colorHex ->
-                                                        try {
-                                                            Color(
-                                                                android.graphics.Color.parseColor(
-                                                                    colorHex,
-                                                                ),
-                                                            )
-                                                        } catch (e: Exception) {
-                                                            null
-                                                        }
-                                                    }
-                                                }
-                                            } else {
-                                                null
-                                            }
-
-                                        Box(modifier = Modifier.weight(1f)) {
-                                            AppGridItem(
-                                                app = app,
-                                                isFrozen = frozenStates[app.packageName] ?: false,
-                                                isAutoFreezeEnabled = app.isEnabled,
-                                                isLockedByTag = isLockedByTag,
-                                                tagColor = tagColor,
-                                                isHighlighted = (app == bestMatch && searchQuery.isNotEmpty()),
-                                                menuState = menuState,
-                                                onClick = {
-                                                    HapticUtil.performVirtualKeyHaptic(view)
-                                                    if (frozenStates[app.packageName] != true || ensureShellPermission()) {
-                                                        viewModel.launchAndUnfreezeApp(
-                                                            context,
-                                                            app.packageName,
-                                                        )
-                                                        onAppLaunched?.invoke()
-                                                    }
-                                                },
-                                                onToggleFreeze = {
-                                                    if (ensureShellPermission()) scope.launch(Dispatchers.IO) {
-                                                        val isCurrentlyFrozen =
-                                                            frozenStates[app.packageName] ?: false
-                                                        if (isCurrentlyFrozen) {
-                                                            FreezeManager.unfreezeApp(
-                                                                context,
-                                                                app.packageName,
-                                                            )
-                                                        } else {
-                                                            FreezeManager.freezeApp(
-                                                                context,
-                                                                app.packageName,
-                                                            )
-                                                        }
-                                                        withContext(Dispatchers.Main) {
-                                                            frozenStates[app.packageName] =
-                                                                !isCurrentlyFrozen
-                                                        }
-                                                    }
-                                                },
-                                                onToggleAutoFreeze = { isAutoFreeze ->
-                                                    viewModel.updateFreezeAppAutoFreeze(
-                                                        context,
-                                                        app.packageName,
-                                                        isAutoFreeze,
-                                                    )
-                                                },
-                                                onAssignTags = {
-                                                    appForTagAssignment = app
-                                                },
-                                                onRemove = {
-                                                    viewModel.updateFreezeAppEnabled(
-                                                        context,
-                                                        app.packageName,
-                                                        false,
-                                                    )
-                                                },
-                                            )
-                                        }
-                                    }
-                                    repeat(4 - rowApps.size) {
-                                        Spacer(modifier = Modifier.weight(1f))
-                                    }
+                            rowApps.forEach { app ->
+                                if (app == null) {
+                                    AddAppsGridItem(
+                                        onClick = {
+                                            HapticUtil.performVirtualKeyHaptic(view)
+                                            isAppSelectionSheetOpen = true
+                                        },
+                                        modifier =
+                                            Modifier
+                                                .weight(1f)
+                                                .fillMaxHeight(),
+                                    )
+                                    return@forEach
                                 }
+                                val appTagIds = freezeAppTagMap[app.packageName] ?: emptyList()
+                                val isLockedByTag = appTagIds.any { it in neverAutoFreezeTagIds }
+                                val tagColor =
+                                    if (isTagColorCodedEnabled) appTagIds.firstOrNull()?.let { tagColors[it] } else null
+
+                                Box(modifier = Modifier.weight(1f)) {
+                                    AppGridItem(
+                                        app = app,
+                                        isFrozen = frozenStates[app.packageName] ?: false,
+                                        isAutoFreezeEnabled = app.isEnabled,
+                                        isLockedByTag = isLockedByTag,
+                                        tagColor = tagColor,
+                                        isHighlighted = (app == bestMatch && searchQuery.isNotEmpty()),
+                                        menuState = menuState,
+                                        onClick = {
+                                            HapticUtil.performVirtualKeyHaptic(view)
+                                            if (frozenStates[app.packageName] != true || ensureShellPermission()) {
+                                                viewModel.launchAndUnfreezeApp(
+                                                    context,
+                                                    app.packageName,
+                                                )
+                                                onAppLaunched?.invoke()
+                                            }
+                                        },
+                                        onToggleFreeze = {
+                                            if (ensureShellPermission()) scope.launch(Dispatchers.IO) {
+                                                val isCurrentlyFrozen =
+                                                    frozenStates[app.packageName] ?: false
+                                                if (isCurrentlyFrozen) {
+                                                    FreezeManager.unfreezeApp(
+                                                        context,
+                                                        app.packageName,
+                                                    )
+                                                } else {
+                                                    FreezeManager.freezeApp(
+                                                        context,
+                                                        app.packageName,
+                                                    )
+                                                }
+                                                withContext(Dispatchers.Main) {
+                                                    frozenStates[app.packageName] =
+                                                        !isCurrentlyFrozen
+                                                }
+                                            }
+                                        },
+                                        onToggleAutoFreeze = { isAutoFreeze ->
+                                            viewModel.updateFreezeAppAutoFreeze(
+                                                context,
+                                                app.packageName,
+                                                isAutoFreeze,
+                                            )
+                                        },
+                                        onAssignTags = {
+                                            appForTagAssignment = app
+                                        },
+                                        onRemove = {
+                                            viewModel.updateFreezeAppEnabled(
+                                                context,
+                                                app.packageName,
+                                                false,
+                                            )
+                                        },
+                                    )
+                                }
+                            }
+                            repeat(4 - rowApps.size) {
+                                Spacer(modifier = Modifier.weight(1f))
                             }
                         }
                     }
                 }
 
-                onHelpClick?.let { WhatIsThisButton(onClick = it, modifier = Modifier.padding(top = 24.dp)) }
-                Spacer(modifier = Modifier.height(contentPadding.calculateBottomPadding()))
+                onHelpClick?.let { onHelp ->
+                    item(key = "help") {
+                        WhatIsThisButton(onClick = onHelp, modifier = Modifier.padding(top = 24.dp))
+                    }
+                }
             }
         }
 
@@ -637,6 +625,13 @@ fun FreezeGridUI(
         }
     }
 }
+
+private fun parseTagColor(colorHex: String?): Color? =
+    try {
+        colorHex?.let { Color(android.graphics.Color.parseColor(it)) }
+    } catch (e: Exception) {
+        null
+    }
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -693,12 +688,12 @@ fun AppGridItem(
     var showMenu by remember { mutableStateOf(false) }
 
     val isBlurred = menuState.activeId != null && menuState.activeId != app.packageName
-    val blurRadius by animateDpAsState(
+    val blurRadius = animateDpAsState(
         targetValue = if (isBlurred) 10.dp else 0.dp,
         animationSpec = tween(durationMillis = 500),
         label = "blur",
     )
-    val alpha by animateFloatAsState(
+    val dimAlpha = animateFloatAsState(
         targetValue = if (isBlurred) 0.5f else 1f,
         animationSpec = tween(durationMillis = 500),
         label = "alpha",
@@ -719,7 +714,7 @@ fun AppGridItem(
         }
     }
 
-    val grayscaleMatrix = remember { ColorMatrix().apply { setToSaturation(0.4f) } }
+    val frozenColorFilter = remember { ColorFilter.colorMatrix(ColorMatrix().apply { setToSaturation(0.4f) }) }
 
     val borderColor by animateColorAsState(
         targetValue = if (isHighlighted) MaterialTheme.colorScheme.primary else Color.Transparent,
@@ -748,8 +743,13 @@ fun AppGridItem(
         modifier =
             Modifier
                 .fillMaxWidth()
-                .alpha(alpha)
-                .blur(blurRadius)
+                .graphicsLayer {
+                    alpha = dimAlpha.value
+                    val radius = blurRadius.value.toPx()
+                    renderEffect = if (radius > 0f) BlurEffect(radius, radius, TileMode.Clamp) else null
+                    shape = RectangleShape
+                    clip = true
+                }
                 .combinedClickable(
                     onClick = {
                         HapticUtil.performVirtualKeyHaptic(view)
@@ -779,7 +779,7 @@ fun AppGridItem(
                             .fillMaxSize()
                             .clip(RoundedCornerShape(14.dp)),
                     contentScale = ContentScale.Fit,
-                    colorFilter = if (isFrozen) ColorFilter.colorMatrix(grayscaleMatrix) else null,
+                    colorFilter = if (isFrozen) frozenColorFilter else null,
                     alpha = if (isFrozen) 0.6f else 1f,
                 )
 
