@@ -119,7 +119,7 @@
     <string name="like_song_settings_desc">Ta funkcja wymaga dostępu do powiadomień, aby wykryć aktualnie odtwarzane multimedia i wywołać podobną akcję. Włącz tę opcję poniżej.</string>
     <string name="like_song_toast_enabled">Pokaż wiadomość toastową</string>
     <string name="like_song_aod_overlay_title">Pokaż nakładkę na AOD</string>
-    <string name="feat_essentials_on_display_title">Essentials On Display</string>
+    <string name="feat_essentials_on_display_title">Essentials Na Ekranie</string>
     <string name="feat_essentials_on_display_desc">Rzuć okiem na multimedia i informacje na ekranie AOD (zawsze włączonym).</string>
     <string name="essentials_on_display_docked_mode_title">Docked mode</string>
     <string name="essentials_on_display_docked_mode_desc">Keep the overlay visible indefinitely while music is playing on AOD</string>
@@ -448,7 +448,7 @@
     <string name="feat_statusbar_icons_desc">Kontroluj widoczność ikon na pasku stanu</string>
     <string name="feat_caffeinate_title">Kofeina</string>
     <string name="feat_caffeinate_desc">Nie wygaszaj ekranu</string>
-    <string name="feat_maps_power_saving_title">Tryb oszczędzania energii podczas nawigacji</string>
+    <string name="feat_maps_power_saving_title">Oszczędzanie energii podczas nawigacji</string>
     <string name="feat_maps_power_saving_desc">Na dowolne urządzenie z Androidem</string>
     <string name="feat_notification_lighting_title">Oświetlenie powiadomień</string>
     <string name="feat_notification_lighting_desc">Podświetl powiadomienia</string>
@@ -750,7 +750,7 @@
     <string name="welcome_back_title">Welcome back to Essentials</string>
     <string name="action_see_whats_new">See what\'s new</string>
     <string name="label_mode_default">Default</string>
-    <string name="label_mode_glove">Tryb rękawiczki</string>
+    <string name="label_mode_glove">Tryb w rękawiczkach</string>
     <string name="tile_scale_animations">Glove Mode</string>
     <string name="about_desc_scale_animations_tile">Quickly toggle between Default and Glove mode UI profiles</string>
     <string name="label_increase_touch_sensitivity">Zwiększa czułość na dotyk</string>
@@ -1611,7 +1611,7 @@ Aby ustawienie zadziałało, może być konieczne wielokrotne zastosowanie.</str
     <string name="feat_flashlight_desc">Jasność, zanikanie i sterowanie bezpieczeństwa</string>
     <string name="settings_genai_automation_title">Używaj generatywnego AI </string>
     <string name="settings_genai_automation_desc">Wykorzystuje lokalny model Gemini Nano do tworzenia automatyzacji na podstawie opisów</string>
-    <string name="app_icon_default">Domyślna</string>
+    <string name="app_icon_default">Domyślny</string>
     <string name="app_icon_legacy">Klasyczna</string>
     <string name="app_icon_black">Dynamiczna</string>
     <string name="app_icon_gta">Vice City</string>
@@ -1764,7 +1764,7 @@ Aby ustawienie zadziałało, może być konieczne wielokrotne zastosowanie.</str
     <string name="island_backdrop_blur_available_title">Blur is reported as supported on this device</string>
     <string name="island_backdrop_blur_available_note">It may still not work on some devices. Battery Saver, system settings such as \"Disable window blurs\" in Developer options, and manufacturer limits can turn window blur off at any time.</string>
     <string name="island_backdrop_blur_radius_title">Blur amount</string>
-    <string name="what_is_this">What is this?</string>
+    <string name="what_is_this">Co to jest?</string>
     <string name="label_feature_designed_by">Designed by</string>
     <string name="label_how_to_use">How to use</string>
     <string name="shut_up_how_to_use">1. Grant Write secure settings and Usage access from the permissions prompt. Shizuku is needed for freezing apps.\n\n2. Tap Select Apps and pick the apps that refuse to run with developer options, debugging or accessibility turned on, such as banking or payment apps.\n\n3. Tap an app to choose what gets hidden for it: Developer Options, USB Debugging, Wireless Debugging and Accessibility Services. You can also turn on Auto Freeze to freeze the app after you leave it, and Restore keyboard to switch back to your keyboard afterwards.\n\n4. Tap Create shortcut for each app and add it to your home screen. Always open the app from this shortcut, never from its normal icon, so the settings are turned off before the app starts and can check them.\n\n5. When you leave the app, Shut-Up! waits for the Restoration Delay and then shows a notification. Tap it to turn everything back on. Set Restore mode to Auto if you would rather have the settings restored on their own.\n\nTips: if wireless debugging was turned off, Shizuku may stop working, so enable Attempt Shizuku restart. Use the Keyboard option to pick the keyboard to restore, or leave it on Skip. With Auto Freeze, a notification counts down and lets you freeze now or abort.</string>
@@ -1930,4 +1930,25 @@ Aby ustawienie zadziałało, może być konieczne wielokrotne zastosowanie.</str
     <string name="app_ops_search_apps">Search apps</string>
     <string name="app_ops_search_ops">Search operations</string>
     <string name="setting_show_whats_new_title">Indicate what\'s new for a day</string>
+    <string name="permission_required_for">Wygamane dla:</string>
+    <string name="perm_calendar_title">Kalendarz</string>
+    <string name="label_wallpaper_apply">Zastosuj tapetę</string>
+    <string name="wallpaper_home_screen">Ekran główny</string>
+    <string name="wallpaper_lock_screen">Ekran blokady</string>
+    <string name="island_max_width_title">Maksymalna szerokość</string>
+    <string name="duo_camera_size_title">Rozmiar kamery</string>
+    <string name="island_cutout_gap_title">Odstęp kamery</string>
+    <string name="island_hide_icon_notifications">Ikony powiadomień</string>
+    <string name="island_hide_icon_clock">Zegar</string>
+    <string name="island_hide_icon_system">Ikony systemowe</string>
+    <string name="island_camera_position_title">Pozycja kamery</string>
+    <string name="app_colors_auto">Automatyczne</string>
+    <string name="island_preview_stage_title">Podgląd</string>
+    <string name="island_call_show_peek">Podgląd</string>
+    <string name="island_call_show_expanded">Rozszerzony</string>
+    <string name="island_camera_position_left">Lewa</string>
+    <string name="island_camera_position_right">Prawa</string>
+    <string name="island_camera_position_center">Środek</string>
+    <string name="duo_camera_offset_x_title">Pozycja pozioma</string>
+    <string name="duo_camera_offset_y_title">Pozycja pionowa</string>
 </resources>
