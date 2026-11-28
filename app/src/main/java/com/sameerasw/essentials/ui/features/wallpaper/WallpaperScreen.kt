@@ -20,6 +20,7 @@ import android.net.Uri
 import android.os.Build
 import android.widget.Toast
 import com.sameerasw.essentials.ui.activities.WallpaperStagingActivity
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -28,6 +29,8 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
@@ -37,6 +40,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -159,6 +163,7 @@ fun WallpaperScreen(
 
     var showHelpSheet by remember { mutableStateOf(false) }
     var showSettingsCard by remember { mutableStateOf(false) }
+    var isDailyLivePreviewExpanded by remember { mutableStateOf(false) }
 
     val pagerState =
         rememberPagerState(
@@ -280,9 +285,10 @@ fun WallpaperScreen(
             Modifier
                 .fillMaxSize()
                 .progressiveBlur(
-                    blurRadius = if (isBlurEnabled) 40f else 0f,
+                    blurRadius = if (isBlurEnabled && !isDailyLivePreviewExpanded) 40f else 0f,
                     height = topBlurHeightPx,
                     direction = BlurDirection.TOP,
+                    showGradientOverlay = !isDailyLivePreviewExpanded,
                 ),
     ) {
         Row(
@@ -335,9 +341,10 @@ fun WallpaperScreen(
                 Modifier
                     .fillMaxSize()
                     .progressiveBlur(
-                        blurRadius = if (isBlurEnabled) 40f else 0f,
+                        blurRadius = if (isBlurEnabled && !isDailyLivePreviewExpanded) 40f else 0f,
                         height = bottomBlurHeightPx,
                         direction = BlurDirection.BOTTOM,
+                        showGradientOverlay = !isDailyLivePreviewExpanded,
                     )
                     .scrollMotionBlur(pagerState, enabled = isMotionBlurEnabled),
         ) { page ->
@@ -484,6 +491,9 @@ fun WallpaperScreen(
                                 isSelected = selectedVideo == SettingsRepository.LIVE_WALLPAPER_DAILY_IMAGE,
                                 onClick = {
                                     HapticUtil.performCustomHaptic(view, 0.5f)
+                                    if (selectedVideo == SettingsRepository.LIVE_WALLPAPER_DAILY_IMAGE) {
+                                        isDailyLivePreviewExpanded = true
+                                    }
                                     selectedVideo = SettingsRepository.LIVE_WALLPAPER_DAILY_IMAGE
                                     repository.saveLiveWallpaperSelectedVideo(SettingsRepository.LIVE_WALLPAPER_DAILY_IMAGE)
                                 },
@@ -530,7 +540,65 @@ fun WallpaperScreen(
                             )
                         }
                     }
+
+                    AnimatedVisibility(
+                        visible =
+                            isDailyLivePreviewExpanded &&
+                                selectedVideo == SettingsRepository.LIVE_WALLPAPER_DAILY_IMAGE &&
+                                wallpaperInfo != null,
+                        enter = fadeIn(animationSpec = tween(350)) + scaleIn(animationSpec = tween(350), initialScale = 0.92f),
+                        exit = fadeOut(animationSpec = tween(300)) + scaleOut(animationSpec = tween(300), targetScale = 0.92f),
+                    ) {
+                        BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
+                            val previewBlurHeightPx = constraints.maxHeight * progressiveBlurHeight
+                            val previewBlurRadiusPx = with(density) { 28.dp.toPx() }
+                            val previewBlurRadius = if (progressiveBlurEnabled) previewBlurRadiusPx else 0f
+                            SubcomposeAsyncImage(
+                                model = wallpaperInfo?.urlMobile,
+                                contentDescription = null,
+                                contentScale = ContentScale.Crop,
+                                modifier =
+                                    Modifier
+                                        .fillMaxSize()
+                                        .clickable {
+                                            HapticUtil.performUIHaptic(view)
+                                            isDailyLivePreviewExpanded = false
+                                        }.progressiveBlur(
+                                            blurRadius = previewBlurRadius,
+                                            height = previewBlurHeightPx,
+                                            direction = BlurDirection.TOP,
+                                            showGradientOverlay = false,
+                                        ).progressiveBlur(
+                                            blurRadius = previewBlurRadius,
+                                            height = previewBlurHeightPx,
+                                            direction = BlurDirection.BOTTOM,
+                                            showGradientOverlay = false,
+                                        ),
+                                loading = {
+                                    Box(
+                                        modifier =
+                                            Modifier
+                                                .fillMaxSize()
+                                                .background(MaterialTheme.colorScheme.surfaceContainer),
+                                        contentAlignment = Alignment.Center,
+                                    ) {
+                                        LoadingIndicator()
+                                    }
+                                },
+                            )
+                        }
+                    }
                 }
+            }
+        }
+
+        BackHandler(enabled = isDailyLivePreviewExpanded) {
+            isDailyLivePreviewExpanded = false
+        }
+
+        LaunchedEffect(pagerState.currentPage, selectedVideo) {
+            if (pagerState.currentPage != 1 || selectedVideo != SettingsRepository.LIVE_WALLPAPER_DAILY_IMAGE) {
+                isDailyLivePreviewExpanded = false
             }
         }
 
