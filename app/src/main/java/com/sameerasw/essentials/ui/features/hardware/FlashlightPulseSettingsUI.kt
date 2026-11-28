@@ -97,7 +97,7 @@ fun FlashlightPulseSettingsUI(
                     onCheckedChange = { checked ->
                         viewModel.setFlashlightPulseDisableOnDnd(checked, context)
                     },
-                    modifier = Modifier.highlight(highlightSetting == "flashlight_pulse_disable_on_dnd"),
+                    modifier = Modifier.highlight("flashlight_pulse_disable_on_dnd", highlightSetting),
                 )
 
                 ConfigSliderItem(
@@ -107,7 +107,7 @@ fun FlashlightPulseSettingsUI(
                     valueRange = 0.01f..1f,
                     valueFormatter = { "${Math.round(it * 100)}%" },
                     increment = 0.01f,
-                    modifier = Modifier.highlight(highlightSetting == "flashlight_pulse_max_intensity"),
+                    modifier = Modifier.highlight("flashlight_pulse_max_intensity", highlightSetting),
                 )
             }
             IconToggleItem(
@@ -117,7 +117,7 @@ fun FlashlightPulseSettingsUI(
                 onCheckedChange = { checked ->
                     viewModel.setFlashlightPulseUseLightingApps(checked, context)
                 },
-                modifier = Modifier.highlight(highlightSetting == "flashlight_pulse_same_apps"),
+                modifier = Modifier.highlight("flashlight_pulse_same_apps", highlightSetting),
             )
         }
 

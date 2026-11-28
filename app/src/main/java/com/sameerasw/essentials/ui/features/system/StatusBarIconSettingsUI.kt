@@ -243,13 +243,13 @@ fun StatusBarIconSettingsUI(
                         viewModel.setSmartWiFiEnabled(isChecked, context)
                     },
                     enabled = isPermissionGranted && viewModel.isMobileDataVisible.value,
-                    modifier = Modifier.highlight(highlightSetting == "smart_wifi"),
+                    modifier = Modifier.highlight("smart_wifi", highlightSetting),
                 )
 
                 Box(
                     modifier =
                         Modifier
-                            .highlight(highlightSetting == "smart_data")
+                            .highlight("smart_data", highlightSetting)
                             .clickable {
                                 HapticUtil.performUIHaptic(view)
                                 val hasPermission =
@@ -377,7 +377,7 @@ fun StatusBarIconSettingsUI(
                         viewModel.setClockSecondsEnabled(checked, context)
                     },
                     enabled = isPermissionGranted,
-                    modifier = Modifier.highlight(highlightSetting == "clock_seconds"),
+                    modifier = Modifier.highlight("clock_seconds", highlightSetting),
                 )
 
                 Column(
@@ -390,7 +390,7 @@ fun StatusBarIconSettingsUI(
                                     androidx.compose.foundation.shape.RoundedCornerShape(
                                         MaterialTheme.shapes.extraSmall.bottomEnd,
                                     ),
-                            ).highlight(highlightSetting == "clock_position"),
+                            ).highlight("clock_position", highlightSetting),
                 ) {
                     Row(
                         modifier =
@@ -457,7 +457,7 @@ fun StatusBarIconSettingsUI(
                         viewModel.setPrivacyChipEnabled(checked, context)
                     },
                     enabled = isPermissionGranted,
-                    modifier = Modifier.highlight(highlightSetting == "privacy_chip"),
+                    modifier = Modifier.highlight("privacy_chip", highlightSetting),
                 )
 
                 Column(
@@ -470,7 +470,7 @@ fun StatusBarIconSettingsUI(
                                     androidx.compose.foundation.shape.RoundedCornerShape(
                                         MaterialTheme.shapes.extraSmall.bottomEnd,
                                     ),
-                            ).highlight(highlightSetting == "battery_percentage"),
+                            ).highlight("battery_percentage", highlightSetting),
                 ) {
                     Row(
                         modifier =
@@ -532,7 +532,7 @@ fun StatusBarIconSettingsUI(
                     Modifier
                         .fillMaxWidth()
                         .padding(vertical = 16.dp)
-                        .highlight(highlightSetting == "reset_icons"),
+                        .highlight("reset_icons", highlightSetting),
                 enabled = isPermissionGranted,
             ) {
                 TranslatableText(R.string.action_reset_all_icons)
@@ -577,7 +577,7 @@ fun StatusBarIconSettingsUI(
                         showAdvancedPermissionSheet = true
                     }
                 },
-                modifier = Modifier.highlight(highlightSetting == "hide_system_icons"),
+                modifier = Modifier.highlight("hide_system_icons", highlightSetting),
             )
 
             IconToggleItem(
@@ -602,7 +602,7 @@ fun StatusBarIconSettingsUI(
                         showAdvancedPermissionSheet = true
                     }
                 },
-                modifier = Modifier.highlight(highlightSetting == "hide_system_icons_locked"),
+                modifier = Modifier.highlight("hide_system_icons_locked", highlightSetting),
             )
 
             IconToggleItem(
@@ -628,7 +628,7 @@ fun StatusBarIconSettingsUI(
                         showAdvancedPermissionSheet = true
                     }
                 },
-                modifier = Modifier.highlight(highlightSetting == "hide_clock"),
+                modifier = Modifier.highlight("hide_clock", highlightSetting),
             )
 
             IconToggleItem(
@@ -654,7 +654,7 @@ fun StatusBarIconSettingsUI(
                         showAdvancedPermissionSheet = true
                     }
                 },
-                modifier = Modifier.highlight(highlightSetting == "hide_notifications"),
+                modifier = Modifier.highlight("hide_notifications", highlightSetting),
             )
         }
 
@@ -683,7 +683,7 @@ fun StatusBarIconSettingsUI(
                         mainViewModel.setIslandHideStatusBarInsets(checked, context)
                     }
                 },
-                modifier = Modifier.highlight(highlightSetting == "island_hide_status_bar_insets"),
+                modifier = Modifier.highlight("island_hide_status_bar_insets", highlightSetting),
             )
         }
 

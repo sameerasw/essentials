@@ -147,7 +147,7 @@ fun FaceUnlockBrightnessSettingsUI(
                         viewModel.setFaceUnlockBrightnessEnabled(checked)
                     }
                 },
-                modifier = Modifier.highlight(highlightSetting == "face_unlock_brightness_enabled"),
+                modifier = Modifier.highlight("face_unlock_brightness_enabled", highlightSetting),
             )
         }
 
@@ -166,7 +166,7 @@ fun FaceUnlockBrightnessSettingsUI(
                             .fillMaxWidth()
                             .background(MaterialTheme.colorScheme.surfaceBright, MaterialTheme.shapes.extraSmall)
                             .padding(top = 12.dp)
-                            .highlight(highlightSetting == "face_unlock_max_brightness"),
+                            .highlight("face_unlock_max_brightness", highlightSetting),
                 ) {
                     TranslatableText(
                         stringResId = R.string.flashlight_pulse_max_brightness,
@@ -200,7 +200,7 @@ fun FaceUnlockBrightnessSettingsUI(
                         currentLux?.let { lux ->
                             { AmbientMatchChip(matches = lux < viewModel.faceUnlockAmbientThreshold.floatValue) }
                         },
-                    modifier = Modifier.highlight(highlightSetting == "face_unlock_ambient_threshold"),
+                    modifier = Modifier.highlight("face_unlock_ambient_threshold", highlightSetting),
                 )
 
                 IconToggleItem(
@@ -211,7 +211,7 @@ fun FaceUnlockBrightnessSettingsUI(
                         HapticUtil.performVirtualKeyHaptic(view)
                         viewModel.setFaceUnlockAutoIlluminate(checked)
                     },
-                    modifier = Modifier.highlight(highlightSetting == "face_unlock_auto_illuminate"),
+                    modifier = Modifier.highlight("face_unlock_auto_illuminate", highlightSetting),
                 )
 
                 IconToggleItem(
@@ -226,7 +226,7 @@ fun FaceUnlockBrightnessSettingsUI(
                             viewModel.setFaceUnlockTriggerUnlock(checked)
                         }
                     },
-                    modifier = Modifier.highlight(highlightSetting == "face_unlock_trigger_unlock"),
+                    modifier = Modifier.highlight("face_unlock_trigger_unlock", highlightSetting),
                 )
 
                 IconToggleItem(
@@ -237,7 +237,7 @@ fun FaceUnlockBrightnessSettingsUI(
                         HapticUtil.performVirtualKeyHaptic(view)
                         viewModel.setFaceUnlockLightTint(checked)
                     },
-                    modifier = Modifier.highlight(highlightSetting == "face_unlock_light_tint"),
+                    modifier = Modifier.highlight("face_unlock_light_tint", highlightSetting),
                 )
             }
         }

@@ -118,7 +118,7 @@ fun AppLockSettingsUI(
                 },
                 enabled = canEnableAppLock,
                 onDisabledClick = { showPermissionSheet = true },
-                modifier = Modifier.highlight(highlightKey == "app_lock_enabled"),
+                modifier = Modifier.highlight("app_lock_enabled", highlightKey),
             )
 
             FeatureCard(
@@ -130,7 +130,7 @@ fun AppLockSettingsUI(
                 hasMoreSettings = true,
                 onToggle = {},
                 onClick = { isAppSelectionSheetOpen = true },
-                modifier = Modifier.highlight(highlightKey == "app_lock_selected_apps"),
+                modifier = Modifier.highlight("app_lock_selected_apps", highlightKey),
             )
 
             ConfigPickerItem(
@@ -139,7 +139,7 @@ fun AppLockSettingsUI(
                 iconRes = R.drawable.rounded_lock_clock_24,
                 isEnabled = isAppLockEnabled,
                 selectedValue = delayLabels[viewModel.appLockAutoLockDelayIndex.intValue],
-                modifier = Modifier.highlight(highlightKey == "app_lock_auto_lock_delay"),
+                modifier = Modifier.highlight("app_lock_auto_lock_delay", highlightKey),
             ) {
                 delayLabels.forEachIndexed { index, label ->
                     SegmentedDropdownMenuItem(

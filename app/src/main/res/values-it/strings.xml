@@ -1834,6 +1834,7 @@ con il ❤️ da 🇱🇰</string>
     <string name="btn_grant_all_permissions">Consenti tutte le autorizzazioni</string>
     <string name="btn_clear_search_history">Elimina cronologia di ricerca</string>
     <string name="label_developer_options">Opzioni Sviluppatore</string>
+    <string name="setting_show_whats_new_title">Indicate what\'s new for a day</string>
     <string name="action_licenses_and_credits">Licenze</string>
     <string name="external_control_token_title">Token controllo esterno</string>
     <string name="shizuku_auth_token_label">Token autorizz. Shizuku</string>

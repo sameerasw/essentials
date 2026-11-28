@@ -9,6 +9,8 @@
 
 package com.sameerasw.essentials
 
+import com.sameerasw.essentials.domain.registry.WhatsNewRegistry
+import com.sameerasw.essentials.ui.state.WhatsNewState
 import com.sameerasw.essentials.ui.theme.UiDesign
 import com.sameerasw.essentials.ui.theme.UiDesignState
 import com.sameerasw.essentials.ui.theme.fabContentColor
@@ -99,6 +101,7 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Badge
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -979,6 +982,8 @@ class MainActivity : AppCompatActivity() {
                                                                     badge =
                                                                         if (tab == DIYTabs.SETTINGS && (isTranslationModeActive || isUpdateAvailable)) {
                                                                             { SettingsTabBadge(isTranslationModeActive) }
+                                                                        } else if (WhatsNewState.isNewFeature(WhatsNewRegistry.tabId(tab))) {
+                                                                            { Badge(modifier = Modifier.offset(x = (-4).dp, y = 4.dp), containerColor = LocalContentColor.current) }
                                                                         } else {
                                                                             null
                                                                         },
@@ -1423,9 +1428,14 @@ class MainActivity : AppCompatActivity() {
                             enter = fadeIn() + slideInVertically { it },
                             exit = fadeOut() + slideOutVertically { it },
                         ) {
+                            DisposableEffect(Unit) {
+                                onDispose { splashLogoHandoff.welcomeBounds = null }
+                            }
                             WelcomeScreen(
                                 viewModel = viewModel,
                                 isWhatsNewFlow = isWhatsNewVisible,
+                                onLogoPlaced = { splashLogoHandoff.welcomeBounds = it },
+                                logoAlpha = { splashLogoHandoff.welcomeLogoAlpha.floatValue },
                                 onBeginClick = {
                                     if (isWhatsNewVisible) {
                                         viewModel.completeWhatsNew()

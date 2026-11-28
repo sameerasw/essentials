@@ -16,6 +16,8 @@ import com.sameerasw.essentials.ui.theme.toolbarPillColor
 import com.sameerasw.essentials.ui.theme.toolbarSelectedContentColor
 import com.sameerasw.essentials.ui.theme.toolbarContentColor
 import com.sameerasw.essentials.ui.theme.toolbarContainerColor
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.CornerRadius
@@ -666,7 +668,9 @@ fun EssentialsFloatingToolbar(
                                                                             .align(Alignment.TopEnd)
                                                                             .offset(x = 7.dp, y = (-7).dp),
                                                                 ) {
-                                                                    item.badge.invoke()
+                                                                    CompositionLocalProvider(LocalContentColor provides tint) {
+                                                                        item.badge.invoke()
+                                                                    }
                                                                 }
                                                             }
                                                         }

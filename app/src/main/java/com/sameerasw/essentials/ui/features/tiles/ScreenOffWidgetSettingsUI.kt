@@ -98,7 +98,7 @@ fun ScreenOffWidgetSettingsUI(
                         selectedScreenOffMethod = type
                     }
                 },
-                modifier = Modifier.highlight(highlightSetting == "screen_off_method_picker"),
+                modifier = Modifier.highlight("screen_off_method_picker", highlightSetting),
             )
         }
 
@@ -127,7 +127,7 @@ fun ScreenOffWidgetSettingsUI(
                         performHapticFeedback(vibrator, type)
                     }
                 },
-                modifier = Modifier.highlight(highlightSetting == "haptic_picker"),
+                modifier = Modifier.highlight("haptic_picker", highlightSetting),
             )
         }
     }

@@ -167,7 +167,7 @@ fun FreezeSettingsUI(
                 modifier =
                     Modifier
                         .fillMaxWidth()
-                        .highlight(highlightKey == "freeze_all_manual"),
+                        .highlight("freeze_all_manual", highlightKey),
             ) {
                 Row(
                     modifier =
@@ -316,7 +316,7 @@ fun FreezeSettingsUI(
                 hasMoreSettings = true,
                 onToggle = {},
                 onClick = { isAppSelectionSheetOpen = true },
-                modifier = Modifier.highlight(highlightKey == "freeze_selected_apps"),
+                modifier = Modifier.highlight("freeze_selected_apps", highlightKey),
             )
 
             IconToggleItem(
@@ -631,7 +631,7 @@ fun FreezeSettingsUI(
                     }
                 },
                 enabled = true,
-                modifier = Modifier.highlight(highlightKey == "freeze_when_locked_enabled"),
+                modifier = Modifier.highlight("freeze_when_locked_enabled", highlightKey),
             )
 
             IconToggleItem(
@@ -651,7 +651,7 @@ fun FreezeSettingsUI(
                     }
                 },
                 enabled = true,
-                modifier = Modifier.highlight(highlightKey == "freeze_dont_freeze_active_apps"),
+                modifier = Modifier.highlight("freeze_dont_freeze_active_apps", highlightKey),
             )
 
             Column(
@@ -662,7 +662,7 @@ fun FreezeSettingsUI(
                             color = MaterialTheme.colorScheme.surfaceBright,
                             shape = RoundedCornerShape(MaterialTheme.shapes.extraSmall.bottomEnd),
                         ).padding(horizontal = 32.dp, vertical = 18.dp)
-                        .highlight(highlightKey == "freeze_lock_delay_index"),
+                        .highlight("freeze_lock_delay_index", highlightKey),
             ) {
                 TranslatableText(
                     stringResId = R.string.freeze_delay_title,

@@ -74,6 +74,7 @@ import androidx.fragment.app.FragmentActivity
 import com.sameerasw.essentials.FeatureSettingsActivity
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.modes.ModesController
+import com.sameerasw.essentials.domain.registry.WhatsNewRegistry
 import com.sameerasw.essentials.domain.registry.FeatureRegistry
 import com.sameerasw.essentials.domain.registry.PermissionRegistry
 import com.sameerasw.essentials.domain.registry.QSTileRegistry
@@ -1123,6 +1124,7 @@ fun SetupFeatures(
                                 sectionFeatures.forEach { feature ->
                                     TourAnchor(TourStep.FEATURE_ITEM to (feature.id == "Display" && AppTour.homeTab == DIYTabs.ESSENTIALS)) {
                                         FeatureCard(
+                                            whatsNewId = feature.id,
                                             oneUiAppIcon = true,
                                             title = feature.title,
                                             isSelected = feature.id in LocalSelectedFeatureIds.current,
@@ -1205,6 +1207,7 @@ fun SetupFeatures(
                                 val activeModeCount = activeModeIds.size
                                 hiddenTabs.forEach { tab ->
                                     FeatureCard(
+                                        whatsNewId = WhatsNewRegistry.tabId(tab),
                                         oneUiAppIcon = true,
                                         title = tab.displayTitle,
                                         description =

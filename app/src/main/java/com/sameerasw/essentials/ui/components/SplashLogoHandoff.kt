@@ -13,10 +13,13 @@ import androidx.core.splashscreen.SplashScreenViewProvider
 // LayeredLogoIcon: same logo spans 135.74 of a 192 viewport, drawn at minDimension / 140 per unit.
 private const val SPLASH_UNITS_PER_VIEW = 72f
 private const val TOOLBAR_UNITS_PER_ICON = 140f
+private const val WELCOME_UNITS_PER_ICON = 192f
 private const val TOOLBAR_PER_SPLASH_UNIT = 135.74f / 53.9f
 
 class SplashLogoHandoff {
     var targetBounds: Rect? = null
+    var welcomeBounds: Rect? = null
+    val welcomeLogoAlpha = mutableFloatStateOf(1f)
     val toolbarLogoAlpha = mutableFloatStateOf(1f)
     val toolbarLogoSlot = mutableFloatStateOf(1f)
 
@@ -26,7 +29,9 @@ class SplashLogoHandoff {
         durationMs: Long,
         onEnd: () -> Unit,
     ): Boolean {
-        val initialTarget = targetBounds ?: return false
+        val toWelcome = welcomeBounds?.isEmpty == false
+        val initialTarget = (if (toWelcome) welcomeBounds else targetBounds) ?: return false
+        val unitsPerIcon = if (toWelcome) WELCOME_UNITS_PER_ICON else TOOLBAR_UNITS_PER_ICON
         if (initialTarget.isEmpty || iconView.width == 0) return false
         val splashView = provider.view
 
@@ -46,8 +51,12 @@ class SplashLogoHandoff {
             }
         val background = splashView.background?.mutate()
 
-        toolbarLogoAlpha.floatValue = 0f
-        toolbarLogoSlot.floatValue = 0f
+        if (toWelcome) {
+            welcomeLogoAlpha.floatValue = 0f
+        } else {
+            toolbarLogoAlpha.floatValue = 0f
+            toolbarLogoSlot.floatValue = 0f
+        }
 
         val move = PathInterpolator(0.55f, 0f, 0.15f, 1f)
         val fade = PathInterpolator(0f, 0f, 0.2f, 1f)
@@ -55,11 +64,11 @@ class SplashLogoHandoff {
             duration = durationMs
             addUpdateListener { animator ->
                 val t = animator.animatedFraction
-                val target = targetBounds ?: initialTarget
-                val targetPxPerUnit = target.minDimension / TOOLBAR_UNITS_PER_ICON * TOOLBAR_PER_SPLASH_UNIT
+                val target = (if (toWelcome) welcomeBounds else targetBounds) ?: initialTarget
+                val targetPxPerUnit = target.minDimension / unitsPerIcon * TOOLBAR_PER_SPLASH_UNIT
                 val targetScale = targetPxPerUnit / splashPxPerUnit
                 val m = move.getInterpolation(t)
-                toolbarLogoSlot.floatValue = m
+                if (!toWelcome) toolbarLogoSlot.floatValue = m
 
                 iconView.translationX = (target.center.x - iconCenterX) * m
                 iconView.translationY = (target.center.y - iconCenterY) * m
@@ -73,9 +82,10 @@ class SplashLogoHandoff {
 
                 val handoff = ((t - 0.85f) / 0.15f).coerceIn(0f, 1f)
                 iconView.alpha = 1f - handoff
-                toolbarLogoAlpha.floatValue = handoff
+                if (toWelcome) welcomeLogoAlpha.floatValue = handoff else toolbarLogoAlpha.floatValue = handoff
             }
             doOnEnd {
+                welcomeLogoAlpha.floatValue = 1f
                 toolbarLogoAlpha.floatValue = 1f
                 toolbarLogoSlot.floatValue = 1f
                 onEnd()

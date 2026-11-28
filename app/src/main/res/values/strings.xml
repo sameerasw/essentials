@@ -1320,6 +1320,7 @@
     <string name="toast_onboarding_reset">Onboarding reset</string>
     <string name="toast_update_note_reset">Update note reset</string>
     <string name="label_developer_options">Developer Options</string>
+    <string name="setting_show_whats_new_title">Indicate what\'s new for a day</string>
     <string name="label_wallpaper_update">Wallpaper Update</string>
     <string name="btn_wallpaper_desktop">Desktop</string>
     <string name="btn_wallpaper_both">Both</string>

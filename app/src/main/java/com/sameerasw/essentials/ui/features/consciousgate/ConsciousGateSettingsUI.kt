@@ -170,7 +170,7 @@ fun ConsciousGateSettingsUI(
                 },
                 enabled = canEnableConsciousGate,
                 onDisabledClick = { showPermissionSheet = true },
-                modifier = Modifier.highlight(highlightKey == "conscious_gate_enabled"),
+                modifier = Modifier.highlight("conscious_gate_enabled", highlightKey),
             )
 
             FeatureCard(
@@ -182,7 +182,7 @@ fun ConsciousGateSettingsUI(
                 hasMoreSettings = true,
                 onToggle = {},
                 onClick = { isAppSelectionSheetOpen = true },
-                modifier = Modifier.highlight(highlightKey == "conscious_gate_selected_apps"),
+                modifier = Modifier.highlight("conscious_gate_selected_apps", highlightKey),
             )
 
             ConfigPickerItem(
@@ -191,7 +191,7 @@ fun ConsciousGateSettingsUI(
                 iconRes = R.drawable.rounded_timer_24,
                 isEnabled = isConsciousGateEnabled,
                 selectedValue = delaySelectedLabel,
-                modifier = Modifier.highlight(highlightKey == "conscious_gate_delay_seconds"),
+                modifier = Modifier.highlight("conscious_gate_delay_seconds", highlightKey),
             ) {
                 delaySecondsOptions.forEach { seconds ->
                     SegmentedDropdownMenuItem(
@@ -235,7 +235,7 @@ fun ConsciousGateSettingsUI(
                 iconRes = R.drawable.rounded_lock_clock_24,
                 isEnabled = isConsciousGateEnabled,
                 selectedValue = reappearSelectedLabel,
-                modifier = Modifier.highlight(highlightKey == "conscious_gate_reappear_minutes"),
+                modifier = Modifier.highlight("conscious_gate_reappear_minutes", highlightKey),
             ) {
                 reappearPresetMinutes.forEachIndexed { index, minutes ->
                     SegmentedDropdownMenuItem(
@@ -281,7 +281,7 @@ fun ConsciousGateSettingsUI(
                     viewModel.setConsciousGateFeelEverySecondEnabled(enabled)
                 },
                 enabled = isConsciousGateEnabled,
-                modifier = Modifier.highlight(highlightKey == "conscious_gate_feel_every_second"),
+                modifier = Modifier.highlight("conscious_gate_feel_every_second", highlightKey),
             )
         }
 

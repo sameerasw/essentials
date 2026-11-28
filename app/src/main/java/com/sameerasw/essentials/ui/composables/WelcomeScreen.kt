@@ -65,10 +65,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.boundsInWindow
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
@@ -89,6 +92,7 @@ import com.sameerasw.essentials.R
 import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.components.ShakeForHelpCard
 import com.sameerasw.essentials.ui.components.WhatsNewCustomContent
+import com.sameerasw.essentials.ui.components.WhatsNewToggleItem
 import com.sameerasw.essentials.ui.components.text.SimpleMarkdown
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.pickers.PrivilegedModePicker
@@ -118,6 +122,8 @@ enum class OnboardingStep {
 fun WelcomeScreen(
     viewModel: MainViewModel,
     isWhatsNewFlow: Boolean = false,
+    onLogoPlaced: ((Rect) -> Unit)? = null,
+    logoAlpha: (() -> Float)? = null,
     onBeginClick: () -> Unit,
 ) {
     val view = LocalView.current
@@ -156,6 +162,8 @@ fun WelcomeScreen(
                         WelcomeStepContent(
                             viewModel = viewModel,
                             isWhatsNewFlow = isWhatsNewFlow,
+                            onLogoPlaced = onLogoPlaced,
+                            logoAlpha = logoAlpha,
                             rotationAnimatable = rotationAnimatable,
                             center = center,
                             onCenterChanged = { center = it },
@@ -238,6 +246,8 @@ fun WelcomeScreen(
 fun WelcomeStepContent(
     viewModel: MainViewModel,
     isWhatsNewFlow: Boolean,
+    onLogoPlaced: ((Rect) -> Unit)?,
+    logoAlpha: (() -> Float)?,
     rotationAnimatable: Animatable<Float, *>,
     center: Offset,
     onCenterChanged: (Offset) -> Unit,
@@ -271,7 +281,13 @@ fun WelcomeStepContent(
                 modifier =
                     Modifier
                         .size(240.dp)
-                        .onSizeChanged {
+                        .then(
+                            if (onLogoPlaced != null) {
+                                Modifier.onGloballyPositioned { onLogoPlaced(it.boundsInWindow()) }
+                            } else {
+                                Modifier
+                            },
+                        ).onSizeChanged {
                             onCenterChanged(Offset(it.width / 2f, it.height / 2f))
                         }.pointerInput(Unit) {
                             val majorStep = 60f
@@ -356,6 +372,7 @@ fun WelcomeStepContent(
                             )
                         }.graphicsLayer {
                             rotationZ = rotationAnimatable.value
+                            alpha = logoAlpha?.invoke() ?: 1f
                         },
                 colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary),
             )
@@ -841,6 +858,16 @@ fun WhatsNewStepContent(
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            Text(
+                text = "Read more",
+                style = MaterialTheme.typography.titleSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(start = 32.dp, end = 24.dp, bottom = 12.dp),
+            )
+
             // Release Notes / Markdown
             Box(
                 modifier =
@@ -908,51 +935,59 @@ fun WhatsNewStepContent(
             Spacer(modifier = Modifier.height(32.dp))
         }
 
-        Row(
+        Column(
             modifier =
                 Modifier
                     .fillMaxWidth()
                     .navigationBarsPadding()
                     .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            OutlinedButton(
-                onClick = {
-                    HapticUtil.performVirtualKeyHaptic(view)
-                    onBack()
-                },
-                modifier = Modifier.size(56.dp),
-                shape = RoundedCornerShape(16.dp),
-                contentPadding = PaddingValues(0.dp),
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.rounded_arrow_back_24),
-                    contentDescription = stringResource(R.string.action_back),
-                    modifier = Modifier.size(24.dp),
-                )
+            RoundedCardContainer {
+                WhatsNewToggleItem()
             }
-
-            Button(
-                onClick = onFinish,
-                modifier =
-                    Modifier
-                        .weight(1f)
-                        .height(56.dp),
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
             ) {
-                TranslatableText(
-                    stringResId = R.string.action_let_me_in,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                )
+                OutlinedButton(
+                    onClick = {
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        onBack()
+                    },
+                    modifier = Modifier.size(56.dp),
+                    shape = RoundedCornerShape(16.dp),
+                    contentPadding = PaddingValues(0.dp),
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.rounded_arrow_back_24),
+                        contentDescription = stringResource(R.string.action_back),
+                        modifier = Modifier.size(24.dp),
+                    )
+                }
 
-                Spacer(modifier = Modifier.weight(1f))
+                Button(
+                    onClick = onFinish,
+                    modifier =
+                        Modifier
+                            .weight(1f)
+                            .height(56.dp),
+                ) {
+                    TranslatableText(
+                        stringResId = R.string.action_let_me_in,
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                    )
 
-                Icon(
-                    painter = painterResource(id = R.drawable.rounded_mobile_check_24),
-                    contentDescription = null,
-                    modifier = Modifier.size(24.dp),
-                )
+                    Spacer(modifier = Modifier.weight(1f))
+
+                    Icon(
+                        painter = painterResource(id = R.drawable.rounded_mobile_check_24),
+                        contentDescription = null,
+                        modifier = Modifier.size(24.dp),
+                    )
+                }
             }
         }
     }

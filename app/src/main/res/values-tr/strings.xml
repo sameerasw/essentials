@@ -2171,6 +2171,7 @@ Bazı seçenekler Shizuku veya erişilebilirlik izni gerektirir ve sonuçlar cih
     <string name="island_notif_lock_hidden_title">Hidden</string>
     <string name="text_snippets_how_to_use">1. Turn on Text Snippets and grant the Accessibility permission so shortcuts can expand in any app.\n\n2. Pick a Trigger Prefix: ; : @@ or a space.\n\n3. Tap the + button to add a snippet. Enter a keyword without spaces and the text it should expand into.\n\n4. Type the prefix followed by the keyword, for example ;brb, to expand it. With the space prefix, type the keyword and press space.\n\nTips: keywords only expand at the start of a word, so URLs and times are left alone. Password fields are always ignored. Some apps do not allow text replacement and will not expand snippets.</string>
     <string name="label_developer_options">Geliştirici Seçenekleri</string>
+    <string name="setting_show_whats_new_title">Indicate what\'s new for a day</string>
     <string name="auto_backup_title">Otomatik yedekleme yapılandırmaları</string>
     <string name="action_licenses_and_credits">Lisanslar</string>
     <string name="label_top_contributors">En Çok Katkıda Bulunanlar, Teşekkürler!</string>

@@ -1779,4 +1779,5 @@
     <string name="app_ops_user_app">User app</string>
     <string name="app_ops_search_apps">Search apps</string>
     <string name="app_ops_search_ops">Search operations</string>
+    <string name="setting_show_whats_new_title">Indicate what\'s new for a day</string>
 </resources>

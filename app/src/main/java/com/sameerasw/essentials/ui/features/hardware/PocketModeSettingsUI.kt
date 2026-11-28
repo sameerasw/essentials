@@ -76,7 +76,7 @@ fun PocketModeSettingsUI(
                 },
                 enabled = true,
                 iconRes = R.drawable.ic_pocket_mode,
-                modifier = Modifier.highlight(highlightSetting == "pocket_mode_toggle"),
+                modifier = Modifier.highlight("pocket_mode_toggle", highlightSetting),
             )
 
             IconToggleItem(
@@ -88,7 +88,7 @@ fun PocketModeSettingsUI(
                 },
                 enabled = viewModel.isPocketModeEnabled.value,
                 iconRes = R.drawable.ic_light_sensor,
-                modifier = Modifier.highlight(highlightSetting == "pocket_mode_use_light_sensor"),
+                modifier = Modifier.highlight("pocket_mode_use_light_sensor", highlightSetting),
             )
 
             ConfigSliderItem(

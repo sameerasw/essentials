@@ -26,6 +26,13 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.drawOutline
 
 fun Modifier.highlight(
+    key: String,
+    current: String?,
+    color: Color = Color.Unspecified,
+    shape: Shape = RectangleShape,
+): Modifier = whatsNewSetting(key).highlight(current == key, color, shape)
+
+fun Modifier.highlight(
     enabled: Boolean,
     color: Color = Color.Unspecified,
     shape: Shape = RectangleShape,

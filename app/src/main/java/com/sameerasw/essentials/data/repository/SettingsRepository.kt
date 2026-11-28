@@ -376,6 +376,8 @@ class SettingsRepository(
         const val KEY_CONSCIOUS_GATE_TITLE = "conscious_gate_title"
         const val KEY_CONSCIOUS_GATE_MESSAGE = "conscious_gate_message"
         const val KEY_HIDDEN_DEBUGGING_SUPPORT = "hidden_debugging_support"
+        const val KEY_SHOW_WHATS_NEW_UNTIL = "show_whats_new_until"
+        const val KEY_WHATS_NEW_DEFAULTED_RELEASE = "whats_new_defaulted_release"
         const val KEY_USE_USAGE_ACCESS = "use_usage_access"
 
         const val KEY_FREEZE_WHEN_LOCKED_ENABLED = "freeze_when_locked_enabled"

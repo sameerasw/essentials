@@ -42,6 +42,7 @@ import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.pickers.SegmentedPicker
 import com.sameerasw.essentials.ui.core.sheets.EssentialsBottomSheet
+import com.sameerasw.essentials.ui.modifiers.whatsNewSetting
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.viewmodels.MainViewModel
 
@@ -275,6 +276,7 @@ fun IslandBatteryOptions(
                         HapticUtil.performVirtualKeyHaptic(view)
                         viewModel.setIslandBatteryStatusIcon(checked)
                     },
+                    modifier = Modifier.whatsNewSetting(SettingsRepository.KEY_ISLAND_BATTERY_STATUS_ICON),
                 )
             }
         }

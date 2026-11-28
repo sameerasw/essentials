@@ -143,7 +143,7 @@ fun BackGestureSettingsUI(
                         showPermissions = true
                     }
                 },
-                modifier = Modifier.highlight(highlightSetting == "back_gesture_left_width"),
+                modifier = Modifier.highlight("back_gesture_left_width", highlightSetting),
                 description = R.string.feat_back_gesture_default_width_desc,
             )
             EdgeWidthSlider(
@@ -162,7 +162,7 @@ fun BackGestureSettingsUI(
                         showPermissions = true
                     }
                 },
-                modifier = Modifier.highlight(highlightSetting == "back_gesture_right_width"),
+                modifier = Modifier.highlight("back_gesture_right_width", highlightSetting),
                 description = R.string.feat_back_gesture_default_width_desc,
             )
         }
@@ -181,7 +181,7 @@ fun BackGestureSettingsUI(
         RoundedCardContainer(
             spacing = 2.dp,
             cornerRadius = 24.dp,
-            modifier = Modifier.highlight(highlightSetting == "back_gesture_apps"),
+            modifier = Modifier.highlight("back_gesture_apps", highlightSetting),
         ) {
             viewModel.backGestureAppConfigs.value.forEach { config ->
                 val appIcon =

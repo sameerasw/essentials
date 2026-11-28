@@ -41,6 +41,7 @@ import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.sheets.EssentialsBottomSheet
 import com.sameerasw.essentials.ui.core.sheets.SingleAppSelectionSheet
 import com.sameerasw.essentials.ui.modifiers.highlight
+import com.sameerasw.essentials.ui.modifiers.whatsNewSetting
 import com.sameerasw.essentials.utils.AppUtil
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.utils.media.AppVolumeController
@@ -90,7 +91,7 @@ fun AppVolumeSettingsUI(
                 isChecked = isEnabled,
                 onCheckedChange = { viewModel.setAppVolumeEnabled(it) },
                 enabled = viewModel.isAccessibilityEnabled.value && viewModel.isShizukuPermissionGranted.value,
-                modifier = Modifier.highlight(highlightSetting == "enable_app_volume"),
+                modifier = Modifier.highlight("enable_app_volume", highlightSetting),
             )
             IconToggleItem(
                 iconRes = R.drawable.rounded_volume_up_24,
@@ -98,7 +99,7 @@ fun AppVolumeSettingsUI(
                 isChecked = viewModel.isAppVolumeOverlayEnabled.value,
                 onCheckedChange = { viewModel.setAppVolumeOverlayEnabled(it) },
                 enabled = isEnabled && viewModel.isAccessibilityEnabled.value && viewModel.isShizukuPermissionGranted.value,
-                modifier = Modifier.highlight(highlightSetting == "app_volume_overlay"),
+                modifier = Modifier.highlight("app_volume_overlay", highlightSetting),
             )
         }
 
@@ -112,7 +113,7 @@ fun AppVolumeSettingsUI(
         RoundedCardContainer(
             spacing = 2.dp,
             cornerRadius = 24.dp,
-            modifier = Modifier.highlight(highlightSetting == "app_volume_apps"),
+            modifier = Modifier.highlight("app_volume_apps", highlightSetting),
         ) {
             (playing + levels.keys + focusIgnored).distinct().forEach { packageName ->
                 val appIcon =
@@ -269,6 +270,7 @@ private fun AppVolumeSheet(
                     isChecked = isFocusIgnored,
                     onCheckedChange = onFocusIgnoredChange,
                     enabled = isFocusToggleEnabled,
+                    modifier = Modifier.whatsNewSetting("app_volume_ignore_focus"),
                 )
             }
         }

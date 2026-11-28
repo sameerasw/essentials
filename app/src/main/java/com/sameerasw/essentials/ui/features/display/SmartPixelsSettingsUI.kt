@@ -82,7 +82,7 @@ fun SmartPixelsSettingsUI(
                 },
                 enabled = isAccessibilityEnabled,
                 onDisabledClick = { showPermissionSheet = true },
-                modifier = Modifier.highlight(highlightSetting == "smart_pixels_enable_toggle"),
+                modifier = Modifier.highlight("smart_pixels_enable_toggle", highlightSetting),
             )
         }
 
@@ -108,7 +108,7 @@ fun SmartPixelsSettingsUI(
                 increment = 5f,
                 iconRes = R.drawable.rounded_blur_linear_24,
                 enabled = isSmartPixelsEnabled && isAccessibilityEnabled,
-                modifier = Modifier.highlight(highlightSetting == "smart_pixels_intensity_slider"),
+                modifier = Modifier.highlight("smart_pixels_intensity_slider", highlightSetting),
             )
         }
 
@@ -126,7 +126,7 @@ fun SmartPixelsSettingsUI(
                     viewModel.setSmartPixelsDisableOnCastEnabled(context, checked)
                 },
                 enabled = isSmartPixelsEnabled && isAccessibilityEnabled,
-                modifier = Modifier.highlight(highlightSetting == "smart_pixels_disable_on_cast_toggle"),
+                modifier = Modifier.highlight("smart_pixels_disable_on_cast_toggle", highlightSetting),
             )
         }
     }

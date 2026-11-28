@@ -97,7 +97,7 @@ fun AlwaysOnDisplaySettingsUI(
                         viewModel.setAodEnabled(checked)
                     }
                 },
-                modifier = Modifier.highlight(highlightSetting == "aod_toggle"),
+                modifier = Modifier.highlight("aod_toggle", highlightSetting),
             )
         }
 
@@ -117,7 +117,7 @@ fun AlwaysOnDisplaySettingsUI(
                     HapticUtil.performVirtualKeyHaptic(view)
                     viewModel.toggleNotificationGlanceEnabled(checked)
                 },
-                modifier = Modifier.highlight(highlightSetting == "notification_glance_enabled"),
+                modifier = Modifier.highlight("notification_glance_enabled", highlightSetting),
             )
 
             IconToggleItem(
@@ -128,7 +128,7 @@ fun AlwaysOnDisplaySettingsUI(
                     HapticUtil.performVirtualKeyHaptic(view)
                     viewModel.setNotificationGlanceSameAsLightingEnabled(checked)
                 },
-                modifier = Modifier.highlight(highlightSetting == "notification_glance_same_apps"),
+                modifier = Modifier.highlight("notification_glance_same_apps", highlightSetting),
             )
 
             IconToggleItem(
@@ -151,7 +151,7 @@ fun AlwaysOnDisplaySettingsUI(
                             Pair(R.string.feat_aod_force_turn_off_title, listOf("ACCESSIBILITY"))
                     }
                 },
-                modifier = Modifier.highlight(highlightSetting == "aod_force_turn_off"),
+                modifier = Modifier.highlight("aod_force_turn_off", highlightSetting),
             )
         }
 

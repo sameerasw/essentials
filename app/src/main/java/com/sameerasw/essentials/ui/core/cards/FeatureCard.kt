@@ -65,6 +65,7 @@ import com.sameerasw.essentials.R
 import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenu
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
+import com.sameerasw.essentials.ui.modifiers.whatsNewFeature
 import com.sameerasw.essentials.utils.ColorUtil
 import com.sameerasw.essentials.utils.HapticUtil
 
@@ -100,6 +101,7 @@ fun FeatureCard(
     hasIconBackground: Boolean = true,
     iconTint: androidx.compose.ui.graphics.Color? = null,
     oneUiAppIcon: Boolean = false,
+    whatsNewId: String? = null,
 ) {
     val useAppIcon = oneUiAppIcon && LocalUiDesign.current == UiDesign.ONE_UI
     val selectedContainer by androidx.compose.animation.animateColorAsState(
@@ -180,7 +182,8 @@ fun FeatureCard(
         modifier =
             modifier
                 .alpha(alpha)
-                .blur(blurRadius),
+                .blur(blurRadius)
+                .then(if (whatsNewId != null) Modifier.whatsNewFeature(whatsNewId) else Modifier),
         leadingContent =
             if (iconPainter != null || iconRes != null) {
                 {

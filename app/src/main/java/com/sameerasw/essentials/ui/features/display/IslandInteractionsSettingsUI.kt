@@ -154,7 +154,7 @@ fun IslandInteractionsSettingsUI(
                     .fillMaxWidth()
                     .background(MaterialTheme.colorScheme.surfaceBright, MaterialTheme.shapes.extraSmall)
                     .padding(top = 12.dp)
-                    .highlight(highlightSetting == "island_dismiss_direction"),
+                    .highlight("island_dismiss_direction", highlightSetting),
             ) {
                 TranslatableText(
                     stringResId = R.string.island_dismiss_direction_title,
@@ -185,7 +185,7 @@ fun IslandInteractionsSettingsUI(
                     HapticUtil.performVirtualKeyHaptic(view)
                     viewModel.setIslandTapToOpenExpanded(checked)
                 },
-                modifier = Modifier.highlight(highlightSetting == "island_tap_to_open_expanded"),
+                modifier = Modifier.highlight("island_tap_to_open_expanded", highlightSetting),
             )
 
             IconToggleItem(
@@ -196,7 +196,7 @@ fun IslandInteractionsSettingsUI(
                     HapticUtil.performVirtualKeyHaptic(view)
                     viewModel.setIslandDismissOnOutside(checked)
                 },
-                modifier = Modifier.highlight(highlightSetting == "island_dismiss_on_outside"),
+                modifier = Modifier.highlight("island_dismiss_on_outside", highlightSetting),
             )
 
             IconToggleItem(
@@ -207,7 +207,7 @@ fun IslandInteractionsSettingsUI(
                     HapticUtil.performVirtualKeyHaptic(view)
                     viewModel.setIslandGestureHints(checked)
                 },
-                modifier = Modifier.highlight(highlightSetting == "island_gesture_hints"),
+                modifier = Modifier.highlight("island_gesture_hints", highlightSetting),
             )
 
             AnimatedVisibility(
@@ -223,7 +223,7 @@ fun IslandInteractionsSettingsUI(
                         HapticUtil.performVirtualKeyHaptic(view)
                         viewModel.setIslandDisableInteractionsInFullscreen(checked)
                     },
-                    modifier = Modifier.highlight(highlightSetting == "island_disable_interactions_in_fullscreen"),
+                    modifier = Modifier.highlight("island_disable_interactions_in_fullscreen", highlightSetting),
                 )
             }
         }
@@ -254,7 +254,7 @@ fun IslandInteractionsSettingsUI(
                     HapticUtil.performVirtualKeyHaptic(view)
                     pickingGesture = "long_press"
                 },
-                modifier = Modifier.highlight(highlightSetting == "island_long_press_action"),
+                modifier = Modifier.highlight("island_long_press_action", highlightSetting),
             )
 
             IconToggleItem(
@@ -265,7 +265,7 @@ fun IslandInteractionsSettingsUI(
                     HapticUtil.performVirtualKeyHaptic(view)
                     viewModel.setIslandLikeWhilePlayingEnabled(checked)
                 },
-                modifier = Modifier.highlight(highlightSetting == "island_like_while_playing"),
+                modifier = Modifier.highlight("island_like_while_playing", highlightSetting),
             )
         }
 
@@ -282,7 +282,7 @@ fun IslandInteractionsSettingsUI(
                     HapticUtil.performVirtualKeyHaptic(view)
                     showSlideModeSheet = true
                 },
-                modifier = Modifier.highlight(highlightSetting == "island_slide_mode"),
+                modifier = Modifier.highlight("island_slide_mode", highlightSetting),
             )
 
             IconToggleItem(
@@ -294,7 +294,7 @@ fun IslandInteractionsSettingsUI(
                     HapticUtil.performVirtualKeyHaptic(view)
                     viewModel.setIslandSlideTrackEnabled(checked)
                 },
-                modifier = Modifier.highlight(highlightSetting == "island_slide_track"),
+                modifier = Modifier.highlight("island_slide_track", highlightSetting),
             )
 
             AnimatedVisibility(
@@ -317,7 +317,7 @@ fun IslandInteractionsSettingsUI(
                                 if (checked) listOf("SHIZUKU") else listOf("NOTIFICATION_POLICY")
                         }
                     },
-                    modifier = Modifier.highlight(highlightSetting == "island_slide_sound_mode_shizuku"),
+                    modifier = Modifier.highlight("island_slide_sound_mode_shizuku", highlightSetting),
                 )
             }
 
@@ -334,7 +334,7 @@ fun IslandInteractionsSettingsUI(
                         HapticUtil.performVirtualKeyHaptic(view)
                         viewModel.setIslandSlideInvertDirection(checked)
                     },
-                    modifier = Modifier.highlight(highlightSetting == "island_slide_invert_direction"),
+                    modifier = Modifier.highlight("island_slide_invert_direction", highlightSetting),
                 )
             }
         }
@@ -352,7 +352,7 @@ fun IslandInteractionsSettingsUI(
                     HapticUtil.performVirtualKeyHaptic(view)
                     viewModel.setIslandAlwaysGestures(checked)
                 },
-                modifier = Modifier.highlight(highlightSetting == "island_always_gestures"),
+                modifier = Modifier.highlight("island_always_gestures", highlightSetting),
             )
         }
 

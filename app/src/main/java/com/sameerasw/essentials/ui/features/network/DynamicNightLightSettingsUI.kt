@@ -61,7 +61,7 @@ fun DynamicNightLightSettingsUI(
                 onCheckedChange = { checked ->
                     viewModel.setDynamicNightLightEnabled(checked, context)
                 },
-                modifier = Modifier.highlight(highlightSetting == "dynamic_night_light_toggle"),
+                modifier = Modifier.highlight("dynamic_night_light_toggle", highlightSetting),
             )
         }
 

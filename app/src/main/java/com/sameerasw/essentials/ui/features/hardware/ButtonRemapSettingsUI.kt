@@ -150,7 +150,7 @@ fun ButtonRemapSettingsUI(
                 title = stringResource(R.string.button_remap_enable_title),
                 isChecked = viewModel.isButtonRemapEnabled.value,
                 onCheckedChange = { viewModel.setButtonRemapEnabled(it, context) },
-                modifier = Modifier.highlight(highlightSetting == "enable_remap"),
+                modifier = Modifier.highlight("enable_remap", highlightSetting),
             )
 
             AnimatedVisibility(
@@ -164,7 +164,7 @@ fun ButtonRemapSettingsUI(
                         title = stringResource(R.string.button_remap_pause_on_volume_dialog_title),
                         isChecked = viewModel.isButtonRemapPauseOnVolumeDialog.value,
                         onCheckedChange = { viewModel.setButtonRemapPauseOnVolumeDialog(it, context) },
-                        modifier = Modifier.highlight(highlightSetting == "pause_on_volume_dialog"),
+                        modifier = Modifier.highlight("pause_on_volume_dialog", highlightSetting),
                     )
 
                     val isRootEnabled =
@@ -213,7 +213,7 @@ fun ButtonRemapSettingsUI(
                                 viewModel.setButtonRemapUseShizuku(false, context)
                             }
                         },
-                        modifier = Modifier.highlight(highlightSetting == "shizuku_remap"),
+                        modifier = Modifier.highlight("shizuku_remap", highlightSetting),
                     )
 
                     AnimatedVisibility(
@@ -328,7 +328,7 @@ fun ButtonRemapSettingsUI(
                                 R.string.haptic_tick to HapticFeedbackType.TICK,
                                 R.string.haptic_double to HapticFeedbackType.DOUBLE,
                             ),
-                        modifier = Modifier.highlight(highlightSetting == "remap_haptic"),
+                        modifier = Modifier.highlight("remap_haptic", highlightSetting),
                     )
                 }
 
@@ -412,7 +412,7 @@ fun ButtonRemapSettingsUI(
                             onCheckedChange = { enabled ->
                                 viewModel.setPowerCameraFlipEnabled(enabled)
                             },
-                            modifier = Modifier.highlight(highlightSetting == "power_camera_flip"),
+                            modifier = Modifier.highlight("power_camera_flip", highlightSetting),
                         )
                     }
 
@@ -430,7 +430,7 @@ fun ButtonRemapSettingsUI(
                             requestingPermissionsFor =
                                 Pair(R.string.button_remap_press_and_hold, listOf("WRITE_SECURE_SETTINGS"))
                         },
-                        modifier = Modifier.highlight(highlightSetting == "power_hold"),
+                        modifier = Modifier.highlight("power_hold", highlightSetting),
                     )
                 }
             }

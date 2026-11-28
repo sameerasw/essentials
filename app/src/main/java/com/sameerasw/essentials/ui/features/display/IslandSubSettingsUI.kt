@@ -178,7 +178,7 @@ fun IslandPlacementSettingsUI(
                     .fillMaxWidth()
                     .background(MaterialTheme.colorScheme.surfaceBright, MaterialTheme.shapes.extraSmall)
                     .padding(top = 12.dp)
-                    .highlight(highlightSetting == "island_camera_position"),
+                    .highlight("island_camera_position", highlightSetting),
             ) {
                 TranslatableText(
                     stringResId = R.string.island_camera_position_title,
@@ -219,7 +219,7 @@ fun IslandPlacementSettingsUI(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp)
-                    .highlight(highlightSetting == "island_use_auto_detect"),
+                    .highlight("island_use_auto_detect", highlightSetting),
             ) {
                 Icon(
                     painter = painterResource(R.drawable.rounded_center_focus_strong_24),
@@ -276,7 +276,7 @@ fun IslandPlacementSettingsUI(
                 iconRes = R.drawable.rounded_arrows_outward_24,
                 valueFormatter = { "%.1f dp".format(it) },
                 allowDecimals = true,
-                modifier = Modifier.highlight(highlightSetting == "island_max_width"),
+                modifier = Modifier.highlight("island_max_width", highlightSetting),
             )
         }
 
@@ -296,7 +296,7 @@ fun IslandPlacementSettingsUI(
                 iconRes = R.drawable.rounded_arrows_outward_24,
                 valueFormatter = { "%.2fx".format(it) },
                 allowDecimals = true,
-                modifier = Modifier.highlight(highlightSetting == "island_camera_size"),
+                modifier = Modifier.highlight("island_camera_size", highlightSetting),
             )
 
             IconToggleItem(
@@ -307,7 +307,7 @@ fun IslandPlacementSettingsUI(
                     HapticUtil.performVirtualKeyHaptic(view)
                     viewModel.setIslandCameraGapEnabled(checked)
                 },
-                modifier = Modifier.highlight(highlightSetting == "island_camera_gap_enabled"),
+                modifier = Modifier.highlight("island_camera_gap_enabled", highlightSetting),
             )
 
             AnimatedVisibility(
@@ -327,7 +327,7 @@ fun IslandPlacementSettingsUI(
                     iconRes = R.drawable.rounded_arrows_outward_24,
                     valueFormatter = { "%.1f dp".format(it) },
                     allowDecimals = true,
-                    modifier = Modifier.highlight(highlightSetting == "island_cutout_gap"),
+                    modifier = Modifier.highlight("island_cutout_gap", highlightSetting),
                 )
             }
         }
@@ -348,7 +348,7 @@ fun IslandPlacementSettingsUI(
                 iconRes = R.drawable.rounded_arrows_outward_24,
                 valueFormatter = { "%.1f dp".format(it) },
                 allowDecimals = true,
-                modifier = Modifier.highlight(highlightSetting == "island_padding_around"),
+                modifier = Modifier.highlight("island_padding_around", highlightSetting),
             )
         }
 
@@ -375,7 +375,7 @@ fun IslandPlacementSettingsUI(
                     increment = 0.02f,
                     iconRes = R.drawable.rounded_magnify_fullscreen_24,
                     valueFormatter = { "${(it * 100).toInt()}%" },
-                    modifier = Modifier.highlight(highlightSetting == "island_expanded_scale"),
+                    modifier = Modifier.highlight("island_expanded_scale", highlightSetting),
                 )
 
                 ConfigSliderItem(
@@ -390,7 +390,7 @@ fun IslandPlacementSettingsUI(
                     iconRes = R.drawable.rounded_arrows_outward_24,
                     valueFormatter = { "%.1f dp".format(it) },
                     allowDecimals = true,
-                    modifier = Modifier.highlight(highlightSetting == "island_expanded_width"),
+                    modifier = Modifier.highlight("island_expanded_width", highlightSetting),
                 )
 
                 ConfigSliderItem(
@@ -404,7 +404,7 @@ fun IslandPlacementSettingsUI(
                     increment = 2f,
                     iconRes = R.drawable.rounded_south_24,
                     valueFormatter = { "${it.toInt()} dp" },
-                    modifier = Modifier.highlight(highlightSetting == "island_expanded_offset_y"),
+                    modifier = Modifier.highlight("island_expanded_offset_y", highlightSetting),
                 )
             }
         }
@@ -424,7 +424,7 @@ fun IslandPlacementSettingsUI(
                 increment = 2f,
                 iconRes = R.drawable.rounded_rounded_corner_24,
                 valueFormatter = { "${it.toInt()} dp" },
-                modifier = Modifier.highlight(highlightSetting == "island_expanded_roundness"),
+                modifier = Modifier.highlight("island_expanded_roundness", highlightSetting),
             )
 
             ConfigSliderItem(
@@ -438,7 +438,7 @@ fun IslandPlacementSettingsUI(
                 increment = 2f,
                 iconRes = R.drawable.rounded_screenshot_region_24,
                 valueFormatter = { "${it.toInt()} dp" },
-                modifier = Modifier.highlight(highlightSetting == "island_expanded_padding"),
+                modifier = Modifier.highlight("island_expanded_padding", highlightSetting),
             )
 
             ConfigSliderItem(
@@ -452,7 +452,7 @@ fun IslandPlacementSettingsUI(
                 increment = 2f,
                 iconRes = R.drawable.rounded_vertical_align_top_24,
                 valueFormatter = { "${it.toInt()} dp" },
-                modifier = Modifier.highlight(highlightSetting == "island_expanded_top_padding"),
+                modifier = Modifier.highlight("island_expanded_top_padding", highlightSetting),
             )
 
             ConfigSliderItem(
@@ -466,7 +466,7 @@ fun IslandPlacementSettingsUI(
                 increment = 2f,
                 iconRes = R.drawable.rounded_vertical_align_bottom_24,
                 valueFormatter = { "${it.toInt()} dp" },
-                modifier = Modifier.highlight(highlightSetting == "island_expanded_bottom_padding"),
+                modifier = Modifier.highlight("island_expanded_bottom_padding", highlightSetting),
             )
         }
 
@@ -489,7 +489,7 @@ fun IslandPlacementSettingsUI(
                         HapticUtil.performVirtualKeyHaptic(view)
                         viewModel.setIslandKeepOnLandscape(checked)
                     },
-                    modifier = Modifier.highlight(highlightSetting == "island_keep_on_landscape"),
+                    modifier = Modifier.highlight("island_keep_on_landscape", highlightSetting),
                 )
 
                 AnimatedVisibility(
@@ -509,7 +509,7 @@ fun IslandPlacementSettingsUI(
                             increment = 0.5f,
                             iconRes = R.drawable.rounded_vertical_align_top_24,
                             valueFormatter = { "%.1f dp".format(it) },
-                            modifier = Modifier.highlight(highlightSetting == "island_landscape_top_spacing"),
+                            modifier = Modifier.highlight("island_landscape_top_spacing", highlightSetting),
                         )
 
                         IconToggleItem(
@@ -520,7 +520,7 @@ fun IslandPlacementSettingsUI(
                                 HapticUtil.performVirtualKeyHaptic(view)
                                 viewModel.setIslandBondEdge(checked)
                             },
-                            modifier = Modifier.highlight(highlightSetting == "island_bond_edge"),
+                            modifier = Modifier.highlight("island_bond_edge", highlightSetting),
                         )
                     }
                 }
@@ -537,7 +537,7 @@ fun IslandPlacementSettingsUI(
                     iconRes = R.drawable.rounded_arrows_outward_24,
                     valueFormatter = { "%.2fx".format(it) },
                     allowDecimals = true,
-                    modifier = Modifier.highlight(highlightSetting == "island_bond_scale"),
+                    modifier = Modifier.highlight("island_bond_scale", highlightSetting),
                 )
 
                 IconToggleItem(
@@ -548,7 +548,7 @@ fun IslandPlacementSettingsUI(
                         HapticUtil.performVirtualKeyHaptic(view)
                         viewModel.setIslandAlwaysBond(checked)
                     },
-                    modifier = Modifier.highlight(highlightSetting == "island_always_bond"),
+                    modifier = Modifier.highlight("island_always_bond", highlightSetting),
                 )
 
                 AnimatedVisibility(
@@ -564,7 +564,7 @@ fun IslandPlacementSettingsUI(
                             HapticUtil.performVirtualKeyHaptic(view)
                             viewModel.setIslandBondKeepGap(checked)
                         },
-                        modifier = Modifier.highlight(highlightSetting == "island_bond_keep_gap"),
+                        modifier = Modifier.highlight("island_bond_keep_gap", highlightSetting),
                     )
                 }
             }
@@ -590,7 +590,7 @@ fun IslandPlacementSettingsUI(
                         viewModel.setIslandStatusBarAwareWidth(checked)
                     },
                     onInfoClick = { showStatusBarAwareInfo = true },
-                    modifier = Modifier.highlight(highlightSetting == "island_statusbar_aware_width"),
+                    modifier = Modifier.highlight("island_statusbar_aware_width", highlightSetting),
                 )
 
                 AnimatedVisibility(
@@ -606,7 +606,7 @@ fun IslandPlacementSettingsUI(
                             HapticUtil.performVirtualKeyHaptic(view)
                             viewModel.setIslandStatusBarIgnoreNotifications(checked)
                         },
-                        modifier = Modifier.highlight(highlightSetting == "island_statusbar_ignore_notifications"),
+                        modifier = Modifier.highlight("island_statusbar_ignore_notifications", highlightSetting),
                     )
                 }
             }
@@ -679,7 +679,7 @@ fun IslandVisualsSettingsUI(
                 increment = 0.05f,
                 iconRes = R.drawable.rounded_format_size_24,
                 valueFormatter = { "${(it * 100).toInt()}%" },
-                modifier = Modifier.highlight(highlightSetting == "island_font_scale"),
+                modifier = Modifier.highlight("island_font_scale", highlightSetting),
             )
 
             ConfigSliderItem(
@@ -693,7 +693,7 @@ fun IslandVisualsSettingsUI(
                 increment = 0.1f,
                 iconRes = R.drawable.rounded_format_size_24,
                 valueFormatter = { "${(it * 100).toInt()}%" },
-                modifier = Modifier.highlight(highlightSetting == "island_animation_speed"),
+                modifier = Modifier.highlight("island_animation_speed", highlightSetting),
             )
 
             IconToggleItem(
@@ -704,7 +704,7 @@ fun IslandVisualsSettingsUI(
                     HapticUtil.performVirtualKeyHaptic(view)
                     viewModel.setIslandBalanceCompact(checked)
                 },
-                modifier = Modifier.highlight(highlightSetting == "island_balance_compact"),
+                modifier = Modifier.highlight("island_balance_compact", highlightSetting),
             )
 
             IconToggleItem(
@@ -716,7 +716,7 @@ fun IslandVisualsSettingsUI(
                     viewModel.setIslandPersistentOrder(checked)
                 },
                 onInfoClick = { showPersistentOrderInfo = true },
-                modifier = Modifier.highlight(highlightSetting == "island_persistent_order"),
+                modifier = Modifier.highlight("island_persistent_order", highlightSetting),
             )
 
         }
@@ -735,7 +735,7 @@ fun IslandVisualsSettingsUI(
                     viewModel.setIslandShowGlow(checked)
                 },
                 onSettingsClick = { showGlowSheet = true },
-                modifier = Modifier.highlight(highlightSetting == "island_show_glow"),
+                modifier = Modifier.highlight("island_show_glow", highlightSetting),
             )
         }
 
@@ -752,7 +752,7 @@ fun IslandVisualsSettingsUI(
                         HapticUtil.performVirtualKeyHaptic(view)
                         viewModel.setIslandTransparency(checked)
                     },
-                    modifier = Modifier.highlight(highlightSetting == "island_transparency"),
+                    modifier = Modifier.highlight("island_transparency", highlightSetting),
                 )
 
                 AnimatedVisibility(
@@ -772,7 +772,7 @@ fun IslandVisualsSettingsUI(
                         iconRes = R.drawable.rounded_blur_on_24,
                         valueFormatter = { "%d%%".format((it * 100).roundToInt()) },
                         allowDecimals = true,
-                        modifier = Modifier.highlight(highlightSetting == "island_transparency_intensity"),
+                        modifier = Modifier.highlight("island_transparency_intensity", highlightSetting),
                     )
                 }
             }
@@ -796,7 +796,7 @@ fun IslandVisualsSettingsUI(
                             },
                             onInfoClick = { showBackdropBlurInfo = true },
                             infoWarning = !backdropBlurAvailable,
-                            modifier = Modifier.highlight(highlightSetting == "island_backdrop_blur"),
+                            modifier = Modifier.highlight("island_backdrop_blur", highlightSetting),
                         )
 
                         AnimatedVisibility(
@@ -815,7 +815,7 @@ fun IslandVisualsSettingsUI(
                                 increment = 5f,
                                 iconRes = R.drawable.rounded_blur_on_24,
                                 valueFormatter = { "%d dp".format(it.roundToInt()) },
-                                modifier = Modifier.highlight(highlightSetting == "island_backdrop_blur_radius"),
+                                modifier = Modifier.highlight("island_backdrop_blur_radius", highlightSetting),
                             )
                         }
                     }
@@ -836,7 +836,7 @@ fun IslandVisualsSettingsUI(
                     HapticUtil.performVirtualKeyHaptic(view)
                     viewModel.setIslandProgressiveBlur(checked)
                 },
-                modifier = Modifier.highlight(highlightSetting == "island_progressive_blur"),
+                modifier = Modifier.highlight("island_progressive_blur", highlightSetting),
             )
 
             IconToggleItem(
@@ -848,7 +848,7 @@ fun IslandVisualsSettingsUI(
                     HapticUtil.performVirtualKeyHaptic(view)
                     viewModel.setIslandNeuralExpressive(checked)
                 },
-                modifier = Modifier.highlight(highlightSetting == "island_neural_expressive"),
+                modifier = Modifier.highlight("island_neural_expressive", highlightSetting),
             )
 
             AnimatedVisibility(
@@ -864,7 +864,7 @@ fun IslandVisualsSettingsUI(
                         HapticUtil.performVirtualKeyHaptic(view)
                         viewModel.setIslandNeuralExpressiveAlways(checked)
                     },
-                    modifier = Modifier.highlight(highlightSetting == "island_neural_expressive_always"),
+                    modifier = Modifier.highlight("island_neural_expressive_always", highlightSetting),
                 )
             }
         }
@@ -900,7 +900,7 @@ fun IslandVisualsSettingsUI(
                     viewModel.setIslandBorderOutline(checked)
                 },
                 onSettingsClick = { showBorderOutlineSheet = true },
-                modifier = Modifier.highlight(highlightSetting == "island_border_outline_enabled"),
+                modifier = Modifier.highlight("island_border_outline_enabled", highlightSetting),
             )
         }
 
@@ -927,7 +927,7 @@ fun IslandVisualsSettingsUI(
                 },
                 labelProvider = { modeLabels[it].orEmpty() },
                 title = R.string.island_section_icon_color,
-                modifier = Modifier.fillMaxWidth().highlight(highlightSetting == "island_icon_color_mode"),
+                modifier = Modifier.fillMaxWidth().highlight("island_icon_color_mode", highlightSetting),
             )
             IconToggleItem(
                 iconRes = R.drawable.rounded_palette_24,
@@ -1003,7 +1003,7 @@ fun IslandVisualsSettingsUI(
                         stillSettings.setIslandPreferStillEnabled(checked)
                     },
                     onInfoClick = { showPreferStillInfo = true },
-                    modifier = Modifier.highlight(highlightSetting == "island_prefer_still"),
+                    modifier = Modifier.highlight("island_prefer_still", highlightSetting),
                 )
             }
         }
@@ -1065,6 +1065,7 @@ fun IslandDurationSettingsUI(
                     HapticUtil.performVirtualKeyHaptic(view)
                     viewModel.setIslandTimeoutAfterMarquee(checked)
                 },
+                modifier = Modifier.highlight("island_timeout_after_marquee", highlightSetting),
             )
 
             val infinityText = stringResource(R.string.island_timeout_infinity)
@@ -1080,7 +1081,7 @@ fun IslandDurationSettingsUI(
                 increment = 1f,
                 iconRes = R.drawable.rounded_schedule_24,
                 valueFormatter = { if (it <= 0f) infinityText else "${it.toInt()}s" },
-                modifier = Modifier.highlight(highlightSetting == "island_expanded_timeout_ms"),
+                modifier = Modifier.highlight("island_expanded_timeout_ms", highlightSetting),
             )
         }
     }
@@ -1176,7 +1177,7 @@ fun IslandBehaviorSettingsUI(
                     HapticUtil.performVirtualKeyHaptic(view)
                     viewModel.setIslandLineStageEnabled(checked)
                 },
-                modifier = Modifier.highlight(highlightSetting == "island_line_stage_enabled"),
+                modifier = Modifier.highlight("island_line_stage_enabled", highlightSetting),
             )
         }
 
@@ -1189,7 +1190,7 @@ fun IslandBehaviorSettingsUI(
                     HapticUtil.performVirtualKeyHaptic(view)
                     viewModel.setIslandSecondaryBubble(checked)
                 },
-                modifier = Modifier.highlight(highlightSetting == "island_secondary_bubble"),
+                modifier = Modifier.highlight("island_secondary_bubble", highlightSetting),
             )
 
             val sideEnabled = viewModel.islandCameraPosition.value == SettingsRepository.ISLAND_CAMERA_POSITION_CENTER
@@ -1200,7 +1201,7 @@ fun IslandBehaviorSettingsUI(
                     .fillMaxWidth()
                     .background(MaterialTheme.colorScheme.surfaceBright, MaterialTheme.shapes.extraSmall)
                     .padding(top = 12.dp)
-                    .highlight(highlightSetting == "island_secondary_bubble_side")
+                    .highlight("island_secondary_bubble_side", highlightSetting)
                     .alpha(if (sideEnabled) 1f else 0.38f),
             ) {
                 TranslatableText(
@@ -1234,7 +1235,7 @@ fun IslandBehaviorSettingsUI(
                 increment = 1f,
                 iconRes = R.drawable.rounded_notifications_unread_24,
                 valueFormatter = { if (it.toInt() == 0) autoLabel else it.toInt().toString() },
-                modifier = Modifier.highlight(highlightSetting == "island_secondary_bubbles_count"),
+                modifier = Modifier.highlight("island_secondary_bubbles_count", highlightSetting),
             )
 
         }
@@ -1248,7 +1249,7 @@ fun IslandBehaviorSettingsUI(
                     HapticUtil.performVirtualKeyHaptic(view)
                     viewModel.setIslandHideInOwnerApp(checked)
                 },
-                modifier = Modifier.highlight(highlightSetting == "island_hide_in_owner_app"),
+                modifier = Modifier.highlight("island_hide_in_owner_app", highlightSetting),
             )
 
             IconToggleItem(
@@ -1260,7 +1261,7 @@ fun IslandBehaviorSettingsUI(
                     HapticUtil.performVirtualKeyHaptic(view)
                     viewModel.setIslandHideMediaInOwnerApp(checked)
                 },
-                modifier = Modifier.highlight(highlightSetting == "island_hide_media_in_owner_app"),
+                modifier = Modifier.highlight("island_hide_media_in_owner_app", highlightSetting),
             )
 
             IconToggleItem(
@@ -1271,7 +1272,7 @@ fun IslandBehaviorSettingsUI(
                     HapticUtil.performVirtualKeyHaptic(view)
                     viewModel.setIslandHideOnShade(checked)
                 },
-                modifier = Modifier.highlight(highlightSetting == "island_hide_on_shade"),
+                modifier = Modifier.highlight("island_hide_on_shade", highlightSetting),
             )
 
             IconToggleItem(
@@ -1282,7 +1283,7 @@ fun IslandBehaviorSettingsUI(
                     HapticUtil.performVirtualKeyHaptic(view)
                     viewModel.setIslandKeepInFullscreen(!checked)
                 },
-                modifier = Modifier.highlight(highlightSetting == "island_keep_in_fullscreen"),
+                modifier = Modifier.highlight("island_keep_in_fullscreen", highlightSetting),
             )
         }
 
@@ -1304,7 +1305,7 @@ fun IslandBehaviorSettingsUI(
                         viewModel.setIslandHideStatusBarInsets(checked, context)
                     }
                 },
-                modifier = Modifier.highlight(highlightSetting == "island_hide_status_bar_insets"),
+                modifier = Modifier.highlight("island_hide_status_bar_insets", highlightSetting),
             )
 
             IconToggleItem(
@@ -1319,7 +1320,7 @@ fun IslandBehaviorSettingsUI(
                         viewModel.setIslandSuppressSystemHeadsUp(checked)
                     }
                 },
-                modifier = Modifier.highlight(highlightSetting == "island_suppress_system_heads_up"),
+                modifier = Modifier.highlight("island_suppress_system_heads_up", highlightSetting),
             )
 
             IconToggleItem(
@@ -1339,7 +1340,7 @@ fun IslandBehaviorSettingsUI(
                         viewModel.setIslandHideLiveUpdates(checked)
                     }
                 },
-                modifier = Modifier.highlight(highlightSetting == "island_hide_live_updates"),
+                modifier = Modifier.highlight("island_hide_live_updates", highlightSetting),
             )
 
             IslandHideIconsToggle(
@@ -1371,7 +1372,7 @@ fun IslandBehaviorSettingsUI(
                         viewModel.setIslandDynamicHideStatusBar(checked, context)
                     }
                 },
-                modifier = Modifier.highlight(highlightSetting == "island_dynamic_hide_status_bar"),
+                modifier = Modifier.highlight("island_dynamic_hide_status_bar", highlightSetting),
             )
         }
     }
@@ -1488,7 +1489,7 @@ fun IslandNotificationSettingsUI(
                     HapticUtil.performVirtualKeyHaptic(view)
                     viewModel.setIslandShowNotifications(checked)
                 },
-                modifier = Modifier.highlight(highlightSetting == "island_show_notifications"),
+                modifier = Modifier.highlight("island_show_notifications", highlightSetting),
             )
 
         }
@@ -1507,7 +1508,7 @@ fun IslandNotificationSettingsUI(
                     viewModel.setIslandNotifHub(checked)
                 },
                 onSettingsClick = { showHubSheet = true },
-                modifier = Modifier.highlight(highlightSetting == "island_notif_hub"),
+                modifier = Modifier.highlight("island_notif_hub", highlightSetting),
             )
         }
 
@@ -1521,7 +1522,7 @@ fun IslandNotificationSettingsUI(
                     HapticUtil.performVirtualKeyHaptic(view)
                     viewModel.setIslandNotifFilterApps(checked)
                 },
-                modifier = Modifier.highlight(highlightSetting == "island_notif_filter_apps"),
+                modifier = Modifier.highlight("island_notif_filter_apps", highlightSetting),
             )
 
             AnimatedVisibility(
@@ -1549,7 +1550,7 @@ fun IslandNotificationSettingsUI(
                     HapticUtil.performVirtualKeyHaptic(view)
                     viewModel.setIslandNotifSkipSilent(checked)
                 },
-                modifier = Modifier.highlight(highlightSetting == "island_notif_skip_silent"),
+                modifier = Modifier.highlight("island_notif_skip_silent", highlightSetting),
             )
 
             IconToggleItem(
@@ -1561,7 +1562,7 @@ fun IslandNotificationSettingsUI(
                     HapticUtil.performVirtualKeyHaptic(view)
                     viewModel.setIslandNotifFollowDnd(checked)
                 },
-                modifier = Modifier.highlight(highlightSetting == "island_notif_follow_dnd"),
+                modifier = Modifier.highlight("island_notif_follow_dnd", highlightSetting),
             )
         }
 
@@ -1580,7 +1581,7 @@ fun IslandNotificationSettingsUI(
                         .fillMaxWidth()
                         .background(MaterialTheme.colorScheme.surfaceBright, MaterialTheme.shapes.extraSmall)
                         .padding(top = 12.dp)
-                        .highlight(highlightSetting == "island_notif_peek_style"),
+                        .highlight("island_notif_peek_style", highlightSetting),
                 ) {
                     TranslatableText(
                         stringResId = R.string.island_notif_condensed_info_title,
@@ -1621,7 +1622,7 @@ fun IslandNotificationSettingsUI(
                     viewModel.setIslandNotifQueue(checked)
                 },
                 enabled = !viewModel.isIslandNotifHub.value,
-                modifier = Modifier.highlight(highlightSetting == "island_notif_queue"),
+                modifier = Modifier.highlight("island_notif_queue", highlightSetting),
             )
 
             IconToggleItem(
@@ -1634,7 +1635,7 @@ fun IslandNotificationSettingsUI(
                     viewModel.setIslandCatchUpEnabled(checked)
                 },
                 enabled = !viewModel.isIslandNotifHub.value,
-                modifier = Modifier.highlight(highlightSetting == "island_catch_up"),
+                modifier = Modifier.highlight("island_catch_up", highlightSetting),
             )
 
             AnimatedVisibility(
@@ -1661,7 +1662,7 @@ fun IslandNotificationSettingsUI(
                             infinityText,
                         )
                     },
-                    modifier = Modifier.highlight(highlightSetting == "island_catch_up_timeout"),
+                    modifier = Modifier.highlight("island_catch_up_timeout", highlightSetting),
                 )
             }
 
@@ -1674,7 +1675,7 @@ fun IslandNotificationSettingsUI(
                     viewModel.setIslandPulseShadow(checked)
                 },
                 onSettingsClick = { showPulseShadowSheet = true },
-                modifier = Modifier.highlight(highlightSetting == "island_pulse_shadow_on_notification"),
+                modifier = Modifier.highlight("island_pulse_shadow_on_notification", highlightSetting),
             )
         }
 
@@ -1703,7 +1704,7 @@ fun IslandNotificationSettingsUI(
                         viewModel.setIslandOtpEnabled(checked)
                     }
                 },
-                modifier = Modifier.highlight(highlightSetting == "island_otp_enabled"),
+                modifier = Modifier.highlight("island_otp_enabled", highlightSetting),
             )
             AnimatedVisibility(
                 visible = otpEnabled,
@@ -1715,7 +1716,7 @@ fun IslandNotificationSettingsUI(
                     iconRes = R.drawable.rounded_content_copy_24,
                     title = stringResource(R.string.island_otp_tap_to_copy_title),
                     defaultValue = true,
-                    modifier = Modifier.highlight(highlightSetting == "island_otp_tap_to_copy"),
+                    modifier = Modifier.highlight("island_otp_tap_to_copy", highlightSetting),
                 )
             }
             AnimatedVisibility(
@@ -1757,7 +1758,7 @@ fun IslandNotificationSettingsUI(
                     iconRes = R.drawable.rounded_filter_alt_24,
                     title = stringResource(R.string.island_otp_bypass_filter_title),
                     defaultValue = true,
-                    modifier = Modifier.highlight(highlightSetting == "island_otp_bypass_filter"),
+                    modifier = Modifier.highlight("island_otp_bypass_filter", highlightSetting),
                 )
             }
         }

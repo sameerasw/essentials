@@ -215,7 +215,7 @@ fun NavigationSettingsUI(
                     }
                 },
                 iconRes = R.drawable.rounded_home_24,
-                modifier = Modifier.highlight(highlightSetting == "hide_gesture_bar_toggle"),
+                modifier = Modifier.highlight("hide_gesture_bar_toggle", highlightSetting),
             )
 
             IconToggleItem(
@@ -236,7 +236,7 @@ fun NavigationSettingsUI(
                     }
                 },
                 iconRes = R.drawable.rounded_home_health_24,
-                modifier = Modifier.highlight(highlightSetting == "hide_gesture_bar_launcher_toggle"),
+                modifier = Modifier.highlight("hide_gesture_bar_launcher_toggle", highlightSetting),
             )
 
             IconToggleItem(
@@ -256,7 +256,7 @@ fun NavigationSettingsUI(
                     requestingPermissionFor = PermissionModule.CIRCLE_TO_SEARCH
                 },
                 iconRes = R.drawable.rounded_touch_app_24,
-                modifier = Modifier.highlight(highlightSetting == "circle_to_search_gesture_toggle"),
+                modifier = Modifier.highlight("circle_to_search_gesture_toggle", highlightSetting),
             )
 
             IconToggleItem(
@@ -278,7 +278,7 @@ fun NavigationSettingsUI(
                     }
                 },
                 iconRes = R.drawable.rounded_splitscreen_24,
-                modifier = Modifier.highlight(highlightSetting == "split_screen_gesture_toggle"),
+                modifier = Modifier.highlight("split_screen_gesture_toggle", highlightSetting),
             )
 
             IconToggleItem(
@@ -299,7 +299,7 @@ fun NavigationSettingsUI(
                     }
                 },
                 iconRes = R.drawable.rounded_bottom_navigation_24,
-                modifier = Modifier.highlight(highlightSetting == "transparent_navigation_bar_toggle"),
+                modifier = Modifier.highlight("transparent_navigation_bar_toggle", highlightSetting),
             )
 
             AnimatedVisibility(
