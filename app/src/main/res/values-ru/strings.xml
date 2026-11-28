@@ -17,7 +17,7 @@
     <string name="check_pre_releases_label">Проверять наличие пред-релизов</string>
     <string name="check_pre_releases_desc">Могут быть нестабильны</string>
     <string name="label_default_tab">Вкладка по умолчанию</string>
-    <string name="label_toolbar">Customize toolbar</string>
+    <string name="label_toolbar">Настройка панели инструментов </string>
     <string name="toolbar_section_hidden">Hidden from toolbar</string>
     <string name="toolbar_hidden_hint">Drag items here to remove them from the toolbar. They will show up in the Essentials tab.</string>
     <string name="toolbar_show_tab_names">Show tab names</string>
@@ -2587,4 +2587,7 @@
     <string name="diy_trigger_bluetooth_connected">Устройство Bluetooth подключено</string>
     <string name="diy_trigger_android_auto_connected">Android Auto подключён </string>
     <string name="watch_update_action">Обновить приложение на часах</string>
+    <string name="section_graphics">Графика </string>
+    <string name="feat_hilight_title">Хайлайт</string>
+    <string name="hilight_hint">Эффекты прекращаются сами по себе после выбранной продолжительности, до 30 секунд. Пока играет эффект, собственные эффекты Pixel Hilight, такие как звонки и Gemini приостановлены. </string>
 </resources>
