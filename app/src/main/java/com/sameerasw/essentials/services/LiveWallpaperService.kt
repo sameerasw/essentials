@@ -19,6 +19,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.SharedPreferences
 import android.content.res.Configuration
+import android.graphics.BlendMode
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
@@ -49,6 +50,7 @@ import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.DefaultRenderersFactory
 import androidx.media3.exoplayer.ExoPlayer
+import androidx.palette.graphics.Palette
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.data.repository.WallpaperRepository
 import com.sameerasw.essentials.services.handlers.WallpaperDockBridge
@@ -91,6 +93,10 @@ class LiveWallpaperService : WallpaperService() {
         private var currentArt: Bitmap? = null
         private var currentArtKey: String? = null
         private var outgoingArt: Bitmap? = null
+        private var currentArtShade = Color.BLACK
+        private var outgoingArtShade = Color.BLACK
+        private val artFadePaint = Paint()
+        private val edgeNodes = arrayOfNulls<RenderNode>(EDGE_BLUR_STEPS * 2)
         private var isMusicPlaying = false
         private var artProgress = 0f
         private var artSwap = 1f
@@ -268,9 +274,11 @@ class LiveWallpaperService : WallpaperService() {
             isMusicPlaying = true
             if (key != currentArtKey) {
                 val previous = currentArt
+                val previousShade = currentArtShade
                 currentArtKey = key
                 currentArt = art
-                if (previous != null && artProgress > 0f) crossfadeArt(previous)
+                currentArtShade = darkAccentShade(art)
+                if (previous != null && artProgress > 0f) crossfadeArt(previous, previousShade)
             } else {
                 currentArt = art
             }
@@ -315,9 +323,13 @@ class LiveWallpaperService : WallpaperService() {
                 }
         }
 
-        private fun crossfadeArt(previous: Bitmap) {
+        private fun crossfadeArt(
+            previous: Bitmap,
+            previousShade: Int,
+        ) {
             artSwapAnimator?.cancel()
             outgoingArt = previous
+            outgoingArtShade = previousShade
             artSwap = 0f
             artSwapAnimator =
                 ValueAnimator.ofFloat(0f, 1f).apply {
@@ -642,20 +654,116 @@ class LiveWallpaperService : WallpaperService() {
             canvas.drawBitmap(base, sceneMatrix(base, width, height), bitmapPaint)
             if (artProgress <= 0f) return
             val outgoing = outgoingArt
-            if (outgoing != null) drawArt(canvas, outgoing, artProgress, width, height)
-            currentArt?.let { drawArt(canvas, it, artProgress * if (outgoing != null) artSwap else 1f, width, height) }
+            if (outgoing != null) drawArt(canvas, outgoing, outgoingArtShade, artProgress, width, height)
+            currentArt?.let {
+                drawArt(canvas, it, currentArtShade, artProgress * if (outgoing != null) artSwap else 1f, width, height)
+            }
         }
 
+        // same look as the AOD album art: cropped art with accent tinted fades from the top and bottom
         private fun drawArt(
             canvas: Canvas,
             art: Bitmap,
+            shade: Int,
             alpha: Float,
             width: Int,
             height: Int,
         ) {
             if (art.isRecycled || alpha <= 0f) return
-            artPaint.alpha = (alpha * 255).toInt().coerceIn(0, 255)
+            val alphaInt = (alpha * 255).toInt().coerceIn(0, 255)
+            artPaint.alpha = alphaInt
             canvas.drawBitmap(art, sceneMatrix(art, width, height), artPaint)
+
+            val fade = height * ART_FADE_FRACTION
+            val tinted = withAlpha(shade, alphaInt.toFloat())
+            artFadePaint.shader = LinearGradient(0f, 0f, 0f, fade, tinted, Color.TRANSPARENT, Shader.TileMode.CLAMP)
+            canvas.drawRect(0f, 0f, width.toFloat(), fade, artFadePaint)
+            artFadePaint.shader =
+                LinearGradient(0f, height - fade, 0f, height.toFloat(), Color.TRANSPARENT, tinted, Shader.TileMode.CLAMP)
+            canvas.drawRect(0f, height - fade, width.toFloat(), height.toFloat(), artFadePaint)
+        }
+
+        private fun darkAccentShade(bitmap: Bitmap): Int {
+            val palette =
+                try {
+                    Palette.from(bitmap).maximumColorCount(24).generate()
+                } catch (_: Exception) {
+                    null
+                }
+            val accent =
+                palette?.vibrantSwatch?.rgb
+                    ?: palette?.lightVibrantSwatch?.rgb
+                    ?: palette?.dominantSwatch?.rgb
+                    ?: palette?.mutedSwatch?.rgb
+                    ?: Color.BLACK
+            val hsv = FloatArray(3)
+            Color.colorToHSV(accent, hsv)
+            hsv[1] = hsv[1].coerceIn(0.6f, 1f)
+            hsv[2] = (hsv[2] * 0.65f).coerceIn(0.4f, 0.65f)
+            return Color.HSVToColor(hsv)
+        }
+
+        // stacked blur steps whose radius grows toward the screen edge; each step masks itself inside its node
+        private fun drawProgressiveEdge(
+            canvas: Canvas,
+            width: Int,
+            height: Int,
+            edge: Float,
+            top: Boolean,
+        ) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) return
+            val edgePx = edge.toInt().coerceIn(1, height)
+            val offsetY = if (top) 0f else (height - edgePx).toFloat()
+            val maxRadius = resources.displayMetrics.density * BLUR_RADIUS_DP * revealProgress
+            if (maxRadius >= 0.5f) {
+                for (step in 0 until EDGE_BLUR_STEPS) {
+                    val radius = maxRadius * (step + 1) / EDGE_BLUR_STEPS
+                    if (radius < 0.5f) continue
+                    val index = step + if (top) 0 else EDGE_BLUR_STEPS
+                    val node = edgeNodes[index] ?: RenderNode("edgeBlur$index").also { edgeNodes[index] = it }
+
+                    // distance from the screen edge where this step is fully on, and where it has faded out
+                    val fullUntil = edgePx * (1f - (step + 1f) / EDGE_BLUR_STEPS)
+                    val goneAt = edgePx * (1f - step.toFloat() / EDGE_BLUR_STEPS)
+                    val mask =
+                        if (top) {
+                            LinearGradient(0f, fullUntil, 0f, goneAt, Color.BLACK, Color.TRANSPARENT, Shader.TileMode.CLAMP)
+                        } else {
+                            LinearGradient(0f, edgePx - fullUntil, 0f, edgePx - goneAt, Color.BLACK, Color.TRANSPARENT, Shader.TileMode.CLAMP)
+                        }
+                    node.setPosition(0, 0, width, edgePx)
+                    node.setRenderEffect(
+                        RenderEffect.createBlendModeEffect(
+                            RenderEffect.createBlurEffect(radius, radius, Shader.TileMode.CLAMP),
+                            RenderEffect.createShaderEffect(mask),
+                            BlendMode.DST_IN,
+                        ),
+                    )
+                    val recording = node.beginRecording(width, edgePx)
+                    recording.translate(0f, -offsetY)
+                    drawScene(recording, width, height)
+                    node.endRecording()
+
+                    val save = canvas.save()
+                    canvas.translate(0f, offsetY)
+                    canvas.drawRenderNode(node)
+                    canvas.restoreToCount(save)
+                }
+            }
+
+            val start = if (top) 0f else height.toFloat()
+            val end = if (top) edge else height - edge
+            scrimPaint.shader =
+                LinearGradient(
+                    0f,
+                    start,
+                    0f,
+                    end,
+                    Color.argb((revealProgress * SCRIM_ALPHA * 255).toInt(), 0, 0, 0),
+                    Color.TRANSPARENT,
+                    Shader.TileMode.CLAMP,
+                )
+            canvas.drawRect(0f, if (top) 0f else height - edge, width.toFloat(), if (top) edge else height.toFloat(), scrimPaint)
         }
 
         private fun ensureBlurLayer(
@@ -700,9 +808,11 @@ class LiveWallpaperService : WallpaperService() {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 blurNode?.discardDisplayList()
                 dockBlurNode?.discardDisplayList()
+                edgeNodes.forEach { it?.discardDisplayList() }
             }
             blurNode = null
             dockBlurNode = null
+            edgeNodes.fill(null)
         }
 
         private fun clearImageState() {
@@ -734,13 +844,17 @@ class LiveWallpaperService : WallpaperService() {
                 val showDock =
                     revealProgress > 0f && dockAlpha > 0f && dock != null && !isPreview &&
                         repository.isLiveWallpaperDockEnabled()
-                if (showEdges || (showDock && Build.VERSION.SDK_INT < Build.VERSION_CODES.S)) {
-                    ensureBlurLayer(bitmap, matrix, width, height)
-                }
+                val legacyBlur = Build.VERSION.SDK_INT < Build.VERSION_CODES.S
+                if (legacyBlur && (showEdges || showDock)) ensureBlurLayer(bitmap, matrix, width, height)
                 if (showEdges) {
                     val edge = height * repository.getLiveWallpaperProgressiveBlurHeight().coerceIn(0.02f, 0.5f)
-                    drawBlurredEdge(canvas, width, height, edge, top = true)
-                    drawBlurredEdge(canvas, width, height, edge, top = false)
+                    if (legacyBlur) {
+                        drawBlurredEdge(canvas, width, height, edge, top = true)
+                        drawBlurredEdge(canvas, width, height, edge, top = false)
+                    } else {
+                        drawProgressiveEdge(canvas, width, height, edge, top = true)
+                        drawProgressiveEdge(canvas, width, height, edge, top = false)
+                    }
                 }
                 if (showDock && dock != null) drawDock(canvas, dock, width, height)
             } finally {
@@ -951,6 +1065,8 @@ class LiveWallpaperService : WallpaperService() {
         private const val ZOOM_OUT_DURATION = 650L
         private const val SCRIM_ALPHA = 0.18f
         private const val ART_FADE_DURATION = 650L
+        private const val ART_FADE_FRACTION = 0.4f
+        private const val EDGE_BLUR_STEPS = 4
         private const val ART_HIDE_DELAY = 2500L
     }
 }
