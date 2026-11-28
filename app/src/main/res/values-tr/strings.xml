@@ -34,15 +34,15 @@
     <string name="mode_editor_edit_title">Edit mode</string>
     <string name="mode_name_hint">Mod adı</string>
     <string name="mode_system_settings">Open in system settings</string>
-    <string name="mode_section_features">While active</string>
-    <string name="mode_section_freeze">Freeze apps</string>
-    <string name="mode_feature_mobile_data">Mobile data</string>
+    <string name="mode_section_features">Aktifken</string>
+    <string name="mode_section_freeze">Uygulamaları dondur</string>
+    <string name="mode_feature_mobile_data">Mobil veri</string>
     <string name="mode_feature_show_taps">Show taps</string>
     <string name="mode_link_title">Bir sistem modu bağla</string>
     <string name="mode_link_none">Bağlanacak sistem modu kalmadı</string>
     <string name="mode_unlink">Unlink</string>
-    <string name="mode_section_conditions">Turn on automatically</string>
-    <string name="mode_condition_add">Add condition</string>
+    <string name="mode_section_conditions">Otomatik olarak aç</string>
+    <string name="mode_condition_add">Koşul ekle</string>
     <string name="mode_condition_place">At a location</string>
     <string name="mode_condition_working_location_named">Working at %1$s</string>
     <string name="mode_condition_event_named">During “%1$s”</string>
@@ -51,8 +51,8 @@
     <string name="mode_confirm_decline">Not now</string>
     <string name="mode_exit_trip">Start a trip to</string>
     <string name="mode_exit_trip_empty">No saved destinations yet. Add one in Are we there yet?</string>
-    <string name="mode_trip_on_start">When it starts</string>
-    <string name="mode_trip_on_end">When it ends</string>
+    <string name="mode_trip_on_start">Başladığında</string>
+    <string name="mode_trip_on_end">Bittiğinde</string>
     <string name="mode_linked_to">Linked to %1$s</string>
     <string name="mode_owned">Essentials mode</string>
     <string name="tab_modes_desc">Turn Essentials and system modes into routines</string>
@@ -70,7 +70,7 @@ Modlar, bir programdan, takvim etkinliklerinden veya çalışma konumunuzdan, Wi
     <string name="diy_calendar_working_location">Working location only</string>
     <string name="diy_calendar_working_location_name">Location, like Office</string>
     <string name="toolbar_tab_your_android_desc">Specs and track app updates</string>
-    <string name="toolbar_tab_freeze_no_apps">No apps</string>
+    <string name="toolbar_tab_freeze_no_apps">Uygulama yok</string>
     <!-- App Lock -->
     <string name="settings_section_security">Güvenlik</string>
     <string name="app_lock_enable_title">Uygulama kilidini etkinleştir</string>
@@ -1140,7 +1140,7 @@ Bu özelliği etkinleştirmek için güvenli ayarlar yazma izni, zorla kapatma s
     <string name="app_zero">Zero</string>
     <!-- Help & Guides -->
     <string name="help_guides_title">Yardım &amp; Kılavuzlar</string>
-    <string name="need_more_support_reach_out">Daha fazla desteğe mi ihtiyacınız var? Ulaş,</string>
+    <string name="need_more_support_reach_out">Daha fazla desteğe mi ihtiyacınız var? Ulaşın,</string>
     <string name="action_collapse">Yıkılmak</string>
     <string name="action_expand">Genişletmek</string>
     <string name="support_group_label">Destek Grubu</string>
@@ -2482,7 +2482,7 @@ Bu izin için sadece şunlara ihtiyaç duyulmaktadır: </string>
     <string name="app_ops_scanning">Reading app ops…</string>
     <string name="app_ops_restricted_count">%1$d restricted</string>
     <string name="app_ops_changed_count">%1$d changed</string>
-    <string name="app_ops_add_app">Add app</string>
+    <string name="app_ops_add_app">Uygulama ekle</string>
     <string name="app_ops_section_used">Kullanılmış veya değiştirilmiş</string>
     <string name="app_ops_section_other">Diğer işlemler</string>
     <string name="app_ops_last_used">Used %1$s ago</string>
@@ -2533,4 +2533,9 @@ Bu izin için sadece şunlara ihtiyaç duyulmaktadır: </string>
     <string name="perm_install_packages_desc">Uygulama ve gereksimleri otomatik yüklemek için gereklidir.</string>
     <string name="perm_storage_title">Bütün Dosyalara Erişim</string>
     <string name="perm_sensitive_notifications_title">Özel Bildirimleri Oku</string>
+    <string name="back_gesture_apps_section">Uygulamalar</string>
+    <string name="snippets_dialog_new_title">Yeni Parça</string>
+    <string name="snippets_empty_title">Henüz parça yok</string>
+    <string name="automation_channel_name">Otomasyonlar</string>
+    <string name="button_remap_power_actions">Özel işlemler</string>
 </resources>
