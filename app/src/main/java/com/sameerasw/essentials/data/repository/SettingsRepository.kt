@@ -917,6 +917,10 @@ class SettingsRepository(
         const val LIVE_WALLPAPER_DEFAULT_VIDEO = "my_video"
         const val LIVE_WALLPAPER_TRIGGER_UNLOCK = "unlock"
         const val LIVE_WALLPAPER_TRIGGER_SCREEN_ON = "screen_on"
+        const val LIVE_WALLPAPER_DAILY_IMAGE = "daily_wallpaper"
+        const val KEY_LIVE_WALLPAPER_PROGRESSIVE_BLUR = "progressive_blur"
+        const val KEY_LIVE_WALLPAPER_PROGRESSIVE_BLUR_HEIGHT = "progressive_blur_height"
+        const val LIVE_WALLPAPER_PROGRESSIVE_BLUR_HEIGHT_DEFAULT = 0.18f
 
         const val KEY_SHUT_UP_SELECTED_APPS = "shut_up_selected_apps"
         const val KEY_SHUT_UP_ORIGINAL_SETTINGS = "shut_up_original_settings"
@@ -2930,6 +2934,29 @@ class SettingsRepository(
      * Executes the get live wallpaper playback trigger operation.
      * @return The resulting String data.
      */
+    fun registerLiveWallpaperPrefsListener(listener: SharedPreferences.OnSharedPreferenceChangeListener) =
+        liveWallpaperPrefs.registerOnSharedPreferenceChangeListener(listener)
+
+    fun unregisterLiveWallpaperPrefsListener(listener: SharedPreferences.OnSharedPreferenceChangeListener) =
+        liveWallpaperPrefs.unregisterOnSharedPreferenceChangeListener(listener)
+
+    fun isLiveWallpaperDailyImageSelected(): Boolean = getLiveWallpaperSelectedVideo() == LIVE_WALLPAPER_DAILY_IMAGE
+
+    fun isLiveWallpaperProgressiveBlurEnabled(): Boolean =
+        liveWallpaperPrefs.getBoolean(KEY_LIVE_WALLPAPER_PROGRESSIVE_BLUR, false)
+
+    fun setLiveWallpaperProgressiveBlurEnabled(enabled: Boolean) =
+        liveWallpaperPrefs.edit().putBoolean(KEY_LIVE_WALLPAPER_PROGRESSIVE_BLUR, enabled).apply()
+
+    fun getLiveWallpaperProgressiveBlurHeight(): Float =
+        liveWallpaperPrefs.getFloat(
+            KEY_LIVE_WALLPAPER_PROGRESSIVE_BLUR_HEIGHT,
+            LIVE_WALLPAPER_PROGRESSIVE_BLUR_HEIGHT_DEFAULT,
+        )
+
+    fun setLiveWallpaperProgressiveBlurHeight(height: Float) =
+        liveWallpaperPrefs.edit().putFloat(KEY_LIVE_WALLPAPER_PROGRESSIVE_BLUR_HEIGHT, height).apply()
+
     fun getLiveWallpaperPlaybackTrigger(): String =
         liveWallpaperPrefs.getString(
             KEY_LIVE_WALLPAPER_PLAYBACK_TRIGGER,

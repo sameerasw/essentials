@@ -504,4 +504,6 @@ Anda dapat menyesuaikan gaya animasi, warna, dan perilakunya. Fitur ini berfungs
     <string name="app_ops_search_apps">Search apps</string>
     <string name="app_ops_search_ops">Search operations</string>
     <string name="setting_show_whats_new_title">Indicate what\'s new for a day</string>
+    <string name="live_wallpaper_progressive_blur">Progressive blur</string>
+    <string name="live_wallpaper_blur_height">Blur height</string>
 </resources>

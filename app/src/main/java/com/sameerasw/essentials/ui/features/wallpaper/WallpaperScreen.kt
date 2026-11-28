@@ -74,6 +74,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SplitButtonDefaults
 import androidx.compose.material3.SplitButtonLayout
+import androidx.compose.material3.Slider
 import com.sameerasw.essentials.ui.core.controls.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.ToggleButton
@@ -82,6 +83,7 @@ import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -150,6 +152,8 @@ fun WallpaperScreen(
     var availableVideos by remember { mutableStateOf(repository.getLiveWallpaperAvailableVideos()) }
     var selectedVideo by remember { mutableStateOf(repository.getLiveWallpaperSelectedVideo()) }
     var playbackTrigger by remember { mutableStateOf(repository.getLiveWallpaperPlaybackTrigger()) }
+    var progressiveBlurEnabled by remember { mutableStateOf(repository.isLiveWallpaperProgressiveBlurEnabled()) }
+    var progressiveBlurHeight by remember { mutableFloatStateOf(repository.getLiveWallpaperProgressiveBlurHeight()) }
     var applyHome by remember { mutableStateOf(repository.getDailyWallpaperApplyHome()) }
     var applyLock by remember { mutableStateOf(repository.getDailyWallpaperApplyLock()) }
 
@@ -475,6 +479,18 @@ fun WallpaperScreen(
                                 .scrollMotionBlur(gridState, enabled = isMotionBlurEnabled),
                     ) {
                         item {
+                            DailyWallpaperLiveItem(
+                                imageUrl = wallpaperInfo?.urlMobile,
+                                isSelected = selectedVideo == SettingsRepository.LIVE_WALLPAPER_DAILY_IMAGE,
+                                onClick = {
+                                    HapticUtil.performCustomHaptic(view, 0.5f)
+                                    selectedVideo = SettingsRepository.LIVE_WALLPAPER_DAILY_IMAGE
+                                    repository.saveLiveWallpaperSelectedVideo(SettingsRepository.LIVE_WALLPAPER_DAILY_IMAGE)
+                                },
+                            )
+                        }
+
+                        item {
                             AddVideoItem(onClick = {
                                 HapticUtil.performCustomHaptic(view, 0.5f)
                                 pickerLauncher.launch(
@@ -700,39 +716,87 @@ fun WallpaperScreen(
                                         .padding(16.dp),
                                 verticalArrangement = Arrangement.spacedBy(12.dp),
                             ) {
-                                TranslatableText(
-                                    stringResId = R.string.live_wallpaper_playback_trigger_title,
-                                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                                    color = MaterialTheme.colorScheme.onSurface,
-                                )
+                                if (selectedVideo == SettingsRepository.LIVE_WALLPAPER_DAILY_IMAGE) {
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.SpaceBetween,
+                                    ) {
+                                        TranslatableText(
+                                            stringResId = R.string.live_wallpaper_progressive_blur,
+                                            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                                            color = MaterialTheme.colorScheme.onSurface,
+                                        )
+                                        Switch(
+                                            checked = progressiveBlurEnabled,
+                                            onCheckedChange = { checked ->
+                                                HapticUtil.performUIHaptic(view)
+                                                progressiveBlurEnabled = checked
+                                                repository.setLiveWallpaperProgressiveBlurEnabled(checked)
+                                            },
+                                        )
+                                    }
 
-                                val options =
-                                    listOf(
-                                        SettingsRepository.LIVE_WALLPAPER_TRIGGER_UNLOCK to
-                                            stringResource(
-                                                R.string.live_wallpaper_trigger_unlock,
-                                            ),
-                                        SettingsRepository.LIVE_WALLPAPER_TRIGGER_SCREEN_ON to
-                                            stringResource(
-                                                R.string.live_wallpaper_trigger_screen_on,
-                                            ),
+                                    AnimatedVisibility(
+                                        visible = progressiveBlurEnabled,
+                                        enter = expandVertically(animationSpec = tween(300)) + fadeIn(animationSpec = tween(300)),
+                                        exit = shrinkVertically(animationSpec = tween(300)) + fadeOut(animationSpec = tween(300)),
+                                    ) {
+                                        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                                            TranslatableText(
+                                                stringResId = R.string.live_wallpaper_blur_height,
+                                                style = MaterialTheme.typography.labelLarge,
+                                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                            )
+                                            Slider(
+                                                value = progressiveBlurHeight,
+                                                onValueChange = {
+                                                    progressiveBlurHeight = it
+                                                    HapticUtil.performSliderHaptic(view)
+                                                },
+                                                onValueChangeFinished = {
+                                                    repository.setLiveWallpaperProgressiveBlurHeight(progressiveBlurHeight)
+                                                },
+                                                valueRange = 0.05f..0.4f,
+                                                modifier = Modifier.fillMaxWidth(),
+                                            )
+                                        }
+                                    }
+                                } else {
+                                    TranslatableText(
+                                        stringResId = R.string.live_wallpaper_playback_trigger_title,
+                                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                                        color = MaterialTheme.colorScheme.onSurface,
                                     )
 
-                                SegmentedPicker(
-                                    items = options,
-                                    selectedItem =
-                                        options.find { it.first == playbackTrigger }
-                                            ?: options.first(),
-                                    onItemSelected = { option ->
-                                        HapticUtil.performUIHaptic(view)
-                                        playbackTrigger = option.first
-                                        repository.saveLiveWallpaperPlaybackTrigger(option.first)
-                                    },
-                                    labelProvider = { it.second },
-                                    containerColor = Color.Transparent,
-                                    contentPadding = PaddingValues(0.dp),
-                                    modifier = Modifier.fillMaxWidth(),
-                                )
+                                    val options =
+                                        listOf(
+                                            SettingsRepository.LIVE_WALLPAPER_TRIGGER_UNLOCK to
+                                                stringResource(
+                                                    R.string.live_wallpaper_trigger_unlock,
+                                                ),
+                                            SettingsRepository.LIVE_WALLPAPER_TRIGGER_SCREEN_ON to
+                                                stringResource(
+                                                    R.string.live_wallpaper_trigger_screen_on,
+                                                ),
+                                        )
+
+                                    SegmentedPicker(
+                                        items = options,
+                                        selectedItem =
+                                            options.find { it.first == playbackTrigger }
+                                                ?: options.first(),
+                                        onItemSelected = { option ->
+                                            HapticUtil.performUIHaptic(view)
+                                            playbackTrigger = option.first
+                                            repository.saveLiveWallpaperPlaybackTrigger(option.first)
+                                        },
+                                        labelProvider = { it.second },
+                                        containerColor = Color.Transparent,
+                                        contentPadding = PaddingValues(0.dp),
+                                        modifier = Modifier.fillMaxWidth(),
+                                    )
+                                }
 
                                 if (repository.getLiveWallpaperCustomVideos().isNotEmpty()) {
                                     Button(
@@ -1195,6 +1259,73 @@ fun AddVideoItem(onClick: () -> Unit) {
                 tint = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.size(32.dp),
             )
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
+fun DailyWallpaperLiveItem(
+    imageUrl: String?,
+    isSelected: Boolean,
+    onClick: () -> Unit,
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.clickable { onClick() },
+    ) {
+        Box(
+            modifier =
+                Modifier
+                    .aspectRatio(9f / 16f)
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(MaterialTheme.colorScheme.surfaceVariant),
+            contentAlignment = Alignment.Center,
+        ) {
+            if (imageUrl.isNullOrBlank()) {
+                Icon(
+                    painter = painterResource(id = R.drawable.rounded_wallpaper_24),
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.size(32.dp),
+                )
+            } else {
+                SubcomposeAsyncImage(
+                    model = imageUrl,
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.fillMaxSize(),
+                    loading = { LoadingIndicator(modifier = Modifier.size(32.dp)) },
+                )
+            }
+
+            if (isSelected) {
+                Box(
+                    modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.3f)),
+                )
+                Icon(
+                    painter = painterResource(id = R.drawable.rounded_check_circle_24),
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onPrimary,
+                    modifier = Modifier.size(24.dp),
+                )
+            } else {
+                Icon(
+                    painter = painterResource(id = R.drawable.rounded_wallpaper_24),
+                    contentDescription = null,
+                    tint = Color.White,
+                    modifier =
+                        Modifier
+                            .align(Alignment.TopEnd)
+                            .padding(6.dp)
+                            .background(Color.Black.copy(alpha = 0.35f), CircleShape)
+                            .padding(4.dp)
+                            .size(14.dp),
+                )
+            }
         }
     }
 }

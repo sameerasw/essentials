@@ -9,6 +9,8 @@
 
 package com.sameerasw.essentials.services
 
+import android.app.WallpaperManager
+import android.content.ComponentName
 import android.content.Context
 import android.util.Log
 import androidx.work.CoroutineWorker
@@ -53,13 +55,15 @@ class DailyWallpaperWorker(
                     if (applyHome) flags = flags or android.app.WallpaperManager.FLAG_SYSTEM
                     if (applyLock) flags = flags or android.app.WallpaperManager.FLAG_LOCK
 
-                    if (flags != 0) {
+                    val liveDailyActive = isDailyLiveWallpaperActive(context, settingsRepository)
+                    if (flags != 0 || liveDailyActive) {
                         val applied =
-                            wallpaperRepository.autoApplyWallpaper(
-                                context,
-                                todayWallpaper.urlMobile,
-                                flags,
-                            )
+                            liveDailyActive ||
+                                wallpaperRepository.autoApplyWallpaper(
+                                    context,
+                                    todayWallpaper.urlMobile,
+                                    flags,
+                                )
                         if (applied) {
                             newWallpaperApplied = true
                             settingsRepository.putString(
@@ -146,5 +150,14 @@ class DailyWallpaperWorker(
             Log.e("DailyWallpaperWorker", "Error during daily sync", e)
             Result.retry()
         }
+    }
+
+    private fun isDailyLiveWallpaperActive(
+        context: Context,
+        settingsRepository: SettingsRepository,
+    ): Boolean {
+        if (!settingsRepository.isLiveWallpaperDailyImageSelected()) return false
+        val active = WallpaperManager.getInstance(context).wallpaperInfo?.component ?: return false
+        return active == ComponentName(context, LiveWallpaperService::class.java)
     }
 }

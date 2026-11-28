@@ -1609,6 +1609,8 @@
     <string name="live_wallpaper_playback_trigger_title">Oynat</string>
     <string name="live_wallpaper_trigger_unlock">Kilit açıldığında</string>
     <string name="live_wallpaper_trigger_screen_on">Ekran açıldığında</string>
+    <string name="live_wallpaper_progressive_blur">Progressive blur</string>
+    <string name="live_wallpaper_blur_height">Blur height</string>
     <string name="live_wallpaper_video_title">Video</string>
     <string name="btn_apply">Uygula</string>
     <string name="add_video">Video ekle</string>

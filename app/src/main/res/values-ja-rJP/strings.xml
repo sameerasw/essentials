@@ -1608,6 +1608,8 @@
     <string name="live_wallpaper_playback_trigger_title">再生タイミング</string>
     <string name="live_wallpaper_trigger_unlock">ロック解除時</string>
     <string name="live_wallpaper_trigger_screen_on">画面オン時</string>
+    <string name="live_wallpaper_progressive_blur">Progressive blur</string>
+    <string name="live_wallpaper_blur_height">Blur height</string>
     <string name="live_wallpaper_video_title">動画</string>
     <string name="btn_apply">適用</string>
     <string name="add_video">動画を追加</string>
